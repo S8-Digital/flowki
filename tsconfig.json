@@ -11,6 +11,8 @@
         "lib": ["ESNext", "DOM"],
         "noEmit": true,
         "skipLibCheck": true,
+        "esModuleInterop": true,
+        "types": ["vite/client", "./resources/js/types"],
         "paths": {
             "@/*": ["./resources/js/*"]
         }
