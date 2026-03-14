@@ -9,6 +9,8 @@
     "format:check": "prettier --check resources/",
     "lint": "eslint . --fix",
     "prepare": "husky",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {

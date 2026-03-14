@@ -1,1 +1,6 @@
-npx lint-staged
+if [ -f vendor/bin/pint ]; then
+  npx lint-staged
+else
+  echo "Skipping pint (vendor not installed)"
+  npx lint-staged --config .husky/.lintstagedrc-nopint.json
+fi
