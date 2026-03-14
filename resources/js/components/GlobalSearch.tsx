@@ -22,7 +22,7 @@ export default function GlobalSearch() {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<SearchResults | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+    const debounceRef = useRef<number | undefined>(undefined);
 
     useEffect(() => {
         clearTimeout(debounceRef.current);

@@ -187,8 +187,8 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                                     {msg.isStreaming && !msg.content ? (
                                         <span className="flex items-center gap-1 text-muted-foreground">
                                             <span className="animate-bounce">●</span>
-                                            <span className="animate-bounce [animation-delay:100ms]">●</span>
-                                            <span className="animate-bounce [animation-delay:200ms]">●</span>
+                                            <span className="animate-bounce delay-100">●</span>
+                                            <span className="animate-bounce delay-200">●</span>
                                         </span>
                                     ) : (
                                         <span className="whitespace-pre-wrap">{msg.content}</span>

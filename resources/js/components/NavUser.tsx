@@ -22,7 +22,7 @@ export default function NavUser() {
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
-                        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                        className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-56 rounded-lg"
                         side={isMobile ? 'bottom' : state === 'collapsed' ? 'left' : 'bottom'}
                         align="end"
                         sideOffset={4}

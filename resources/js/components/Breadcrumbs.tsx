@@ -11,7 +11,7 @@ export default function Breadcrumbs({ breadcrumbs }: BreadcrumbsProps) {
         <Breadcrumb>
             <BreadcrumbList>
                 {breadcrumbs.map((item, index) => (
-                    <span key={index} className="contents">
+                    <span key={item.href ?? item.title} className="contents">
                         <BreadcrumbItem>
                             {index === breadcrumbs.length - 1 ? (
                                 <BreadcrumbPage>{item.title}</BreadcrumbPage>
