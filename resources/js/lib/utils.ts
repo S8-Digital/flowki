@@ -1,4 +1,4 @@
-import { InertiaLinkProps } from '@inertiajs/vue3';
+import { InertiaLinkProps } from '@inertiajs/react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
