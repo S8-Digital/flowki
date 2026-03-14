@@ -1,0 +1,23 @@
+{
+    "agents": [
+        "junie",
+        "claude_code",
+        "copilot"
+    ],
+    "guidelines": true,
+    "herd_mcp": false,
+    "mcp": true,
+    "packages": [
+        "inertiajs/inertia-laravel",
+        "laravel/ai",
+        "laravel/horizon"
+    ],
+    "sail": true,
+    "skills": [
+        "mcp-development",
+        "wayfinder-development",
+        "tailwindcss-development",
+        "ai-sdk-development",
+        "configuring-horizon"
+    ]
+}

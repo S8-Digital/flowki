@@ -1,0 +1,8 @@
+.env
+.env.*
+.env.local
+.env.production
+.env.staging
+*.pem
+*.key
+*.json
