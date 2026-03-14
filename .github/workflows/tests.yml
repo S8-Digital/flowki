@@ -42,6 +42,9 @@ jobs:
       - name: Generate Application Key
         run: php artisan key:generate
 
+      - name: Generate Wayfinder Routes
+        run: php artisan wayfinder:generate --with-form --no-interaction
+
       - name: Build Assets
         run: npm run build
 
