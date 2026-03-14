@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\FamilyRole;
+use App\Enums\SocialProvider;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -111,5 +112,20 @@ class User extends Authenticatable
     public function hasGoogleCalendarConnected(): bool
     {
         return $this->google_calendar_token !== null;
+    }
+
+    public function socialAccounts(): HasMany
+    {
+        return $this->hasMany(SocialAccount::class);
+    }
+
+    public function hasSocialProvider(SocialProvider $provider): bool
+    {
+        return $this->socialAccounts()->where('provider', $provider->value)->exists();
+    }
+
+    public function hasPasswordSet(): bool
+    {
+        return $this->password !== null;
     }
 }

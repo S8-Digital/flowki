@@ -47,6 +47,10 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $user,
+                'connectedProviders' => $user
+                    ? $user->socialAccounts()->pluck('provider')->map(fn ($p) => $p->value)->all()
+                    : [],
+                'hasPasswordSet' => $user?->hasPasswordSet() ?? false,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

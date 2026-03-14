@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import InputError from '@/components/InputError.vue';
+import SocialAuthButtons from '@/components/SocialAuthButtons.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,6 +60,8 @@ import { LoaderCircle } from 'lucide-vue-next';
                     Create account
                 </Button>
             </div>
+
+            <SocialAuthButtons label="Or sign up with" />
 
             <div class="text-center text-sm text-muted-foreground">
                 Already have an account?

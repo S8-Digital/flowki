@@ -22,6 +22,7 @@ yarn.lock
 yarn-error.log
 /auth.json
 /.fleet
+/.google
 /.idea
 /.nova
 /.vscode

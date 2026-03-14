@@ -13,14 +13,6 @@ class GoogleCalendarService
 
     private const CALENDAR_URL = 'https://www.googleapis.com/calendar/v3';
 
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
     public function getAuthorizationUrl(string $state): string
     {
         return self::AUTH_URL.'?'.http_build_query([

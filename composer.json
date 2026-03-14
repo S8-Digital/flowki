@@ -17,9 +17,11 @@
         "laravel/mcp": "^0.5.9",
         "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.2",
+        "laravel/socialite": "*",
         "laravel/telescope": "^5.18",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
+        "socialiteproviders/apple": "*",
         "spatie/laravel-google-cloud-storage": "^2.3",
         "spatie/laravel-permission": "^7.2"
     },

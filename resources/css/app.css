@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-
 @import 'tw-animate-css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -7,55 +6,118 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+   FLOWKI — Design System
+   calm, modern, family-first
+   ============================================================ */
+
 @theme inline {
+    /* ---- Typography ---- */
     --font-sans:
         'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-curious-blue-50: #f4f7fb;
-    --color-curious-blue-100: #e7f0f7;
-    --color-curious-blue-200: #cadeed;
-    --color-curious-blue-300: #9bc2de;
-    --color-curious-blue-400: #66a3ca;
-    --color-curious-blue-500: #4e92be;
-    --color-curious-blue-600: #316d98;
-    --color-curious-blue-700: #29577b;
-    --color-curious-blue-800: #254b67;
-    --color-curious-blue-900: #234057;
-    --color-curious-blue-950: #182939;
+    /* ---- Curious Blue (primary brand) ---- */
+    --color-curious-blue-50: #f0f6fb;
+    --color-curious-blue-100: #d6eaf5;
+    --color-curious-blue-200: #a8d1ea;
+    --color-curious-blue-300: #7ab8dc;
+    --color-curious-blue-400: #5ba3cb;
+    --color-curious-blue-500: #3282b0;
+    --color-curious-blue-600: #255f87;
+    --color-curious-blue-700: #1e4e72;
+    --color-curious-blue-800: #1a4665;
+    --color-curious-blue-900: #153856;
+    --color-curious-blue-950: #0e2538;
 
-    --color-pastel-pink-500: #f3c4c9;
-    --color-pastel-green-500: #c4e8d1;
-    --color-pastel-yellow-500: #f8e3b3;
-    --color-pastel-purple-500: #d4c4e8;
+    /* ---- Sage Green (secondary / chores / nature) ---- */
+    --color-sage-50: #f0f7f2;
+    --color-sage-100: #c8e8d2;
+    --color-sage-200: #95d0ae;
+    --color-sage-300: #6dbb8e;
+    --color-sage-400: #5aad7a;
+    --color-sage-500: #3a8a5c;
+    --color-sage-600: #2c6844;
+    --color-sage-700: #235535;
+    --color-sage-800: #1e4a30;
+    --color-sage-900: #163824;
+    --color-sage-950: #0d2416;
 
+    /* ---- Warm Coral (tertiary / shopping / energy) ---- */
+    --color-coral-50: #fdf2f0;
+    --color-coral-100: #f8d8d2;
+    --color-coral-200: #f0aba0;
+    --color-coral-300: #e88070;
+    --color-coral-400: #e06f5c;
+    --color-coral-500: #c4503c;
+    --color-coral-600: #9c3c2c;
+    --color-coral-700: #7e3023;
+    --color-coral-800: #6e2a1e;
+    --color-coral-900: #541f16;
+    --color-coral-950: #38130d;
+
+    /* ---- Amber (meals / recipes / warmth) ---- */
+    --color-amber-50: #fef8ec;
+    --color-amber-100: #feefc8;
+    --color-amber-200: #fde08e;
+    --color-amber-300: #fbcc55;
+    --color-amber-400: #f9b830;
+    --color-amber-500: #d4900e;
+    --color-amber-600: #a86e08;
+    --color-amber-700: #8a5806;
+    --color-amber-800: #6e4605;
+    --color-amber-900: #523404;
+    --color-amber-950: #362102;
+
+    /* ---- Lavender (to-dos / reminders / calm) ---- */
+    --color-lavender-50: #f4f2fc;
+    --color-lavender-100: #e2dcf7;
+    --color-lavender-200: #c4b9ef;
+    --color-lavender-300: #a696e7;
+    --color-lavender-400: #8b7adc;
+    --color-lavender-500: #6e5cc8;
+    --color-lavender-600: #5544a8;
+    --color-lavender-700: #423688;
+    --color-lavender-800: #332b6e;
+    --color-lavender-900: #261f52;
+    --color-lavender-950: #181436;
+
+    /* ---- Pastel chart / category colors ---- */
+    --color-pastel-blue-500: #d6eaf5;
+    --color-pastel-green-500: #c8e8d2;
+    --color-pastel-coral-500: #f8d8d2;
+    --color-pastel-amber-500: #feefc8;
+    --color-pastel-purple-500: #e2dcf7;
+
+    /* ---- Warm neutral backgrounds ---- */
+    --color-warm-white: hsl(40 20% 98%);
+    --color-warm-50: hsl(40 15% 96%);
+    --color-warm-100: hsl(40 12% 92%);
+    --color-warm-200: hsl(40 10% 86%);
+    --color-warm-300: hsl(40 8% 72%);
+
+    /* ---- Border radius ---- */
+    --radius-xl: calc(var(--radius) + 4px);
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
 
+    /* ---- Semantic color mappings ---- */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
-
     --color-popover: var(--popover);
     --color-popover-foreground: var(--popover-foreground);
-
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
-
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
-
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
-
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
-
     --color-destructive: var(--destructive);
     --color-destructive-foreground: var(--destructive-foreground);
-
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
@@ -74,23 +136,25 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /* ---- Category semantic tokens ---- */
+    --color-category-events: var(--color-curious-blue-100, #d6eaf5);
+    --color-category-chores: var(--color-sage-100, #c8e8d2);
+    --color-category-shopping: var(--color-coral-100, #f8d8d2);
+    --color-category-meals: var(--color-amber-100, #feefc8);
+    --color-category-todos: var(--color-lavender-100, #e2dcf7);
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
+/* ============================================================
+   Tailwind v4 border compatibility
+   ============================================================ */
 @layer base {
     *,
     ::after,
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
+        border-color: var(--color-warm-100, currentColor);
     }
 }
 
@@ -102,84 +166,242 @@
     }
 }
 
+/* ============================================================
+   LIGHT MODE
+   ============================================================ */
 :root {
-    --background: hsl(0 0% 100%);
-    --foreground: hsl(0 0% 3.9%);
+    /* Core surfaces — warmed neutrals */
+    --background: hsl(40 20% 98%);
+    --foreground: hsl(220 15% 12%);
     --card: hsl(0 0% 100%);
-    --card-foreground: hsl(0 0% 3.9%);
+    --card-foreground: hsl(220 15% 12%);
     --popover: hsl(0 0% 100%);
-    --popover-foreground: hsl(0 0% 3.9%);
-    --primary: hsl(207 47% 52%);
+    --popover-foreground: hsl(220 15% 12%);
+
+    /* Primary — Curious Blue, slightly richer saturation */
+    --primary: hsl(207 55% 44%);
     --primary-foreground: hsl(0 0% 100%);
-    --secondary: hsl(0 0% 92.1%);
-    --secondary-foreground: hsl(0 0% 9%);
-    --muted: hsl(0 0% 96.1%);
-    --muted-foreground: hsl(0 0% 45.1%);
-    --accent: hsl(207 60% 94%);
-    --accent-foreground: hsl(208 51% 39%);
-    --destructive: hsl(0 84.2% 60.2%);
-    --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(0 0% 92.8%);
-    --input: hsl(0 0% 89.8%);
-    --ring: hsl(208 51% 39%);
-    --chart-1: var(--color-pastel-pink-500);
+
+    /* Secondary — subtle warm grey */
+    --secondary: hsl(40 12% 92%);
+    --secondary-foreground: hsl(220 12% 18%);
+
+    /* Muted — warm off-white */
+    --muted: hsl(40 15% 96%);
+    --muted-foreground: hsl(220 8% 46%);
+
+    /* Accent — soft blue tint */
+    --accent: hsl(207 65% 93%);
+    --accent-foreground: hsl(207 55% 30%);
+
+    /* Destructive */
+    --destructive: hsl(4 72% 56%);
+    --destructive-foreground: hsl(0 0% 100%);
+
+    /* Borders and inputs */
+    --border: hsl(40 10% 88%);
+    --input: hsl(40 10% 90%);
+    --ring: hsl(207 55% 44%);
+
+    /* Border radius — softer and more modern */
+    --radius: 0.875rem;
+
+    /* Chart / category pastel palette */
+    --chart-1: var(--color-pastel-blue-500);
     --chart-2: var(--color-pastel-green-500);
-    --chart-3: var(--color-pastel-yellow-500);
-    --chart-4: var(--color-pastel-purple-500);
-    --chart-5: hsl(208 40% 80%);
-    --radius: 0.75rem;
-    --sidebar-background: hsl(0 0% 98%);
-    --sidebar-foreground: hsl(240 5.3% 26.1%);
-    --sidebar-primary: hsl(207 47% 52%);
+    --chart-3: var(--color-pastel-coral-500);
+    --chart-4: var(--color-pastel-amber-500);
+    --chart-5: var(--color-pastel-purple-500);
+
+    /* Sidebar */
+    --sidebar-background: hsl(40 15% 97%);
+    --sidebar-foreground: hsl(220 12% 28%);
+    --sidebar-primary: hsl(207 55% 44%);
     --sidebar-primary-foreground: hsl(0 0% 100%);
-    --sidebar-accent: hsl(207 60% 94%);
-    --sidebar-accent-foreground: hsl(208 51% 39%);
-    --sidebar-border: hsl(0 0% 91%);
-    --sidebar-ring: hsl(208 51% 39%);
-    --sidebar: hsl(0 0% 98%);
+    --sidebar-accent: hsl(207 65% 93%);
+    --sidebar-accent-foreground: hsl(207 55% 30%);
+    --sidebar-border: hsl(40 10% 90%);
+    --sidebar-ring: hsl(207 55% 44%);
+    --sidebar: hsl(40 15% 97%);
+
+    /* ---- Flowki category color tokens (light) ---- */
+    --category-events-bg: hsl(207 60% 92%);
+    --category-events-fg: hsl(207 55% 28%);
+    --category-events-border: hsl(207 45% 78%);
+
+    --category-chores-bg: hsl(142 38% 88%);
+    --category-chores-fg: hsl(142 42% 22%);
+    --category-chores-border: hsl(142 32% 72%);
+
+    --category-shopping-bg: hsl(8 68% 92%);
+    --category-shopping-fg: hsl(8 58% 28%);
+    --category-shopping-border: hsl(8 48% 76%);
+
+    --category-meals-bg: hsl(38 92% 92%);
+    --category-meals-fg: hsl(38 72% 24%);
+    --category-meals-border: hsl(38 68% 74%);
+
+    --category-todos-bg: hsl(252 42% 92%);
+    --category-todos-fg: hsl(252 48% 26%);
+    --category-todos-border: hsl(252 36% 74%);
 }
 
+/* ============================================================
+   DARK MODE
+   ============================================================ */
 .dark {
-    --background: hsl(0 0% 3.9%);
-    --foreground: hsl(0 0% 98%);
-    --card: hsl(0 0% 3.9%);
-    --card-foreground: hsl(0 0% 98%);
-    --popover: hsl(0 0% 3.9%);
-    --popover-foreground: hsl(0 0% 98%);
-    --primary: hsl(207 51% 74%);
-    --primary-foreground: hsl(208 45% 18%);
-    --secondary: hsl(0 0% 14.9%);
-    --secondary-foreground: hsl(0 0% 98%);
-    --muted: hsl(0 0% 16.08%);
-    --muted-foreground: hsl(0 0% 70%);
-    --accent: hsl(208 43% 16%);
-    --accent-foreground: hsl(207 51% 74%);
-    --destructive: hsl(0 84% 60%);
+    /* Core surfaces — warm dark, not pure black */
+    --background: hsl(40 6% 10%);
+    --foreground: hsl(40 12% 94%);
+    --card: hsl(40 6% 13%);
+    --card-foreground: hsl(40 12% 94%);
+    --popover: hsl(40 6% 13%);
+    --popover-foreground: hsl(40 12% 94%);
+
+    /* Primary — lighter blue for dark bg legibility */
+    --primary: hsl(207 60% 68%);
+    --primary-foreground: hsl(207 50% 14%);
+
+    /* Secondary */
+    --secondary: hsl(40 5% 18%);
+    --secondary-foreground: hsl(40 10% 90%);
+
+    /* Muted */
+    --muted: hsl(40 5% 17%);
+    --muted-foreground: hsl(40 6% 62%);
+
+    /* Accent */
+    --accent: hsl(207 38% 18%);
+    --accent-foreground: hsl(207 55% 72%);
+
+    /* Destructive */
+    --destructive: hsl(4 72% 58%);
     --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(0 0% 14.9%);
-    --input: hsl(0 0% 14.9%);
-    --ring: hsl(207 47% 60%);
-    --chart-1: var(--color-pastel-pink-500);
+
+    /* Borders and inputs */
+    --border: hsl(40 5% 20%);
+    --input: hsl(40 5% 20%);
+    --ring: hsl(207 55% 58%);
+
+    /* Chart colors unchanged — pastels read well on dark too */
+    --chart-1: var(--color-pastel-blue-500);
     --chart-2: var(--color-pastel-green-500);
-    --chart-3: var(--color-pastel-yellow-500);
-    --chart-4: var(--color-pastel-purple-500);
-    --chart-5: hsl(208 40% 80%);
-    --sidebar-background: hsl(0 0% 7%);
-    --sidebar-foreground: hsl(0 0% 95.9%);
-    --sidebar-primary: hsl(207 51% 74%);
-    --sidebar-primary-foreground: hsl(208 45% 18%);
-    --sidebar-accent: hsl(208 43% 16%);
-    --sidebar-accent-foreground: hsl(207 51% 74%);
-    --sidebar-border: hsl(0 0% 15.9%);
-    --sidebar-ring: hsl(207 47% 60%);
-    --sidebar: hsl(240 5.9% 10%);
+    --chart-3: var(--color-pastel-coral-500);
+    --chart-4: var(--color-pastel-amber-500);
+    --chart-5: var(--color-pastel-purple-500);
+
+    /* Sidebar */
+    --sidebar-background: hsl(40 6% 8%);
+    --sidebar-foreground: hsl(40 10% 88%);
+    --sidebar-primary: hsl(207 60% 68%);
+    --sidebar-primary-foreground: hsl(207 50% 14%);
+    --sidebar-accent: hsl(207 38% 18%);
+    --sidebar-accent-foreground: hsl(207 55% 72%);
+    --sidebar-border: hsl(40 5% 18%);
+    --sidebar-ring: hsl(207 55% 58%);
+    --sidebar: hsl(40 6% 8%);
+
+    /* ---- Flowki category color tokens (dark) ---- */
+    --category-events-bg: hsl(207 38% 18%);
+    --category-events-fg: hsl(207 55% 72%);
+    --category-events-border: hsl(207 35% 28%);
+
+    --category-chores-bg: hsl(142 28% 16%);
+    --category-chores-fg: hsl(142 40% 68%);
+    --category-chores-border: hsl(142 28% 26%);
+
+    --category-shopping-bg: hsl(8 38% 18%);
+    --category-shopping-fg: hsl(8 55% 72%);
+    --category-shopping-border: hsl(8 35% 28%);
+
+    --category-meals-bg: hsl(38 42% 16%);
+    --category-meals-fg: hsl(38 68% 68%);
+    --category-meals-border: hsl(38 38% 26%);
+
+    --category-todos-bg: hsl(252 28% 18%);
+    --category-todos-fg: hsl(252 48% 72%);
+    --category-todos-border: hsl(252 28% 28%);
 }
 
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
 @layer base {
     * {
         @apply border-border outline-ring/50;
     }
+
     body {
         @apply bg-background text-foreground;
+        font-feature-settings:
+            'rlig' 1,
+            'calt' 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Smooth focus rings */
+    :focus-visible {
+        @apply outline-2 outline-offset-2;
+    }
+
+    /* Scrollbar — subtle and warm */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-warm-200);
+        border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-warm-300);
+    }
+}
+
+/* ============================================================
+   FLOWKI UTILITY CLASSES
+   Category badge helpers — use these on any pill/tag element
+   ============================================================ */
+@layer utilities {
+    /* Events */
+    .category-events {
+        background-color: var(--category-events-bg);
+        color: var(--category-events-fg);
+        border-color: var(--category-events-border);
+    }
+
+    /* Chores */
+    .category-chores {
+        background-color: var(--category-chores-bg);
+        color: var(--category-chores-fg);
+        border-color: var(--category-chores-border);
+    }
+
+    /* Shopping */
+    .category-shopping {
+        background-color: var(--category-shopping-bg);
+        color: var(--category-shopping-fg);
+        border-color: var(--category-shopping-border);
+    }
+
+    /* Meals */
+    .category-meals {
+        background-color: var(--category-meals-bg);
+        color: var(--category-meals-fg);
+        border-color: var(--category-meals-border);
+    }
+
+    /* To-dos */
+    .category-todos {
+        background-color: var(--category-todos-bg);
+        color: var(--category-todos-fg);
+        border-color: var(--category-todos-border);
     }
 }
