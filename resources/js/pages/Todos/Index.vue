@@ -88,9 +88,7 @@ function formatDateTime(value: string | null) {
 
                 <Dialog v-model:open="createOpen">
                     <DialogTrigger as-child>
-                        <Button size="sm">
-                            <Plus class="mr-1 size-4" /> New Todo
-                        </Button>
+                        <Button size="sm"> <Plus class="mr-1 size-4" /> New Todo </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -212,7 +210,14 @@ function formatDateTime(value: string | null) {
                             <span class="rounded-full bg-secondary px-2 py-0.5 text-xs">{{ statusLabel(todo.status) }}</span>
                             <Button variant="ghost" size="icon" @click="openEdit(todo)">
                                 <span class="sr-only">Edit</span>
-                                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    />
+                                </svg>
                             </Button>
                             <Button variant="ghost" size="icon" @click="deleteTodo(todo)">
                                 <Trash2 class="size-4 text-destructive" />
@@ -312,4 +317,3 @@ function formatDateTime(value: string | null) {
         </div>
     </AppLayout>
 </template>
-

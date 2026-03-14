@@ -72,22 +72,10 @@ function changeRole(memberId: number, role: string) {
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader><DialogTitle>Edit Family Name</DialogTitle></DialogHeader>
-                            <Form
-                                :action="update()"
-                                method="patch"
-                                class="space-y-4"
-                                v-slot="{ errors, processing }"
-                                @success="editNameOpen = false"
-                            >
+                            <Form :action="update()" method="patch" class="space-y-4" v-slot="{ errors, processing }" @success="editNameOpen = false">
                                 <div class="grid gap-2">
                                     <Label for="name">Family Name</Label>
-                                    <Input
-                                        id="name"
-                                        name="name"
-                                        v-model="editableName"
-                                        required
-                                        placeholder="e.g. The Smith Family"
-                                    />
+                                    <Input id="name" name="name" v-model="editableName" required placeholder="e.g. The Smith Family" />
                                     <InputError :message="errors.name" />
                                 </div>
                                 <Button type="submit" class="w-full" :disabled="processing">
@@ -117,15 +105,12 @@ function changeRole(memberId: number, role: string) {
                         <!-- Add Child -->
                         <Dialog v-model:open="addChildOpen">
                             <DialogTrigger as-child>
-                                <Button size="sm" variant="outline">
-                                    <Baby class="mr-1 size-4" /> Add Child
-                                </Button>
+                                <Button size="sm" variant="outline"> <Baby class="mr-1 size-4" /> Add Child </Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader><DialogTitle>Add Child</DialogTitle></DialogHeader>
                                 <p class="text-sm text-muted-foreground">
-                                    Children are added directly and don't need to log in. They can be assigned todos and
-                                    chores.
+                                    Children are added directly and don't need to log in. They can be assigned todos and chores.
                                 </p>
                                 <Form
                                     :action="addChild()"
@@ -150,9 +135,7 @@ function changeRole(memberId: number, role: string) {
                         <!-- Invite Member -->
                         <Dialog v-model:open="inviteMemberOpen">
                             <DialogTrigger as-child>
-                                <Button size="sm" variant="outline">
-                                    <UserPlus class="mr-1 size-4" /> Invite Member
-                                </Button>
+                                <Button size="sm" variant="outline"> <UserPlus class="mr-1 size-4" /> Invite Member </Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader><DialogTitle>Invite Family Member</DialogTitle></DialogHeader>
@@ -165,18 +148,11 @@ function changeRole(memberId: number, role: string) {
                                     @success="inviteMemberOpen = false"
                                 >
                                     <p class="text-sm text-muted-foreground">
-                                        An invitation email will be sent with a link to set up their account and join
-                                        your family.
+                                        An invitation email will be sent with a link to set up their account and join your family.
                                     </p>
                                     <div class="grid gap-2">
                                         <Label for="invite-email">Email Address</Label>
-                                        <Input
-                                            id="invite-email"
-                                            name="email"
-                                            type="email"
-                                            placeholder="their@email.com"
-                                            required
-                                        />
+                                        <Input id="invite-email" name="email" type="email" placeholder="their@email.com" required />
                                         <InputError :message="errors.email" />
                                     </div>
                                     <div class="grid gap-2">
@@ -184,7 +160,7 @@ function changeRole(memberId: number, role: string) {
                                         <select
                                             id="invite-role"
                                             name="role"
-                                            class="border-input bg-background rounded-md border px-3 py-2 text-sm"
+                                            class="rounded-md border border-input bg-background px-3 py-2 text-sm"
                                             required
                                         >
                                             <option value="member">Member</option>
@@ -225,7 +201,7 @@ function changeRole(memberId: number, role: string) {
                                 v-if="member.id !== currentUserId && !member.is_child"
                                 :value="member.role"
                                 @change="changeRole(member.id, ($event.target as HTMLSelectElement).value)"
-                                class="border-input rounded-full border bg-transparent px-2 py-0.5 text-xs capitalize"
+                                class="rounded-full border border-input bg-transparent px-2 py-0.5 text-xs capitalize"
                             >
                                 <option value="admin">Admin</option>
                                 <option value="member">Member</option>
@@ -237,12 +213,7 @@ function changeRole(memberId: number, role: string) {
                             <span v-else class="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">
                                 {{ member.role }}
                             </span>
-                            <Button
-                                v-if="member.id !== currentUserId"
-                                variant="ghost"
-                                size="icon"
-                                @click="removeUser(member.id)"
-                            >
+                            <Button v-if="member.id !== currentUserId" variant="ghost" size="icon" @click="removeUser(member.id)">
                                 <UserMinus class="size-4 text-destructive" />
                             </Button>
                         </div>
@@ -252,4 +223,3 @@ function changeRole(memberId: number, role: string) {
         </div>
     </AppLayout>
 </template>
-

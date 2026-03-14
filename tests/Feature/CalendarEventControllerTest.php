@@ -8,6 +8,7 @@ use Tests\TestCase;
 class CalendarEventControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -18,4 +19,3 @@ class CalendarEventControllerTest extends TestCase
         $response->assertStatus(200);
     }
 }
-

@@ -46,4 +46,3 @@ class CreateEvent implements Tool
         ];
     }
 }
-

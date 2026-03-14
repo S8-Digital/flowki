@@ -1,15 +1,15 @@
 <script setup lang="ts">
+import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
+import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
+import { show as familyShow } from '@/actions/App/Http/Controllers/FamilyController';
+import { index as recipeIndex } from '@/actions/App/Http/Controllers/RecipeController';
+import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
+import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
 import AiChatModal from '@/components/AiChatModal.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
-import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
-import { index as recipeIndex } from '@/actions/App/Http/Controllers/RecipeController';
-import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
-import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
-import { show as familyShow } from '@/actions/App/Http/Controllers/FamilyController';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';

@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Chore;
+use App\Models\ChoreCompletion;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ChoreCompletion>
+ * @extends Factory<ChoreCompletion>
  */
 class ChoreCompletionFactory extends Factory
 {

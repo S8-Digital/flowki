@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Enums\FamilyRole;
 use App\Enums\RecipeCategory;
 use App\Enums\ShoppingItemCategory;
 use App\Enums\TodoCategory;
+use Database\Factories\FamilyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 
 class Family extends Model
 {
-    /** @use HasFactory<\Database\Factories\FamilyFactory> */
+    /** @use HasFactory<FamilyFactory> */
     use HasFactory;
 
     protected $fillable = ['name', 'invite_code', 'created_by', 'settings'];

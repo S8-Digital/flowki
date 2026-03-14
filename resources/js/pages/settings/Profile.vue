@@ -115,10 +115,7 @@ function disconnectGoogleCalendar() {
 
             <!-- Google Calendar -->
             <div class="flex flex-col space-y-6">
-                <HeadingSmall
-                    title="Google Calendar"
-                    description="Sync your assigned todos and chores to your personal Google Calendar."
-                />
+                <HeadingSmall title="Google Calendar" description="Sync your assigned todos and chores to your personal Google Calendar." />
 
                 <div class="rounded-lg border p-4">
                     <div v-if="hasGoogleCalendarConnected" class="flex items-center justify-between gap-4">

@@ -6,11 +6,12 @@ use App\Enums\Priority;
 use App\Enums\TodoCategory;
 use App\Enums\TodoStatus;
 use App\Models\Family;
+use App\Models\Todo;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Todo>
+ * @extends Factory<Todo>
  */
 class TodoFactory extends Factory
 {

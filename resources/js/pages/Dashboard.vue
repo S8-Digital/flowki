@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
 import CalendarScheduleWidget from '@/components/Dashboard/CalendarScheduleWidget.vue';
 import CalendarTodayWidget from '@/components/Dashboard/CalendarTodayWidget.vue';
 import ShoppingListWidget from '@/components/Dashboard/ShoppingListWidget.vue';
@@ -9,12 +10,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
-import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
 import { type BreadcrumbItem } from '@/types';
-import { router } from '@inertiajs/vue3';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { GripVertical, Plus, Settings2, X } from 'lucide-vue-next';
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface Widget {
     id: number;
@@ -150,7 +149,9 @@ function saveSettings() {
         update(settingsWidget.value.id).url,
         { settings },
         {
-            onSuccess: () => { settingsOpen.value = false; },
+            onSuccess: () => {
+                settingsOpen.value = false;
+            },
             preserveScroll: true,
         },
     );
@@ -179,11 +180,7 @@ function onDragOver(widget: Widget) {
 function onDrop() {
     draggingId.value = null;
     dragOverId.value = null;
-    router.post(
-        reorder().url,
-        { order: localWidgets.value.map((w) => w.id) },
-        { preserveScroll: true },
-    );
+    router.post(reorder().url, { order: localWidgets.value.map((w) => w.id) }, { preserveScroll: true });
 }
 
 // Show settings option only for widgets with configurable settings
@@ -203,9 +200,7 @@ const showCategoryFilter = computed(() => newWidgetType.value === 'todo_list');
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <h1 class="text-xl font-semibold">Dashboard</h1>
-                <Button size="sm" @click="addOpen = true">
-                    <Plus class="mr-1 size-4" /> Add Widget
-                </Button>
+                <Button size="sm" @click="addOpen = true"> <Plus class="mr-1 size-4" /> Add Widget </Button>
             </div>
 
             <!-- Widget grid -->
@@ -214,7 +209,7 @@ const showCategoryFilter = computed(() => newWidgetType.value === 'todo_list');
                     v-for="widget in localWidgets"
                     :key="widget.id"
                     class="rounded-xl border bg-card transition-shadow"
-                    :class="{ 'opacity-50 scale-[0.98]': draggingId === widget.id }"
+                    :class="{ 'scale-[0.98] opacity-50': draggingId === widget.id }"
                     draggable="true"
                     @dragstart="onDragStart(widget)"
                     @dragover.prevent="onDragOver(widget)"
@@ -230,13 +225,7 @@ const showCategoryFilter = computed(() => newWidgetType.value === 'todo_list');
                             </span>
                         </div>
                         <div class="flex items-center gap-1">
-                            <Button
-                                v-if="hasSettings(widget.type)"
-                                variant="ghost"
-                                size="icon"
-                                class="size-7"
-                                @click="openSettings(widget)"
-                            >
+                            <Button v-if="hasSettings(widget.type)" variant="ghost" size="icon" class="size-7" @click="openSettings(widget)">
                                 <Settings2 class="size-3.5 text-muted-foreground" />
                             </Button>
                             <Button variant="ghost" size="icon" class="size-7" @click="removeWidget(widget)">
@@ -247,14 +236,8 @@ const showCategoryFilter = computed(() => newWidgetType.value === 'todo_list');
 
                     <!-- Widget content -->
                     <div class="p-4">
-                        <CalendarScheduleWidget
-                            v-if="widget.type === 'calendar_schedule'"
-                            :events="calendarEvents"
-                        />
-                        <CalendarTodayWidget
-                            v-else-if="widget.type === 'calendar_today'"
-                            :events="todayEvents()"
-                        />
+                        <CalendarScheduleWidget v-if="widget.type === 'calendar_schedule'" :events="calendarEvents" />
+                        <CalendarTodayWidget v-else-if="widget.type === 'calendar_today'" :events="todayEvents()" />
                         <TodoListWidget
                             v-else-if="widget.type === 'todo_list'"
                             :todos="filteredTodos(widget)"
@@ -263,7 +246,7 @@ const showCategoryFilter = computed(() => newWidgetType.value === 'todo_list');
                         <ShoppingListWidget
                             v-else-if="widget.type === 'shopping_list'"
                             :shopping-items="shoppingItems"
-                            :list-id="widget.settings?.list_id as number | undefined"
+                            :list-id="widget.settings?.list_id ?? undefined"
                             :shopping-lists="shoppingLists"
                         />
                     </div>
@@ -332,9 +315,7 @@ const showCategoryFilter = computed(() => newWidgetType.value === 'todo_list');
                         </Select>
                     </div>
 
-                    <Button class="w-full" :disabled="!newWidgetType" @click="addWidget">
-                        Add Widget
-                    </Button>
+                    <Button class="w-full" :disabled="!newWidgetType" @click="addWidget"> Add Widget </Button>
                 </div>
             </DialogContent>
         </Dialog>

@@ -142,7 +142,10 @@ function formatDateTime(value: string | null) {
                     </div>
                 </template>
 
-                <div v-if="chores && chores.data.length === 0" class="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">
+                <div
+                    v-if="chores && chores.data.length === 0"
+                    class="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground"
+                >
                     No chores yet. Add your first one!
                 </div>
 
@@ -161,7 +164,14 @@ function formatDateTime(value: string | null) {
                                 <CheckCircle class="size-4 text-green-500" />
                             </Button>
                             <Button variant="ghost" size="icon" @click="openEdit(chore)">
-                                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    />
+                                </svg>
                             </Button>
                             <Button variant="ghost" size="icon" @click="deleteChore(chore)">
                                 <Trash2 class="size-4 text-destructive" />
@@ -215,13 +225,7 @@ function formatDateTime(value: string | null) {
                                     :key="m.id"
                                     class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-accent"
                                 >
-                                    <input
-                                        type="checkbox"
-                                        name="assignee_ids[]"
-                                        :value="m.id"
-                                        v-model="editAssignees"
-                                        class="rounded border-input"
-                                    />
+                                    <input type="checkbox" name="assignee_ids[]" :value="m.id" v-model="editAssignees" class="rounded border-input" />
                                     {{ m.name }}
                                 </label>
                             </div>
@@ -235,4 +239,3 @@ function formatDateTime(value: string | null) {
         </div>
     </AppLayout>
 </template>
-

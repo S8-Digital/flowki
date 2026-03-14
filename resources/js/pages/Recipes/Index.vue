@@ -17,7 +17,7 @@ interface Props {
     filters: Record<string, string>;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Recipes', href: '/recipes' }];
 const createOpen = ref(false);
@@ -42,7 +42,14 @@ function deleteRecipe(recipe: Recipe) {
                     </DialogTrigger>
                     <DialogContent class="max-h-[90vh] overflow-y-auto">
                         <DialogHeader><DialogTitle>Create Recipe</DialogTitle></DialogHeader>
-                        <Form :action="store()" method="post" enctype="multipart/form-data" class="space-y-4" v-slot="{ errors, processing }" reset-on-success>
+                        <Form
+                            :action="store()"
+                            method="post"
+                            enctype="multipart/form-data"
+                            class="space-y-4"
+                            v-slot="{ errors, processing }"
+                            reset-on-success
+                        >
                             <div class="grid gap-2">
                                 <Label for="title">Title</Label>
                                 <Input id="title" name="title" placeholder="Recipe name" required />
@@ -82,8 +89,14 @@ function deleteRecipe(recipe: Recipe) {
                             </div>
                             <div class="grid gap-2">
                                 <Label for="instructions">Instructions</Label>
-                                <textarea id="instructions" name="instructions" rows="4" required placeholder="Step by step instructions…"
-                                    class="w-full rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring" />
+                                <textarea
+                                    id="instructions"
+                                    name="instructions"
+                                    rows="4"
+                                    required
+                                    placeholder="Step by step instructions…"
+                                    class="w-full rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:outline-none"
+                                />
                                 <InputError :message="errors.instructions" />
                             </div>
                             <div class="grid gap-2">
@@ -106,13 +119,19 @@ function deleteRecipe(recipe: Recipe) {
                     </div>
                 </template>
 
-                <div v-if="recipes && recipes.data.length === 0" class="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">
+                <div
+                    v-if="recipes && recipes.data.length === 0"
+                    class="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground"
+                >
                     No recipes yet. Add your first one!
                 </div>
 
                 <div v-else-if="recipes" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    <div v-for="recipe in recipes.data" :key="recipe.id"
-                        class="group relative flex flex-col overflow-hidden rounded-xl border transition hover:shadow-md">
+                    <div
+                        v-for="recipe in recipes.data"
+                        :key="recipe.id"
+                        class="group relative flex flex-col overflow-hidden rounded-xl border transition hover:shadow-md"
+                    >
                         <div v-if="recipe.photo_path" class="aspect-video w-full overflow-hidden">
                             <img :src="`/storage/${recipe.photo_path}`" :alt="recipe.title" class="h-full w-full object-cover" />
                         </div>
@@ -148,4 +167,3 @@ function deleteRecipe(recipe: Recipe) {
         </div>
     </AppLayout>
 </template>
-

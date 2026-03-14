@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
-import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
+import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -10,13 +10,13 @@ import { Label } from '@/components/ui/label';
 import { SelectInput } from '@/components/ui/select-input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, type CalendarEvent, type Chore, type Todo, type User } from '@/types';
-import { Form, Head, router } from '@inertiajs/vue3';
-import FullCalendar from '@fullcalendar/vue3';
+import type { CalendarOptions, DateSelectArg, EventClickArg, EventDropArg, EventResizeDoneArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
-import type { CalendarOptions, EventClickArg, DateSelectArg, EventDropArg, EventResizeDoneArg } from '@fullcalendar/core';
+import listPlugin from '@fullcalendar/list';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import FullCalendar from '@fullcalendar/vue3';
+import { Form, Head, router } from '@inertiajs/vue3';
 import { Plus, Trash2 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
@@ -174,7 +174,14 @@ const calendarOptions = computed<CalendarOptions>(() => ({
         <div class="flex flex-col gap-4 p-4">
             <div class="flex items-center justify-between">
                 <h1 class="text-xl font-semibold">Calendar</h1>
-                <Button size="sm" @click="createStart = ''; createEnd = ''; createOpen = true">
+                <Button
+                    size="sm"
+                    @click="
+                        createStart = '';
+                        createEnd = '';
+                        createOpen = true;
+                    "
+                >
                     <Plus class="mr-1 size-4" /> New Event
                 </Button>
             </div>
@@ -299,14 +306,18 @@ const calendarOptions = computed<CalendarOptions>(() => ({
                         </div>
                         <div class="grid gap-2">
                             <Label>Colour</Label>
-                            <Input name="color" type="color" class="h-9 w-full cursor-pointer rounded-md border px-1" :value="selectedEvent.color ?? '#6366f1'" />
+                            <Input
+                                name="color"
+                                type="color"
+                                class="h-9 w-full cursor-pointer rounded-md border px-1"
+                                :value="selectedEvent.color ?? '#6366f1'"
+                            />
                         </div>
                     </div>
                     <div class="grid gap-2">
                         <Label>Attendees</Label>
                         <SelectInput name="attendee_ids[]" multiple class="h-24">
-                            <option v-for="m in members" :key="m.id" :value="m.id"
-                                :selected="selectedEvent.attendees?.some(a => a.id === m.id)">
+                            <option v-for="m in members" :key="m.id" :value="m.id" :selected="selectedEvent.attendees?.some((a) => a.id === m.id)">
                                 {{ m.name }}
                             </option>
                         </SelectInput>
@@ -423,8 +434,7 @@ const calendarOptions = computed<CalendarOptions>(() => ({
                     <div class="grid gap-2">
                         <Label>Assign To</Label>
                         <SelectInput name="assignee_ids[]" multiple class="h-20">
-                            <option v-for="m in members" :key="m.id" :value="m.id"
-                                :selected="selectedChore.assignees?.some(a => a.id === m.id)">
+                            <option v-for="m in members" :key="m.id" :value="m.id" :selected="selectedChore.assignees?.some((a) => a.id === m.id)">
                                 {{ m.name }}
                             </option>
                         </SelectInput>
@@ -437,4 +447,3 @@ const calendarOptions = computed<CalendarOptions>(() => ({
         </Dialog>
     </AppLayout>
 </template>
-

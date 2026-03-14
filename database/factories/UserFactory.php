@@ -4,12 +4,13 @@ namespace Database\Factories;
 
 use App\Enums\FamilyRole;
 use App\Models\Family;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -49,7 +50,7 @@ class UserFactory extends Factory
      */
     public function withFamily(): static
     {
-        return $this->afterCreating(function (\App\Models\User $user) {
+        return $this->afterCreating(function (User $user) {
             $family = Family::factory()->create(['created_by' => $user->id]);
             $user->family()->associate($family)->save();
             $family->members()->attach($user->id, ['role' => FamilyRole::Admin->value]);
@@ -62,7 +63,7 @@ class UserFactory extends Factory
      */
     public function asMemberOf(Family $family): static
     {
-        return $this->afterCreating(function (\App\Models\User $user) use ($family) {
+        return $this->afterCreating(function (User $user) use ($family) {
             $user->update(['family_id' => $family->id]);
             $family->members()->attach($user->id, ['role' => FamilyRole::Member->value]);
             $user->syncRoles(['Member']);

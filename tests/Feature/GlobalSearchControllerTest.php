@@ -13,7 +13,7 @@ class GlobalSearchControllerTest extends TestCase
 
     public function test_guests_cannot_search(): void
     {
-        $this->getJson(route('search') . '?q=test')->assertUnauthorized();
+        $this->getJson(route('search').'?q=test')->assertUnauthorized();
     }
 
     public function test_search_requires_minimum_two_characters(): void
@@ -21,7 +21,7 @@ class GlobalSearchControllerTest extends TestCase
         $user = User::factory()->withFamily()->create();
 
         $this->actingAs($user)
-            ->getJson(route('search') . '?q=a')
+            ->getJson(route('search').'?q=a')
             ->assertUnprocessable();
     }
 
@@ -44,7 +44,7 @@ class GlobalSearchControllerTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->getJson(route('search') . '?q=banana')
+            ->getJson(route('search').'?q=banana')
             ->assertOk();
 
         $this->assertCount(1, $response->json('todos'));
@@ -61,7 +61,7 @@ class GlobalSearchControllerTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->getJson(route('search') . '?q=banana')
+            ->getJson(route('search').'?q=banana')
             ->assertOk();
 
         $this->assertCount(0, $response->json('todos'));
@@ -72,7 +72,7 @@ class GlobalSearchControllerTest extends TestCase
         $user = User::factory()->withFamily()->create();
 
         $response = $this->actingAs($user)
-            ->getJson(route('search') . '?q=test')
+            ->getJson(route('search').'?q=test')
             ->assertOk();
 
         $response->assertJsonStructure(['todos', 'chores', 'events', 'recipes', 'shopping_items']);

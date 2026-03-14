@@ -31,10 +31,9 @@ function toggle() {
         type="button"
         :title="label"
         :aria-label="`Switch theme (current: ${label})`"
-        class="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        class="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         @click="toggle"
     >
         <component :is="icon" class="size-4" />
     </button>
 </template>
-

@@ -4,11 +4,12 @@ namespace Database\Factories;
 
 use App\Enums\RecipeCategory;
 use App\Models\Family;
+use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Recipe>
+ * @extends Factory<Recipe>
  */
 class RecipeFactory extends Factory
 {

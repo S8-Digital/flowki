@@ -7,8 +7,10 @@ use App\Enums\Priority;
 use App\Enums\TodoCategory;
 use App\Enums\TodoStatus;
 use App\Models\User;
+use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Ai\Tools\Request;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class CreateTodoToolTest extends TestCase
@@ -61,8 +63,8 @@ class CreateTodoToolTest extends TestCase
         $user = User::factory()->withFamily()->create();
         $tool = new CreateTodo($user);
 
-        /** @var \Illuminate\Contracts\JsonSchema\JsonSchema&\Mockery\MockInterface $schema */
-        $schema = \Mockery::mock(\Illuminate\Contracts\JsonSchema\JsonSchema::class);
+        /** @var JsonSchema&MockInterface $schema */
+        $schema = \Mockery::mock(JsonSchema::class);
         $schema->shouldReceive('string')->andReturnSelf()->zeroOrMoreTimes();
         $schema->shouldReceive('boolean')->andReturnSelf()->zeroOrMoreTimes();
         $schema->shouldReceive('description')->andReturnSelf()->zeroOrMoreTimes();

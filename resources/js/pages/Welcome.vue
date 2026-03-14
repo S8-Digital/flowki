@@ -57,18 +57,12 @@ const features = [
                 >
                     Create your family
                 </Link>
-                <Link :href="login()" class="rounded-md border px-6 py-2.5 text-sm font-semibold transition hover:bg-accent">
-                    Sign in
-                </Link>
+                <Link :href="login()" class="rounded-md border px-6 py-2.5 text-sm font-semibold transition hover:bg-accent"> Sign in </Link>
             </div>
 
             <!-- Feature grid -->
             <div class="mt-8 grid max-w-3xl grid-cols-2 gap-4 sm:grid-cols-3">
-                <div
-                    v-for="feature in features"
-                    :key="feature.name"
-                    class="flex flex-col items-center gap-2 rounded-xl border bg-card p-4 text-sm"
-                >
+                <div v-for="feature in features" :key="feature.name" class="flex flex-col items-center gap-2 rounded-xl border bg-card p-4 text-sm">
                     <component :is="feature.icon" class="size-6 text-primary" />
                     <span class="font-medium">{{ feature.name }}</span>
                 </div>
@@ -76,4 +70,3 @@ const features = [
         </main>
     </div>
 </template>
-

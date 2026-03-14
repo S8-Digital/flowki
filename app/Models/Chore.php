@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ChoreFrequency;
+use Database\Factories\ChoreFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Chore extends Model
 {
-    /** @use HasFactory<\Database\Factories\ChoreFactory> */
+    /** @use HasFactory<ChoreFactory> */
     use HasFactory;
 
     protected $fillable = [

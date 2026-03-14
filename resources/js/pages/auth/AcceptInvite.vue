@@ -19,10 +19,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-    <AuthBase
-        :title="`Join ${props.familyName}`"
-        :description="`You've been invited as a ${props.role}. Set up your account to get started.`"
-    >
+    <AuthBase :title="`Join ${props.familyName}`" :description="`You've been invited as a ${props.role}. Set up your account to get started.`">
         <Head title="Accept Invitation" />
 
         <Form
@@ -35,27 +32,12 @@ const props = defineProps<Props>();
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        :value="props.email"
-                        disabled
-                        class="bg-muted"
-                    />
+                    <Input id="email" type="email" :value="props.email" disabled class="bg-muted" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="name">Your name</Label>
-                    <Input
-                        id="name"
-                        type="text"
-                        required
-                        autofocus
-                        :tabindex="1"
-                        autocomplete="name"
-                        name="name"
-                        placeholder="Full name"
-                    />
+                    <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Full name" />
                     <InputError :message="errors.name" />
                 </div>
 
@@ -95,4 +77,3 @@ const props = defineProps<Props>();
         </Form>
     </AuthBase>
 </template>
-

@@ -43,4 +43,3 @@ class CreateChore implements Tool
         ];
     }
 }
-

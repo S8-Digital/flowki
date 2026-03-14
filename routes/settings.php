@@ -31,5 +31,3 @@ Route::middleware('auth')->group(function () {
     Route::get('auth/google/calendar/callback', [GoogleCalendarController::class, 'callback'])->name('google.calendar.callback');
     Route::delete('auth/google/calendar', [GoogleCalendarController::class, 'disconnect'])->name('google.calendar.disconnect');
 });
-
-

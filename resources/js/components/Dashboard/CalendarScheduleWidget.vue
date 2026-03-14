@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { CalendarDays } from 'lucide-vue-next';
-
 interface CalendarEventItem {
     id: number;
     title: string;
@@ -26,19 +24,10 @@ function formatTime(value: string) {
 
 <template>
     <div class="flex flex-col gap-2">
-        <div v-if="events.length === 0" class="py-8 text-center text-sm text-muted-foreground">
-            No upcoming events in the next 14 days.
-        </div>
+        <div v-if="events.length === 0" class="py-8 text-center text-sm text-muted-foreground">No upcoming events in the next 14 days.</div>
         <ul v-else class="space-y-2">
-            <li
-                v-for="event in events"
-                :key="event.id"
-                class="flex items-start gap-3 rounded-lg border p-3"
-            >
-                <div
-                    class="mt-0.5 size-2.5 shrink-0 rounded-full"
-                    :style="{ backgroundColor: event.color ?? '#6366f1' }"
-                />
+            <li v-for="event in events" :key="event.id" class="flex items-start gap-3 rounded-lg border p-3">
+                <div class="mt-0.5 size-2.5 shrink-0 rounded-full" :style="{ backgroundColor: event.color ?? '#6366f1' }" />
                 <div class="min-w-0 flex-1">
                     <p class="truncate text-sm font-medium">{{ event.title }}</p>
                     <p class="text-xs text-muted-foreground">
@@ -51,4 +40,3 @@ function formatTime(value: string) {
         </ul>
     </div>
 </template>
-

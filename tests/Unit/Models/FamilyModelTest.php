@@ -3,7 +3,10 @@
 namespace Tests\Unit\Models;
 
 use App\Enums\FamilyRole;
+use App\Models\Chore;
 use App\Models\Family;
+use App\Models\ShoppingList;
+use App\Models\Todo;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -32,7 +35,7 @@ class FamilyModelTest extends TestCase
     public function test_family_has_todos_relationship(): void
     {
         $user = User::factory()->withFamily()->create();
-        \App\Models\Todo::factory()->create(['family_id' => $user->family_id]);
+        Todo::factory()->create(['family_id' => $user->family_id]);
 
         $this->assertCount(1, $user->family->todos);
     }
@@ -40,7 +43,7 @@ class FamilyModelTest extends TestCase
     public function test_family_has_chores_relationship(): void
     {
         $user = User::factory()->withFamily()->create();
-        \App\Models\Chore::factory()->create(['family_id' => $user->family_id]);
+        Chore::factory()->create(['family_id' => $user->family_id]);
 
         $this->assertCount(1, $user->family->chores);
     }
@@ -48,7 +51,7 @@ class FamilyModelTest extends TestCase
     public function test_family_has_shopping_lists_relationship(): void
     {
         $user = User::factory()->withFamily()->create();
-        \App\Models\ShoppingList::factory()->create(['family_id' => $user->family_id]);
+        ShoppingList::factory()->create(['family_id' => $user->family_id]);
 
         $this->assertCount(1, $user->family->shoppingLists);
     }

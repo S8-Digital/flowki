@@ -5,8 +5,7 @@ import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { router } from '@inertiajs/vue3';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { Plus, Trash2 } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -87,22 +86,9 @@ function save() {
                 <HeadingSmall title="Todo Categories" description="Customize the categories available for todos." />
 
                 <div class="space-y-2">
-                    <div
-                        v-for="(cat, i) in todoCategories"
-                        :key="i"
-                        class="flex items-center gap-2"
-                    >
-                        <Input
-                            v-model="cat.label"
-                            placeholder="Label (e.g. Household)"
-                            class="flex-1"
-                            @input="onLabelInput(cat)"
-                        />
-                        <Input
-                            v-model="cat.value"
-                            placeholder="Value (e.g. household)"
-                            class="w-40 font-mono text-xs"
-                        />
+                    <div v-for="(cat, i) in todoCategories" :key="i" class="flex items-center gap-2">
+                        <Input v-model="cat.label" placeholder="Label (e.g. Household)" class="flex-1" @input="onLabelInput(cat)" />
+                        <Input v-model="cat.value" placeholder="Value (e.g. household)" class="w-40 font-mono text-xs" />
                         <Button variant="ghost" size="icon" @click="removeCategory(todoCategories, i)" title="Remove">
                             <Trash2 class="size-4 text-destructive" />
                         </Button>
@@ -119,22 +105,9 @@ function save() {
                 <HeadingSmall title="Recipe Categories" description="Customize the categories available for recipes." />
 
                 <div class="space-y-2">
-                    <div
-                        v-for="(cat, i) in recipeCategories"
-                        :key="i"
-                        class="flex items-center gap-2"
-                    >
-                        <Input
-                            v-model="cat.label"
-                            placeholder="Label (e.g. Dessert)"
-                            class="flex-1"
-                            @input="onLabelInput(cat)"
-                        />
-                        <Input
-                            v-model="cat.value"
-                            placeholder="Value (e.g. dessert)"
-                            class="w-40 font-mono text-xs"
-                        />
+                    <div v-for="(cat, i) in recipeCategories" :key="i" class="flex items-center gap-2">
+                        <Input v-model="cat.label" placeholder="Label (e.g. Dessert)" class="flex-1" @input="onLabelInput(cat)" />
+                        <Input v-model="cat.value" placeholder="Value (e.g. dessert)" class="w-40 font-mono text-xs" />
                         <Button variant="ghost" size="icon" @click="removeCategory(recipeCategories, i)" title="Remove">
                             <Trash2 class="size-4 text-destructive" />
                         </Button>
@@ -151,22 +124,9 @@ function save() {
                 <HeadingSmall title="Shopping Categories" description="Customize the categories available for shopping items." />
 
                 <div class="space-y-2">
-                    <div
-                        v-for="(cat, i) in shoppingCategories"
-                        :key="i"
-                        class="flex items-center gap-2"
-                    >
-                        <Input
-                            v-model="cat.label"
-                            placeholder="Label (e.g. Snacks)"
-                            class="flex-1"
-                            @input="onLabelInput(cat)"
-                        />
-                        <Input
-                            v-model="cat.value"
-                            placeholder="Value (e.g. snacks)"
-                            class="w-40 font-mono text-xs"
-                        />
+                    <div v-for="(cat, i) in shoppingCategories" :key="i" class="flex items-center gap-2">
+                        <Input v-model="cat.label" placeholder="Label (e.g. Snacks)" class="flex-1" @input="onLabelInput(cat)" />
+                        <Input v-model="cat.value" placeholder="Value (e.g. snacks)" class="w-40 font-mono text-xs" />
                         <Button variant="ghost" size="icon" @click="removeCategory(shoppingCategories, i)" title="Remove">
                             <Trash2 class="size-4 text-destructive" />
                         </Button>
@@ -195,4 +155,3 @@ function save() {
         </SettingsLayout>
     </AppLayout>
 </template>
-

@@ -3,7 +3,7 @@ import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Bot, Send, Sparkles, User, X } from 'lucide-vue-next';
+import { Bot, Send, Sparkles, User } from 'lucide-vue-next';
 import { nextTick, ref } from 'vue';
 
 interface Message {
@@ -166,33 +166,18 @@ function handleKeydown(e: KeyboardEvent) {
 
                 <!-- Message list -->
                 <template v-else>
-                    <div
-                        v-for="(msg, i) in messages"
-                        :key="i"
-                        class="flex gap-3"
-                        :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
-                    >
+                    <div v-for="(msg, i) in messages" :key="i" class="flex gap-3" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
                         <!-- Assistant icon -->
-                        <div
-                            v-if="msg.role === 'assistant'"
-                            class="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10"
-                        >
+                        <div v-if="msg.role === 'assistant'" class="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
                             <Bot class="size-3.5 text-primary" />
                         </div>
 
                         <!-- Bubble -->
                         <div
                             class="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm"
-                            :class="
-                                msg.role === 'user'
-                                    ? 'rounded-br-sm bg-primary text-primary-foreground'
-                                    : 'rounded-bl-sm bg-muted'
-                            "
+                            :class="msg.role === 'user' ? 'rounded-br-sm bg-primary text-primary-foreground' : 'rounded-bl-sm bg-muted'"
                         >
-                            <span
-                                v-if="msg.isStreaming && !msg.content"
-                                class="flex items-center gap-1 text-muted-foreground"
-                            >
+                            <span v-if="msg.isStreaming && !msg.content" class="flex items-center gap-1 text-muted-foreground">
                                 <span class="animate-bounce">●</span>
                                 <span class="animate-bounce delay-100">●</span>
                                 <span class="animate-bounce delay-200">●</span>
@@ -201,10 +186,7 @@ function handleKeydown(e: KeyboardEvent) {
                         </div>
 
                         <!-- User icon -->
-                        <div
-                            v-if="msg.role === 'user'"
-                            class="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full bg-secondary"
-                        >
+                        <div v-if="msg.role === 'user'" class="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full bg-secondary">
                             <User class="size-3.5" />
                         </div>
                     </div>
@@ -230,4 +212,3 @@ function handleKeydown(e: KeyboardEvent) {
         </DialogContent>
     </Dialog>
 </template>
-

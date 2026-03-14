@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use App\Enums\RecurrenceType;
+use App\Models\CalendarEvent;
 use App\Models\Family;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CalendarEvent>
+ * @extends Factory<CalendarEvent>
  */
 class CalendarEventFactory extends Factory
 {
@@ -20,7 +21,7 @@ class CalendarEventFactory extends Factory
     public function definition(): array
     {
         $startAt = fake()->dateTimeBetween('now', '+60 days');
-        $endAt = (clone $startAt)->modify('+' . fake()->numberBetween(30, 180) . ' minutes');
+        $endAt = (clone $startAt)->modify('+'.fake()->numberBetween(30, 180).' minutes');
 
         return [
             'family_id' => Family::factory(),

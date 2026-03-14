@@ -6,6 +6,7 @@ use App\Ai\FamilyAssistantAgent;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AiController extends Controller
 {
@@ -14,7 +15,7 @@ class AiController extends Controller
         return Inertia::render('Assistant/Index');
     }
 
-    public function chat(Request $request): Response|\Symfony\Component\HttpFoundation\StreamedResponse
+    public function chat(Request $request): Response|StreamedResponse
     {
         $request->validate([
             'message' => ['required', 'string', 'max:2000'],

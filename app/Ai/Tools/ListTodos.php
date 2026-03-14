@@ -51,4 +51,3 @@ class ListTodos implements Tool
         ];
     }
 }
-

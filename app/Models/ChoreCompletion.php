@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ChoreCompletionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ChoreCompletion extends Model
 {
-    /** @use HasFactory<\Database\Factories\ChoreCompletionFactory> */
+    /** @use HasFactory<ChoreCompletionFactory> */
     use HasFactory;
 
     protected $fillable = [

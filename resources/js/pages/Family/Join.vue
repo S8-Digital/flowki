@@ -37,4 +37,3 @@ const breadcrumbs: BreadcrumbItem[] = [{ title: 'Join Family', href: '/family/jo
         </div>
     </AppLayout>
 </template>
-

@@ -48,4 +48,3 @@ class CreateTodo implements Tool
         ];
     }
 }
-

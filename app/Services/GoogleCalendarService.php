@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Http;
 class GoogleCalendarService
 {
     private const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+
     private const TOKEN_URL = 'https://oauth2.googleapis.com/token';
+
     private const CALENDAR_URL = 'https://www.googleapis.com/calendar/v3';
 
     /**
@@ -21,7 +23,7 @@ class GoogleCalendarService
 
     public function getAuthorizationUrl(string $state): string
     {
-        return self::AUTH_URL . '?' . http_build_query([
+        return self::AUTH_URL.'?'.http_build_query([
             'client_id' => config('services.google.client_id'),
             'redirect_uri' => config('services.google.redirect_uri'),
             'response_type' => 'code',
@@ -80,7 +82,7 @@ class GoogleCalendarService
     /**
      * @param  array{summary: string, description?: string, start: string, end: string}  $eventData
      */
-    public function createOrUpdateEvent(User $user, string $googleEventId = null, array $eventData): ?string
+    public function createOrUpdateEvent(User $user, ?string $googleEventId, array $eventData): ?string
     {
         $accessToken = $this->refreshAccessToken($user);
 
@@ -99,10 +101,10 @@ class GoogleCalendarService
 
         if ($googleEventId) {
             $response = Http::withToken($accessToken)
-                ->put(self::CALENDAR_URL . "/calendars/{$calendarId}/events/{$googleEventId}", $body);
+                ->put(self::CALENDAR_URL."/calendars/{$calendarId}/events/{$googleEventId}", $body);
         } else {
             $response = Http::withToken($accessToken)
-                ->post(self::CALENDAR_URL . "/calendars/{$calendarId}/events", $body);
+                ->post(self::CALENDAR_URL."/calendars/{$calendarId}/events", $body);
         }
 
         return $response->successful() ? $response->json('id') : null;
@@ -119,6 +121,6 @@ class GoogleCalendarService
         $calendarId = $user->google_calendar_id ?? 'primary';
 
         Http::withToken($accessToken)
-            ->delete(self::CALENDAR_URL . "/calendars/{$calendarId}/events/{$googleEventId}");
+            ->delete(self::CALENDAR_URL."/calendars/{$calendarId}/events/{$googleEventId}");
     }
 }

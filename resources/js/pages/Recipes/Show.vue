@@ -81,8 +81,13 @@ function deleteRecipe() {
                                         </div>
                                         <div class="grid gap-2">
                                             <Label>Instructions</Label>
-                                            <textarea name="instructions" rows="5" :value="recipe.instructions" required
-                                                class="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring" />
+                                            <textarea
+                                                name="instructions"
+                                                rows="5"
+                                                :value="recipe.instructions"
+                                                required
+                                                class="w-full rounded-md border bg-background px-3 py-2 text-sm focus:ring-1 focus:ring-ring focus:outline-none"
+                                            />
                                             <InputError :message="errors.instructions" />
                                         </div>
                                         <div class="grid grid-cols-2 gap-3">
@@ -91,7 +96,14 @@ function deleteRecipe() {
                                                 <Input name="rating" type="number" min="1" max="5" :default-value="recipe.rating ?? ''" />
                                             </div>
                                             <div class="flex items-center gap-2 pt-6">
-                                                <input id="is_favorite" name="is_favorite" type="checkbox" value="1" :checked="recipe.is_favorite" class="rounded" />
+                                                <input
+                                                    id="is_favorite"
+                                                    name="is_favorite"
+                                                    type="checkbox"
+                                                    value="1"
+                                                    :checked="recipe.is_favorite"
+                                                    class="rounded"
+                                                />
                                                 <Label for="is_favorite">Favourite</Label>
                                             </div>
                                         </div>
@@ -136,18 +148,15 @@ function deleteRecipe() {
                         </li>
                     </ul>
                     <p v-else class="text-sm text-muted-foreground">No ingredients listed.</p>
-                    <Link :href="shoppingIndex().url" class="mt-4 block text-xs text-muted-foreground hover:underline">
-                        Add to shopping list →
-                    </Link>
+                    <Link :href="shoppingIndex().url" class="mt-4 block text-xs text-muted-foreground hover:underline"> Add to shopping list → </Link>
                 </div>
 
                 <!-- Instructions -->
                 <div class="rounded-xl border p-4 lg:col-span-2">
                     <h2 class="mb-3 font-semibold">Instructions</h2>
-                    <div class="prose prose-sm dark:prose-invert max-w-none whitespace-pre-line text-sm">{{ recipe.instructions }}</div>
+                    <div class="prose prose-sm dark:prose-invert max-w-none text-sm whitespace-pre-line">{{ recipe.instructions }}</div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
-

@@ -1,11 +1,10 @@
 <script setup lang="ts">
+import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
+import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
+import { show as recipeShow } from '@/actions/App/Http/Controllers/RecipeController';
+import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
-import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
-import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
-import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
-import { show as recipeShow } from '@/actions/App/Http/Controllers/RecipeController';
 import { Link } from '@inertiajs/vue3';
 import { Search, X } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
@@ -55,11 +54,12 @@ watch(query, (val) => {
 
 const hasResults = () =>
     results.value &&
-    (results.value.todos.length +
+    results.value.todos.length +
         results.value.chores.length +
         results.value.events.length +
         results.value.recipes.length +
-        results.value.shopping_items.length) > 0;
+        results.value.shopping_items.length >
+        0;
 </script>
 
 <template>
@@ -97,7 +97,7 @@ const hasResults = () =>
                         <template v-if="results">
                             <!-- Todos -->
                             <div v-if="results.todos.length">
-                                <p class="px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Todos</p>
+                                <p class="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Todos</p>
                                 <Link
                                     v-for="t in results.todos"
                                     :key="t.id"
@@ -111,7 +111,7 @@ const hasResults = () =>
 
                             <!-- Chores -->
                             <div v-if="results.chores.length">
-                                <p class="px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Chores</p>
+                                <p class="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Chores</p>
                                 <Link
                                     v-for="c in results.chores"
                                     :key="c.id"
@@ -125,7 +125,7 @@ const hasResults = () =>
 
                             <!-- Events -->
                             <div v-if="results.events.length">
-                                <p class="px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Events</p>
+                                <p class="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Events</p>
                                 <Link
                                     v-for="e in results.events"
                                     :key="e.id"
@@ -139,7 +139,7 @@ const hasResults = () =>
 
                             <!-- Recipes -->
                             <div v-if="results.recipes.length">
-                                <p class="px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Recipes</p>
+                                <p class="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Recipes</p>
                                 <Link
                                     v-for="r in results.recipes"
                                     :key="r.id"
@@ -153,7 +153,7 @@ const hasResults = () =>
 
                             <!-- Shopping Items -->
                             <div v-if="results.shopping_items.length">
-                                <p class="px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Shopping Items</p>
+                                <p class="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Shopping Items</p>
                                 <p
                                     v-for="item in results.shopping_items"
                                     :key="item.id"
@@ -169,4 +169,3 @@ const hasResults = () =>
         </Teleport>
     </div>
 </template>
-

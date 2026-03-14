@@ -11,7 +11,6 @@ class ShoppingListControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-
     public function test_guests_cannot_view_shopping_lists(): void
     {
         $this->get(route('shopping.index'))->assertRedirect(route('login'));

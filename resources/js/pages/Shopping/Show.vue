@@ -3,7 +3,6 @@ import { destroy as destroyItem, store as storeItem, toggle } from '@/actions/Ap
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, type ShoppingItem, type ShoppingList } from '@/types';
 import { Form, Head, router } from '@inertiajs/vue3';
@@ -82,7 +81,7 @@ function deleteItem(item: ShoppingItem) {
                 <ul class="divide-y rounded-xl border opacity-60">
                     <li v-for="item in checked" :key="item.id" class="flex items-center gap-3 px-4 py-2">
                         <input type="checkbox" :checked="item.is_checked" @change="toggleItem(item)" class="size-4 cursor-pointer rounded" />
-                        <span class="flex-1 line-through text-muted-foreground">{{ item.name }}</span>
+                        <span class="flex-1 text-muted-foreground line-through">{{ item.name }}</span>
                         <Button variant="ghost" size="icon" @click="deleteItem(item)">
                             <Trash2 class="size-3.5 text-destructive" />
                         </Button>
@@ -96,4 +95,3 @@ function deleteItem(item: ShoppingItem) {
         </div>
     </AppLayout>
 </template>
-

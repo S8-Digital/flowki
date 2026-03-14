@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { Bot, Send, Sparkles, User } from 'lucide-vue-next';
 import { nextTick, ref } from 'vue';
 
@@ -16,7 +16,6 @@ interface Message {
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'AI Assistant', href: '/assistant' }];
 
-const page = usePage();
 const messages = ref<Message[]>([]);
 const input = ref('');
 const isLoading = ref(false);
@@ -119,10 +118,9 @@ function handleKeydown(e: KeyboardEvent) {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-[calc(100vh-10rem)] flex-col">
             <!-- Messages -->
-            <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
-
+            <div ref="messagesContainer" class="flex-1 space-y-4 overflow-y-auto p-4">
                 <!-- Empty state -->
-                <div v-if="messages.length === 0" class="flex flex-col items-center justify-center h-full gap-6 text-center">
+                <div v-if="messages.length === 0" class="flex h-full flex-col items-center justify-center gap-6 text-center">
                     <div class="flex size-16 items-center justify-center rounded-full bg-primary/10">
                         <Sparkles class="size-8 text-primary" />
                     </div>
@@ -146,23 +144,16 @@ function handleKeydown(e: KeyboardEvent) {
 
                 <!-- Message list -->
                 <template v-else>
-                    <div
-                        v-for="(msg, i) in messages"
-                        :key="i"
-                        class="flex gap-3"
-                        :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
-                    >
+                    <div v-for="(msg, i) in messages" :key="i" class="flex gap-3" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
                         <!-- Assistant icon -->
-                        <div v-if="msg.role === 'assistant'" class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 mt-1">
+                        <div v-if="msg.role === 'assistant'" class="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10">
                             <Bot class="size-4 text-primary" />
                         </div>
 
                         <!-- Bubble -->
                         <div
                             class="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm"
-                            :class="msg.role === 'user'
-                                ? 'bg-primary text-primary-foreground rounded-br-sm'
-                                : 'bg-muted rounded-bl-sm'"
+                            :class="msg.role === 'user' ? 'rounded-br-sm bg-primary text-primary-foreground' : 'rounded-bl-sm bg-muted'"
                         >
                             <span v-if="msg.isStreaming && !msg.content" class="flex items-center gap-1 text-muted-foreground">
                                 <span class="animate-bounce">●</span>
@@ -173,7 +164,7 @@ function handleKeydown(e: KeyboardEvent) {
                         </div>
 
                         <!-- User icon -->
-                        <div v-if="msg.role === 'user'" class="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary mt-1">
+                        <div v-if="msg.role === 'user'" class="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary">
                             <User class="size-4" />
                         </div>
                     </div>
@@ -194,11 +185,8 @@ function handleKeydown(e: KeyboardEvent) {
                         <Send class="size-4" />
                     </Button>
                 </div>
-                <p class="mt-1.5 text-xs text-muted-foreground text-center">
-                    AI can make mistakes. Verify important information.
-                </p>
+                <p class="mt-1.5 text-center text-xs text-muted-foreground">AI can make mistakes. Verify important information.</p>
             </div>
         </div>
     </AppLayout>
 </template>
-

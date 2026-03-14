@@ -23,19 +23,10 @@ const today = new Date().toLocaleDateString(undefined, { weekday: 'long', month:
 <template>
     <div class="flex flex-col gap-2">
         <p class="text-xs font-medium text-muted-foreground">{{ today }}</p>
-        <div v-if="events.length === 0" class="py-8 text-center text-sm text-muted-foreground">
-            Nothing scheduled for today.
-        </div>
+        <div v-if="events.length === 0" class="py-8 text-center text-sm text-muted-foreground">Nothing scheduled for today.</div>
         <ul v-else class="space-y-2">
-            <li
-                v-for="event in events"
-                :key="event.id"
-                class="flex items-center gap-3 rounded-lg border p-3"
-            >
-                <div
-                    class="size-2.5 shrink-0 rounded-full"
-                    :style="{ backgroundColor: event.color ?? '#6366f1' }"
-                />
+            <li v-for="event in events" :key="event.id" class="flex items-center gap-3 rounded-lg border p-3">
+                <div class="size-2.5 shrink-0 rounded-full" :style="{ backgroundColor: event.color ?? '#6366f1' }" />
                 <div class="min-w-0 flex-1">
                     <p class="truncate text-sm font-medium">{{ event.title }}</p>
                     <p class="text-xs text-muted-foreground">
@@ -46,4 +37,3 @@ const today = new Date().toLocaleDateString(undefined, { weekday: 'long', month:
         </ul>
     </div>
 </template>
-
