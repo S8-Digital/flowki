@@ -1,7 +1,10 @@
 name: Create Roadmap Issues
 
 on:
+  # Allows manual re-runs at any time (e.g., after merging to main).
   workflow_dispatch:
+  # Auto-runs when the workflow or data file is updated on the initial PR branch.
+  # Once issues are created this trigger is no longer needed; use workflow_dispatch instead.
   push:
     branches:
       - 'copilot/create-github-issues-flowki-app'
@@ -24,7 +27,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const fs   = require('fs');
+            const fs    = require('fs');
             const owner = context.repo.owner;
             const repo  = context.repo.repo;
 
@@ -54,10 +57,10 @@ jobs:
             }
 
             async function createIssue(title, body, labels, milestoneNumber) {
-              const { data: existing } = await github.rest.issues.listForRepo({
-                owner, repo, state: 'all', per_page: 100
-              });
-              const dup = existing.find(i => i.title === title);
+              // Use search API for reliable duplicate detection (not page-limited).
+              const q = `repo:${owner}/${repo} is:issue in:title "${title.replace(/"/g, '')}"`;
+              const { data: searchResult } = await github.rest.search.issuesAndPullRequests({ q, per_page: 5 });
+              const dup = searchResult.items.find(i => i.title === title);
               if (dup) {
                 console.log(`Issue already exists: "${title}" (#${dup.number})`);
                 return dup.number;
