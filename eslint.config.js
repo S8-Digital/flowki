@@ -1,29 +1,117 @@
 import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
+import stylistic from '@stylistic/eslint-plugin';
+import prettier from 'eslint-config-prettier/flat';
+import importPlugin from 'eslint-plugin-import';
+import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import typescript from 'typescript-eslint';
 
-export default tseslint.config(
-    { ignores: ['dist', 'vendor', 'node_modules', 'public/build', 'bootstrap/ssr', 'resources/js/actions/**', 'resources/js/routes/**', 'resources/js/components/ui/*'] },
+const controlStatements = ['if', 'return', 'for', 'while', 'do', 'switch', 'try', 'throw'];
+const paddingAroundControl = [
+    ...controlStatements.flatMap((stmt) => [
+        { blankLine: 'always', prev: '*', next: stmt },
+        { blankLine: 'always', prev: stmt, next: '*' },
+    ]),
+];
+
+/** @type {import('eslint').Linter.Config[]} */
+export default [
+    js.configs.recommended,
     {
-        extends: [js.configs.recommended, ...tseslint.configs.recommended],
-        files: ['**/*.{ts,tsx}'],
-        languageOptions: {
-            ecmaVersion: 2020,
-            globals: globals.browser,
-        },
         plugins: {
             'react-hooks': reactHooks,
-            'react-refresh': reactRefresh,
         },
         rules: {
-            ...reactHooks.configs.recommended.rules,
-            'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-            '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-            '@typescript-eslint/no-explicit-any': 'off',
+            'react-hooks/rules-of-hooks': 'error',
+            'react-hooks/exhaustive-deps': 'warn',
         },
     },
-    prettier,
-);
+    ...typescript.configs.recommended,
+    {
+        ...react.configs.flat.recommended,
+        ...react.configs.flat['jsx-runtime'], // Required for React 17+
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+            },
+        },
+        rules: {
+            'react/react-in-jsx-scope': 'off',
+            'react/prop-types': 'off',
+            'react/no-unescaped-entities': 'off',
+        },
+        settings: {
+            react: {
+                version: 'detect',
+            },
+        },
+    },
+    {
+        plugins: {
+            import: importPlugin,
+        },
+        settings: {
+            'import/resolver': {
+                typescript: {
+                    alwaysTryTypes: true,
+                    project: './tsconfig.json',
+                },
+                node: true,
+            },
+        },
+        rules: {
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/consistent-type-imports': [
+                'error',
+                {
+                    prefer: 'type-imports',
+                    fixStyle: 'separate-type-imports',
+                },
+            ],
+            'import/order': [
+                'error',
+                {
+                    groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+                    alphabetize: {
+                        order: 'asc',
+                        caseInsensitive: true,
+                    },
+                },
+            ],
+            'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+        },
+    },
+    {
+        plugins: {
+            '@stylistic': stylistic,
+        },
+        rules: {
+            '@stylistic/padding-line-between-statements': ['error', ...paddingAroundControl],
+        },
+    },
+    {
+        ignores: [
+            'vendor',
+            'node_modules',
+            'public',
+            'bootstrap/ssr',
+            'tailwind.config.js',
+            'vite.config.ts',
+            'resources/js/actions/**',
+            'resources/js/components/ui/*',
+            'resources/js/routes/**',
+            'resources/js/wayfinder/**',
+        ],
+    },
+    prettier, // Turn off all rules that might conflict with Prettier
+    {
+        plugins: {
+            '@stylistic': stylistic,
+        },
+        rules: {
+            curly: ['error', 'all'],
+            '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
+        },
+    },
+];

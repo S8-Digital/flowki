@@ -1,707 +1,737 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { applyUrlDefaults, queryParams, type RouteDefinition, type RouteFormDefinition, type RouteQueryOptions } from './../../../../wayfinder';
 /**
-* @see \App\Http\Controllers\FamilyController::create
-* @see app/Http/Controllers/FamilyController.php:26
-* @route '/family/create'
-*/
+ * @see \App\Http\Controllers\FamilyController::create
+ * @see app/Http/Controllers/FamilyController.php:26
+ * @route '/family/create'
+ */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
-})
+});
 
 create.definition = {
-    methods: ["get","head"],
+    methods: ['get', 'head'],
     url: '/family/create',
-} satisfies RouteDefinition<["get","head"]>
+} satisfies RouteDefinition<['get', 'head']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::create
-* @see app/Http/Controllers/FamilyController.php:26
-* @route '/family/create'
-*/
+ * @see \App\Http\Controllers\FamilyController::create
+ * @see app/Http/Controllers/FamilyController.php:26
+ * @route '/family/create'
+ */
 create.url = (options?: RouteQueryOptions) => {
-    return create.definition.url + queryParams(options)
-}
+    return create.definition.url + queryParams(options);
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::create
-* @see app/Http/Controllers/FamilyController.php:26
-* @route '/family/create'
-*/
+ * @see \App\Http\Controllers\FamilyController::create
+ * @see app/Http/Controllers/FamilyController.php:26
+ * @route '/family/create'
+ */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::create
-* @see app/Http/Controllers/FamilyController.php:26
-* @route '/family/create'
-*/
+ * @see \App\Http\Controllers\FamilyController::create
+ * @see app/Http/Controllers/FamilyController.php:26
+ * @route '/family/create'
+ */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
     method: 'head',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::create
-* @see app/Http/Controllers/FamilyController.php:26
-* @route '/family/create'
-*/
+ * @see \App\Http\Controllers\FamilyController::create
+ * @see app/Http/Controllers/FamilyController.php:26
+ * @route '/family/create'
+ */
 const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::create
-* @see app/Http/Controllers/FamilyController.php:26
-* @route '/family/create'
-*/
+ * @see \App\Http\Controllers\FamilyController::create
+ * @see app/Http/Controllers/FamilyController.php:26
+ * @route '/family/create'
+ */
 createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::create
-* @see app/Http/Controllers/FamilyController.php:26
-* @route '/family/create'
-*/
+ * @see \App\Http\Controllers\FamilyController::create
+ * @see app/Http/Controllers/FamilyController.php:26
+ * @route '/family/create'
+ */
 createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'get',
-})
+});
 
-create.form = createForm
+create.form = createForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::store
-* @see app/Http/Controllers/FamilyController.php:31
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::store
+ * @see app/Http/Controllers/FamilyController.php:31
+ * @route '/family'
+ */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
-})
+});
 
 store.definition = {
-    methods: ["post"],
+    methods: ['post'],
     url: '/family',
-} satisfies RouteDefinition<["post"]>
+} satisfies RouteDefinition<['post']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::store
-* @see app/Http/Controllers/FamilyController.php:31
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::store
+ * @see app/Http/Controllers/FamilyController.php:31
+ * @route '/family'
+ */
 store.url = (options?: RouteQueryOptions) => {
-    return store.definition.url + queryParams(options)
-}
+    return store.definition.url + queryParams(options);
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::store
-* @see app/Http/Controllers/FamilyController.php:31
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::store
+ * @see app/Http/Controllers/FamilyController.php:31
+ * @route '/family'
+ */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::store
-* @see app/Http/Controllers/FamilyController.php:31
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::store
+ * @see app/Http/Controllers/FamilyController.php:31
+ * @route '/family'
+ */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(options),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::store
-* @see app/Http/Controllers/FamilyController.php:31
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::store
+ * @see app/Http/Controllers/FamilyController.php:31
+ * @route '/family'
+ */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(options),
     method: 'post',
-})
+});
 
-store.form = storeForm
+store.form = storeForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::join
-* @see app/Http/Controllers/FamilyController.php:45
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::join
+ * @see app/Http/Controllers/FamilyController.php:45
+ * @route '/family/join'
+ */
 export const join = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: join.url(options),
     method: 'get',
-})
+});
 
 join.definition = {
-    methods: ["get","head"],
+    methods: ['get', 'head'],
     url: '/family/join',
-} satisfies RouteDefinition<["get","head"]>
+} satisfies RouteDefinition<['get', 'head']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::join
-* @see app/Http/Controllers/FamilyController.php:45
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::join
+ * @see app/Http/Controllers/FamilyController.php:45
+ * @route '/family/join'
+ */
 join.url = (options?: RouteQueryOptions) => {
-    return join.definition.url + queryParams(options)
-}
+    return join.definition.url + queryParams(options);
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::join
-* @see app/Http/Controllers/FamilyController.php:45
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::join
+ * @see app/Http/Controllers/FamilyController.php:45
+ * @route '/family/join'
+ */
 join.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: join.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::join
-* @see app/Http/Controllers/FamilyController.php:45
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::join
+ * @see app/Http/Controllers/FamilyController.php:45
+ * @route '/family/join'
+ */
 join.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: join.url(options),
     method: 'head',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::join
-* @see app/Http/Controllers/FamilyController.php:45
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::join
+ * @see app/Http/Controllers/FamilyController.php:45
+ * @route '/family/join'
+ */
 const joinForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: join.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::join
-* @see app/Http/Controllers/FamilyController.php:45
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::join
+ * @see app/Http/Controllers/FamilyController.php:45
+ * @route '/family/join'
+ */
 joinForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: join.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::join
-* @see app/Http/Controllers/FamilyController.php:45
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::join
+ * @see app/Http/Controllers/FamilyController.php:45
+ * @route '/family/join'
+ */
 joinForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: join.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'get',
-})
+});
 
-join.form = joinForm
+join.form = joinForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::joinStore
-* @see app/Http/Controllers/FamilyController.php:50
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::joinStore
+ * @see app/Http/Controllers/FamilyController.php:50
+ * @route '/family/join'
+ */
 export const joinStore = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: joinStore.url(options),
     method: 'post',
-})
+});
 
 joinStore.definition = {
-    methods: ["post"],
+    methods: ['post'],
     url: '/family/join',
-} satisfies RouteDefinition<["post"]>
+} satisfies RouteDefinition<['post']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::joinStore
-* @see app/Http/Controllers/FamilyController.php:50
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::joinStore
+ * @see app/Http/Controllers/FamilyController.php:50
+ * @route '/family/join'
+ */
 joinStore.url = (options?: RouteQueryOptions) => {
-    return joinStore.definition.url + queryParams(options)
-}
+    return joinStore.definition.url + queryParams(options);
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::joinStore
-* @see app/Http/Controllers/FamilyController.php:50
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::joinStore
+ * @see app/Http/Controllers/FamilyController.php:50
+ * @route '/family/join'
+ */
 joinStore.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: joinStore.url(options),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::joinStore
-* @see app/Http/Controllers/FamilyController.php:50
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::joinStore
+ * @see app/Http/Controllers/FamilyController.php:50
+ * @route '/family/join'
+ */
 const joinStoreForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: joinStore.url(options),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::joinStore
-* @see app/Http/Controllers/FamilyController.php:50
-* @route '/family/join'
-*/
+ * @see \App\Http\Controllers\FamilyController::joinStore
+ * @see app/Http/Controllers/FamilyController.php:50
+ * @route '/family/join'
+ */
 joinStoreForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: joinStore.url(options),
     method: 'post',
-})
+});
 
-joinStore.form = joinStoreForm
+joinStore.form = joinStoreForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::show
-* @see app/Http/Controllers/FamilyController.php:67
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::show
+ * @see app/Http/Controllers/FamilyController.php:67
+ * @route '/family'
+ */
 export const show = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(options),
     method: 'get',
-})
+});
 
 show.definition = {
-    methods: ["get","head"],
+    methods: ['get', 'head'],
     url: '/family',
-} satisfies RouteDefinition<["get","head"]>
+} satisfies RouteDefinition<['get', 'head']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::show
-* @see app/Http/Controllers/FamilyController.php:67
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::show
+ * @see app/Http/Controllers/FamilyController.php:67
+ * @route '/family'
+ */
 show.url = (options?: RouteQueryOptions) => {
-    return show.definition.url + queryParams(options)
-}
+    return show.definition.url + queryParams(options);
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::show
-* @see app/Http/Controllers/FamilyController.php:67
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::show
+ * @see app/Http/Controllers/FamilyController.php:67
+ * @route '/family'
+ */
 show.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::show
-* @see app/Http/Controllers/FamilyController.php:67
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::show
+ * @see app/Http/Controllers/FamilyController.php:67
+ * @route '/family'
+ */
 show.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(options),
     method: 'head',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::show
-* @see app/Http/Controllers/FamilyController.php:67
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::show
+ * @see app/Http/Controllers/FamilyController.php:67
+ * @route '/family'
+ */
 const showForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::show
-* @see app/Http/Controllers/FamilyController.php:67
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::show
+ * @see app/Http/Controllers/FamilyController.php:67
+ * @route '/family'
+ */
 showForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(options),
     method: 'get',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::show
-* @see app/Http/Controllers/FamilyController.php:67
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::show
+ * @see app/Http/Controllers/FamilyController.php:67
+ * @route '/family'
+ */
 showForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'get',
-})
+});
 
-show.form = showForm
+show.form = showForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::update
-* @see app/Http/Controllers/FamilyController.php:89
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::update
+ * @see app/Http/Controllers/FamilyController.php:89
+ * @route '/family'
+ */
 export const update = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(options),
     method: 'patch',
-})
+});
 
 update.definition = {
-    methods: ["patch"],
+    methods: ['patch'],
     url: '/family',
-} satisfies RouteDefinition<["patch"]>
+} satisfies RouteDefinition<['patch']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::update
-* @see app/Http/Controllers/FamilyController.php:89
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::update
+ * @see app/Http/Controllers/FamilyController.php:89
+ * @route '/family'
+ */
 update.url = (options?: RouteQueryOptions) => {
-    return update.definition.url + queryParams(options)
-}
+    return update.definition.url + queryParams(options);
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::update
-* @see app/Http/Controllers/FamilyController.php:89
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::update
+ * @see app/Http/Controllers/FamilyController.php:89
+ * @route '/family'
+ */
 update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(options),
     method: 'patch',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::update
-* @see app/Http/Controllers/FamilyController.php:89
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::update
+ * @see app/Http/Controllers/FamilyController.php:89
+ * @route '/family'
+ */
 const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::update
-* @see app/Http/Controllers/FamilyController.php:89
-* @route '/family'
-*/
+ * @see \App\Http\Controllers\FamilyController::update
+ * @see app/Http/Controllers/FamilyController.php:89
+ * @route '/family'
+ */
 updateForm.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'post',
-})
+});
 
-update.form = updateForm
+update.form = updateForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
-* @route '/family/members'
-*/
+ * @see \App\Http\Controllers\FamilyController::inviteMember
+ * @see app/Http/Controllers/FamilyController.php:100
+ * @route '/family/members'
+ */
 export const inviteMember = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: inviteMember.url(options),
     method: 'post',
-})
+});
 
 inviteMember.definition = {
-    methods: ["post"],
+    methods: ['post'],
     url: '/family/members',
-} satisfies RouteDefinition<["post"]>
+} satisfies RouteDefinition<['post']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
-* @route '/family/members'
-*/
+ * @see \App\Http\Controllers\FamilyController::inviteMember
+ * @see app/Http/Controllers/FamilyController.php:100
+ * @route '/family/members'
+ */
 inviteMember.url = (options?: RouteQueryOptions) => {
-    return inviteMember.definition.url + queryParams(options)
-}
+    return inviteMember.definition.url + queryParams(options);
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
-* @route '/family/members'
-*/
+ * @see \App\Http\Controllers\FamilyController::inviteMember
+ * @see app/Http/Controllers/FamilyController.php:100
+ * @route '/family/members'
+ */
 inviteMember.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: inviteMember.url(options),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
-* @route '/family/members'
-*/
+ * @see \App\Http\Controllers\FamilyController::inviteMember
+ * @see app/Http/Controllers/FamilyController.php:100
+ * @route '/family/members'
+ */
 const inviteMemberForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: inviteMember.url(options),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
-* @route '/family/members'
-*/
+ * @see \App\Http\Controllers\FamilyController::inviteMember
+ * @see app/Http/Controllers/FamilyController.php:100
+ * @route '/family/members'
+ */
 inviteMemberForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: inviteMember.url(options),
     method: 'post',
-})
+});
 
-inviteMember.form = inviteMemberForm
+inviteMember.form = inviteMemberForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
-* @route '/family/children'
-*/
+ * @see \App\Http\Controllers\FamilyController::addChild
+ * @see app/Http/Controllers/FamilyController.php:143
+ * @route '/family/children'
+ */
 export const addChild = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: addChild.url(options),
     method: 'post',
-})
+});
 
 addChild.definition = {
-    methods: ["post"],
+    methods: ['post'],
     url: '/family/children',
-} satisfies RouteDefinition<["post"]>
+} satisfies RouteDefinition<['post']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
-* @route '/family/children'
-*/
+ * @see \App\Http\Controllers\FamilyController::addChild
+ * @see app/Http/Controllers/FamilyController.php:143
+ * @route '/family/children'
+ */
 addChild.url = (options?: RouteQueryOptions) => {
-    return addChild.definition.url + queryParams(options)
-}
+    return addChild.definition.url + queryParams(options);
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
-* @route '/family/children'
-*/
+ * @see \App\Http\Controllers\FamilyController::addChild
+ * @see app/Http/Controllers/FamilyController.php:143
+ * @route '/family/children'
+ */
 addChild.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: addChild.url(options),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
-* @route '/family/children'
-*/
+ * @see \App\Http\Controllers\FamilyController::addChild
+ * @see app/Http/Controllers/FamilyController.php:143
+ * @route '/family/children'
+ */
 const addChildForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: addChild.url(options),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
-* @route '/family/children'
-*/
+ * @see \App\Http\Controllers\FamilyController::addChild
+ * @see app/Http/Controllers/FamilyController.php:143
+ * @route '/family/children'
+ */
 addChildForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: addChild.url(options),
     method: 'post',
-})
+});
 
-addChild.form = addChildForm
+addChild.form = addChildForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
-* @route '/family/{family}/members/{userId}/role'
-*/
-export const updateMemberRole = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+ * @see \App\Http\Controllers\FamilyController::updateMemberRole
+ * @see app/Http/Controllers/FamilyController.php:161
+ * @route '/family/{family}/members/{userId}/role'
+ */
+export const updateMemberRole = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+): RouteDefinition<'patch'> => ({
     url: updateMemberRole.url(args, options),
     method: 'patch',
-})
+});
 
 updateMemberRole.definition = {
-    methods: ["patch"],
+    methods: ['patch'],
     url: '/family/{family}/members/{userId}/role',
-} satisfies RouteDefinition<["patch"]>
+} satisfies RouteDefinition<['patch']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
-* @route '/family/{family}/members/{userId}/role'
-*/
-updateMemberRole.url = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions) => {
+ * @see \App\Http\Controllers\FamilyController::updateMemberRole
+ * @see app/Http/Controllers/FamilyController.php:161
+ * @route '/family/{family}/members/{userId}/role'
+ */
+updateMemberRole.url = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+) => {
     if (Array.isArray(args)) {
         args = {
             family: args[0],
             userId: args[1],
-        }
+        };
     }
 
-    args = applyUrlDefaults(args)
+    args = applyUrlDefaults(args);
 
     const parsedArgs = {
-        family: typeof args.family === 'object'
-        ? args.family.id
-        : args.family,
+        family: typeof args.family === 'object' ? args.family.id : args.family,
         userId: args.userId,
-    }
+    };
 
-    return updateMemberRole.definition.url
+    return (
+        updateMemberRole.definition.url
             .replace('{family}', parsedArgs.family.toString())
             .replace('{userId}', parsedArgs.userId.toString())
             .replace(/\/+$/, '') + queryParams(options)
-}
+    );
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
-* @route '/family/{family}/members/{userId}/role'
-*/
-updateMemberRole.patch = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+ * @see \App\Http\Controllers\FamilyController::updateMemberRole
+ * @see app/Http/Controllers/FamilyController.php:161
+ * @route '/family/{family}/members/{userId}/role'
+ */
+updateMemberRole.patch = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+): RouteDefinition<'patch'> => ({
     url: updateMemberRole.url(args, options),
     method: 'patch',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
-* @route '/family/{family}/members/{userId}/role'
-*/
-const updateMemberRoleForm = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+ * @see \App\Http\Controllers\FamilyController::updateMemberRole
+ * @see app/Http/Controllers/FamilyController.php:161
+ * @route '/family/{family}/members/{userId}/role'
+ */
+const updateMemberRoleForm = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'post'> => ({
     action: updateMemberRole.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
-* @route '/family/{family}/members/{userId}/role'
-*/
-updateMemberRoleForm.patch = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+ * @see \App\Http\Controllers\FamilyController::updateMemberRole
+ * @see app/Http/Controllers/FamilyController.php:161
+ * @route '/family/{family}/members/{userId}/role'
+ */
+updateMemberRoleForm.patch = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'post'> => ({
     action: updateMemberRole.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'post',
-})
+});
 
-updateMemberRole.form = updateMemberRoleForm
+updateMemberRole.form = updateMemberRoleForm;
 
 /**
-* @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
-* @route '/family/{family}/members/{userId}'
-*/
-export const removeMember = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see \App\Http\Controllers\FamilyController::removeMember
+ * @see app/Http/Controllers/FamilyController.php:177
+ * @route '/family/{family}/members/{userId}'
+ */
+export const removeMember = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+): RouteDefinition<'delete'> => ({
     url: removeMember.url(args, options),
     method: 'delete',
-})
+});
 
 removeMember.definition = {
-    methods: ["delete"],
+    methods: ['delete'],
     url: '/family/{family}/members/{userId}',
-} satisfies RouteDefinition<["delete"]>
+} satisfies RouteDefinition<['delete']>;
 
 /**
-* @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
-* @route '/family/{family}/members/{userId}'
-*/
-removeMember.url = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions) => {
+ * @see \App\Http\Controllers\FamilyController::removeMember
+ * @see app/Http/Controllers/FamilyController.php:177
+ * @route '/family/{family}/members/{userId}'
+ */
+removeMember.url = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+) => {
     if (Array.isArray(args)) {
         args = {
             family: args[0],
             userId: args[1],
-        }
+        };
     }
 
-    args = applyUrlDefaults(args)
+    args = applyUrlDefaults(args);
 
     const parsedArgs = {
-        family: typeof args.family === 'object'
-        ? args.family.id
-        : args.family,
+        family: typeof args.family === 'object' ? args.family.id : args.family,
         userId: args.userId,
-    }
+    };
 
-    return removeMember.definition.url
+    return (
+        removeMember.definition.url
             .replace('{family}', parsedArgs.family.toString())
             .replace('{userId}', parsedArgs.userId.toString())
             .replace(/\/+$/, '') + queryParams(options)
-}
+    );
+};
 
 /**
-* @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
-* @route '/family/{family}/members/{userId}'
-*/
-removeMember.delete = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see \App\Http\Controllers\FamilyController::removeMember
+ * @see app/Http/Controllers/FamilyController.php:177
+ * @route '/family/{family}/members/{userId}'
+ */
+removeMember.delete = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+): RouteDefinition<'delete'> => ({
     url: removeMember.url(args, options),
     method: 'delete',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
-* @route '/family/{family}/members/{userId}'
-*/
-const removeMemberForm = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+ * @see \App\Http\Controllers\FamilyController::removeMember
+ * @see app/Http/Controllers/FamilyController.php:177
+ * @route '/family/{family}/members/{userId}'
+ */
+const removeMemberForm = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'post'> => ({
     action: removeMember.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'post',
-})
+});
 
 /**
-* @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
-* @route '/family/{family}/members/{userId}'
-*/
-removeMemberForm.delete = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+ * @see \App\Http\Controllers\FamilyController::removeMember
+ * @see app/Http/Controllers/FamilyController.php:177
+ * @route '/family/{family}/members/{userId}'
+ */
+removeMemberForm.delete = (
+    args: { family: number | { id: number }; userId: string | number } | [family: number | { id: number }, userId: string | number],
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'post'> => ({
     action: removeMember.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'post',
-})
+});
 
-removeMember.form = removeMemberForm
+removeMember.form = removeMemberForm;
 
-const FamilyController = { create, store, join, joinStore, show, update, inviteMember, addChild, updateMemberRole, removeMember }
+const FamilyController = { create, store, join, joinStore, show, update, inviteMember, addChild, updateMemberRole, removeMember };
 
-export default FamilyController
+export default FamilyController;

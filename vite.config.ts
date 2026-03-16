@@ -7,14 +7,21 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/js/app.tsx'],
+            input: ['resources/css/app.css', 'resources/js/app.tsx'],
             ssr: 'resources/js/ssr.tsx',
             refresh: true,
+        }),
+        react({
+            babel: {
+                plugins: ['babel-plugin-react-compiler'],
+            },
         }),
         tailwindcss(),
         wayfinder({
             formVariants: true,
         }),
-        react(),
     ],
+    esbuild: {
+        jsx: 'automatic',
+    },
 });
