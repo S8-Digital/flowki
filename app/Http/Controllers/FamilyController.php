@@ -82,7 +82,7 @@ class FamilyController extends Controller
         }
 
         return Inertia::render('Family/Show', [
-            'family' => new FamilyResource($family),
+            'family' => (new FamilyResource($family))->resolve(),
         ]);
     }
 

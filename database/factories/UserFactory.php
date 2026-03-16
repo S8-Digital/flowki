@@ -66,7 +66,7 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) use ($family) {
             $user->update(['family_id' => $family->id]);
             $family->members()->attach($user->id, ['role' => FamilyRole::Member->value]);
-            $user->syncRoles(['Member']);
+            $user->syncRoles([FamilyRole::Member->value]);
         });
     }
 

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\ChoreFrequency;
+use App\Enums\FamilyRole;
 use App\Models\Chore;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -51,7 +52,7 @@ class ChoreControllerTest extends TestCase
     {
         $user = User::factory()->withFamily()->create();
         $member = User::factory()->create(['family_id' => $user->family_id]);
-        $user->family->members()->attach($member->id, ['role' => 'member']);
+        $user->family->members()->attach($member->id, ['role' => FamilyRole::Member->value]);
 
         $this->actingAs($user)
             ->post(route('chores.store'), array_merge($this->validChoreData(), ['assignee_ids' => [$member->id]]))

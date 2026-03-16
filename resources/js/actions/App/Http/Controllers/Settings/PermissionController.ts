@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::edit
-* @see app/Http/Controllers/Settings/PermissionController.php:19
+* @see app/Http/Controllers/Settings/PermissionController.php:21
 * @route '/settings/members/{user}/permissions'
 */
 export const edit = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::edit
-* @see app/Http/Controllers/Settings/PermissionController.php:19
+* @see app/Http/Controllers/Settings/PermissionController.php:21
 * @route '/settings/members/{user}/permissions'
 */
 edit.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ edit.url = (args: { user: number | { id: number } } | [user: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::edit
-* @see app/Http/Controllers/Settings/PermissionController.php:19
+* @see app/Http/Controllers/Settings/PermissionController.php:21
 * @route '/settings/members/{user}/permissions'
 */
 edit.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ edit.get = (args: { user: number | { id: number } } | [user: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::edit
-* @see app/Http/Controllers/Settings/PermissionController.php:19
+* @see app/Http/Controllers/Settings/PermissionController.php:21
 * @route '/settings/members/{user}/permissions'
 */
 edit.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ edit.head = (args: { user: number | { id: number } } | [user: number | { id: num
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::edit
-* @see app/Http/Controllers/Settings/PermissionController.php:19
+* @see app/Http/Controllers/Settings/PermissionController.php:21
 * @route '/settings/members/{user}/permissions'
 */
 const editForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const editForm = (args: { user: number | { id: number } } | [user: number | { id
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::edit
-* @see app/Http/Controllers/Settings/PermissionController.php:19
+* @see app/Http/Controllers/Settings/PermissionController.php:21
 * @route '/settings/members/{user}/permissions'
 */
 editForm.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ editForm.get = (args: { user: number | { id: number } } | [user: number | { id: 
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::edit
-* @see app/Http/Controllers/Settings/PermissionController.php:19
+* @see app/Http/Controllers/Settings/PermissionController.php:21
 * @route '/settings/members/{user}/permissions'
 */
 editForm.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -106,7 +106,7 @@ edit.form = editForm
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::update
-* @see app/Http/Controllers/Settings/PermissionController.php:51
+* @see app/Http/Controllers/Settings/PermissionController.php:37
 * @route '/settings/members/{user}/permissions'
 */
 export const update = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -121,7 +121,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::update
-* @see app/Http/Controllers/Settings/PermissionController.php:51
+* @see app/Http/Controllers/Settings/PermissionController.php:37
 * @route '/settings/members/{user}/permissions'
 */
 update.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -154,7 +154,7 @@ update.url = (args: { user: number | { id: number } } | [user: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::update
-* @see app/Http/Controllers/Settings/PermissionController.php:51
+* @see app/Http/Controllers/Settings/PermissionController.php:37
 * @route '/settings/members/{user}/permissions'
 */
 update.put = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -164,7 +164,7 @@ update.put = (args: { user: number | { id: number } } | [user: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::update
-* @see app/Http/Controllers/Settings/PermissionController.php:51
+* @see app/Http/Controllers/Settings/PermissionController.php:37
 * @route '/settings/members/{user}/permissions'
 */
 const updateForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -179,7 +179,7 @@ const updateForm = (args: { user: number | { id: number } } | [user: number | { 
 
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::update
-* @see app/Http/Controllers/Settings/PermissionController.php:51
+* @see app/Http/Controllers/Settings/PermissionController.php:37
 * @route '/settings/members/{user}/permissions'
 */
 updateForm.put = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

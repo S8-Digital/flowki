@@ -59,6 +59,7 @@ export default function UserPermissionsPanel({ permissionGroups, grantedPermissi
                     <div className="space-y-3">
                         {group.permissions.map((permission) => {
                             const isGranted = grantedPermissions.includes(permission.name);
+
                             return (
                                 <div key={permission.name} className="flex items-center gap-3">
                                     <Checkbox

@@ -27,7 +27,7 @@ class PermissionController extends Controller
         abort_unless($family->members()->where('user_id', $user->id)->exists(), 404);
 
         return Inertia::render('settings/MemberPermissions', [
-            'member' => new MemberPermissionResource($user),
+            'member' => (new MemberPermissionResource($user))->resolve(),
         ]);
     }
 
