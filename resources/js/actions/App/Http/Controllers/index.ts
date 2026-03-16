@@ -1,17 +1,17 @@
-import AcceptInviteController from './AcceptInviteController';
-import AiController from './AiController';
-import Auth from './Auth';
-import CalendarEventController from './CalendarEventController';
-import ChoreController from './ChoreController';
-import DashboardController from './DashboardController';
-import FamilyController from './FamilyController';
-import GlobalSearchController from './GlobalSearchController';
-import GoogleCalendarController from './GoogleCalendarController';
-import RecipeController from './RecipeController';
-import Settings from './Settings';
-import ShoppingItemController from './ShoppingItemController';
-import ShoppingListController from './ShoppingListController';
-import TodoController from './TodoController';
+import DashboardController from './DashboardController'
+import FamilyController from './FamilyController'
+import TodoController from './TodoController'
+import ChoreController from './ChoreController'
+import CalendarEventController from './CalendarEventController'
+import ShoppingListController from './ShoppingListController'
+import ShoppingItemController from './ShoppingItemController'
+import RecipeController from './RecipeController'
+import AiController from './AiController'
+import GlobalSearchController from './GlobalSearchController'
+import Settings from './Settings'
+import GoogleCalendarController from './GoogleCalendarController'
+import Auth from './Auth'
+import AcceptInviteController from './AcceptInviteController'
 
 const Controllers = {
     DashboardController: Object.assign(DashboardController, DashboardController),
@@ -28,6 +28,6 @@ const Controllers = {
     GoogleCalendarController: Object.assign(GoogleCalendarController, GoogleCalendarController),
     Auth: Object.assign(Auth, Auth),
     AcceptInviteController: Object.assign(AcceptInviteController, AcceptInviteController),
-};
+}
 
-export default Controllers;
+export default Controllers
