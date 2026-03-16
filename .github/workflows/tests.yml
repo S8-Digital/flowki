@@ -34,7 +34,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Install Node Dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Copy Environment File
         run: cp .env.example .env
