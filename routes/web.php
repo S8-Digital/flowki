@@ -60,6 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Calendar
     Route::get('calendar', [CalendarEventController::class, 'index'])->name('calendar.index');
+    Route::get('calendar/family', [CalendarEventController::class, 'familySchedule'])->name('calendar.family');
     Route::post('calendar', [CalendarEventController::class, 'store'])->name('calendar.store');
     Route::patch('calendar/{calendarEvent}', [CalendarEventController::class, 'update'])->name('calendar.update');
     Route::patch('calendar/{calendarEvent}/move', [CalendarEventController::class, 'move'])->name('calendar.move');

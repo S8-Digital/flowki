@@ -58,6 +58,48 @@ class CalendarEventController extends Controller
         ]);
     }
 
+    public function familySchedule(Request $request): Response
+    {
+        $this->authorize('viewAny', CalendarEvent::class);
+
+        $family = $request->user()->family;
+        $date = $request->query('date', now()->toDateString());
+        $members = UserResource::collection($family->members()->get())->resolve();
+
+        $events = CalendarEventResource::collection(
+            CalendarEvent::query()
+                ->forFamily($family->id)
+                ->with(['attendees:id,name,email,email_verified_at', 'creator:id,name'])
+                ->orderBy('start_at', 'asc')
+                ->get()
+        )->resolve();
+
+        $todos = TodoResource::collection(
+            Todo::query()
+                ->forFamily($family->id)
+                ->whereNotNull('due_date')
+                ->with(['assignee:id,name,email,email_verified_at'])
+                ->get()
+        )->resolve();
+
+        $chores = ChoreResource::collection(
+            Chore::query()
+                ->forFamily($family->id)
+                ->whereNotNull('next_due_date')
+                ->with(['assignees:id,name,email,email_verified_at'])
+                ->get()
+        )->resolve();
+
+        return Inertia::render('Calendar/Index', [
+            'events' => $events,
+            'todos' => $todos,
+            'chores' => $chores,
+            'members' => $members,
+            'initialView' => 'family',
+            'initialDate' => $date,
+        ]);
+    }
+
     public function store(StoreCalendarEventRequest $request): RedirectResponse
     {
         $this->authorize('create', CalendarEvent::class);

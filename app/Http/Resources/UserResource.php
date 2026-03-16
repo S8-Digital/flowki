@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'family_id' => $this->family_id,
+            'profile_color' => $this->profile_color,
             'role' => $this->whenPivotLoaded('family_user', fn () => $this->pivot->role),
             'is_pending' => $this->isPendingInvitation(),
             'is_child' => $this->isChild(),

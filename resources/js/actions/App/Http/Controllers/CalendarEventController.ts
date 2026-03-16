@@ -406,6 +406,42 @@ destroyForm.delete = (args: { calendarEvent: string | number | { id: string | nu
 
 destroy.form = destroyForm
 
-const CalendarEventController = { index, store, update, move, destroy }
+/**
+* @see \App\Http\Controllers\CalendarEventController::familySchedule
+* @see app/Http/Controllers/CalendarEventController.php
+* @route '/calendar/family'
+*/
+export const familySchedule = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: familySchedule.url(options),
+    method: 'get',
+})
+
+familySchedule.definition = {
+    methods: ["get","head"],
+    url: '/calendar/family',
+} satisfies RouteDefinition<["get","head"]>
+
+familySchedule.url = (options?: RouteQueryOptions) => {
+    return familySchedule.definition.url + queryParams(options)
+}
+
+familySchedule.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: familySchedule.url(options),
+    method: 'get',
+})
+
+const familyScheduleForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: familySchedule.url(options),
+    method: 'get',
+})
+
+familyScheduleForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: familySchedule.url(options),
+    method: 'get',
+})
+
+familySchedule.form = familyScheduleForm
+
+const CalendarEventController = { index, store, update, move, destroy, familySchedule }
 
 export default CalendarEventController
