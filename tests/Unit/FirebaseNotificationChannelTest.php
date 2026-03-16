@@ -4,20 +4,13 @@ namespace Tests\Unit;
 
 use App\Channels\FirebaseNotificationChannel;
 use App\Models\Chore;
-use App\Models\FcmToken;
 use App\Models\Todo;
 use App\Models\User;
 use App\Notifications\ChoreAssigned;
 use App\Notifications\TodoAssigned;
+use App\Services\FcmService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
-use Kreait\Firebase\Contract\Messaging;
-use Kreait\Firebase\Exception\Messaging\ApiConnectionFailed;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\MessageTarget;
-use Kreait\Firebase\Messaging\MulticastSendReport;
-use Kreait\Firebase\Messaging\SendReport;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -28,82 +21,46 @@ class FirebaseNotificationChannelTest extends TestCase
 
     private FirebaseNotificationChannel $channel;
 
-    private MockInterface $messaging;
+    private MockInterface $fcmService;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->messaging = Mockery::mock(Messaging::class);
-        $this->channel = new FirebaseNotificationChannel($this->messaging);
+        $this->fcmService = Mockery::mock(FcmService::class);
+        $this->channel = new FirebaseNotificationChannel($this->fcmService);
     }
 
-    public function test_send_dispatches_multicast_to_all_user_tokens(): void
-    {
-        $user = User::factory()->create();
-        FcmToken::factory()->create(['user_id' => $user->id, 'token' => 'token-a']);
-        FcmToken::factory()->create(['user_id' => $user->id, 'token' => 'token-b']);
-
-        $report = $this->makeMulticastReport([], 'token-a', 'token-b');
-
-        $this->messaging
-            ->shouldReceive('sendMulticast')
-            ->once()
-            ->with(Mockery::type(CloudMessage::class), Mockery::type('array'))
-            ->andReturn($report);
-
-        $notification = $this->makeFcmNotification(['title' => 'Hello', 'body' => 'World']);
-
-        $this->channel->send($user, $notification);
-    }
-
-    public function test_send_skips_sdk_when_user_has_no_tokens(): void
+    public function test_delegates_notification_payload_to_fcm_service(): void
     {
         $user = User::factory()->create();
 
-        $this->messaging->shouldNotReceive('sendMulticast');
-
-        $notification = $this->makeFcmNotification(['title' => 'Hello', 'body' => 'World']);
-
-        $this->channel->send($user, $notification);
-    }
-
-    public function test_send_prunes_invalid_tokens_reported_by_fcm(): void
-    {
-        $user = User::factory()->create();
-        FcmToken::factory()->create(['user_id' => $user->id, 'token' => 'valid-token']);
-        $stale = FcmToken::factory()->create(['user_id' => $user->id, 'token' => 'stale-token']);
-
-        $report = $this->makeMulticastReport(['stale-token'], 'valid-token');
-
-        $this->messaging
-            ->shouldReceive('sendMulticast')
-            ->once()
-            ->andReturn($report);
-
-        $notification = $this->makeFcmNotification(['title' => 'Hello', 'body' => 'World']);
-
-        $this->channel->send($user, $notification);
-
-        $this->assertDatabaseMissing('fcm_tokens', ['id' => $stale->id]);
-        $this->assertDatabaseCount('fcm_tokens', 1);
-    }
-
-    public function test_send_with_data_payload_includes_data_in_message(): void
-    {
-        $user = User::factory()->create();
-        FcmToken::factory()->create(['user_id' => $user->id, 'token' => 'token-x']);
-
-        $report = $this->makeMulticastReport([], 'token-x');
-
-        $this->messaging
-            ->shouldReceive('sendMulticast')
+        $this->fcmService
+            ->shouldReceive('sendToUser')
             ->once()
             ->with(
-                Mockery::on(fn (CloudMessage $msg) => true),
-                Mockery::type('array'),
-            )
-            ->andReturn($report);
+                Mockery::on(fn (User $u) => $u->is($user)),
+                ['title' => 'Hello', 'body' => 'World'],
+                [],
+            );
+
+        $notification = $this->makeFcmNotification(['title' => 'Hello', 'body' => 'World']);
+
+        $this->channel->send($user, $notification);
+    }
+
+    public function test_delegates_data_payload_to_fcm_service(): void
+    {
+        $user = User::factory()->create();
+
+        $this->fcmService
+            ->shouldReceive('sendToUser')
+            ->once()
+            ->with(
+                Mockery::on(fn (User $u) => $u->is($user)),
+                ['title' => 'Task assigned', 'body' => 'A task was assigned to you'],
+                ['type' => 'todo_assigned', 'todo_id' => '42'],
+            );
 
         $notification = $this->makeFcmNotification([
             'title' => 'Task assigned',
@@ -114,24 +71,21 @@ class FirebaseNotificationChannelTest extends TestCase
         $this->channel->send($user, $notification);
     }
 
-    public function test_send_logs_warning_and_does_not_throw_on_exception(): void
+    public function test_send_skips_non_user_notifiable(): void
     {
-        $user = User::factory()->create();
-        FcmToken::factory()->create(['user_id' => $user->id, 'token' => 'token-y']);
+        $this->fcmService->shouldNotReceive('sendToUser');
 
-        $this->messaging
-            ->shouldReceive('sendMulticast')
-            ->once()
-            ->andThrow(new ApiConnectionFailed('Connection refused'));
-
-        Log::shouldReceive('warning')
-            ->once()
-            ->withArgs(fn (string $msg) => str_contains($msg, 'FirebaseNotificationChannel'));
+        $notifiable = new class
+        {
+            public function getKey(): int
+            {
+                return 1;
+            }
+        };
 
         $notification = $this->makeFcmNotification(['title' => 'Hi', 'body' => 'There']);
 
-        // Should not throw
-        $this->channel->send($user, $notification);
+        $this->channel->send($notifiable, $notification);
     }
 
     public function test_todo_assigned_notification_uses_firebase_channel(): void
@@ -205,27 +159,5 @@ class FirebaseNotificationChannelTest extends TestCase
                 return $this->payload;
             }
         };
-    }
-
-    /** @param list<string> $invalidTokens */
-    private function makeMulticastReport(array $invalidTokens, string ...$successTokens): MulticastSendReport
-    {
-        $items = [];
-
-        foreach ($successTokens as $token) {
-            $items[] = SendReport::success(
-                MessageTarget::with(MessageTarget::TOKEN, $token),
-                ['name' => 'projects/test/messages/ok'],
-            );
-        }
-
-        foreach ($invalidTokens as $token) {
-            $items[] = SendReport::failure(
-                MessageTarget::with(MessageTarget::TOKEN, $token),
-                new ApiConnectionFailed('invalid registration token'),
-            );
-        }
-
-        return MulticastSendReport::withItems($items);
     }
 }
