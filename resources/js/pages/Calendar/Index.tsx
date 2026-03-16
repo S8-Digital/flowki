@@ -1,4 +1,4 @@
-import type { DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
+import type { DateSelectArg, DatesSetArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -7,10 +7,11 @@ import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Plus, Trash2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
 import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
+import FamilyScheduleView from '@/components/Calendar/FamilyScheduleView';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -24,11 +25,32 @@ interface Props {
     todos: Todo[];
     chores: Chore[];
     members: User[];
+    initialView?: string;
+    initialDate?: string;
 }
+
+type CalendarViewType = 'family' | 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
+
+const VIEW_OPTIONS: { value: CalendarViewType; label: string }[] = [
+    { value: 'family', label: 'Family' },
+    { value: 'dayGridMonth', label: 'Month' },
+    { value: 'timeGridWeek', label: 'Week' },
+    { value: 'timeGridDay', label: 'Day' },
+    { value: 'listWeek', label: 'Schedule' },
+];
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Calendar', href: '/calendar' }];
 
-export default function CalendarIndex({ events, todos, chores, members }: Props) {
+function localToday(): string {
+    const d = new Date();
+
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+export default function CalendarIndex({ events, todos, chores, members, initialView, initialDate }: Props) {
+    const [calendarView, setCalendarView] = useState<CalendarViewType>((initialView as CalendarViewType) ?? 'family');
+    const [selectedDate, setSelectedDate] = useState<string>(initialDate ?? localToday());
+    const calendarRef = useRef<FullCalendar>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [editEventOpen, setEditEventOpen] = useState(false);
     const [editTodoOpen, setEditTodoOpen] = useState(false);
@@ -36,6 +58,14 @@ export default function CalendarIndex({ events, todos, chores, members }: Props)
     const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
     const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
     const [selectedChore, setSelectedChore] = useState<Chore | null>(null);
+
+    function switchView(view: CalendarViewType) {
+        setCalendarView(view);
+
+        if (view !== 'family') {
+            calendarRef.current?.getApi().changeView(view);
+        }
+    }
 
     const createForm = useForm({
         title: '',
@@ -171,6 +201,10 @@ export default function CalendarIndex({ events, todos, chores, members }: Props)
         );
     }
 
+    function handleDatesSet(info: DatesSetArg) {
+        setSelectedDate(info.startStr.split('T')[0]);
+    }
+
     function deleteCurrentEvent() {
         if (!selectedEvent) {
             return;
@@ -219,6 +253,54 @@ export default function CalendarIndex({ events, todos, chores, members }: Props)
         editChoreForm.patch(updateChore(selectedChore.id).url, { onSuccess: () => setEditChoreOpen(false) });
     }
 
+    const handleFamilyEventClick = useCallback(
+        (event: CalendarEvent) => {
+            setSelectedEvent(event);
+            editEventForm.setData({
+                title: event.title,
+                description: event.description ?? '',
+                location: event.location ?? '',
+                start_at: event.start_at.slice(0, 16),
+                end_at: event.end_at?.slice(0, 16) ?? '',
+                recurrence: event.recurrence ?? '',
+                color: event.color ?? '#6366f1',
+                attendee_ids: event.attendees?.map((a) => String(a.id)) ?? [],
+            });
+            setEditEventOpen(true);
+        },
+        [editEventForm],
+    );
+
+    const handleFamilyTodoClick = useCallback(
+        (todo: Todo) => {
+            setSelectedTodo(todo);
+            editTodoForm.setData({
+                title: todo.title,
+                status: todo.status,
+                priority: todo.priority,
+                category: todo.category,
+                due_date: todo.due_date ?? '',
+                assigned_to: String(todo.assignee?.id ?? ''),
+            });
+            setEditTodoOpen(true);
+        },
+        [editTodoForm],
+    );
+
+    const handleFamilyChoreClick = useCallback(
+        (chore: Chore) => {
+            setSelectedChore(chore);
+            editChoreForm.setData({
+                title: chore.title,
+                frequency: chore.frequency ?? '',
+                next_due_date: chore.next_due_date ?? '',
+                assignee_ids: chore.assignees?.map((a) => String(a.id)) ?? [],
+            });
+            setEditChoreOpen(true);
+        },
+        [editChoreForm],
+    );
+
     return (
         <>
             <Head title="Calendar" />
@@ -226,35 +308,67 @@ export default function CalendarIndex({ events, todos, chores, members }: Props)
                 <div className="flex flex-col gap-4 p-4">
                     <div className="flex items-center justify-between">
                         <h1 className="text-xl font-semibold">Calendar</h1>
-                        <Button
-                            size="sm"
-                            onClick={() => {
-                                createForm.setData({ ...createForm.data, start_at: '', end_at: '' });
-                                setCreateOpen(true);
-                            }}
-                        >
-                            <Plus className="mr-1 size-4" /> New Event
-                        </Button>
+                        <div className="flex items-center gap-2">
+                            <select
+                                value={calendarView}
+                                onChange={(e) => switchView(e.target.value as CalendarViewType)}
+                                className="h-9 rounded-md border bg-background px-3 text-sm"
+                                aria-label="Calendar view"
+                            >
+                                {VIEW_OPTIONS.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </option>
+                                ))}
+                            </select>
+                            <Button
+                                size="sm"
+                                onClick={() => {
+                                    createForm.setData({ ...createForm.data, start_at: '', end_at: '' });
+                                    setCreateOpen(true);
+                                }}
+                            >
+                                <Plus className="mr-1 size-4" /> New Event
+                            </Button>
+                        </div>
                     </div>
-                    <div className="rounded-xl border p-2">
-                        <FullCalendar
-                            plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
-                            initialView="dayGridMonth"
-                            headerToolbar={{ left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek' }}
-                            buttonText={{ today: 'Today', month: 'Month', week: 'Week', day: 'Day', list: 'Schedule' }}
-                            editable
-                            selectable
-                            selectMirror
-                            dayMaxEvents
-                            nowIndicator
-                            height="auto"
-                            events={allFcEvents}
-                            select={handleDateSelect}
-                            eventClick={handleEventClick}
-                            eventDrop={handleEventDrop}
-                            eventResize={handleEventResize}
+
+                    {calendarView === 'family' ? (
+                        <FamilyScheduleView
+                            members={members}
+                            events={events}
+                            todos={todos}
+                            chores={chores}
+                            selectedDate={selectedDate}
+                            onDateChange={setSelectedDate}
+                            onEventClick={handleFamilyEventClick}
+                            onTodoClick={handleFamilyTodoClick}
+                            onChoreClick={handleFamilyChoreClick}
                         />
-                    </div>
+                    ) : (
+                        <div className="rounded-xl border p-2">
+                            <FullCalendar
+                                ref={calendarRef}
+                                plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
+                                initialView={calendarView}
+                                initialDate={selectedDate}
+                                headerToolbar={{ left: 'prev,next today', center: 'title', right: '' }}
+                                buttonText={{ today: 'Today' }}
+                                editable
+                                selectable
+                                selectMirror
+                                dayMaxEvents
+                                nowIndicator
+                                height="auto"
+                                events={allFcEvents}
+                                select={handleDateSelect}
+                                eventClick={handleEventClick}
+                                eventDrop={handleEventDrop}
+                                eventResize={handleEventResize}
+                                datesSet={handleDatesSet}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* Create Event */}

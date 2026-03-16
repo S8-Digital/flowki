@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'family_id',
+        'profile_color',
         'email_verified_at',
         'google_calendar_id',
         'google_calendar_token',
