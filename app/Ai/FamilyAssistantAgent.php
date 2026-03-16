@@ -30,6 +30,16 @@ class FamilyAssistantAgent
             default => new UserMessage($msg['content']),
         })->all();
 
+        if (! $this->user->family_id) {
+            $instructions = "You are a helpful family assistant. The user ({$this->user->name}) has not joined or created a family yet. Politely let them know they need to create or join a family before you can help manage todos, events, chores, and shopping lists.";
+
+            return AnonymousAgent::make(
+                instructions: $instructions,
+                messages: $messages,
+                tools: []
+            )->stream($prompt);
+        }
+
         $instructions = <<<MARKDOWN
         You are a helpful family assistant for the Family Organizer app. Today's date is {$this->today()}.
         The user's name is {$this->user->name}. Their family has the following members: {$this->familyMemberNames()}.

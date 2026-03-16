@@ -86,4 +86,27 @@ class ListChoresToolTest extends TestCase
 
         $this->assertNotEmpty($tool->description());
     }
+
+    public function test_handle_filters_by_due_today(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        Chore::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+            'title' => 'Due today chore',
+            'next_due_date' => now(),
+        ]);
+        Chore::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+            'title' => 'Future chore',
+            'next_due_date' => now()->addDays(3),
+        ]);
+
+        $tool = new ListChores($user);
+        $result = $tool->handle(new Request(['due_today' => true]));
+
+        $this->assertStringContainsString('Due today chore', $result);
+        $this->assertStringNotContainsString('Future chore', $result);
+    }
 }

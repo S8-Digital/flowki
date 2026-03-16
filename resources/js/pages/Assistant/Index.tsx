@@ -28,6 +28,9 @@ const suggestions = [
 ];
 
 function loadHistory(): Message[] {
+    if (typeof window === 'undefined') {
+        return [];
+    }
     try {
         const raw = localStorage.getItem(HISTORY_KEY);
         if (raw) {
@@ -40,8 +43,11 @@ function loadHistory(): Message[] {
 }
 
 function saveHistory(messages: Message[]): void {
+    if (typeof window === 'undefined') {
+        return;
+    }
     try {
-        const persisted = messages.filter((m) => !m.isStreaming).map(({ role, content }) => ({ role, content }));
+        const persisted = messages.map(({ role, content }) => ({ role, content }));
         localStorage.setItem(HISTORY_KEY, JSON.stringify(persisted));
     } catch {
         /* ignore */
@@ -55,8 +61,10 @@ export default function AssistantIndex() {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        saveHistory(messages);
-    }, [messages]);
+        if (!isLoading) {
+            saveHistory(messages);
+        }
+    }, [messages, isLoading]);
 
     function scrollToBottom() {
         setTimeout(() => {
@@ -68,7 +76,9 @@ export default function AssistantIndex() {
 
     function clearConversation() {
         setMessages([]);
-        localStorage.removeItem(HISTORY_KEY);
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem(HISTORY_KEY);
+        }
     }
 
     async function sendMessage(text?: string) {
@@ -233,7 +243,7 @@ export default function AssistantIndex() {
                                 <Send className="size-4" />
                             </Button>
                             {messages.length > 0 && (
-                                <Button size="icon" variant="ghost" disabled={isLoading} onClick={clearConversation} title="Clear conversation">
+                                <Button size="icon" variant="ghost" disabled={isLoading} onClick={clearConversation} title="Clear conversation" aria-label="Clear conversation">
                                     <Trash2 className="size-4" />
                                 </Button>
                             )}

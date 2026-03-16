@@ -6,6 +6,7 @@ use App\Enums\RecipeCategory;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Illuminate\Support\Facades\DB;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 
@@ -20,30 +21,49 @@ class ImportRecipe implements Tool
 
     public function handle(Request $request): string
     {
+        if (empty($request['instructions'])) {
+            return 'Error: instructions are required to import a recipe.';
+        }
+
         $title = $request['title'] ?? 'Untitled Recipe';
         $ingredients = $request['ingredients'] ?? [];
-        $instructions = $request['instructions'] ?? null;
 
-        $recipe = Recipe::create([
-            'family_id' => $this->user->family_id,
-            'created_by' => $this->user->id,
-            'title' => $title,
-            'description' => $request['description'] ?? null,
-            'category' => $request['category'] ?? RecipeCategory::Dinner->value,
-            'servings' => $request['servings'] ?? null,
-            'prep_time_minutes' => $request['prep_time_minutes'] ?? null,
-            'cook_time_minutes' => $request['cook_time_minutes'] ?? null,
-            'instructions' => $instructions,
-        ]);
+        foreach ($ingredients as $ingredient) {
+            if (empty($ingredient['name'])) {
+                return 'Error: each ingredient must have a name.';
+            }
+        }
 
-        foreach ($ingredients as $index => $ingredient) {
-            $recipe->ingredients()->create([
-                'name' => $ingredient['name'],
-                'quantity' => $ingredient['quantity'] ?? null,
-                'unit' => $ingredient['unit'] ?? null,
-                'notes' => $ingredient['notes'] ?? null,
-                'sort_order' => $index,
-            ]);
+        try {
+            $recipe = DB::transaction(function () use ($request, $title, $ingredients) {
+                $recipe = Recipe::create([
+                    'family_id' => $this->user->family_id,
+                    'created_by' => $this->user->id,
+                    'title' => $title,
+                    'description' => $request['description'] ?? null,
+                    'category' => $request['category'] ?? RecipeCategory::Dinner->value,
+                    'servings' => $request['servings'] ?? null,
+                    'prep_time_minutes' => $request['prep_time_minutes'] ?? null,
+                    'cook_time_minutes' => $request['cook_time_minutes'] ?? null,
+                    'instructions' => $request['instructions'],
+                ]);
+
+                foreach ($ingredients as $index => $ingredient) {
+                    $recipe->ingredients()->create([
+                        'name' => $ingredient['name'],
+                        'quantity' => $ingredient['quantity'] ?? null,
+                        'unit' => $ingredient['unit'] ?? null,
+                        'notes' => $ingredient['notes'] ?? null,
+                        'sort_order' => $index,
+                    ]);
+                }
+
+                return $recipe;
+            });
+        } catch (\Throwable $e) {
+            report($e);
+
+            return 'Error: failed to import recipe. Please check the input and try again.';
         }
 
         $count = count($ingredients);
@@ -62,7 +82,7 @@ class ImportRecipe implements Tool
             'prep_time_minutes' => $schema->integer()->description('Preparation time in minutes'),
             'cook_time_minutes' => $schema->integer()->description('Cooking time in minutes'),
             'instructions' => $schema->string()->description('Step-by-step cooking instructions')->required(),
-            'ingredients' => $schema->array()->description('List of ingredients')->required(),
+            'ingredients' => $schema->array()->description('List of ingredients, each with a required "name" and optional "quantity", "unit", and "notes"')->required(),
         ];
     }
 }

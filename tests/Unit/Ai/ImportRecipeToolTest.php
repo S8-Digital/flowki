@@ -81,6 +81,37 @@ class ImportRecipeToolTest extends TestCase
         ]);
     }
 
+    public function test_handle_returns_error_when_instructions_missing(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $tool = new ImportRecipe($user);
+
+        $result = $tool->handle(new Request([
+            'title' => 'No Instructions Recipe',
+            'ingredients' => [],
+        ]));
+
+        $this->assertStringContainsString('Error', $result);
+        $this->assertDatabaseMissing('recipes', ['title' => 'No Instructions Recipe']);
+    }
+
+    public function test_handle_returns_error_when_ingredient_has_no_name(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $tool = new ImportRecipe($user);
+
+        $result = $tool->handle(new Request([
+            'title' => 'Bad Ingredient Recipe',
+            'instructions' => 'Cook it.',
+            'ingredients' => [
+                ['quantity' => '100', 'unit' => 'g'],
+            ],
+        ]));
+
+        $this->assertStringContainsString('Error', $result);
+        $this->assertDatabaseMissing('recipes', ['title' => 'Bad Ingredient Recipe']);
+    }
+
     public function test_description_is_not_empty(): void
     {
         $user = User::factory()->withFamily()->create();
