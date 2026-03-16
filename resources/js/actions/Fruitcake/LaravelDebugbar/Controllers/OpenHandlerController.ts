@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::handle
 * @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:18
@@ -42,43 +42,6 @@ handle.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: handle.url(options),
     method: 'head',
 })
-
-/**
-* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::handle
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:18
-* @route '/_debugbar/open'
-*/
-const handleForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: handle.url(options),
-    method: 'get',
-})
-
-/**
-* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::handle
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:18
-* @route '/_debugbar/open'
-*/
-handleForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: handle.url(options),
-    method: 'get',
-})
-
-/**
-* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::handle
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:18
-* @route '/_debugbar/open'
-*/
-handleForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: handle.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-handle.form = handleForm
 
 /**
 * @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::clockwork
@@ -141,43 +104,6 @@ clockwork.head = (args: { id: string | number } | [id: string | number ] | strin
     url: clockwork.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::clockwork
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:49
-* @route '/_debugbar/clockwork/{id}'
-*/
-const clockworkForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: clockwork.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::clockwork
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:49
-* @route '/_debugbar/clockwork/{id}'
-*/
-clockworkForm.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: clockwork.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::clockwork
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:49
-* @route '/_debugbar/clockwork/{id}'
-*/
-clockworkForm.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: clockwork.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-clockwork.form = clockworkForm
 
 const OpenHandlerController = { handle, clockwork }
 

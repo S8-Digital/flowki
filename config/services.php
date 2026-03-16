@@ -46,4 +46,17 @@ return [
         'client_secret' => env('APPLE_CLIENT_SECRET'),
         'redirect' => env('APPLE_REDIRECT_URI'),
     ],
+
+    'firebase' => [
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+        'client_email' => env('FIREBASE_CLIENT_EMAIL'),
+        'private_key' => env('FIREBASE_PRIVATE_KEY'),
+        'api_key' => env('VITE_FIREBASE_API_KEY'),
+        'auth_domain' => env('VITE_FIREBASE_AUTH_DOMAIN'),
+        'storage_bucket' => env('VITE_FIREBASE_STORAGE_BUCKET'),
+        'messaging_sender_id' => env('VITE_FIREBASE_MESSAGING_SENDER_ID'),
+        'app_id' => env('VITE_FIREBASE_APP_ID'),
+        'measurement_id' => env('VITE_FIREBASE_MEASUREMENT_ID'),
+        'vapid_key' => env('VITE_FIREBASE_VAPID_KEY'),
+    ],
 ];

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \Laravel\Telescope\Http\Controllers\ExceptionController::index
 * @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:33
@@ -32,28 +32,6 @@ index.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: index.url(options),
     method: 'post',
 })
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\ExceptionController::index
-* @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:33
-* @route '/telescope/telescope-api/exceptions'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: index.url(options),
-    method: 'post',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\ExceptionController::index
-* @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:33
-* @route '/telescope/telescope-api/exceptions'
-*/
-indexForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: index.url(options),
-    method: 'post',
-})
-
-index.form = indexForm
 
 /**
 * @see \Laravel\Telescope\Http\Controllers\ExceptionController::show
@@ -118,43 +96,6 @@ show.head = (args: { telescopeEntryId: string | number } | [telescopeEntryId: st
 })
 
 /**
-* @see \Laravel\Telescope\Http\Controllers\ExceptionController::show
-* @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:51
-* @route '/telescope/telescope-api/exceptions/{telescopeEntryId}'
-*/
-const showForm = (args: { telescopeEntryId: string | number } | [telescopeEntryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\ExceptionController::show
-* @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:51
-* @route '/telescope/telescope-api/exceptions/{telescopeEntryId}'
-*/
-showForm.get = (args: { telescopeEntryId: string | number } | [telescopeEntryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\ExceptionController::show
-* @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:51
-* @route '/telescope/telescope-api/exceptions/{telescopeEntryId}'
-*/
-showForm.head = (args: { telescopeEntryId: string | number } | [telescopeEntryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-show.form = showForm
-
-/**
 * @see \Laravel\Telescope\Http\Controllers\ExceptionController::update
 * @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:42
 * @route '/telescope/telescope-api/exceptions/{telescopeEntryId}'
@@ -205,38 +146,6 @@ update.put = (args: { telescopeEntryId: string | number } | [telescopeEntryId: s
     url: update.url(args, options),
     method: 'put',
 })
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\ExceptionController::update
-* @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:42
-* @route '/telescope/telescope-api/exceptions/{telescopeEntryId}'
-*/
-const updateForm = (args: { telescopeEntryId: string | number } | [telescopeEntryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\ExceptionController::update
-* @see vendor/laravel/telescope/src/Http/Controllers/ExceptionController.php:42
-* @route '/telescope/telescope-api/exceptions/{telescopeEntryId}'
-*/
-updateForm.put = (args: { telescopeEntryId: string | number } | [telescopeEntryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update.form = updateForm
 
 const ExceptionController = { index, show, update }
 

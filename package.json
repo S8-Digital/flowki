@@ -71,6 +71,7 @@
         "clsx": "^2.1.1",
         "cmdk": "^1.0.4",
         "eslint-plugin-import": "^2.32.0",
+        "firebase": "^12.10.0",
         "laravel-vite-plugin": "^2.0.0",
         "lucide-react": "^0.468.0",
         "react": "^19.0.0",

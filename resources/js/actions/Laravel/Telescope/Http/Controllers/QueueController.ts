@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \Laravel\Telescope\Http\Controllers\QueueController::index
 * @see vendor/laravel/telescope/src/Http/Controllers/QueueController.php:33
@@ -32,28 +32,6 @@ index.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: index.url(options),
     method: 'post',
 })
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\QueueController::index
-* @see vendor/laravel/telescope/src/Http/Controllers/QueueController.php:33
-* @route '/telescope/telescope-api/jobs'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: index.url(options),
-    method: 'post',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\QueueController::index
-* @see vendor/laravel/telescope/src/Http/Controllers/QueueController.php:33
-* @route '/telescope/telescope-api/jobs'
-*/
-indexForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: index.url(options),
-    method: 'post',
-})
-
-index.form = indexForm
 
 /**
 * @see \Laravel\Telescope\Http\Controllers\QueueController::show
@@ -116,43 +94,6 @@ show.head = (args: { telescopeEntryId: string | number } | [telescopeEntryId: st
     url: show.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\QueueController::show
-* @see vendor/laravel/telescope/src/Http/Controllers/QueueController.php:29
-* @route '/telescope/telescope-api/jobs/{telescopeEntryId}'
-*/
-const showForm = (args: { telescopeEntryId: string | number } | [telescopeEntryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\QueueController::show
-* @see vendor/laravel/telescope/src/Http/Controllers/QueueController.php:29
-* @route '/telescope/telescope-api/jobs/{telescopeEntryId}'
-*/
-showForm.get = (args: { telescopeEntryId: string | number } | [telescopeEntryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\QueueController::show
-* @see vendor/laravel/telescope/src/Http/Controllers/QueueController.php:29
-* @route '/telescope/telescope-api/jobs/{telescopeEntryId}'
-*/
-showForm.head = (args: { telescopeEntryId: string | number } | [telescopeEntryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-show.form = showForm
 
 const QueueController = { index, show }
 

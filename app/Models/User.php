@@ -128,4 +128,9 @@ class User extends Authenticatable
     {
         return $this->password !== null;
     }
+
+    public function fcmTokens(): HasMany
+    {
+        return $this->hasMany(FcmToken::class);
+    }
 }

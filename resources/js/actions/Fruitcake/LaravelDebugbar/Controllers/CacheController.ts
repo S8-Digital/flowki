@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \Fruitcake\LaravelDebugbar\Controllers\CacheController::deleteMethod
 * @see vendor/fruitcake/laravel-debugbar/src/Controllers/CacheController.php:16
@@ -50,38 +50,6 @@ deleteMethod.delete = (args: { key: string | number } | [key: string | number ] 
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \Fruitcake\LaravelDebugbar\Controllers\CacheController::deleteMethod
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/CacheController.php:16
-* @route '/_debugbar/cache/{key}'
-*/
-const deleteMethodForm = (args: { key: string | number } | [key: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: deleteMethod.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \Fruitcake\LaravelDebugbar\Controllers\CacheController::deleteMethod
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/CacheController.php:16
-* @route '/_debugbar/cache/{key}'
-*/
-deleteMethodForm.delete = (args: { key: string | number } | [key: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: deleteMethod.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-deleteMethod.form = deleteMethodForm
 
 const CacheController = { deleteMethod, delete: deleteMethod }
 

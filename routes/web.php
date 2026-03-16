@@ -5,6 +5,8 @@ use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\ChoreController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\FcmTokenController;
+use App\Http\Controllers\FirebaseServiceWorkerController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ShoppingItemController;
@@ -12,6 +14,9 @@ use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+// Firebase messaging service worker (must be at root scope, no auth)
+Route::get('/firebase-messaging-sw.js', FirebaseServiceWorkerController::class)->name('firebase.sw');
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -83,6 +88,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Global Search
     Route::get('search', GlobalSearchController::class)->name('search');
+
+    // FCM Tokens
+    Route::post('fcm-tokens', [FcmTokenController::class, 'store'])->name('fcm-tokens.store');
+    Route::delete('fcm-tokens/{token}', [FcmTokenController::class, 'destroy'])->name('fcm-tokens.destroy');
 });
 
 require __DIR__.'/settings.php';

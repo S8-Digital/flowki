@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults, validateParameters } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults, validateParameters } from './../../../../../wayfinder'
 /**
 * @see \Laravel\Telescope\Http\Controllers\HomeController::index
 * @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
@@ -64,43 +64,6 @@ index.head = (args?: { view?: string | number } | [view: string | number ] | str
     url: index.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\HomeController::index
-* @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
-* @route '/telescope/{view?}'
-*/
-const indexForm = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\HomeController::index
-* @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
-* @route '/telescope/{view?}'
-*/
-indexForm.get = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Laravel\Telescope\Http\Controllers\HomeController::index
-* @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
-* @route '/telescope/{view?}'
-*/
-indexForm.head = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
 
 const HomeController = { index }
 

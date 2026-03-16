@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ShoppingListController::index
 * @see app/Http/Controllers/ShoppingListController.php:15
@@ -44,43 +44,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:15
-* @route '/shopping'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:15
-* @route '/shopping'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:15
-* @route '/shopping'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\ShoppingListController::store
 * @see app/Http/Controllers/ShoppingListController.php:44
 * @route '/shopping'
@@ -115,33 +78,11 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\ShoppingListController::store
-* @see app/Http/Controllers/ShoppingListController.php:44
-* @route '/shopping'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\ShoppingListController::store
-* @see app/Http/Controllers/ShoppingListController.php:44
-* @route '/shopping'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
-
-/**
 * @see \App\Http\Controllers\ShoppingListController::show
 * @see app/Http/Controllers/ShoppingListController.php:35
 * @route '/shopping/{shoppingList}'
 */
-export const show = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -156,7 +97,7 @@ show.definition = {
 * @see app/Http/Controllers/ShoppingListController.php:35
 * @route '/shopping/{shoppingList}'
 */
-show.url = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { shoppingList: args }
     }
@@ -189,7 +130,7 @@ show.url = (args: { shoppingList: string | number | { id: string | number } } | 
 * @see app/Http/Controllers/ShoppingListController.php:35
 * @route '/shopping/{shoppingList}'
 */
-show.get = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -199,54 +140,17 @@ show.get = (args: { shoppingList: string | number | { id: string | number } } | 
 * @see app/Http/Controllers/ShoppingListController.php:35
 * @route '/shopping/{shoppingList}'
 */
-show.head = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\ShoppingListController::show
-* @see app/Http/Controllers/ShoppingListController.php:35
-* @route '/shopping/{shoppingList}'
-*/
-const showForm = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\ShoppingListController::show
-* @see app/Http/Controllers/ShoppingListController.php:35
-* @route '/shopping/{shoppingList}'
-*/
-showForm.get = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\ShoppingListController::show
-* @see app/Http/Controllers/ShoppingListController.php:35
-* @route '/shopping/{shoppingList}'
-*/
-showForm.head = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-show.form = showForm
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::destroy
 * @see app/Http/Controllers/ShoppingListController.php:56
 * @route '/shopping/{shoppingList}'
 */
-export const destroy = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -261,7 +165,7 @@ destroy.definition = {
 * @see app/Http/Controllers/ShoppingListController.php:56
 * @route '/shopping/{shoppingList}'
 */
-destroy.url = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { shoppingList: args }
     }
@@ -294,42 +198,10 @@ destroy.url = (args: { shoppingList: string | number | { id: string | number } }
 * @see app/Http/Controllers/ShoppingListController.php:56
 * @route '/shopping/{shoppingList}'
 */
-destroy.delete = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\ShoppingListController::destroy
-* @see app/Http/Controllers/ShoppingListController.php:56
-* @route '/shopping/{shoppingList}'
-*/
-const destroyForm = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\ShoppingListController::destroy
-* @see app/Http/Controllers/ShoppingListController.php:56
-* @route '/shopping/{shoppingList}'
-*/
-destroyForm.delete = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
 
 const ShoppingListController = { index, store, show, destroy }
 

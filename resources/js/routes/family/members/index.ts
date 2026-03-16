@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\FamilyController::invite
 * @see app/Http/Controllers/FamilyController.php:100
@@ -34,33 +34,11 @@ invite.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\FamilyController::invite
-* @see app/Http/Controllers/FamilyController.php:100
-* @route '/family/members'
-*/
-const inviteForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: invite.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\FamilyController::invite
-* @see app/Http/Controllers/FamilyController.php:100
-* @route '/family/members'
-*/
-inviteForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: invite.url(options),
-    method: 'post',
-})
-
-invite.form = inviteForm
-
-/**
 * @see \App\Http\Controllers\FamilyController::role
 * @see app/Http/Controllers/FamilyController.php:161
 * @route '/family/{family}/members/{userId}/role'
 */
-export const role = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const role = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: role.url(args, options),
     method: 'patch',
 })
@@ -75,7 +53,7 @@ role.definition = {
 * @see app/Http/Controllers/FamilyController.php:161
 * @route '/family/{family}/members/{userId}/role'
 */
-role.url = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions) => {
+role.url = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
             family: args[0],
@@ -103,49 +81,17 @@ role.url = (args: { family: string | number | { id: string | number }, userId: s
 * @see app/Http/Controllers/FamilyController.php:161
 * @route '/family/{family}/members/{userId}/role'
 */
-role.patch = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+role.patch = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: role.url(args, options),
     method: 'patch',
 })
-
-/**
-* @see \App\Http\Controllers\FamilyController::role
-* @see app/Http/Controllers/FamilyController.php:161
-* @route '/family/{family}/members/{userId}/role'
-*/
-const roleForm = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: role.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\FamilyController::role
-* @see app/Http/Controllers/FamilyController.php:161
-* @route '/family/{family}/members/{userId}/role'
-*/
-roleForm.patch = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: role.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-role.form = roleForm
 
 /**
 * @see \App\Http\Controllers\FamilyController::remove
 * @see app/Http/Controllers/FamilyController.php:177
 * @route '/family/{family}/members/{userId}'
 */
-export const remove = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const remove = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: remove.url(args, options),
     method: 'delete',
 })
@@ -160,7 +106,7 @@ remove.definition = {
 * @see app/Http/Controllers/FamilyController.php:177
 * @route '/family/{family}/members/{userId}'
 */
-remove.url = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions) => {
+remove.url = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
             family: args[0],
@@ -188,42 +134,10 @@ remove.url = (args: { family: string | number | { id: string | number }, userId:
 * @see app/Http/Controllers/FamilyController.php:177
 * @route '/family/{family}/members/{userId}'
 */
-remove.delete = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+remove.delete = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: remove.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\FamilyController::remove
-* @see app/Http/Controllers/FamilyController.php:177
-* @route '/family/{family}/members/{userId}'
-*/
-const removeForm = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: remove.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\FamilyController::remove
-* @see app/Http/Controllers/FamilyController.php:177
-* @route '/family/{family}/members/{userId}'
-*/
-removeForm.delete = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: remove.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-remove.form = removeForm
 
 const members = {
     invite: Object.assign(invite, invite),

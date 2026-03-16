@@ -6,6 +6,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { initializeTheme } from './hooks/useAppearance';
+import { getFirebaseAnalytics } from './lib/firebase-analytics';
+import { initializePerformanceMonitoring } from './lib/firebase-performance';
 import { store } from './store';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -30,3 +32,7 @@ createInertiaApp({
 
 // This will set light / dark mode on page load...
 initializeTheme();
+
+// Initialize Firebase services
+getFirebaseAnalytics();
+initializePerformanceMonitoring();
