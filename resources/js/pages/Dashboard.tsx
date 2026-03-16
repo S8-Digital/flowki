@@ -12,53 +12,16 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
 import { dashboard } from '@/routes';
-import type { BreadcrumbItem } from '@/types';
-
-interface Widget {
-    id: number;
-    type: string;
-    position: number;
-    settings: Record<string, unknown>;
-}
-
-interface WidgetType {
-    value: string;
-    label: string;
-}
-
-interface CalendarEventItem {
-    id: number;
-    title: string;
-    start_at: string;
-    end_at: string | null;
-    is_all_day: boolean;
-    color: string | null;
-    location: string | null;
-}
-
-interface TodoItem {
-    id: number;
-    title: string;
-    status: string;
-    priority: string;
-    category: string;
-    due_date: string | null;
-}
-
-interface ShoppingListData {
-    id: number;
-    name: string;
-    items: { id: number; name: string; quantity: string | null; category: string; is_checked: boolean }[];
-}
+import type { BreadcrumbItem, CalendarEvent, DashboardShoppingListData, DashboardWidget, DashboardWidgetType, Todo } from '@/types';
 
 interface Props {
-    widgets: Widget[];
-    widgetTypes: WidgetType[];
+    widgets: DashboardWidget[];
+    widgetTypes: DashboardWidgetType[];
     shoppingLists: { id: number; name: string }[];
     todoCategories: { value: string; label: string }[];
-    calendarEvents: CalendarEventItem[];
-    todosToday: TodoItem[];
-    shoppingItems: Record<number, ShoppingListData>;
+    calendarEvents: CalendarEvent[];
+    todosToday: Todo[];
+    shoppingItems: Record<number, DashboardShoppingListData>;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard() }];
@@ -72,13 +35,13 @@ export default function Dashboard({
     todosToday,
     shoppingItems,
 }: Props) {
-    const [localWidgets, setLocalWidgets] = useState<Widget[]>([...initialWidgets]);
+    const [localWidgets, setLocalWidgets] = useState<DashboardWidget[]>([...initialWidgets]);
     const [addOpen, setAddOpen] = useState(false);
     const [newWidgetType, setNewWidgetType] = useState('');
     const [newWidgetListId, setNewWidgetListId] = useState('');
     const [newWidgetCategory, setNewWidgetCategory] = useState('');
     const [settingsOpen, setSettingsOpen] = useState(false);
-    const [settingsWidget, setSettingsWidget] = useState<Widget | null>(null);
+    const [settingsWidget, setSettingsWidget] = useState<DashboardWidget | null>(null);
     const [settingsListId, setSettingsListId] = useState('');
     const [settingsCategory, setSettingsCategory] = useState('');
     const [draggingId, setDraggingId] = useState<number | null>(null);
@@ -93,7 +56,7 @@ export default function Dashboard({
         return calendarEvents.filter((e) => new Date(e.start_at).toDateString() === todayStr);
     }
 
-    function filteredTodos(widget: Widget) {
+    function filteredTodos(widget: DashboardWidget) {
         const cat = widget.settings?.category as string | undefined;
 
         return cat ? todosToday.filter((t) => t.category === cat) : todosToday;
@@ -104,7 +67,7 @@ export default function Dashboard({
             return;
         }
 
-        const settings: Record<string, unknown> = {};
+        const settings: Record<string, string | number | boolean | null> = {};
 
         if (newWidgetListId) {
             settings.list_id = newWidgetListId;
@@ -129,11 +92,11 @@ export default function Dashboard({
         );
     }
 
-    function removeWidget(widget: Widget) {
+    function removeWidget(widget: DashboardWidget) {
         router.delete(destroy(widget.id).url, { preserveScroll: true });
     }
 
-    function openSettings(widget: Widget) {
+    function openSettings(widget: DashboardWidget) {
         setSettingsWidget(widget);
         setSettingsListId(String(widget.settings?.list_id ?? ''));
         setSettingsCategory(String(widget.settings?.category ?? ''));
@@ -145,7 +108,7 @@ export default function Dashboard({
             return;
         }
 
-        const settings: Record<string, unknown> = {};
+        const settings: Record<string, string | number | boolean | null> = {};
 
         if (settingsListId) {
             settings.list_id = settingsListId;
@@ -158,11 +121,11 @@ export default function Dashboard({
         router.patch(update(settingsWidget.id).url, { settings }, { onSuccess: () => setSettingsOpen(false), preserveScroll: true });
     }
 
-    function onDragStart(widget: Widget) {
+    function onDragStart(widget: DashboardWidget) {
         setDraggingId(widget.id);
     }
 
-    function onDragOver(e: React.DragEvent, widget: Widget) {
+    function onDragOver(e: React.DragEvent, widget: DashboardWidget) {
         e.preventDefault();
 
         if (draggingId === widget.id) {
@@ -224,7 +187,7 @@ export default function Dashboard({
                                     <div className="flex items-center gap-2">
                                         <GripVertical className="size-4 cursor-grab text-muted-foreground/40 active:cursor-grabbing" />
                                         <span className="text-sm font-medium">{widgetLabel(widget.type)}</span>
-                                        {widget.settings?.category && (
+                                        {(widget.settings?.category as string) && (
                                             <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">
                                                 {widget.settings.category as string}
                                             </span>

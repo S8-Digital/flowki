@@ -190,7 +190,7 @@ class FamilyControllerTest extends TestCase
         $admin = User::factory()->withFamily()->create();
 
         $this->actingAs($admin)
-            ->post(route('family.members.invite'), ['email' => 'newperson@example.com', 'role' => 'member'])
+            ->post(route('family.members.invite'), ['email' => 'newperson@example.com', 'role' => FamilyRole::Member->value])
             ->assertRedirect();
 
         $this->assertDatabaseHas('invitations', [
@@ -211,7 +211,7 @@ class FamilyControllerTest extends TestCase
         $existing = User::factory()->create(['family_id' => null]);
 
         $this->actingAs($admin)
-            ->post(route('family.members.invite'), ['email' => $existing->email, 'role' => 'member'])
+            ->post(route('family.members.invite'), ['email' => $existing->email, 'role' => FamilyRole::Member->value])
             ->assertRedirect();
 
         $this->assertDatabaseHas('family_user', [
@@ -230,7 +230,7 @@ class FamilyControllerTest extends TestCase
         $taken = User::factory()->withFamily()->create();
 
         $this->actingAs($admin)
-            ->post(route('family.members.invite'), ['email' => $taken->email, 'role' => 'member'])
+            ->post(route('family.members.invite'), ['email' => $taken->email, 'role' => FamilyRole::Member->value])
             ->assertSessionHasErrors('email');
 
         Mail::assertNotQueued(FamilyInvitationMail::class);
@@ -246,7 +246,7 @@ class FamilyControllerTest extends TestCase
         $family->members()->attach($existing->id, ['role' => FamilyRole::Member->value]);
 
         $this->actingAs($admin)
-            ->post(route('family.members.invite'), ['email' => $existing->email, 'role' => 'member'])
+            ->post(route('family.members.invite'), ['email' => $existing->email, 'role' => FamilyRole::Member->value])
             ->assertSessionHasErrors('email');
     }
 
@@ -271,7 +271,7 @@ class FamilyControllerTest extends TestCase
         $family->members()->attach($member->id, ['role' => FamilyRole::Member->value]);
 
         $this->actingAs($member)
-            ->post(route('family.members.invite'), ['email' => 'outsider@example.com', 'role' => 'member'])
+            ->post(route('family.members.invite'), ['email' => 'outsider@example.com', 'role' => FamilyRole::Member->value])
             ->assertForbidden();
     }
 

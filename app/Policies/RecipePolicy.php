@@ -12,7 +12,7 @@ class RecipePolicy
      */
     public function viewAny(User $user): bool
     {
-        return (bool) $user->family_id;
+        return (bool) $user->family_id && $user->hasPermissionTo('view-recipes');
     }
 
     /**
@@ -20,7 +20,7 @@ class RecipePolicy
      */
     public function view(User $user, Recipe $recipe): bool
     {
-        return $user->family_id === $recipe->family_id;
+        return $user->family_id === $recipe->family_id && $user->hasPermissionTo('view-recipes');
     }
 
     /**
@@ -28,7 +28,7 @@ class RecipePolicy
      */
     public function create(User $user): bool
     {
-        return $user->family_id && $user->hasPermissionTo('manage-recipes');
+        return $user->family_id && $user->hasPermissionTo('create-recipes');
     }
 
     /**
@@ -40,7 +40,7 @@ class RecipePolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-recipes');
+        return $user->hasPermissionTo('edit-recipes');
     }
 
     /**
@@ -52,6 +52,6 @@ class RecipePolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-recipes');
+        return $user->hasPermissionTo('delete-recipes');
     }
 }

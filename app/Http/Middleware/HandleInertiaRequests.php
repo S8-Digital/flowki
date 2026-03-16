@@ -52,6 +52,9 @@ class HandleInertiaRequests extends Middleware
                     : [],
                 'hasPasswordSet' => $user?->hasPasswordSet() ?? false,
             ],
+            'currentUserPermissions' => $user
+                ? $user->getAllPermissions()->pluck('name')->values()->all()
+                : [],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

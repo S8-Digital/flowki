@@ -12,7 +12,7 @@ class CalendarEventPolicy
      */
     public function viewAny(User $user): bool
     {
-        return (bool) $user->family_id;
+        return (bool) $user->family_id && $user->hasPermissionTo('view-events');
     }
 
     /**
@@ -20,7 +20,7 @@ class CalendarEventPolicy
      */
     public function view(User $user, CalendarEvent $calendarEvent): bool
     {
-        return $user->family_id === $calendarEvent->family_id;
+        return $user->family_id === $calendarEvent->family_id && $user->hasPermissionTo('view-events');
     }
 
     /**
@@ -28,7 +28,7 @@ class CalendarEventPolicy
      */
     public function create(User $user): bool
     {
-        return $user->family_id && $user->hasPermissionTo('manage-events');
+        return $user->family_id && $user->hasPermissionTo('create-events');
     }
 
     /**
@@ -40,7 +40,7 @@ class CalendarEventPolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-events');
+        return $user->hasPermissionTo('edit-events');
     }
 
     /**
@@ -52,6 +52,6 @@ class CalendarEventPolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-events');
+        return $user->hasPermissionTo('delete-events');
     }
 }
