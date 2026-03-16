@@ -18,12 +18,14 @@ class Family extends Model
     /** @use HasFactory<FamilyFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'invite_code', 'created_by', 'settings'];
+    protected $fillable = ['name', 'invite_code', 'created_by', 'settings', 'location_name', 'latitude', 'longitude'];
 
     protected function casts(): array
     {
         return [
             'settings' => 'array',
+            'latitude' => 'float',
+            'longitude' => 'float',
         ];
     }
 

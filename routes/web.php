@@ -12,6 +12,7 @@ use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -92,6 +93,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // FCM Tokens
     Route::post('fcm-tokens', [FcmTokenController::class, 'store'])->name('fcm-tokens.store');
     Route::delete('fcm-tokens/{token}', [FcmTokenController::class, 'destroy'])->name('fcm-tokens.destroy');
+
+    // Weather
+    Route::get('weather', [WeatherController::class, 'index'])->name('weather.index');
 });
 
 require __DIR__.'/settings.php';

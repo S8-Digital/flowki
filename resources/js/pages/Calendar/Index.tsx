@@ -12,6 +12,7 @@ import { destroy, move, store, update } from '@/actions/App/Http/Controllers/Cal
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
 import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
 import InputError from '@/components/InputError';
+import WeatherStrip from '@/components/WeatherStrip';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -224,6 +225,7 @@ export default function CalendarIndex({ events, todos, chores, members }: Props)
             <Head title="Calendar" />
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="flex flex-col gap-4 p-4">
+                    <WeatherStrip />
                     <div className="flex items-center justify-between">
                         <h1 className="text-xl font-semibold">Calendar</h1>
                         <Button
