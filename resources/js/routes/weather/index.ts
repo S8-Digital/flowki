@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\WeatherController::index
 * @see app/Http/Controllers/WeatherController.php:19
@@ -80,6 +80,8 @@ indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 index.form = indexForm
 
-const WeatherController = { index }
+const weather = {
+    index: Object.assign(index, index),
+}
 
-export default WeatherController
+export default weather

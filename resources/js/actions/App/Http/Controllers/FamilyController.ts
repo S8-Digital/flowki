@@ -422,7 +422,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
+* @see app/Http/Controllers/FamilyController.php:105
 * @route '/family/members'
 */
 export const inviteMember = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -437,7 +437,7 @@ inviteMember.definition = {
 
 /**
 * @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
+* @see app/Http/Controllers/FamilyController.php:105
 * @route '/family/members'
 */
 inviteMember.url = (options?: RouteQueryOptions) => {
@@ -446,7 +446,7 @@ inviteMember.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
+* @see app/Http/Controllers/FamilyController.php:105
 * @route '/family/members'
 */
 inviteMember.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -456,7 +456,7 @@ inviteMember.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
+* @see app/Http/Controllers/FamilyController.php:105
 * @route '/family/members'
 */
 const inviteMemberForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -466,7 +466,7 @@ const inviteMemberForm = (options?: RouteQueryOptions): RouteFormDefinition<'pos
 
 /**
 * @see \App\Http\Controllers\FamilyController::inviteMember
-* @see app/Http/Controllers/FamilyController.php:100
+* @see app/Http/Controllers/FamilyController.php:105
 * @route '/family/members'
 */
 inviteMemberForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -478,7 +478,7 @@ inviteMember.form = inviteMemberForm
 
 /**
 * @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
+* @see app/Http/Controllers/FamilyController.php:148
 * @route '/family/children'
 */
 export const addChild = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -493,7 +493,7 @@ addChild.definition = {
 
 /**
 * @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
+* @see app/Http/Controllers/FamilyController.php:148
 * @route '/family/children'
 */
 addChild.url = (options?: RouteQueryOptions) => {
@@ -502,7 +502,7 @@ addChild.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
+* @see app/Http/Controllers/FamilyController.php:148
 * @route '/family/children'
 */
 addChild.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -512,7 +512,7 @@ addChild.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
+* @see app/Http/Controllers/FamilyController.php:148
 * @route '/family/children'
 */
 const addChildForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -522,7 +522,7 @@ const addChildForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> 
 
 /**
 * @see \App\Http\Controllers\FamilyController::addChild
-* @see app/Http/Controllers/FamilyController.php:143
+* @see app/Http/Controllers/FamilyController.php:148
 * @route '/family/children'
 */
 addChildForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -534,7 +534,7 @@ addChild.form = addChildForm
 
 /**
 * @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
+* @see app/Http/Controllers/FamilyController.php:166
 * @route '/family/{family}/members/{userId}/role'
 */
 export const updateMemberRole = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -549,7 +549,7 @@ updateMemberRole.definition = {
 
 /**
 * @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
+* @see app/Http/Controllers/FamilyController.php:166
 * @route '/family/{family}/members/{userId}/role'
 */
 updateMemberRole.url = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions) => {
@@ -577,7 +577,7 @@ updateMemberRole.url = (args: { family: string | number | { id: string | number 
 
 /**
 * @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
+* @see app/Http/Controllers/FamilyController.php:166
 * @route '/family/{family}/members/{userId}/role'
 */
 updateMemberRole.patch = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -587,7 +587,7 @@ updateMemberRole.patch = (args: { family: string | number | { id: string | numbe
 
 /**
 * @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
+* @see app/Http/Controllers/FamilyController.php:166
 * @route '/family/{family}/members/{userId}/role'
 */
 const updateMemberRoleForm = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -602,7 +602,7 @@ const updateMemberRoleForm = (args: { family: string | number | { id: string | n
 
 /**
 * @see \App\Http\Controllers\FamilyController::updateMemberRole
-* @see app/Http/Controllers/FamilyController.php:161
+* @see app/Http/Controllers/FamilyController.php:166
 * @route '/family/{family}/members/{userId}/role'
 */
 updateMemberRoleForm.patch = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -619,7 +619,7 @@ updateMemberRole.form = updateMemberRoleForm
 
 /**
 * @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
+* @see app/Http/Controllers/FamilyController.php:182
 * @route '/family/{family}/members/{userId}'
 */
 export const removeMember = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -634,7 +634,7 @@ removeMember.definition = {
 
 /**
 * @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
+* @see app/Http/Controllers/FamilyController.php:182
 * @route '/family/{family}/members/{userId}'
 */
 removeMember.url = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions) => {
@@ -662,7 +662,7 @@ removeMember.url = (args: { family: string | number | { id: string | number }, u
 
 /**
 * @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
+* @see app/Http/Controllers/FamilyController.php:182
 * @route '/family/{family}/members/{userId}'
 */
 removeMember.delete = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -672,7 +672,7 @@ removeMember.delete = (args: { family: string | number | { id: string | number }
 
 /**
 * @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
+* @see app/Http/Controllers/FamilyController.php:182
 * @route '/family/{family}/members/{userId}'
 */
 const removeMemberForm = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -687,7 +687,7 @@ const removeMemberForm = (args: { family: string | number | { id: string | numbe
 
 /**
 * @see \App\Http\Controllers\FamilyController::removeMember
-* @see app/Http/Controllers/FamilyController.php:177
+* @see app/Http/Controllers/FamilyController.php:182
 * @route '/family/{family}/members/{userId}'
 */
 removeMemberForm.delete = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
