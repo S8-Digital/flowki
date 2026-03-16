@@ -5,8 +5,10 @@ namespace Tests\Unit\Ai;
 use App\Ai\Tools\ImportRecipe;
 use App\Enums\RecipeCategory;
 use App\Models\User;
+use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Ai\Tools\Request;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class ImportRecipeToolTest extends TestCase
@@ -125,8 +127,8 @@ class ImportRecipeToolTest extends TestCase
         $user = User::factory()->withFamily()->create();
         $tool = new ImportRecipe($user);
 
-        /** @var \Illuminate\Contracts\JsonSchema\JsonSchema&\Mockery\MockInterface $schema */
-        $schema = \Mockery::mock(\Illuminate\Contracts\JsonSchema\JsonSchema::class);
+        /** @var JsonSchema&MockInterface $schema */
+        $schema = \Mockery::mock(JsonSchema::class);
         $schema->shouldReceive('string')->andReturnSelf()->zeroOrMoreTimes();
         $schema->shouldReceive('integer')->andReturnSelf()->zeroOrMoreTimes();
         $schema->shouldReceive('array')->andReturnSelf()->zeroOrMoreTimes();

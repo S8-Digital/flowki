@@ -31,14 +31,17 @@ function loadHistory(): Message[] {
     if (typeof window === 'undefined') {
         return [];
     }
+
     try {
         const raw = localStorage.getItem(HISTORY_KEY);
+
         if (raw) {
             return JSON.parse(raw) as Message[];
         }
     } catch {
         /* ignore */
     }
+
     return [];
 }
 
@@ -46,6 +49,7 @@ function saveHistory(messages: Message[]): void {
     if (typeof window === 'undefined') {
         return;
     }
+
     try {
         const persisted = messages.map(({ role, content }) => ({ role, content }));
         localStorage.setItem(HISTORY_KEY, JSON.stringify(persisted));
@@ -76,6 +80,7 @@ export default function AssistantIndex() {
 
     function clearConversation() {
         setMessages([]);
+
         if (typeof window !== 'undefined') {
             localStorage.removeItem(HISTORY_KEY);
         }
@@ -243,7 +248,14 @@ export default function AssistantIndex() {
                                 <Send className="size-4" />
                             </Button>
                             {messages.length > 0 && (
-                                <Button size="icon" variant="ghost" disabled={isLoading} onClick={clearConversation} title="Clear conversation" aria-label="Clear conversation">
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    disabled={isLoading}
+                                    onClick={clearConversation}
+                                    title="Clear conversation"
+                                    aria-label="Clear conversation"
+                                >
                                     <Trash2 className="size-4" />
                                 </Button>
                             )}
