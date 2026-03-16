@@ -4,10 +4,10 @@ namespace App\Enums;
 
 enum FamilyRole: string
 {
-    case Admin = 'admin';
-    case Member = 'member';
-    case Guest = 'guest';
-    case Child = 'child';
+    case Admin = 'Admin';
+    case Member = 'Member';
+    case Guest = 'Guest';
+    case Child = 'Child';
 
     public function label(): string
     {

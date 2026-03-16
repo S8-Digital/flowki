@@ -12,7 +12,7 @@ class ChorePolicy
      */
     public function viewAny(User $user): bool
     {
-        return (bool) $user->family_id;
+        return (bool) $user->family_id && $user->hasPermissionTo('view-chores');
     }
 
     /**
@@ -20,7 +20,7 @@ class ChorePolicy
      */
     public function view(User $user, Chore $chore): bool
     {
-        return $user->family_id === $chore->family_id;
+        return $user->family_id === $chore->family_id && $user->hasPermissionTo('view-chores');
     }
 
     /**
@@ -28,7 +28,7 @@ class ChorePolicy
      */
     public function create(User $user): bool
     {
-        return $user->family_id && $user->hasPermissionTo('manage-chores');
+        return $user->family_id && $user->hasPermissionTo('create-chores');
     }
 
     /**
@@ -40,7 +40,7 @@ class ChorePolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-chores');
+        return $user->hasPermissionTo('edit-chores');
     }
 
     /**
@@ -52,7 +52,7 @@ class ChorePolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-chores');
+        return $user->hasPermissionTo('delete-chores');
     }
 
     /**
@@ -60,6 +60,6 @@ class ChorePolicy
      */
     public function complete(User $user, Chore $chore): bool
     {
-        return $user->family_id === $chore->family_id;
+        return $user->family_id === $chore->family_id && $user->hasPermissionTo('complete-chores');
     }
 }

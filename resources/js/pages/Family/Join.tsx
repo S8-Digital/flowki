@@ -1,5 +1,5 @@
-import { Head, useForm } from '@inertiajs/react';
-import { joinStore } from '@/actions/App/Http/Controllers/FamilyController';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { create, joinStore } from '@/actions/App/Http/Controllers/FamilyController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,6 +44,12 @@ export default function FamilyJoin() {
                                 {processing ? 'Joining…' : 'Join Family'}
                             </Button>
                         </form>
+                        <p className="text-center text-sm text-muted-foreground">
+                            Don't have an invite code?{' '}
+                            <Link href={create().url} className="underline underline-offset-4 hover:text-foreground">
+                                Create a new family
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </AppLayout>

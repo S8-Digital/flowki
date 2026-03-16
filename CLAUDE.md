@@ -211,6 +211,11 @@ protected function isAccessible(User $user, ?string $path = null): bool
 ## Authentication & Authorization
 
 - Use Laravel's built-in authentication and authorization features (gates, policies, Sanctum, etc.).
+- This application uses **fine-grained, per-action permissions** via Spatie Permission. All authorization checks must use granular permissions (e.g., `create-todos`, `edit-todos`, `delete-todos`, `view-todos`), never broad role checks alone.
+- The full permission set is defined in `RolePermissionSeeder::PERMISSIONS`. When adding a new feature, define granular permissions for every action (view, create, edit, delete, and any feature-specific actions), add them to the seeder, assign them to appropriate roles, and update the feature's Policy to check those permissions.
+- Wildcard permissions are disabled; all permissions must be explicitly defined.
+- Admin UI can toggle individual user-level permissions via `Settings/PermissionController` (admin-only), which grants/revokes direct user permissions using Spatie's `givePermissionTo` / `revokePermissionTo` without changing the user's role.
+- `currentUserPermissions` (array of permission name strings) is exposed as an Inertia shared prop for use in frontend conditional rendering.
 
 ## URL Generation
 

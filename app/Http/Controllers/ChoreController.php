@@ -90,7 +90,7 @@ class ChoreController extends Controller
 
     public function complete(Request $request, Chore $chore): RedirectResponse
     {
-        $this->authorize('update', $chore);
+        $this->authorize('complete', $chore);
 
         ChoreCompletion::create([
             'chore_id' => $chore->id,

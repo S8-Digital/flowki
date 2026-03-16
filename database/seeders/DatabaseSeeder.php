@@ -29,50 +29,39 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Run the role and permission seeders
+        $this->call([
+            RolePermissionSeeder::class,
+        ]);
+
         // Create demo admin user
         $admin = User::factory()->create([
-            'name' => 'Alex Johnson',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-        ]);
-
-        // Create two member users
-        $member1 = User::factory()->create([
-            'name' => 'Sam Johnson',
-            'email' => 'sam@example.com',
-            'password' => Hash::make('password'),
-        ]);
-
-        $member2 = User::factory()->create([
-            'name' => 'Jordan Johnson',
-            'email' => 'jordan@example.com',
+            'name' => 'Ben Sutter',
+            'email' => 'ben@sutter.tech',
             'password' => Hash::make('password'),
         ]);
 
         // Create family
         $family = Family::create([
-            'name' => 'The Johnson Family',
+            'name' => 'The Sutter Family',
             'invite_code' => strtoupper(Str::random(8)),
             'created_by' => $admin->id,
         ]);
 
-        // Attach members with roles
+        // Add admin to family
         $family->members()->attach($admin->id, ['role' => FamilyRole::Admin->value]);
-        $family->members()->attach($member1->id, ['role' => FamilyRole::Member->value]);
-        $family->members()->attach($member2->id, ['role' => FamilyRole::Member->value]);
+
+        // Attach admin role
+        $admin->syncRoles(['Admin']);
 
         // Set family_id on all users
-        User::whereIn('id', [$admin->id, $member1->id, $member2->id])
+        User::whereIn('id', [$admin->id])
             ->update(['family_id' => $family->id]);
 
         // --- Todos ---
         $todoData = [
             ['title' => 'Schedule dentist appointments', 'category' => TodoCategory::Personal, 'priority' => Priority::High, 'status' => TodoStatus::Pending, 'assigned_to' => $admin->id],
-            ['title' => 'Finish school science project', 'category' => TodoCategory::School, 'priority' => Priority::High, 'status' => TodoStatus::InProgress, 'assigned_to' => $member2->id],
             ['title' => 'Pay electricity bill', 'category' => TodoCategory::Home, 'priority' => Priority::Medium, 'status' => TodoStatus::Pending, 'assigned_to' => $admin->id],
-            ['title' => 'Buy birthday gift for grandma', 'category' => TodoCategory::Personal, 'priority' => Priority::Medium, 'status' => TodoStatus::Pending, 'assigned_to' => $member1->id],
-            ['title' => 'Submit quarterly report', 'category' => TodoCategory::Work, 'priority' => Priority::High, 'status' => TodoStatus::Pending, 'assigned_to' => $admin->id],
-            ['title' => 'Clean the garage', 'category' => TodoCategory::Home, 'priority' => Priority::Low, 'status' => TodoStatus::Pending, 'assigned_to' => $member1->id],
         ];
 
         foreach ($todoData as $data) {
@@ -85,11 +74,7 @@ class DatabaseSeeder extends Seeder
 
         // --- Chores ---
         $choreData = [
-            ['title' => 'Vacuum living room', 'frequency' => ChoreFrequency::Weekly, 'assigned_to' => $member1->id],
-            ['title' => 'Wash dishes', 'frequency' => ChoreFrequency::Daily, 'assigned_to' => $member2->id],
             ['title' => 'Take out trash', 'frequency' => ChoreFrequency::Weekly, 'assigned_to' => $admin->id],
-            ['title' => 'Mow the lawn', 'frequency' => ChoreFrequency::Weekly, 'assigned_to' => $member1->id],
-            ['title' => 'Clean bathroom', 'frequency' => ChoreFrequency::Weekly, 'assigned_to' => $member2->id],
         ];
 
         foreach ($choreData as $data) {
@@ -197,7 +182,7 @@ class DatabaseSeeder extends Seeder
 
         $pancakes = Recipe::create([
             'family_id' => $family->id,
-            'created_by' => $member1->id,
+            'created_by' => $admin->id,
             'title' => 'Fluffy Buttermilk Pancakes',
             'description' => 'Light and fluffy pancakes perfect for weekend mornings.',
             'category' => RecipeCategory::Breakfast,

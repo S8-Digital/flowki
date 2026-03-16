@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Policies;
 
+use App\Enums\FamilyRole;
 use App\Models\Chore;
 use App\Models\User;
 use App\Policies\ChorePolicy;
@@ -76,7 +77,7 @@ class ChorePolicyTest extends TestCase
     {
         $user = User::factory()->withFamily()->create();
         $other = User::factory()->create(['family_id' => $user->family_id]);
-        $user->family->members()->attach($other->id, ['role' => 'member']);
+        $user->family->members()->attach($other->id, ['role' => FamilyRole::Member->value]);
         $chore = Chore::factory()->create([
             'family_id' => $user->family_id,
             'created_by' => $user->id,

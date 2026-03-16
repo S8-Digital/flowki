@@ -12,7 +12,7 @@ class TodoPolicy
      */
     public function viewAny(User $user): bool
     {
-        return (bool) $user->family_id;
+        return (bool) $user->family_id && $user->hasPermissionTo('view-todos');
     }
 
     /**
@@ -20,7 +20,7 @@ class TodoPolicy
      */
     public function view(User $user, Todo $todo): bool
     {
-        return $user->family_id === $todo->family_id;
+        return $user->family_id === $todo->family_id && $user->hasPermissionTo('view-todos');
     }
 
     /**
@@ -28,7 +28,7 @@ class TodoPolicy
      */
     public function create(User $user): bool
     {
-        return $user->family_id && $user->hasPermissionTo('manage-todos');
+        return $user->family_id && $user->hasPermissionTo('create-todos');
     }
 
     /**
@@ -40,7 +40,7 @@ class TodoPolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-todos');
+        return $user->hasPermissionTo('edit-todos');
     }
 
     /**
@@ -52,6 +52,6 @@ class TodoPolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-todos');
+        return $user->hasPermissionTo('delete-todos');
     }
 }

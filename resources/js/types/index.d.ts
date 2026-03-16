@@ -1,5 +1,6 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
+import type { RouteDefinition } from '@/wayfinder';
 
 export interface Auth {
     user: User;
@@ -9,7 +10,7 @@ export interface Auth {
 
 export interface BreadcrumbItem {
     title: string;
-    href: string;
+    href: string | RouteDefinition<string>;
 }
 
 export interface NavItem {
@@ -24,6 +25,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    currentUserPermissions: string[];
 };
 
 export interface User {
@@ -47,6 +49,16 @@ export interface Family {
     invite_code: string;
     members?: User[];
     created_at: string;
+}
+
+export interface Permission {
+    name: string;
+    granted: boolean;
+}
+
+export interface PermissionGroup {
+    group: string;
+    permissions: Permission[];
 }
 
 export interface Todo {
@@ -156,3 +168,21 @@ export interface PaginatedResource<T> {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface DashboardWidget {
+    id: number;
+    type: string;
+    position: number;
+    settings: Record<string, string | number | boolean | null>;
+}
+
+export interface DashboardWidgetType {
+    value: string;
+    label: string;
+}
+
+export interface DashboardShoppingListData {
+    id: number;
+    name: string;
+    items: Pick<ShoppingItem, 'id' | 'name' | 'quantity' | 'category' | 'is_checked'>[];
+}
