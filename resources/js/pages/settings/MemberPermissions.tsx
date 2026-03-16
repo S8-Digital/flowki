@@ -12,20 +12,20 @@ interface Member {
     id: number;
     name: string;
     role: string | null;
+    permissionGroups: PermissionGroup[];
 }
 
 interface Props {
     member: Member;
-    permissionGroups: PermissionGroup[];
 }
 
-export default function MemberPermissions({ member, permissionGroups }: Props) {
+export default function MemberPermissions({ member }: Props) {
     const breadcrumbItems: BreadcrumbItem[] = [
         { title: 'Family', href: '/family' },
         { title: `${member.name} Permissions`, href: permissionEdit({ user: member.id }).url },
     ];
 
-    const initialGranted = permissionGroups.flatMap((g) => g.permissions.filter((p) => p.granted).map((p) => p.name));
+    const initialGranted = member.permissionGroups.flatMap((g) => g.permissions.filter((p) => p.granted).map((p) => p.name));
 
     const [grantedPermissions, setGrantedPermissions] = useState<string[]>(initialGranted);
     const [saving, setSaving] = useState(false);
@@ -64,7 +64,7 @@ export default function MemberPermissions({ member, permissionGroups }: Props) {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <UserPermissionsPanel
-                            permissionGroups={permissionGroups}
+                            permissionGroups={member.permissionGroups}
                             grantedPermissions={grantedPermissions}
                             onChange={handlePermissionChange}
                         />

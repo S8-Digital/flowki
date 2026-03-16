@@ -171,7 +171,7 @@ export default function FamilyShow({ family }: Props) {
                                 <Dialog open={inviteMemberOpen} onOpenChange={setInviteMemberOpen}>
                                     <DialogTrigger asChild>
                                         <Button size="sm" variant="outline">
-                                            <UserPlus className="mr-1 size-4" /> Invite Member
+                                            <UserPlus className="mr-1 size-4" /> Invite Family Member
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent>

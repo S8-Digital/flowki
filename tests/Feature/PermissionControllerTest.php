@@ -31,8 +31,8 @@ class PermissionControllerTest extends TestCase
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('settings/MemberPermissions')
-                ->has('permissionGroups')
                 ->where('member.id', $member->id)
+                ->has('member.permissionGroups')
             );
     }
 

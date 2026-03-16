@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Settings\UpdatePermissionRequest;
+use App\Http\Resources\Settings\MemberPermissionResource;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Http\RedirectResponse;
@@ -24,31 +26,15 @@ class PermissionController extends Controller
 
         abort_unless($family->members()->where('user_id', $user->id)->exists(), 404);
 
-        $allPermissions = collect(RolePermissionSeeder::PERMISSIONS)
-            ->map(fn (array $perms, string $group) => [
-                'group' => $group,
-                'permissions' => collect($perms)->map(fn (string $name) => [
-                    'name' => $name,
-                    'granted' => $user->hasPermissionTo($name),
-                ])->values()->all(),
-            ])
-            ->values()
-            ->all();
-
         return Inertia::render('settings/MemberPermissions', [
-            'member' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'role' => $user->getRoleNames()->first(),
-            ],
-            'permissionGroups' => $allPermissions,
+            'member' => new MemberPermissionResource($user),
         ]);
     }
 
     /**
      * Update the direct user-level permissions for the given family member.
      */
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(UpdatePermissionRequest $request, User $user): RedirectResponse
     {
         $family = $request->user()->family()->firstOrFail();
 
@@ -57,14 +43,8 @@ class PermissionController extends Controller
         abort_unless($family->members()->where('user_id', $user->id)->exists(), 404);
 
         $allPermissionNames = collect(RolePermissionSeeder::PERMISSIONS)->flatten()->all();
-
-        $validated = $request->validate([
-            'permissions' => ['present', 'array'],
-            'permissions.*' => ['string', 'in:' . implode(',', $allPermissionNames)],
-        ]);
-
         $allPermissions = Permission::whereIn('name', $allPermissionNames)->get();
-        $grantedNames = $validated['permissions'];
+        $grantedNames = $request->validated('permissions');
 
         foreach ($allPermissions as $permission) {
             if (in_array($permission->name, $grantedNames, true)) {
