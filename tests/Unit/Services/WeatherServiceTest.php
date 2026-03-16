@@ -3,12 +3,15 @@
 namespace Tests\Unit\Services;
 
 use App\Services\WeatherService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class WeatherServiceTest extends TestCase
 {
+    use RefreshDatabase;
+
     private function currentWeatherPayload(): array
     {
         return [

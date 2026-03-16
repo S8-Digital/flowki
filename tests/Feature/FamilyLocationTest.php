@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Family;
+use App\Enums\FamilyRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -95,8 +95,8 @@ class FamilyLocationTest extends TestCase
     {
         $admin = User::factory()->withFamily()->create();
         $member = User::factory()->create(['family_id' => $admin->family_id]);
-        $admin->family->members()->attach($member->id, ['role' => 'member']);
-        $member->syncRoles(['Member']);
+        $admin->family->members()->attach($member->id, ['role' => FamilyRole::Member->value]);
+        $member->syncRoles([FamilyRole::Member->value]);
 
         $this->actingAs($member)
             ->patch(route('family.update'), [
