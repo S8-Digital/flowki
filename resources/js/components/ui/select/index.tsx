@@ -21,15 +21,27 @@ function Select({ value, onValueChange, children, ...props }: {
 }
 
 function SelectTrigger({ className, children, ...props }: React.HTMLAttributes<HTMLButtonElement>) {
+    // MT SelectTrigger expects children to be a render function ({ value, element }) => ReactNode,
+    // but our API passes <SelectValue placeholder="..."> as children.
+    // Extract placeholder from the SelectValue child and pass it as a prop instead.
+    let placeholder: string | undefined;
+    React.Children.forEach(children, (child) => {
+        if (React.isValidElement(child) && (child.props as any).placeholder) {
+            placeholder = (child.props as any).placeholder as string;
+        }
+    });
     return (
-        <MtSelectTrigger className={cn('w-full', className)} {...(props as any)}>
-            {children}
-        </MtSelectTrigger>
+        <MtSelectTrigger
+            className={cn('w-full cursor-pointer', className)}
+            placeholder={placeholder}
+            {...(props as any)}
+        />
     );
 }
 
 function SelectValue({ placeholder }: { placeholder?: string }) {
-    return <span data-slot="placeholder" className="text-foreground/60">{placeholder}</span>;
+    // Rendered as placeholder text via the parent SelectTrigger
+    return null;
 }
 
 function SelectContent({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
