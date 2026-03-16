@@ -1,14 +1,15 @@
-import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { Baby, Copy, Pencil, UserMinus, UserPlus } from 'lucide-react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { Baby, Copy, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
+import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
-import type { BreadcrumbItem, Family } from '@/types';
+import type { AppPageProps, BreadcrumbItem, Family } from '@/types';
 
 interface Props {
     family: Family;
@@ -17,8 +18,9 @@ interface Props {
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Family', href: '/family' }];
 
 export default function FamilyShow({ family }: Props) {
-    const page = usePage<{ auth: { user: { id: number } } }>();
+    const page = usePage<AppPageProps>();
     const currentUserId = page.props.auth.user.id;
+    const canManageMembers = page.props.currentUserPermissions.includes('manage-members');
 
     const [copied, setCopied] = useState(false);
     const [editNameOpen, setEditNameOpen] = useState(false);
@@ -246,6 +248,13 @@ export default function FamilyShow({ family }: Props) {
                                             </select>
                                         ) : (
                                             <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">{member.role}</span>
+                                        )}
+                                        {canManageMembers && (
+                                            <Button variant="ghost" size="icon" asChild title="Manage permissions">
+                                                <Link href={permissionsEdit({ user: member.id }).url}>
+                                                    <Settings className="size-4 text-muted-foreground" />
+                                                </Link>
+                                            </Button>
                                         )}
                                         {member.id !== currentUserId && (
                                             <Button variant="ghost" size="icon" onClick={() => removeUser(member.id)}>

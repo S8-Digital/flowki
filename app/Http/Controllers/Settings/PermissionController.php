@@ -22,6 +22,8 @@ class PermissionController extends Controller
 
         $this->authorize('manageMembers', $family);
 
+        abort_unless($family->members()->where('user_id', $user->id)->exists(), 404);
+
         $allPermissions = collect(RolePermissionSeeder::PERMISSIONS)
             ->map(fn (array $perms, string $group) => [
                 'group' => $group,
@@ -52,10 +54,12 @@ class PermissionController extends Controller
 
         $this->authorize('manageMembers', $family);
 
+        abort_unless($family->members()->where('user_id', $user->id)->exists(), 404);
+
         $allPermissionNames = collect(RolePermissionSeeder::PERMISSIONS)->flatten()->all();
 
         $validated = $request->validate([
-            'permissions' => ['required', 'array'],
+            'permissions' => ['present', 'array'],
             'permissions.*' => ['string', 'in:' . implode(',', $allPermissionNames)],
         ]);
 
