@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\ChoreController::index
-* @see app/Http/Controllers/ChoreController.php:20
+* @see app/Http/Controllers/ChoreController.php:22
 * @route '/chores'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\ChoreController::index
-* @see app/Http/Controllers/ChoreController.php:20
+* @see app/Http/Controllers/ChoreController.php:22
 * @route '/chores'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ChoreController::index
-* @see app/Http/Controllers/ChoreController.php:20
+* @see app/Http/Controllers/ChoreController.php:22
 * @route '/chores'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\ChoreController::index
-* @see app/Http/Controllers/ChoreController.php:20
+* @see app/Http/Controllers/ChoreController.php:22
 * @route '/chores'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\ChoreController::index
-* @see app/Http/Controllers/ChoreController.php:20
+* @see app/Http/Controllers/ChoreController.php:22
 * @route '/chores'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\ChoreController::index
-* @see app/Http/Controllers/ChoreController.php:20
+* @see app/Http/Controllers/ChoreController.php:22
 * @route '/chores'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\ChoreController::index
-* @see app/Http/Controllers/ChoreController.php:20
+* @see app/Http/Controllers/ChoreController.php:22
 * @route '/chores'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:45
+* @see app/Http/Controllers/ChoreController.php:47
 * @route '/chores'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:45
+* @see app/Http/Controllers/ChoreController.php:47
 * @route '/chores'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:45
+* @see app/Http/Controllers/ChoreController.php:47
 * @route '/chores'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:45
+* @see app/Http/Controllers/ChoreController.php:47
 * @route '/chores'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:45
+* @see app/Http/Controllers/ChoreController.php:47
 * @route '/chores'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\ChoreController::update
-* @see app/Http/Controllers/ChoreController.php:66
+* @see app/Http/Controllers/ChoreController.php:69
 * @route '/chores/{chore}'
 */
 export const update = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -153,7 +153,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\ChoreController::update
-* @see app/Http/Controllers/ChoreController.php:66
+* @see app/Http/Controllers/ChoreController.php:69
 * @route '/chores/{chore}'
 */
 update.url = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ update.url = (args: { chore: string | number | { id: string | number } } | [chor
 
 /**
 * @see \App\Http\Controllers\ChoreController::update
-* @see app/Http/Controllers/ChoreController.php:66
+* @see app/Http/Controllers/ChoreController.php:69
 * @route '/chores/{chore}'
 */
 update.patch = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -196,7 +196,7 @@ update.patch = (args: { chore: string | number | { id: string | number } } | [ch
 
 /**
 * @see \App\Http\Controllers\ChoreController::update
-* @see app/Http/Controllers/ChoreController.php:66
+* @see app/Http/Controllers/ChoreController.php:69
 * @route '/chores/{chore}'
 */
 const updateForm = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +211,7 @@ const updateForm = (args: { chore: string | number | { id: string | number } } |
 
 /**
 * @see \App\Http\Controllers\ChoreController::update
-* @see app/Http/Controllers/ChoreController.php:66
+* @see app/Http/Controllers/ChoreController.php:69
 * @route '/chores/{chore}'
 */
 updateForm.patch = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -228,7 +228,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\ChoreController::destroy
-* @see app/Http/Controllers/ChoreController.php:82
+* @see app/Http/Controllers/ChoreController.php:89
 * @route '/chores/{chore}'
 */
 export const destroy = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -243,7 +243,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\ChoreController::destroy
-* @see app/Http/Controllers/ChoreController.php:82
+* @see app/Http/Controllers/ChoreController.php:89
 * @route '/chores/{chore}'
 */
 destroy.url = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -276,7 +276,7 @@ destroy.url = (args: { chore: string | number | { id: string | number } } | [cho
 
 /**
 * @see \App\Http\Controllers\ChoreController::destroy
-* @see app/Http/Controllers/ChoreController.php:82
+* @see app/Http/Controllers/ChoreController.php:89
 * @route '/chores/{chore}'
 */
 destroy.delete = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -286,7 +286,7 @@ destroy.delete = (args: { chore: string | number | { id: string | number } } | [
 
 /**
 * @see \App\Http\Controllers\ChoreController::destroy
-* @see app/Http/Controllers/ChoreController.php:82
+* @see app/Http/Controllers/ChoreController.php:89
 * @route '/chores/{chore}'
 */
 const destroyForm = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -301,7 +301,7 @@ const destroyForm = (args: { chore: string | number | { id: string | number } } 
 
 /**
 * @see \App\Http\Controllers\ChoreController::destroy
-* @see app/Http/Controllers/ChoreController.php:82
+* @see app/Http/Controllers/ChoreController.php:89
 * @route '/chores/{chore}'
 */
 destroyForm.delete = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -318,7 +318,7 @@ destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\ChoreController::complete
-* @see app/Http/Controllers/ChoreController.php:91
+* @see app/Http/Controllers/ChoreController.php:98
 * @route '/chores/{chore}/complete'
 */
 export const complete = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -333,7 +333,7 @@ complete.definition = {
 
 /**
 * @see \App\Http\Controllers\ChoreController::complete
-* @see app/Http/Controllers/ChoreController.php:91
+* @see app/Http/Controllers/ChoreController.php:98
 * @route '/chores/{chore}/complete'
 */
 complete.url = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -366,7 +366,7 @@ complete.url = (args: { chore: string | number | { id: string | number } } | [ch
 
 /**
 * @see \App\Http\Controllers\ChoreController::complete
-* @see app/Http/Controllers/ChoreController.php:91
+* @see app/Http/Controllers/ChoreController.php:98
 * @route '/chores/{chore}/complete'
 */
 complete.post = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -376,7 +376,7 @@ complete.post = (args: { chore: string | number | { id: string | number } } | [c
 
 /**
 * @see \App\Http\Controllers\ChoreController::complete
-* @see app/Http/Controllers/ChoreController.php:91
+* @see app/Http/Controllers/ChoreController.php:98
 * @route '/chores/{chore}/complete'
 */
 const completeForm = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -386,7 +386,7 @@ const completeForm = (args: { chore: string | number | { id: string | number } }
 
 /**
 * @see \App\Http\Controllers\ChoreController::complete
-* @see app/Http/Controllers/ChoreController.php:91
+* @see app/Http/Controllers/ChoreController.php:98
 * @route '/chores/{chore}/complete'
 */
 completeForm.post = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

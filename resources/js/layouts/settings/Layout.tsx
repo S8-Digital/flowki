@@ -12,6 +12,7 @@ const sidebarNavItems: NavItem[] = [
     { title: 'Password', href: '/settings/password' },
     { title: 'Appearance', href: appearance() },
     { title: 'Categories', href: '/settings/categories' },
+    { title: 'Notifications', href: '/settings/notifications' },
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {

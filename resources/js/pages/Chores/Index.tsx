@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, Chore, PaginatedResource, User } from '@/types';
 
@@ -42,8 +43,24 @@ export default function ChoresIndex({ chores, members }: Props) {
     const [editOpen, setEditOpen] = useState(false);
     const [editingChore, setEditingChore] = useState<Chore | null>(null);
 
-    const createForm = useForm({ title: '', description: '', frequency: 'weekly', next_due_date: '', assignee_ids: [] as string[] });
-    const editForm = useForm({ title: '', description: '', frequency: '', next_due_date: '', assignee_ids: [] as string[] });
+    const createForm = useForm({
+        title: '',
+        description: '',
+        frequency: 'weekly',
+        next_due_date: '',
+        assignee_ids: [] as string[],
+        reminder_enabled: true,
+        reminder_lead_time: 60,
+    });
+    const editForm = useForm({
+        title: '',
+        description: '',
+        frequency: '',
+        next_due_date: '',
+        assignee_ids: [] as string[],
+        reminder_enabled: true,
+        reminder_lead_time: 60,
+    });
 
     function openEdit(chore: Chore) {
         setEditingChore(chore);
@@ -53,6 +70,8 @@ export default function ChoresIndex({ chores, members }: Props) {
             frequency: chore.frequency ?? '',
             next_due_date: chore.next_due_date ?? '',
             assignee_ids: chore.assignees?.map((a) => String(a.id)) ?? [],
+            reminder_enabled: chore.reminder_enabled ?? true,
+            reminder_lead_time: chore.reminder_lead_time ?? 60,
         });
         setEditOpen(true);
     }
@@ -174,6 +193,38 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             ))}
                                         </div>
                                     </div>
+                                    <div className="space-y-3 rounded-lg border p-3">
+                                        <div className="flex items-center justify-between">
+                                            <Label htmlFor="create-chore-reminder-enabled" className="cursor-pointer">
+                                                Reminder
+                                            </Label>
+                                            <Switch
+                                                id="create-chore-reminder-enabled"
+                                                checked={createForm.data.reminder_enabled}
+                                                onCheckedChange={(v) => createForm.setData('reminder_enabled', v)}
+                                            />
+                                        </div>
+                                        {createForm.data.reminder_enabled && (
+                                            <div className="grid gap-2">
+                                                <Label className="text-xs text-muted-foreground">Send reminder</Label>
+                                                <Select
+                                                    value={String(createForm.data.reminder_lead_time)}
+                                                    onValueChange={(v) => createForm.setData('reminder_lead_time', Number(v))}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="10">10 minutes before</SelectItem>
+                                                        <SelectItem value="30">30 minutes before</SelectItem>
+                                                        <SelectItem value="60">1 hour before</SelectItem>
+                                                        <SelectItem value="120">2 hours before</SelectItem>
+                                                        <SelectItem value="1440">1 day before</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        )}
+                                    </div>
                                     <Button type="submit" className="w-full" disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Chore'}
                                     </Button>
@@ -288,6 +339,38 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 </label>
                                             ))}
                                         </div>
+                                    </div>
+                                    <div className="space-y-3 rounded-lg border p-3">
+                                        <div className="flex items-center justify-between">
+                                            <Label htmlFor="edit-chore-reminder-enabled" className="cursor-pointer">
+                                                Reminder
+                                            </Label>
+                                            <Switch
+                                                id="edit-chore-reminder-enabled"
+                                                checked={editForm.data.reminder_enabled}
+                                                onCheckedChange={(v) => editForm.setData('reminder_enabled', v)}
+                                            />
+                                        </div>
+                                        {editForm.data.reminder_enabled && (
+                                            <div className="grid gap-2">
+                                                <Label className="text-xs text-muted-foreground">Send reminder</Label>
+                                                <Select
+                                                    value={String(editForm.data.reminder_lead_time)}
+                                                    onValueChange={(v) => editForm.setData('reminder_lead_time', Number(v))}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="10">10 minutes before</SelectItem>
+                                                        <SelectItem value="30">30 minutes before</SelectItem>
+                                                        <SelectItem value="60">1 hour before</SelectItem>
+                                                        <SelectItem value="120">2 hours before</SelectItem>
+                                                        <SelectItem value="1440">1 day before</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        )}
                                     </div>
                                     <Button type="submit" className="w-full" disabled={editForm.processing}>
                                         {editForm.processing ? 'Saving…' : 'Save Changes'}

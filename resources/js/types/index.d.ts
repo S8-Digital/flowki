@@ -27,6 +27,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     auth: Auth;
     sidebarOpen: boolean;
     currentUserPermissions: string[];
+    unreadNotificationsCount: number;
 };
 
 export interface User {
@@ -74,6 +75,8 @@ export interface Todo {
     priority: string;
     status: string;
     due_date: string | null; // datetime-local format: Y-m-d\TH:i
+    reminder_enabled: boolean;
+    reminder_lead_time: number;
     family_id: number;
     assignee?: User;
     creator?: User;
@@ -87,11 +90,21 @@ export interface Chore {
     description: string | null;
     frequency: string;
     next_due_date: string | null; // datetime-local format: Y-m-d\TH:i
+    reminder_enabled: boolean;
+    reminder_lead_time: number;
     family_id: number;
     assignees?: User[];
     creator?: User;
     created_at: string;
     updated_at: string;
+}
+
+export interface AppNotification {
+    id: string;
+    type: string;
+    data: Record<string, unknown>;
+    read_at: string | null;
+    created_at: string;
 }
 
 export interface CalendarEvent {

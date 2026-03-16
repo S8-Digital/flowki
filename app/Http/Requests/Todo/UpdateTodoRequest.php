@@ -34,6 +34,8 @@ class UpdateTodoRequest extends FormRequest
             'status' => ['required', Rule::enum(TodoStatus::class)],
             'due_date' => ['nullable', 'date'],
             'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
+            'reminder_enabled' => ['nullable', 'boolean'],
+            'reminder_lead_time' => ['nullable', 'integer', 'min:1', 'max:10080'],
         ];
     }
 }

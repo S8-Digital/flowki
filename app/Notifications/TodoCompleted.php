@@ -3,17 +3,21 @@
 namespace App\Notifications;
 
 use App\Channels\FirebaseNotificationChannel;
-use App\Models\Chore;
+use App\Models\Todo;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ChoreAssigned extends Notification implements ShouldQueue
+class TodoCompleted extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(private readonly Chore $chore) {}
+    public function __construct(
+        private readonly Todo $todo,
+        private readonly User $completedBy,
+    ) {}
 
     /**
      * @return list<string>
@@ -36,12 +40,11 @@ class ChoreAssigned extends Notification implements ShouldQueue
     public function toMail(mixed $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New chore assigned: '.$this->chore->title)
+            ->subject('Task completed: '.$this->todo->title)
             ->greeting('Hi '.$notifiable->name.'!')
-            ->line('You have been assigned a new chore: **'.$this->chore->title.'**')
-            ->when($this->chore->next_due_date, fn ($mail) => $mail->line('Due: '.$this->chore->next_due_date->format('D, M j Y g:i A')))
-            ->action('View Chores', url('/chores'))
-            ->line('Thanks for helping keep the home running!');
+            ->line('**'.$this->completedBy->name.'** has completed the task: **'.$this->todo->title.'**')
+            ->action('View Todos', url('/todos'))
+            ->line('Great work keeping the family on track!');
     }
 
     /**
@@ -50,11 +53,11 @@ class ChoreAssigned extends Notification implements ShouldQueue
     public function toFcm(mixed $notifiable): array
     {
         return [
-            'title' => 'New chore assigned',
-            'body' => "You have been assigned: {$this->chore->title}",
+            'title' => 'Task completed',
+            'body' => "{$this->completedBy->name} completed: {$this->todo->title}",
             'data' => [
-                'type' => 'chore_assigned',
-                'chore_id' => (string) $this->chore->id,
+                'type' => 'todo_completed',
+                'todo_id' => (string) $this->todo->id,
             ],
         ];
     }
@@ -65,9 +68,11 @@ class ChoreAssigned extends Notification implements ShouldQueue
     public function toArray(mixed $notifiable): array
     {
         return [
-            'type' => 'chore_assigned',
-            'chore_id' => $this->chore->id,
-            'chore_title' => $this->chore->title,
+            'type' => 'todo_completed',
+            'todo_id' => $this->todo->id,
+            'todo_title' => $this->todo->title,
+            'completed_by_id' => $this->completedBy->id,
+            'completed_by_name' => $this->completedBy->name,
         ];
     }
 }

@@ -31,6 +31,8 @@ class StoreChoreRequest extends FormRequest
             'next_due_date' => ['nullable', 'date'],
             'assignee_ids' => ['nullable', 'array'],
             'assignee_ids.*' => ['integer', 'exists:users,id'],
+            'reminder_enabled' => ['nullable', 'boolean'],
+            'reminder_lead_time' => ['nullable', 'integer', 'min:1', 'max:10080'],
         ];
     }
 

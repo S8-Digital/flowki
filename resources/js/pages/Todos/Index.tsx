@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, PaginatedResource, Todo, User } from '@/types';
 
@@ -54,8 +55,20 @@ export default function TodosIndex({ todos, members, categories }: Props) {
         status: 'pending',
         due_date: '',
         assigned_to: '',
+        reminder_enabled: true,
+        reminder_lead_time: 60,
     });
-    const editForm = useForm({ title: '', description: '', category: '', priority: '', status: '', due_date: '', assigned_to: '' });
+    const editForm = useForm({
+        title: '',
+        description: '',
+        category: '',
+        priority: '',
+        status: '',
+        due_date: '',
+        assigned_to: '',
+        reminder_enabled: true,
+        reminder_lead_time: 60,
+    });
 
     function openEdit(todo: Todo) {
         setEditingTodo(todo);
@@ -67,6 +80,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
             status: todo.status ?? '',
             due_date: todo.due_date ?? '',
             assigned_to: String(todo.assignee?.id ?? ''),
+            reminder_enabled: todo.reminder_enabled ?? true,
+            reminder_lead_time: todo.reminder_lead_time ?? 60,
         });
         setEditOpen(true);
     }
@@ -203,6 +218,38 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 ))}
                                             </SelectContent>
                                         </Select>
+                                    </div>
+                                    <div className="space-y-3 rounded-lg border p-3">
+                                        <div className="flex items-center justify-between">
+                                            <Label htmlFor="create-reminder-enabled" className="cursor-pointer">
+                                                Reminder
+                                            </Label>
+                                            <Switch
+                                                id="create-reminder-enabled"
+                                                checked={createForm.data.reminder_enabled}
+                                                onCheckedChange={(v) => createForm.setData('reminder_enabled', v)}
+                                            />
+                                        </div>
+                                        {createForm.data.reminder_enabled && (
+                                            <div className="grid gap-2">
+                                                <Label className="text-xs text-muted-foreground">Send reminder</Label>
+                                                <Select
+                                                    value={String(createForm.data.reminder_lead_time)}
+                                                    onValueChange={(v) => createForm.setData('reminder_lead_time', Number(v))}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="10">10 minutes before</SelectItem>
+                                                        <SelectItem value="30">30 minutes before</SelectItem>
+                                                        <SelectItem value="60">1 hour before</SelectItem>
+                                                        <SelectItem value="120">2 hours before</SelectItem>
+                                                        <SelectItem value="1440">1 day before</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        )}
                                     </div>
                                     <Button type="submit" className="w-full" disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Todo'}
@@ -344,6 +391,38 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 ))}
                                             </SelectContent>
                                         </Select>
+                                    </div>
+                                    <div className="space-y-3 rounded-lg border p-3">
+                                        <div className="flex items-center justify-between">
+                                            <Label htmlFor="edit-reminder-enabled" className="cursor-pointer">
+                                                Reminder
+                                            </Label>
+                                            <Switch
+                                                id="edit-reminder-enabled"
+                                                checked={editForm.data.reminder_enabled}
+                                                onCheckedChange={(v) => editForm.setData('reminder_enabled', v)}
+                                            />
+                                        </div>
+                                        {editForm.data.reminder_enabled && (
+                                            <div className="grid gap-2">
+                                                <Label className="text-xs text-muted-foreground">Send reminder</Label>
+                                                <Select
+                                                    value={String(editForm.data.reminder_lead_time)}
+                                                    onValueChange={(v) => editForm.setData('reminder_lead_time', Number(v))}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="10">10 minutes before</SelectItem>
+                                                        <SelectItem value="30">30 minutes before</SelectItem>
+                                                        <SelectItem value="60">1 hour before</SelectItem>
+                                                        <SelectItem value="120">2 hours before</SelectItem>
+                                                        <SelectItem value="1440">1 day before</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        )}
                                     </div>
                                     <Button type="submit" className="w-full" disabled={editForm.processing}>
                                         {editForm.processing ? 'Saving…' : 'Save Changes'}

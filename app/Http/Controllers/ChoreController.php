@@ -10,6 +10,8 @@ use App\Jobs\SyncItemToGoogleCalendar;
 use App\Models\Chore;
 use App\Models\ChoreCompletion;
 use App\Models\User;
+use App\Notifications\ChoreAssigned;
+use App\Notifications\ChoreCompleted;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -56,6 +58,7 @@ class ChoreController extends Controller
 
         if ($request->filled('assignee_ids')) {
             $chore->assignees()->sync($request->assignee_ids);
+            $this->notifyNewAssignees($chore, $request->assignee_ids, [], $request->user()->id);
         }
 
         $this->syncAssigneesToGoogleCalendar($chore);
@@ -67,10 +70,14 @@ class ChoreController extends Controller
     {
         $this->authorize('update', $chore);
 
+        $previousAssigneeIds = $chore->assignees()->pluck('users.id')->toArray();
+
         $chore->update($request->safe()->except('assignee_ids'));
 
         if ($request->has('assignee_ids')) {
-            $chore->assignees()->sync($request->assignee_ids ?? []);
+            $newAssigneeIds = $request->assignee_ids ?? [];
+            $chore->assignees()->sync($newAssigneeIds);
+            $this->notifyNewAssignees($chore, $newAssigneeIds, $previousAssigneeIds, $request->user()->id);
         }
 
         $chore->load('assignees');
@@ -98,7 +105,36 @@ class ChoreController extends Controller
             'completed_at' => now(),
         ]);
 
+        // Notify creator if completed by someone else
+        /** @var User $completedBy */
+        $completedBy = $request->user();
+
+        /** @var User|null $creator */
+        $creator = User::find($chore->created_by);
+        if ($creator && $creator->id !== $completedBy->id) {
+            $creator->notify(new ChoreCompleted($chore, $completedBy));
+        }
+
         return back();
+    }
+
+    /**
+     * @param  int[]  $newIds
+     * @param  int[]  $previousIds
+     */
+    private function notifyNewAssignees(Chore $chore, array $newIds, array $previousIds, int $actorId): void
+    {
+        $addedIds = array_diff(array_map('intval', $newIds), $previousIds);
+
+        foreach ($addedIds as $userId) {
+            if ($userId === $actorId) {
+                continue;
+            }
+
+            /** @var User|null $user */
+            $user = User::find($userId);
+            $user?->notify(new ChoreAssigned($chore));
+        }
     }
 
     private function syncAssigneesToGoogleCalendar(Chore $chore): void
