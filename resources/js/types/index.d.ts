@@ -39,6 +39,7 @@ export interface User {
     is_pending?: boolean;
     is_child?: boolean;
     avatar?: string;
+    profile_color?: string | null;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
@@ -212,4 +213,19 @@ export interface WeatherData {
     location: string;
     current: WeatherCondition;
     forecast: ForecastDay[];
+}
+
+export interface MemberSummary {
+    user: User;
+    totalItems: number;
+    completedItems: number;
+    completionPct: number;
+}
+
+export interface FamilyScheduleColumn extends MemberSummary {
+    colorIndex: number;
+    events: CalendarEvent[];
+    allDayEvents: CalendarEvent[];
+    todos: Todo[];
+    chores: Chore[];
 }

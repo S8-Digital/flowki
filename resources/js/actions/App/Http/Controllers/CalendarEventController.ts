@@ -81,8 +81,89 @@ indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 index.form = indexForm
 
 /**
+* @see \App\Http\Controllers\CalendarEventController::familySchedule
+* @see app/Http/Controllers/CalendarEventController.php:29
+* @route '/calendar/family'
+*/
+export const familySchedule = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: familySchedule.url(options),
+    method: 'get',
+})
+
+familySchedule.definition = {
+    methods: ["get","head"],
+    url: '/calendar/family',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\CalendarEventController::familySchedule
+* @see app/Http/Controllers/CalendarEventController.php:29
+* @route '/calendar/family'
+*/
+familySchedule.url = (options?: RouteQueryOptions) => {
+    return familySchedule.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\CalendarEventController::familySchedule
+* @see app/Http/Controllers/CalendarEventController.php:29
+* @route '/calendar/family'
+*/
+familySchedule.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: familySchedule.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\CalendarEventController::familySchedule
+* @see app/Http/Controllers/CalendarEventController.php:29
+* @route '/calendar/family'
+*/
+familySchedule.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: familySchedule.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\CalendarEventController::familySchedule
+* @see app/Http/Controllers/CalendarEventController.php:29
+* @route '/calendar/family'
+*/
+const familyScheduleForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: familySchedule.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\CalendarEventController::familySchedule
+* @see app/Http/Controllers/CalendarEventController.php:29
+* @route '/calendar/family'
+*/
+familyScheduleForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: familySchedule.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\CalendarEventController::familySchedule
+* @see app/Http/Controllers/CalendarEventController.php:29
+* @route '/calendar/family'
+*/
+familyScheduleForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: familySchedule.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+familySchedule.form = familyScheduleForm
+
+/**
 * @see \App\Http\Controllers\CalendarEventController::store
-* @see app/Http/Controllers/CalendarEventController.php:61
+* @see app/Http/Controllers/CalendarEventController.php:76
 * @route '/calendar'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +178,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::store
-* @see app/Http/Controllers/CalendarEventController.php:61
+* @see app/Http/Controllers/CalendarEventController.php:76
 * @route '/calendar'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +187,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::store
-* @see app/Http/Controllers/CalendarEventController.php:61
+* @see app/Http/Controllers/CalendarEventController.php:76
 * @route '/calendar'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +197,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::store
-* @see app/Http/Controllers/CalendarEventController.php:61
+* @see app/Http/Controllers/CalendarEventController.php:76
 * @route '/calendar'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +207,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::store
-* @see app/Http/Controllers/CalendarEventController.php:61
+* @see app/Http/Controllers/CalendarEventController.php:76
 * @route '/calendar'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +219,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::update
-* @see app/Http/Controllers/CalendarEventController.php:80
+* @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
 export const update = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -153,7 +234,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::update
-* @see app/Http/Controllers/CalendarEventController.php:80
+* @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
 update.url = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -186,7 +267,7 @@ update.url = (args: { calendarEvent: string | number | { id: string | number } }
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::update
-* @see app/Http/Controllers/CalendarEventController.php:80
+* @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
 update.patch = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -196,7 +277,7 @@ update.patch = (args: { calendarEvent: string | number | { id: string | number }
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::update
-* @see app/Http/Controllers/CalendarEventController.php:80
+* @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
 const updateForm = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +292,7 @@ const updateForm = (args: { calendarEvent: string | number | { id: string | numb
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::update
-* @see app/Http/Controllers/CalendarEventController.php:80
+* @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
 updateForm.patch = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -228,7 +309,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::move
-* @see app/Http/Controllers/CalendarEventController.php:93
+* @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
 export const move = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -243,7 +324,7 @@ move.definition = {
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::move
-* @see app/Http/Controllers/CalendarEventController.php:93
+* @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
 move.url = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -276,7 +357,7 @@ move.url = (args: { calendarEvent: string | number | { id: string | number } } |
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::move
-* @see app/Http/Controllers/CalendarEventController.php:93
+* @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
 move.patch = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -286,7 +367,7 @@ move.patch = (args: { calendarEvent: string | number | { id: string | number } }
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::move
-* @see app/Http/Controllers/CalendarEventController.php:93
+* @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
 const moveForm = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -301,7 +382,7 @@ const moveForm = (args: { calendarEvent: string | number | { id: string | number
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::move
-* @see app/Http/Controllers/CalendarEventController.php:93
+* @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
 moveForm.patch = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -318,7 +399,7 @@ move.form = moveForm
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::destroy
-* @see app/Http/Controllers/CalendarEventController.php:102
+* @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
 export const destroy = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -333,7 +414,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::destroy
-* @see app/Http/Controllers/CalendarEventController.php:102
+* @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
 destroy.url = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -366,7 +447,7 @@ destroy.url = (args: { calendarEvent: string | number | { id: string | number } 
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::destroy
-* @see app/Http/Controllers/CalendarEventController.php:102
+* @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
 destroy.delete = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -376,7 +457,7 @@ destroy.delete = (args: { calendarEvent: string | number | { id: string | number
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::destroy
-* @see app/Http/Controllers/CalendarEventController.php:102
+* @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
 const destroyForm = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -391,7 +472,7 @@ const destroyForm = (args: { calendarEvent: string | number | { id: string | num
 
 /**
 * @see \App\Http\Controllers\CalendarEventController::destroy
-* @see app/Http/Controllers/CalendarEventController.php:102
+* @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
 destroyForm.delete = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -406,6 +487,6 @@ destroyForm.delete = (args: { calendarEvent: string | number | { id: string | nu
 
 destroy.form = destroyForm
 
-const CalendarEventController = { index, store, update, move, destroy }
+const CalendarEventController = { index, familySchedule, store, update, move, destroy }
 
 export default CalendarEventController

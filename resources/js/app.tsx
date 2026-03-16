@@ -1,13 +1,13 @@
 import '../css/app.css';
 
-import { createInertiaApp } from '@inertiajs/react';
+import { createInertiaApp, router } from '@inertiajs/react';
 import { ThemeProvider } from '@material-tailwind/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { initializeTheme } from './hooks/useAppearance';
-import { getFirebaseAnalytics } from './lib/firebase-analytics';
+import { getFirebaseAnalytics, trackEvent } from './lib/firebase-analytics';
 import { initializePerformanceMonitoring } from './lib/firebase-performance';
 import { store } from './store';
 
@@ -39,3 +39,11 @@ initializeTheme();
 // Initialize Firebase services
 getFirebaseAnalytics();
 initializePerformanceMonitoring();
+
+// Track page views on every Inertia navigation
+router.on('navigate', (event) => {
+    trackEvent('page_view', {
+        page_location: event.detail.page.url,
+        page_title: document.title,
+    });
+});

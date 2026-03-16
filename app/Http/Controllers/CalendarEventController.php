@@ -23,7 +23,27 @@ class CalendarEventController extends Controller
     {
         $this->authorize('viewAny', CalendarEvent::class);
 
+        return Inertia::render('Calendar/Index', $this->loadCalendarData($request));
+    }
+
+    public function familySchedule(Request $request): Response
+    {
+        $this->authorize('viewAny', CalendarEvent::class);
+
+        $request->validate(['date' => ['nullable', 'date_format:Y-m-d']]);
+
+        $date = $request->query('date', now()->toDateString());
+
+        return Inertia::render('Calendar/Index', array_merge(
+            $this->loadCalendarData($request),
+            ['initialView' => 'family', 'initialDate' => $date]
+        ));
+    }
+
+    private function loadCalendarData(Request $request): array
+    {
         $family = $request->user()->family;
+
         $members = UserResource::collection($family->members()->get())->resolve();
 
         $events = CalendarEventResource::collection(
@@ -50,12 +70,7 @@ class CalendarEventController extends Controller
                 ->get()
         )->resolve();
 
-        return Inertia::render('Calendar/Index', [
-            'events' => $events,
-            'todos' => $todos,
-            'chores' => $chores,
-            'members' => $members,
-        ]);
+        return compact('members', 'events', 'todos', 'chores');
     }
 
     public function store(StoreCalendarEventRequest $request): RedirectResponse
