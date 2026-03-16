@@ -6,6 +6,9 @@ use App\Mcp\Tools\AddShoppingItemTool;
 use App\Mcp\Tools\CreateChoreTool;
 use App\Mcp\Tools\CreateEventTool;
 use App\Mcp\Tools\CreateTodoTool;
+use App\Mcp\Tools\ListChoresTool;
+use App\Mcp\Tools\ListEventsTool;
+use App\Mcp\Tools\ListShoppingItemsTool;
 use App\Mcp\Tools\ListTodosTool;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Instructions;
@@ -23,8 +26,11 @@ use Laravel\Mcp\Server\Attributes\Version;
     - create_todo: Create a new todo item
     - list_todos: List todos with optional filters
     - create_event: Schedule a calendar event
+    - list_events: List calendar events with optional date range filters
     - create_chore: Add a recurring chore
+    - list_chores: List chores with optional filters
     - add_shopping_item: Add an item to a shopping list
+    - list_shopping_items: List items in a shopping list
     MARKDOWN)]
 class FamilyOrganizerServer extends Server
 {
@@ -32,8 +38,11 @@ class FamilyOrganizerServer extends Server
         CreateTodoTool::class,
         ListTodosTool::class,
         CreateEventTool::class,
+        ListEventsTool::class,
         CreateChoreTool::class,
+        ListChoresTool::class,
         AddShoppingItemTool::class,
+        ListShoppingItemsTool::class,
     ];
 
     protected array $resources = [];
