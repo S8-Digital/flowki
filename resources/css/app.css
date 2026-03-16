@@ -469,7 +469,7 @@
     .category-events-item {
         background-color: var(--category-events-bg);
         color: var(--category-events-fg);
-        border-left: 3px solid var(--category-events-border);
+        border: 2px solid var(--category-events-border);
     }
 
     /* Chores */
@@ -482,7 +482,7 @@
     .category-chores-item {
         background-color: var(--category-chores-bg);
         color: var(--category-chores-fg);
-        border-left: 3px solid var(--category-chores-border);
+        border: 2px solid var(--category-chores-border);
     }
 
     /* Shopping */
@@ -495,7 +495,7 @@
     .category-shopping-item {
         background-color: var(--category-shopping-bg);
         color: var(--category-shopping-fg);
-        border-left: 3px solid var(--category-shopping-border);
+        border: 2px solid var(--category-shopping-border);
     }
 
     /* Meals */
@@ -508,7 +508,7 @@
     .category-meals-item {
         background-color: var(--category-meals-bg);
         color: var(--category-meals-fg);
-        border-left: 3px solid var(--category-meals-border);
+        border: 2px solid var(--category-meals-border);
     }
 
     /* To-dos */
@@ -521,6 +521,6 @@
     .category-todos-item {
         background-color: var(--category-todos-bg);
         color: var(--category-todos-fg);
-        border-left: 3px solid var(--category-todos-border);
+        border: 2px solid var(--category-todos-border);
     }
 }

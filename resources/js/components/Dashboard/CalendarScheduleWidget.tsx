@@ -42,7 +42,7 @@ export default function CalendarScheduleWidget({ events }: CalendarScheduleWidge
                             <li
                                 key={event.id}
                                 className="flex items-start gap-3 overflow-hidden rounded-lg p-3"
-                                style={{ borderLeft: `3px solid ${color}`, backgroundColor: `${color}18` }}
+                                style={{ border: `2px solid ${color}`, backgroundColor: `${color}18` }}
                             >
                                 <div className="min-w-0 flex-1">
                                     <p className="truncate text-sm font-medium">{event.title}</p>

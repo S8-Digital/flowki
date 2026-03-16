@@ -1,3 +1,4 @@
+import { Slot } from '@radix-ui/react-slot';
 import { PanelLeftIcon } from 'lucide-react';
 import * as React from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -394,10 +395,10 @@ function SidebarMenuButton({
     size?: 'default' | 'sm' | 'lg';
     tooltip?: string | React.ComponentProps<'div'>;
 }) {
-    const child = asChild && React.isValidElement(children) ? children : null;
+    const Comp = asChild ? Slot : 'button';
 
     return (
-        <button
+        <Comp
             data-sidebar="menu-button"
             data-size={size}
             data-active={isActive}
@@ -406,10 +407,10 @@ function SidebarMenuButton({
                 sidebarMenuButtonVariants.size[size],
                 className,
             )}
-            {...(asChild ? ((child?.props as any) ?? {}) : props)}
+            {...props}
         >
-            {asChild ? (child?.props as any)?.children : children}
-        </button>
+            {children}
+        </Comp>
     );
 }
 
@@ -500,8 +501,7 @@ function SidebarMenuSubButton({
     size?: 'sm' | 'md';
     isActive?: boolean;
 }) {
-    const Comp = asChild ? 'span' : 'a';
-    const child = asChild && React.isValidElement(children) ? children : null;
+    const Comp = asChild ? Slot : 'a';
     return (
         <Comp
             data-sidebar="menu-sub-button"
@@ -515,9 +515,9 @@ function SidebarMenuSubButton({
                 'group-data-[collapsible=icon]:hidden',
                 className,
             )}
-            {...(asChild ? ((child?.props as any) ?? {}) : props)}
+            {...props}
         >
-            {asChild ? (child?.props as any)?.children : children}
+            {children}
         </Comp>
     );
 }
