@@ -141,7 +141,7 @@ store.form = storeForm
 * @see app/Http/Controllers/ChoreController.php:66
 * @route '/chores/{chore}'
 */
-export const update = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -156,7 +156,7 @@ update.definition = {
 * @see app/Http/Controllers/ChoreController.php:66
 * @route '/chores/{chore}'
 */
-update.url = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { chore: args }
     }
@@ -189,7 +189,7 @@ update.url = (args: { chore: string | number | { id: string | number } } | [chor
 * @see app/Http/Controllers/ChoreController.php:66
 * @route '/chores/{chore}'
 */
-update.patch = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -199,7 +199,7 @@ update.patch = (args: { chore: string | number | { id: string | number } } | [ch
 * @see app/Http/Controllers/ChoreController.php:66
 * @route '/chores/{chore}'
 */
-const updateForm = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -214,7 +214,7 @@ const updateForm = (args: { chore: string | number | { id: string | number } } |
 * @see app/Http/Controllers/ChoreController.php:66
 * @route '/chores/{chore}'
 */
-updateForm.patch = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -231,7 +231,7 @@ update.form = updateForm
 * @see app/Http/Controllers/ChoreController.php:82
 * @route '/chores/{chore}'
 */
-export const destroy = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -246,7 +246,7 @@ destroy.definition = {
 * @see app/Http/Controllers/ChoreController.php:82
 * @route '/chores/{chore}'
 */
-destroy.url = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { chore: args }
     }
@@ -279,7 +279,7 @@ destroy.url = (args: { chore: string | number | { id: string | number } } | [cho
 * @see app/Http/Controllers/ChoreController.php:82
 * @route '/chores/{chore}'
 */
-destroy.delete = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -289,7 +289,7 @@ destroy.delete = (args: { chore: string | number | { id: string | number } } | [
 * @see app/Http/Controllers/ChoreController.php:82
 * @route '/chores/{chore}'
 */
-const destroyForm = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -304,7 +304,7 @@ const destroyForm = (args: { chore: string | number | { id: string | number } } 
 * @see app/Http/Controllers/ChoreController.php:82
 * @route '/chores/{chore}'
 */
-destroyForm.delete = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -321,7 +321,7 @@ destroy.form = destroyForm
 * @see app/Http/Controllers/ChoreController.php:91
 * @route '/chores/{chore}/complete'
 */
-export const complete = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const complete = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: complete.url(args, options),
     method: 'post',
 })
@@ -336,7 +336,7 @@ complete.definition = {
 * @see app/Http/Controllers/ChoreController.php:91
 * @route '/chores/{chore}/complete'
 */
-complete.url = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+complete.url = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { chore: args }
     }
@@ -369,7 +369,7 @@ complete.url = (args: { chore: string | number | { id: string | number } } | [ch
 * @see app/Http/Controllers/ChoreController.php:91
 * @route '/chores/{chore}/complete'
 */
-complete.post = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+complete.post = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: complete.url(args, options),
     method: 'post',
 })
@@ -379,7 +379,7 @@ complete.post = (args: { chore: string | number | { id: string | number } } | [c
 * @see app/Http/Controllers/ChoreController.php:91
 * @route '/chores/{chore}/complete'
 */
-const completeForm = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const completeForm = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: complete.url(args, options),
     method: 'post',
 })
@@ -389,7 +389,7 @@ const completeForm = (args: { chore: string | number | { id: string | number } }
 * @see app/Http/Controllers/ChoreController.php:91
 * @route '/chores/{chore}/complete'
 */
-completeForm.post = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+completeForm.post = (args: { chore: number | { id: number } } | [chore: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: complete.url(args, options),
     method: 'post',
 })

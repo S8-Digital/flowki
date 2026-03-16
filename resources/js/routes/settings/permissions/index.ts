@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\PermissionController::edit
 * @see app/Http/Controllers/Settings/PermissionController.php:19
@@ -194,6 +194,9 @@ updateForm.put = (args: { user: number | { id: number } } | [user: number | { id
 
 update.form = updateForm
 
-const PermissionController = { edit, update }
+const permissions = {
+    edit: Object.assign(edit, edit),
+    update: Object.assign(update, update),
+}
 
-export default PermissionController
+export default permissions
