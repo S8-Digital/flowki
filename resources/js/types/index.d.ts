@@ -49,6 +49,9 @@ export interface Family {
     id: number;
     name: string;
     invite_code: string;
+    location_name: string | null;
+    latitude: number | null;
+    longitude: number | null;
     members?: User[];
     created_at: string;
 }
@@ -187,6 +190,29 @@ export interface DashboardShoppingListData {
     id: number;
     name: string;
     items: Pick<ShoppingItem, 'id' | 'name' | 'quantity' | 'category' | 'is_checked'>[];
+}
+
+export interface WeatherCondition {
+    temp: number;
+    feels_like: number;
+    description: string;
+    icon: string;
+    humidity: number;
+    wind_speed: number;
+}
+
+export interface ForecastDay {
+    date: string;
+    temp_min: number;
+    temp_max: number;
+    description: string;
+    icon: string;
+}
+
+export interface WeatherData {
+    location: string;
+    current: WeatherCondition;
+    forecast: ForecastDay[];
 }
 
 export interface MemberSummary {

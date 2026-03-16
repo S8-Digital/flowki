@@ -1,5 +1,5 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { Baby, Copy, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
+import { Baby, Copy, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
 import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';
@@ -21,13 +21,21 @@ export default function FamilyShow({ family }: Props) {
     const page = usePage<AppPageProps>();
     const currentUserId = page.props.auth.user.id;
     const canManageMembers = page.props.currentUserPermissions.includes('manage-members');
+    const canManageFamily = page.props.currentUserPermissions.includes('manage-family');
 
     const [copied, setCopied] = useState(false);
     const [editNameOpen, setEditNameOpen] = useState(false);
+    const [editLocationOpen, setEditLocationOpen] = useState(false);
     const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
     const [addChildOpen, setAddChildOpen] = useState(false);
 
     const editNameForm = useForm({ name: family.name });
+    const editLocationForm = useForm({
+        name: family.name,
+        location_name: family.location_name ?? '',
+        latitude: family.latitude !== null ? String(family.latitude) : '',
+        longitude: family.longitude !== null ? String(family.longitude) : '',
+    });
     const inviteForm = useForm({ email: '', role: 'member' });
     const addChildForm = useForm({ name: '' });
 
@@ -36,6 +44,17 @@ export default function FamilyShow({ family }: Props) {
             editNameForm.setData('name', family.name);
         }
     }, [editNameForm, editNameOpen, family.name]);
+
+    useEffect(() => {
+        if (editLocationOpen) {
+            editLocationForm.setData({
+                name: family.name,
+                location_name: family.location_name ?? '',
+                latitude: family.latitude !== null ? String(family.latitude) : '',
+                longitude: family.longitude !== null ? String(family.longitude) : '',
+            });
+        }
+    }, [editLocationForm, editLocationOpen, family]);
 
     function copyInviteCode() {
         navigator.clipboard.writeText(family.invite_code);
@@ -46,6 +65,11 @@ export default function FamilyShow({ family }: Props) {
     function handleEditName(e: React.FormEvent) {
         e.preventDefault();
         editNameForm.patch(update().url, { onSuccess: () => setEditNameOpen(false) });
+    }
+
+    function handleEditLocation(e: React.FormEvent) {
+        e.preventDefault();
+        editLocationForm.patch(update().url, { onSuccess: () => setEditLocationOpen(false) });
     }
 
     function handleInvite(e: React.FormEvent) {
@@ -130,6 +154,92 @@ export default function FamilyShow({ family }: Props) {
                             </button>
                             {copied && <span className="text-xs text-green-500">Copied!</span>}
                         </div>
+                    </div>
+
+                    {/* Location section */}
+                    <div className="rounded-xl border p-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <MapPin className="size-4 text-muted-foreground" />
+                                <span className="text-sm font-medium">Location</span>
+                            </div>
+                            {canManageFamily && (
+                                <Dialog open={editLocationOpen} onOpenChange={setEditLocationOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                                            <Pencil className="size-3.5" />
+                                            <span className="text-xs">Edit</span>
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Set Family Location</DialogTitle>
+                                        </DialogHeader>
+                                        <form onSubmit={handleEditLocation} className="space-y-4">
+                                            <p className="text-sm text-muted-foreground">
+                                                Used to show local weather on the dashboard and calendar. Enter a city name, or provide coordinates
+                                                for more accuracy.
+                                            </p>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="location_name">City / Location Name</Label>
+                                                <Input
+                                                    id="location_name"
+                                                    value={editLocationForm.data.location_name}
+                                                    onChange={(e) => editLocationForm.setData('location_name', e.target.value)}
+                                                    placeholder="e.g. London, Paris, New York"
+                                                />
+                                                <InputError message={editLocationForm.errors.location_name} />
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div className="grid gap-2">
+                                                    <Label htmlFor="latitude">
+                                                        Latitude <span className="text-xs text-muted-foreground">(optional)</span>
+                                                    </Label>
+                                                    <Input
+                                                        id="latitude"
+                                                        type="number"
+                                                        step="any"
+                                                        value={editLocationForm.data.latitude}
+                                                        onChange={(e) => editLocationForm.setData('latitude', e.target.value)}
+                                                        placeholder="51.5074"
+                                                    />
+                                                    <InputError message={editLocationForm.errors.latitude} />
+                                                </div>
+                                                <div className="grid gap-2">
+                                                    <Label htmlFor="longitude">
+                                                        Longitude <span className="text-xs text-muted-foreground">(optional)</span>
+                                                    </Label>
+                                                    <Input
+                                                        id="longitude"
+                                                        type="number"
+                                                        step="any"
+                                                        value={editLocationForm.data.longitude}
+                                                        onChange={(e) => editLocationForm.setData('longitude', e.target.value)}
+                                                        placeholder="-0.1278"
+                                                    />
+                                                    <InputError message={editLocationForm.errors.longitude} />
+                                                </div>
+                                            </div>
+                                            <Button type="submit" className="w-full" disabled={editLocationForm.processing}>
+                                                {editLocationForm.processing ? 'Saving…' : 'Save Location'}
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+                            )}
+                        </div>
+                        {family.location_name ? (
+                            <p className="mt-2 text-sm text-muted-foreground">
+                                {family.location_name}
+                                {family.latitude !== null && family.longitude !== null && (
+                                    <span className="ml-2 text-xs opacity-60">
+                                        ({family.latitude}, {family.longitude})
+                                    </span>
+                                )}
+                            </p>
+                        ) : (
+                            <p className="mt-2 text-sm text-muted-foreground">No location set.</p>
+                        )}
                     </div>
 
                     <div className="rounded-xl border">

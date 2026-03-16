@@ -8,6 +8,7 @@ enum DashboardWidgetType: string
     case CalendarToday = 'calendar_today';
     case TodoList = 'todo_list';
     case ShoppingList = 'shopping_list';
+    case Weather = 'weather';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum DashboardWidgetType: string
             self::CalendarToday => "Today's Schedule",
             self::TodoList => 'Todo List',
             self::ShoppingList => 'Shopping List',
+            self::Weather => 'Weather',
         };
     }
 }

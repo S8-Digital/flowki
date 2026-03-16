@@ -92,7 +92,12 @@ class FamilyController extends Controller
 
         $this->authorize('update', $family);
 
-        $family->update(['name' => $request->name]);
+        $family->update([
+            'name' => $request->name,
+            'location_name' => $request->location_name,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
 
         return back();
     }

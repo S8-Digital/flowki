@@ -59,4 +59,8 @@ return [
         'measurement_id' => env('VITE_FIREBASE_MEASUREMENT_ID'),
         'vapid_key' => env('VITE_FIREBASE_VAPID_KEY'),
     ],
+
+    'openweathermap' => [
+        'key' => env('OPENWEATHERMAP_API_KEY'),
+    ],
 ];

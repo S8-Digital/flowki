@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
 
@@ -306,6 +307,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
             <Head title="Calendar" />
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="flex flex-col gap-4 p-4">
+                    <WeatherStrip />
                     <div className="flex items-center justify-between">
                         <h1 className="text-xl font-semibold">Calendar</h1>
                         <div className="flex items-center gap-2">

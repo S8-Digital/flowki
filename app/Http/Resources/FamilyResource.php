@@ -18,6 +18,9 @@ class FamilyResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'invite_code' => $this->invite_code,
+            'location_name' => $this->location_name,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
             'members' => $this->when(
                 $this->resource->relationLoaded('members'),
                 fn () => UserResource::collection($this->resource->members)->resolve()

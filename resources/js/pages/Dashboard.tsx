@@ -6,6 +6,7 @@ import CalendarScheduleWidget from '@/components/Dashboard/CalendarScheduleWidge
 import CalendarTodayWidget from '@/components/Dashboard/CalendarTodayWidget';
 import ShoppingListWidget from '@/components/Dashboard/ShoppingListWidget';
 import TodoListWidget from '@/components/Dashboard/TodoListWidget';
+import WeatherWidget from '@/components/Dashboard/WeatherWidget';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -217,6 +218,7 @@ export default function Dashboard({
                                             shoppingLists={shoppingLists}
                                         />
                                     )}
+                                    {widget.type === 'weather' && <WeatherWidget />}
                                 </div>
                             </div>
                         ))}
