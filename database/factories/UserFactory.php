@@ -69,4 +69,20 @@ class UserFactory extends Factory
             $user->syncRoles(['Member']);
         });
     }
+
+    /**
+     * Attach the user to an existing family as a Child with the Child Spatie role.
+     */
+    public function asChildOf(Family $family): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email' => null,
+            'password' => null,
+            'email_verified_at' => now(),
+        ])->afterCreating(function (User $user) use ($family) {
+            $user->update(['family_id' => $family->id]);
+            $family->members()->attach($user->id, ['role' => FamilyRole::Child->value]);
+            $user->syncRoles(['Child']);
+        });
+    }
 }

@@ -12,7 +12,7 @@ class ShoppingListPolicy
      */
     public function viewAny(User $user): bool
     {
-        return (bool) $user->family_id;
+        return (bool) $user->family_id && $user->hasPermissionTo('view-shopping');
     }
 
     /**
@@ -20,7 +20,7 @@ class ShoppingListPolicy
      */
     public function view(User $user, ShoppingList $shoppingList): bool
     {
-        return $user->family_id === $shoppingList->family_id;
+        return $user->family_id === $shoppingList->family_id && $user->hasPermissionTo('view-shopping');
     }
 
     /**
@@ -28,7 +28,7 @@ class ShoppingListPolicy
      */
     public function create(User $user): bool
     {
-        return $user->family_id && $user->hasPermissionTo('manage-shopping');
+        return $user->family_id && $user->hasPermissionTo('create-shopping');
     }
 
     /**
@@ -40,7 +40,7 @@ class ShoppingListPolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-shopping');
+        return $user->hasPermissionTo('edit-shopping');
     }
 
     /**
@@ -52,7 +52,7 @@ class ShoppingListPolicy
             return false;
         }
 
-        return $user->hasPermissionTo('manage-shopping');
+        return $user->hasPermissionTo('delete-shopping');
     }
 
     /**
@@ -76,6 +76,6 @@ class ShoppingListPolicy
      */
     public function addItem(User $user, ShoppingList $shoppingList): bool
     {
-        return $user->family_id === $shoppingList->family_id;
+        return $user->family_id === $shoppingList->family_id && $user->hasPermissionTo('create-shopping-items');
     }
 }

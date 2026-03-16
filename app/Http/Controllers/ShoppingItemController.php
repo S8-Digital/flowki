@@ -12,7 +12,7 @@ class ShoppingItemController extends Controller
 {
     public function store(StoreShoppingItemRequest $request, ShoppingList $shoppingList): RedirectResponse
     {
-        $this->authorize('update', $shoppingList);
+        $this->authorize('addItem', $shoppingList);
 
         $shoppingList->items()->create(array_merge($request->validated(), [
             'added_by' => $request->user()->id,

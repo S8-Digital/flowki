@@ -24,6 +24,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    currentUserPermissions: string[];
 };
 
 export interface User {
@@ -47,6 +48,16 @@ export interface Family {
     invite_code: string;
     members?: User[];
     created_at: string;
+}
+
+export interface Permission {
+    name: string;
+    granted: boolean;
+}
+
+export interface PermissionGroup {
+    group: string;
+    permissions: Permission[];
 }
 
 export interface Todo {
