@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import * as icons from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface IconProps {
     name: string;

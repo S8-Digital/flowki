@@ -1,5 +1,5 @@
-import type { AppPageProps } from '@/types';
 import { usePage } from '@inertiajs/react';
+import type { AppPageProps } from '@/types';
 import AppLogoIcon from './AppLogoIcon';
 
 export default function AppLogo() {

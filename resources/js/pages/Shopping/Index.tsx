@@ -1,3 +1,6 @@
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { ExternalLink, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { destroy, show, store } from '@/actions/App/Http/Controllers/ShoppingListController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -7,9 +10,6 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, ShoppingList } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { ExternalLink, Plus, ShoppingCart, Trash2 } from 'lucide-react';
-import { useState } from 'react';
 
 interface Props {
     lists: ShoppingList[] | null;

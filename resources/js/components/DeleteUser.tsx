@@ -1,3 +1,5 @@
+import { useForm } from '@inertiajs/react';
+import { useRef, useState } from 'react';
 import { destroy } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
@@ -14,8 +16,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useForm } from '@inertiajs/react';
-import { useRef, useState } from 'react';
 
 export default function DeleteUser() {
     const passwordInputRef = useRef<HTMLInputElement>(null);

@@ -1,13 +1,3 @@
-import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
-import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
-import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
-import InputError from '@/components/InputError';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AppLayout from '@/layouts/AppLayout';
-import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
 import type { DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
@@ -18,6 +8,16 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Plus, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
+import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
+import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
+import InputError from '@/components/InputError';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/AppLayout';
+import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
 
 interface Props {
     events: CalendarEvent[];

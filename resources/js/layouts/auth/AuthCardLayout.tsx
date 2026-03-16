@@ -1,8 +1,8 @@
+import { Link } from '@inertiajs/react';
+import type { PropsWithChildren } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { home } from '@/routes';
-import { Link } from '@inertiajs/react';
-import type { PropsWithChildren } from 'react';
 
 interface Props extends PropsWithChildren {
     title?: string;

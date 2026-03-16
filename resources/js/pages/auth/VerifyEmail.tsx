@@ -1,10 +1,10 @@
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
 import TextLink from '@/components/TextLink';
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/AuthLayout';
 import { logout } from '@/routes';
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
 
 interface Props {
     status?: string;

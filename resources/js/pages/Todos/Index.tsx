@@ -1,3 +1,6 @@
+import { Head, router, useForm } from '@inertiajs/react';
+import { Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { destroy, store, update } from '@/actions/App/Http/Controllers/TodoController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -9,9 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, PaginatedResource, Todo, User } from '@/types';
-import { Head, router, useForm } from '@inertiajs/react';
-import { Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
 
 interface Category {
     value: string;

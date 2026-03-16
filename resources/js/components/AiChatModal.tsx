@@ -1,9 +1,9 @@
+import { Bot, Send, Sparkles, User } from 'lucide-react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Bot, Send, Sparkles, User } from 'lucide-react';
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
 interface Message {
     role: 'user' | 'assistant';

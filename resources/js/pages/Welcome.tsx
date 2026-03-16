@@ -1,7 +1,7 @@
-import AppearanceToggle from '@/components/AppearanceToggle';
-import { login, register } from '@/routes';
 import { Head, Link } from '@inertiajs/react';
 import { CalendarDays, CheckSquare, ChefHat, RotateCcw, ShoppingCart, Users } from 'lucide-react';
+import AppearanceToggle from '@/components/AppearanceToggle';
+import { login, register } from '@/routes';
 
 const features = [
     { name: 'Todos', icon: CheckSquare },

@@ -1,6 +1,6 @@
+import { Monitor, Moon, Sun } from 'lucide-react';
 import { useAppearance } from '@/hooks/useAppearance';
 import { cn } from '@/lib/utils';
-import { Monitor, Moon, Sun } from 'lucide-react';
 
 const tabs = [
     { value: 'light', Icon: Sun, label: 'Light' },

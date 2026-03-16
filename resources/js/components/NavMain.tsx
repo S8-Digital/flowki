@@ -1,7 +1,7 @@
+import { Link, usePage } from '@inertiajs/react';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { urlIsActive } from '@/lib/utils';
 import type { NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
 
 interface NavMainProps {
     items: NavItem[];

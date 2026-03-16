@@ -1,8 +1,8 @@
+import { Link, usePage } from '@inertiajs/react';
+import type { PropsWithChildren } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { home } from '@/routes';
 import type { AppPageProps } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
-import type { PropsWithChildren } from 'react';
 
 interface Props extends PropsWithChildren {
     title?: string;

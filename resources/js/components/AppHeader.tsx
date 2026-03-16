@@ -1,3 +1,6 @@
+import type { InertiaLinkProps } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, Folder, LayoutGrid, Menu } from 'lucide-react';
 import AppLogo from '@/components/AppLogo';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -13,9 +16,6 @@ import { getInitials } from '@/hooks/useInitials';
 import { cn, toUrl, urlIsActive } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import type { AppPageProps, BreadcrumbItem, NavItem } from '@/types';
-import type { InertiaLinkProps } from '@inertiajs/react';
-import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu } from 'lucide-react';
 
 interface AppHeaderProps {
     breadcrumbs?: BreadcrumbItem[];

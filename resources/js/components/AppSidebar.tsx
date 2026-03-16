@@ -1,3 +1,6 @@
+import { Link } from '@inertiajs/react';
+import { CalendarDays, CheckSquare, ChefHat, LayoutGrid, RotateCcw, ShoppingCart, Sparkles, Users } from 'lucide-react';
+import { useRef } from 'react';
 import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
 import { show as familyShow } from '@/actions/App/Http/Controllers/FamilyController';
@@ -13,9 +16,6 @@ import NavUser from '@/components/NavUser';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { CalendarDays, CheckSquare, ChefHat, LayoutGrid, RotateCcw, ShoppingCart, Sparkles, Users } from 'lucide-react';
-import { useRef } from 'react';
 
 const footerNavItems: NavItem[] = [];
 
