@@ -1,6 +1,7 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/react';
+import { ThemeProvider } from '@material-tailwind/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -19,9 +20,11 @@ createInertiaApp({
         const root = createRoot(el);
         root.render(
             <StrictMode>
-                <Provider store={store}>
-                    <App {...props} />
-                </Provider>
+                <ThemeProvider value={{}}>
+                    <Provider store={store}>
+                        <App {...props} />
+                    </Provider>
+                </ThemeProvider>
             </StrictMode>,
         );
     },

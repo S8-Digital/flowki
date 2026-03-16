@@ -3,6 +3,8 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../../node_modules/@material-tailwind/react/src/components/**/*.{js,ts,jsx,tsx}';
+@source '../../node_modules/@material-tailwind/react/src/theme/**/*.{js,ts,jsx,tsx}';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -89,8 +91,8 @@
     --color-pastel-purple-500: #e2dcf7;
 
     /* ---- Warm neutral backgrounds ---- */
-    --color-warm-white: hsl(40 20% 98%);
-    --color-warm-50: hsl(40 15% 96%);
+    --color-warm-white: hsl(0 0% 100%);
+    --color-warm-50: hsl(210 14% 97%);
     --color-warm-100: hsl(40 12% 92%);
     --color-warm-200: hsl(40 10% 86%);
     --color-warm-300: hsl(40 8% 72%);
@@ -143,6 +145,36 @@
     --color-category-shopping: var(--color-coral-100, #f8d8d2);
     --color-category-meals: var(--color-amber-100, #feefc8);
     --color-category-todos: var(--color-lavender-100, #e2dcf7);
+
+    /* Material Tailwind color tokens - mapped to Flowki palette */
+    --color-surface: var(--mt-surface);
+    --color-surface-dark: var(--mt-surface-dark);
+    --color-surface-light: var(--mt-surface-light);
+    --color-surface-foreground: var(--mt-surface-foreground);
+    --color-primary-dark: var(--mt-primary-dark);
+    --color-primary-light: var(--mt-primary-light);
+    --color-secondary: var(--mt-secondary);
+    --color-secondary-dark: var(--mt-secondary-dark);
+    --color-secondary-light: var(--mt-secondary-light);
+    --color-secondary-foreground: var(--mt-secondary-foreground);
+    --color-error: var(--mt-error);
+    --color-error-dark: var(--mt-error-dark);
+    --color-error-light: var(--mt-error-light);
+    --color-error-foreground: var(--mt-error-foreground);
+    --color-success: var(--mt-success);
+    --color-success-dark: var(--mt-success-dark);
+    --color-success-light: var(--mt-success-light);
+    --color-success-foreground: var(--mt-success-foreground);
+    --color-warning: var(--mt-warning);
+    --color-warning-dark: var(--mt-warning-dark);
+    --color-warning-light: var(--mt-warning-light);
+    --color-warning-foreground: var(--mt-warning-foreground);
+    --color-info: var(--mt-info);
+    --color-info-dark: var(--mt-info-dark);
+    --color-info-light: var(--mt-info-light);
+    --color-info-foreground: var(--mt-info-foreground);
+    --color-black: #020617;
+    --color-white: #ffffff;
 }
 
 /* ============================================================
@@ -170,8 +202,8 @@
    LIGHT MODE
    ============================================================ */
 :root {
-    /* Core surfaces — warmed neutrals */
-    --background: hsl(40 20% 98%);
+    /* Core surfaces — pure white paper, crisp and bright */
+    --background: hsl(0 0% 100%);
     --foreground: hsl(220 15% 12%);
     --card: hsl(0 0% 100%);
     --card-foreground: hsl(220 15% 12%);
@@ -182,12 +214,12 @@
     --primary: hsl(207 55% 44%);
     --primary-foreground: hsl(0 0% 100%);
 
-    /* Secondary — subtle warm grey */
-    --secondary: hsl(40 12% 92%);
+    /* Secondary — subtle cool grey */
+    --secondary: hsl(210 14% 93%);
     --secondary-foreground: hsl(220 12% 18%);
 
-    /* Muted — warm off-white */
-    --muted: hsl(40 15% 96%);
+    /* Muted — very light grey */
+    --muted: hsl(210 14% 97%);
     --muted-foreground: hsl(220 8% 46%);
 
     /* Accent — soft blue tint */
@@ -199,8 +231,8 @@
     --destructive-foreground: hsl(0 0% 100%);
 
     /* Borders and inputs */
-    --border: hsl(40 10% 88%);
-    --input: hsl(40 10% 90%);
+    --border: hsl(214 13% 90%);
+    --input: hsl(214 13% 91%);
     --ring: hsl(207 55% 44%);
 
     /* Border radius — softer and more modern */
@@ -213,37 +245,65 @@
     --chart-4: var(--color-pastel-amber-500);
     --chart-5: var(--color-pastel-purple-500);
 
-    /* Sidebar */
-    --sidebar-background: hsl(40 15% 97%);
+    /* Sidebar — slightly off-white for contrast against pure white content */
+    --sidebar-background: hsl(210 20% 98%);
     --sidebar-foreground: hsl(220 12% 28%);
     --sidebar-primary: hsl(207 55% 44%);
     --sidebar-primary-foreground: hsl(0 0% 100%);
     --sidebar-accent: hsl(207 65% 93%);
     --sidebar-accent-foreground: hsl(207 55% 30%);
-    --sidebar-border: hsl(40 10% 90%);
+    --sidebar-border: hsl(214 13% 91%);
     --sidebar-ring: hsl(207 55% 44%);
-    --sidebar: hsl(40 15% 97%);
+    --sidebar: hsl(210 20% 98%);
 
-    /* ---- Flowki category color tokens (light) ---- */
-    --category-events-bg: hsl(207 60% 92%);
-    --category-events-fg: hsl(207 55% 28%);
-    --category-events-border: hsl(207 45% 78%);
+    /* Material Tailwind runtime CSS vars (mapped to Flowki palette) */
+    --mt-surface: hsl(40 10% 90%);
+    --mt-surface-dark: hsl(40 10% 82%);
+    --mt-surface-light: hsl(40 15% 96%);
+    --mt-surface-foreground: hsl(220 15% 12%);
+    --mt-primary-dark: hsl(207 55% 33%);
+    --mt-primary-light: hsl(207 55% 55%);
+    --mt-secondary: hsl(40 12% 92%);
+    --mt-secondary-dark: hsl(40 10% 82%);
+    --mt-secondary-light: hsl(40 15% 96%);
+    --mt-secondary-foreground: hsl(220 12% 18%);
+    --mt-error: hsl(4 72% 56%);
+    --mt-error-dark: hsl(4 72% 44%);
+    --mt-error-light: hsl(4 72% 68%);
+    --mt-error-foreground: hsl(0 0% 100%);
+    --mt-success: hsl(142 42% 35%);
+    --mt-success-dark: hsl(142 42% 25%);
+    --mt-success-light: hsl(142 42% 48%);
+    --mt-success-foreground: hsl(0 0% 100%);
+    --mt-warning: hsl(38 68% 45%);
+    --mt-warning-dark: hsl(38 68% 34%);
+    --mt-warning-light: hsl(38 68% 58%);
+    --mt-warning-foreground: hsl(0 0% 100%);
+    --mt-info: hsl(207 55% 44%);
+    --mt-info-dark: hsl(207 55% 33%);
+    --mt-info-light: hsl(207 55% 55%);
+    --mt-info-foreground: hsl(0 0% 100%);
 
-    --category-chores-bg: hsl(142 38% 88%);
-    --category-chores-fg: hsl(142 42% 22%);
-    --category-chores-border: hsl(142 32% 72%);
+    /* ---- Flowki category color tokens (light) — vivid outlines + soft pastels ---- */
+    --category-events-bg: hsl(207 72% 94%);
+    --category-events-fg: hsl(207 65% 25%);
+    --category-events-border: hsl(207 65% 60%);
 
-    --category-shopping-bg: hsl(8 68% 92%);
-    --category-shopping-fg: hsl(8 58% 28%);
-    --category-shopping-border: hsl(8 48% 76%);
+    --category-chores-bg: hsl(142 48% 91%);
+    --category-chores-fg: hsl(142 52% 20%);
+    --category-chores-border: hsl(142 48% 52%);
 
-    --category-meals-bg: hsl(38 92% 92%);
-    --category-meals-fg: hsl(38 72% 24%);
-    --category-meals-border: hsl(38 68% 74%);
+    --category-shopping-bg: hsl(8 75% 93%);
+    --category-shopping-fg: hsl(8 65% 26%);
+    --category-shopping-border: hsl(8 62% 58%);
 
-    --category-todos-bg: hsl(252 42% 92%);
-    --category-todos-fg: hsl(252 48% 26%);
-    --category-todos-border: hsl(252 36% 74%);
+    --category-meals-bg: hsl(38 95% 92%);
+    --category-meals-fg: hsl(38 78% 22%);
+    --category-meals-border: hsl(38 78% 56%);
+
+    --category-todos-bg: hsl(252 52% 93%);
+    --category-todos-fg: hsl(252 55% 24%);
+    --category-todos-border: hsl(252 52% 60%);
 }
 
 /* ============================================================
@@ -300,6 +360,34 @@
     --sidebar-border: hsl(40 5% 18%);
     --sidebar-ring: hsl(207 55% 58%);
     --sidebar: hsl(40 6% 8%);
+
+    /* Material Tailwind runtime CSS vars (dark mode) */
+    --mt-surface: hsl(40 5% 22%);
+    --mt-surface-dark: hsl(40 5% 16%);
+    --mt-surface-light: hsl(40 5% 28%);
+    --mt-surface-foreground: hsl(40 12% 94%);
+    --mt-primary-dark: hsl(207 60% 55%);
+    --mt-primary-light: hsl(207 60% 78%);
+    --mt-secondary: hsl(40 5% 18%);
+    --mt-secondary-dark: hsl(40 5% 12%);
+    --mt-secondary-light: hsl(40 5% 24%);
+    --mt-secondary-foreground: hsl(40 10% 90%);
+    --mt-error: hsl(4 72% 58%);
+    --mt-error-dark: hsl(4 72% 46%);
+    --mt-error-light: hsl(4 72% 70%);
+    --mt-error-foreground: hsl(0 0% 100%);
+    --mt-success: hsl(142 40% 48%);
+    --mt-success-dark: hsl(142 40% 36%);
+    --mt-success-light: hsl(142 40% 60%);
+    --mt-success-foreground: hsl(0 0% 100%);
+    --mt-warning: hsl(38 68% 58%);
+    --mt-warning-dark: hsl(38 68% 46%);
+    --mt-warning-light: hsl(38 68% 70%);
+    --mt-warning-foreground: hsl(0 0% 100%);
+    --mt-info: hsl(207 60% 68%);
+    --mt-info-dark: hsl(207 60% 55%);
+    --mt-info-light: hsl(207 60% 78%);
+    --mt-info-foreground: hsl(0 0% 100%);
 
     /* ---- Flowki category color tokens (dark) ---- */
     --category-events-bg: hsl(207 38% 18%);
@@ -368,6 +456,7 @@
 /* ============================================================
    FLOWKI UTILITY CLASSES
    Category badge helpers — use these on any pill/tag element
+   Category item helpers — use .category-X-item for list rows
    ============================================================ */
 @layer utilities {
     /* Events */
@@ -377,11 +466,23 @@
         border-color: var(--category-events-border);
     }
 
+    .category-events-item {
+        background-color: var(--category-events-bg);
+        color: var(--category-events-fg);
+        border: 2px solid var(--category-events-border);
+    }
+
     /* Chores */
     .category-chores {
         background-color: var(--category-chores-bg);
         color: var(--category-chores-fg);
         border-color: var(--category-chores-border);
+    }
+
+    .category-chores-item {
+        background-color: var(--category-chores-bg);
+        color: var(--category-chores-fg);
+        border: 2px solid var(--category-chores-border);
     }
 
     /* Shopping */
@@ -391,6 +492,12 @@
         border-color: var(--category-shopping-border);
     }
 
+    .category-shopping-item {
+        background-color: var(--category-shopping-bg);
+        color: var(--category-shopping-fg);
+        border: 2px solid var(--category-shopping-border);
+    }
+
     /* Meals */
     .category-meals {
         background-color: var(--category-meals-bg);
@@ -398,10 +505,22 @@
         border-color: var(--category-meals-border);
     }
 
+    .category-meals-item {
+        background-color: var(--category-meals-bg);
+        color: var(--category-meals-fg);
+        border: 2px solid var(--category-meals-border);
+    }
+
     /* To-dos */
     .category-todos {
         background-color: var(--category-todos-bg);
         color: var(--category-todos-fg);
         border-color: var(--category-todos-border);
+    }
+
+    .category-todos-item {
+        background-color: var(--category-todos-bg);
+        color: var(--category-todos-fg);
+        border: 2px solid var(--category-todos-border);
     }
 }

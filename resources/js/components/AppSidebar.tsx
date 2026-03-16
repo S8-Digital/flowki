@@ -23,13 +23,13 @@ export default function AppSidebar({ children }: { children?: React.ReactNode })
     const aiChatModalRef = useRef<AiChatModalHandle>(null);
 
     const mainNavItems: NavItem[] = [
-        { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
-        { title: 'Todos', href: todoIndex(), icon: CheckSquare },
-        { title: 'Chores', href: choreIndex(), icon: RotateCcw },
-        { title: 'Calendar', href: calendarIndex(), icon: CalendarDays },
-        { title: 'Shopping', href: shoppingIndex(), icon: ShoppingCart },
-        { title: 'Recipes', href: recipeIndex(), icon: ChefHat },
-        { title: 'Family', href: familyShow(), icon: Users },
+        { title: 'Dashboard', href: dashboard(), icon: LayoutGrid, iconColor: '#3282b0' },
+        { title: 'Todos', href: todoIndex(), icon: CheckSquare, iconColor: '#6e5cc8' },
+        { title: 'Chores', href: choreIndex(), icon: RotateCcw, iconColor: '#3a8a5c' },
+        { title: 'Calendar', href: calendarIndex(), icon: CalendarDays, iconColor: '#3282b0' },
+        { title: 'Shopping', href: shoppingIndex(), icon: ShoppingCart, iconColor: '#c4503c' },
+        { title: 'Recipes', href: recipeIndex(), icon: ChefHat, iconColor: '#d4900e' },
+        { title: 'Family', href: familyShow(), icon: Users, iconColor: '#5ba3cb' },
     ];
 
     return (

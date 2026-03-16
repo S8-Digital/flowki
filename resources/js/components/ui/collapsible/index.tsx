@@ -1,16 +1,48 @@
-import * as CollapsiblePrimitive from '@radix-ui/react-collapsible';
+import { Collapse as MtCollapse } from '@material-tailwind/react';
 import * as React from 'react';
 
-function Collapsible({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.Root>) {
-    return <CollapsiblePrimitive.Root data-slot="collapsible" {...props} />;
+interface CollapsibleContextProps {
+    open: boolean;
+    setOpen: (open: boolean) => void;
 }
 
-function CollapsibleTrigger({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>) {
-    return <CollapsiblePrimitive.CollapsibleTrigger data-slot="collapsible-trigger" {...props} />;
+const CollapsibleContext = React.createContext<CollapsibleContextProps>({ open: false, setOpen: () => {} });
+
+function Collapsible({ open: controlledOpen, onOpenChange, defaultOpen = false, children, ...props }: {
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    defaultOpen?: boolean;
+    children?: React.ReactNode;
+    className?: string;
+}) {
+    const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+    const open = controlledOpen ?? uncontrolledOpen;
+    const setOpen = (value: boolean) => {
+        if (onOpenChange) onOpenChange(value);
+        else setUncontrolledOpen(value);
+    };
+    return (
+        <CollapsibleContext.Provider value={{ open, setOpen }}>
+            <div {...props}>{children}</div>
+        </CollapsibleContext.Provider>
+    );
 }
 
-function CollapsibleContent({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {
-    return <CollapsiblePrimitive.CollapsibleContent data-slot="collapsible-content" {...props} />;
+function CollapsibleTrigger({ asChild, children, ...props }: { asChild?: boolean; children?: React.ReactNode; [key: string]: any }) {
+    const { open, setOpen } = React.useContext(CollapsibleContext);
+    const handleClick = () => setOpen(!open);
+    if (asChild && React.isValidElement(children)) {
+        return React.cloneElement(children as React.ReactElement<any>, {
+            onClick: handleClick,
+            ...(children.props as any),
+        });
+    }
+    return <button onClick={handleClick} {...props}>{children}</button>;
+}
+
+function CollapsibleContent({ children, ...props }: { children?: React.ReactNode; className?: string }) {
+    const { open } = React.useContext(CollapsibleContext);
+    return <MtCollapse open={open} {...(props as any)}>{children}</MtCollapse>;
 }
 
 export { Collapsible, CollapsibleContent, CollapsibleTrigger };

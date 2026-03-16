@@ -41,10 +41,13 @@ export default function ShoppingListWidget({ shoppingItems, listId }: ShoppingLi
                     ) : (
                         <ul className="space-y-1.5">
                             {list.items.map((item) => (
-                                <li key={item.id} className="flex items-center gap-2 rounded-md px-2 py-1 text-sm">
-                                    <div className="size-1.5 shrink-0 rounded-full bg-muted-foreground/40" />
+                                <li
+                                    key={item.id}
+                                    className="category-shopping-item flex items-center gap-2 overflow-hidden rounded-md px-2 py-1.5 text-sm"
+                                >
+                                    <div className="size-1.5 shrink-0 rounded-full bg-current opacity-60" />
                                     <span className="flex-1 truncate">{item.name}</span>
-                                    {item.quantity && <span className="shrink-0 text-xs text-muted-foreground">{item.quantity}</span>}
+                                    {item.quantity && <span className="shrink-0 text-xs opacity-70">{item.quantity}</span>}
                                 </li>
                             ))}
                         </ul>

@@ -193,12 +193,15 @@ export default function ChoresIndex({ chores, members }: Props) {
                             No chores yet. Add your first one!
                         </div>
                     ) : (
-                        <ul className="divide-y rounded-xl border">
+                        <ul className="space-y-2">
                             {chores.data.map((chore) => (
-                                <li key={chore.id} className="flex items-center justify-between gap-3 px-4 py-3">
+                                <li
+                                    key={chore.id}
+                                    className="category-chores-item flex items-center justify-between gap-3 overflow-hidden rounded-xl px-4 py-3"
+                                >
                                     <div className="min-w-0 flex-1">
                                         <p className="truncate font-medium">{chore.title}</p>
-                                        <p className="mt-0.5 flex gap-2 text-xs text-muted-foreground">
+                                        <p className="mt-0.5 flex gap-2 text-xs opacity-70">
                                             <span className="capitalize">{chore.frequency}</span>
                                             {chore.next_due_date && <span>Due {formatDateTime(chore.next_due_date)}</span>}
                                             {chore.assignees?.length ? <span>→ {chore.assignees.map((a) => a.name).join(', ')}</span> : null}

@@ -1,11 +1,10 @@
+import { Button } from '@material-tailwind/react';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useAppearance } from '@/hooks/useAppearance';
 
 export default function AppearanceToggle() {
     const { appearance, updateAppearance } = useAppearance();
-
     const cycle = ['light', 'dark', 'system'] as const;
-
     const Icon = appearance === 'dark' ? Moon : appearance === 'light' ? Sun : Monitor;
     const label = appearance === 'dark' ? 'Dark mode' : appearance === 'light' ? 'Light mode' : 'System theme';
 
@@ -16,14 +15,18 @@ export default function AppearanceToggle() {
     }
 
     return (
-        <button
-            type="button"
+        <Button
+            as="button"
+            variant="ghost"
+            size="sm"
+            color="secondary"
             title={label}
             aria-label={`Switch theme (current: ${label})`}
-            className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             onClick={toggle}
+            className="flex size-8 items-center justify-center p-1.5"
+            ripple={false}
         >
             <Icon className="size-4" />
-        </button>
+        </Button>
     );
 }
