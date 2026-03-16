@@ -1,4 +1,4 @@
-import type { DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
+import type { DateSelectArg, DatesSetArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -41,9 +41,15 @@ const VIEW_OPTIONS: { value: CalendarViewType; label: string }[] = [
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Calendar', href: '/calendar' }];
 
+function localToday(): string {
+    const d = new Date();
+
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export default function CalendarIndex({ events, todos, chores, members, initialView, initialDate }: Props) {
     const [calendarView, setCalendarView] = useState<CalendarViewType>((initialView as CalendarViewType) ?? 'family');
-    const [selectedDate, setSelectedDate] = useState<string>(initialDate ?? new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState<string>(initialDate ?? localToday());
     const calendarRef = useRef<FullCalendar>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [editEventOpen, setEditEventOpen] = useState(false);
@@ -195,6 +201,10 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         );
     }
 
+    function handleDatesSet(info: DatesSetArg) {
+        setSelectedDate(info.startStr.split('T')[0]);
+    }
+
     function deleteCurrentEvent() {
         if (!selectedEvent) {
             return;
@@ -341,6 +351,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 ref={calendarRef}
                                 plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
                                 initialView={calendarView}
+                                initialDate={selectedDate}
                                 headerToolbar={{ left: 'prev,next today', center: 'title', right: '' }}
                                 buttonText={{ today: 'Today' }}
                                 editable
@@ -354,6 +365,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 eventClick={handleEventClick}
                                 eventDrop={handleEventDrop}
                                 eventResize={handleEventResize}
+                                datesSet={handleDatesSet}
                             />
                         </div>
                     )}

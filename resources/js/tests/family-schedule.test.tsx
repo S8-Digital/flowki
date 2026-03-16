@@ -62,6 +62,7 @@ const baseChore: Chore = {
 function makeColumn(overrides: Partial<FamilyScheduleColumn> = {}): FamilyScheduleColumn {
     return {
         user: baseUser,
+        colorIndex: 0,
         events: [],
         allDayEvents: [],
         todos: [],
@@ -88,7 +89,7 @@ describe('getInitials', () => {
 });
 
 describe('getMemberColor', () => {
-    it('returns the user profile_color when valid', () => {
+    it('returns the user profile_color when valid 6-digit hex', () => {
         const user = { ...baseUser, profile_color: '#ff0000' };
         expect(getMemberColor(user, 0)).toBe('#ff0000');
     });
@@ -101,6 +102,11 @@ describe('getMemberColor', () => {
     it('falls back to MEMBER_COLORS when profile_color is invalid', () => {
         const user = { ...baseUser, profile_color: 'not-a-color' };
         expect(getMemberColor(user, 2)).toBe(MEMBER_COLORS[2]);
+    });
+
+    it('falls back to MEMBER_COLORS for short 3-digit hex', () => {
+        const user = { ...baseUser, profile_color: '#fff' };
+        expect(getMemberColor(user, 1)).toBe(MEMBER_COLORS[1]);
     });
 
     it('cycles through MEMBER_COLORS based on index', () => {
@@ -218,6 +224,7 @@ describe('buildColumns', () => {
         expect(columns).toHaveLength(1);
         expect(columns[0].events).toHaveLength(1);
         expect(columns[0].events[0].id).toBe(1);
+        expect(columns[0].colorIndex).toBe(0);
     });
 
     it('excludes events for the wrong date', () => {

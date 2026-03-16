@@ -197,6 +197,7 @@ export interface MemberSummary {
 }
 
 export interface FamilyScheduleColumn extends MemberSummary {
+    colorIndex: number;
     events: CalendarEvent[];
     allDayEvents: CalendarEvent[];
     todos: Todo[];

@@ -44,11 +44,17 @@ function shiftDate(dateStr: string, days: number): string {
     const d = new Date(dateStr + 'T00:00:00');
     d.setDate(d.getDate() + days);
 
-    return d.toISOString().split('T')[0];
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function localToday(): string {
+    const d = new Date();
+
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 function buildColumns(members: User[], events: CalendarEvent[], todos: Todo[], chores: Chore[], date: string): FamilyScheduleColumn[] {
-    return members.map((member) => {
+    return members.map((member, idx) => {
         const memberEvents = events.filter(
             (e) =>
                 !e.is_all_day && e.start_at.split('T')[0] === date && (e.attendees?.some((a) => a.id === member.id) || e.creator?.id === member.id),
@@ -68,6 +74,7 @@ function buildColumns(members: User[], events: CalendarEvent[], todos: Todo[], c
 
         return {
             user: member,
+            colorIndex: idx,
             events: memberEvents,
             allDayEvents: memberAllDayEvents,
             todos: memberTodos,
@@ -118,7 +125,7 @@ export default function FamilyScheduleView({
                     <Button variant="outline" size="icon" onClick={() => onDateChange(shiftDate(selectedDate, -1))} aria-label="Previous day">
                         <ChevronLeft className="size-4" />
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => onDateChange(new Date().toISOString().split('T')[0])} className="px-3">
+                    <Button variant="outline" size="sm" onClick={() => onDateChange(localToday())} className="px-3">
                         Today
                     </Button>
                     <Button variant="outline" size="icon" onClick={() => onDateChange(shiftDate(selectedDate, 1))} aria-label="Next day">

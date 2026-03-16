@@ -10,8 +10,8 @@ interface Props {
 
 export const MEMBER_COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#3b82f6', '#ec4899', '#14b8a6', '#f97316', '#84cc16'];
 
-export function getMemberColor(user: { id: number; profile_color?: string | null }, index: number): string {
-    if (user.profile_color && /^#[0-9a-fA-F]{3,8}$/.test(user.profile_color)) {
+export function getMemberColor(user: { profile_color?: string | null }, index: number): string {
+    if (user.profile_color && /^#[0-9a-fA-F]{6}$/.test(user.profile_color)) {
         return user.profile_color;
     }
 
@@ -32,8 +32,8 @@ function formatTime(value: string): string {
 }
 
 export default function MemberColumn({ column, onEventClick, onTodoClick, onChoreClick }: Props) {
-    const { user, events, allDayEvents, todos, chores, totalItems, completedItems, completionPct } = column;
-    const color = getMemberColor(user, user.id);
+    const { user, events, allDayEvents, todos, chores, totalItems, completedItems, completionPct, colorIndex } = column;
+    const color = getMemberColor(user, colorIndex);
     const isEmpty = totalItems === 0;
 
     return (
