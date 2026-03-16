@@ -39,7 +39,10 @@ export default function RecipesShow({ recipe }: Props) {
     }
 
     function deleteRecipe() {
-        if (!confirm('Delete this recipe?')) return;
+        if (!confirm('Delete this recipe?')) {
+            return;
+        }
+
         router.delete(destroy(recipe.id).url, { onSuccess: () => router.visit('/recipes') });
     }
 
@@ -68,10 +71,14 @@ export default function RecipesShow({ recipe }: Props) {
                                     {recipe.is_favorite && <Heart className="size-5 fill-red-500 text-red-500" />}
                                     <Dialog open={editOpen} onOpenChange={setEditOpen}>
                                         <DialogTrigger asChild>
-                                            <Button variant="outline" size="sm">Edit</Button>
+                                            <Button variant="outline" size="sm">
+                                                Edit
+                                            </Button>
                                         </DialogTrigger>
                                         <DialogContent className="max-h-[90vh] overflow-y-auto">
-                                            <DialogHeader><DialogTitle>Edit Recipe</DialogTitle></DialogHeader>
+                                            <DialogHeader>
+                                                <DialogTitle>Edit Recipe</DialogTitle>
+                                            </DialogHeader>
                                             <form onSubmit={handleEdit} className="space-y-4">
                                                 <div className="grid gap-2">
                                                     <Label>Title</Label>
@@ -85,29 +92,57 @@ export default function RecipesShow({ recipe }: Props) {
                                                 <div className="grid grid-cols-2 gap-3">
                                                     <div className="grid gap-2">
                                                         <Label>Prep (min)</Label>
-                                                        <Input type="number" value={data.prep_time_minutes} onChange={(e) => setData('prep_time_minutes', e.target.value)} />
+                                                        <Input
+                                                            type="number"
+                                                            value={data.prep_time_minutes}
+                                                            onChange={(e) => setData('prep_time_minutes', e.target.value)}
+                                                        />
                                                     </div>
                                                     <div className="grid gap-2">
                                                         <Label>Cook (min)</Label>
-                                                        <Input type="number" value={data.cook_time_minutes} onChange={(e) => setData('cook_time_minutes', e.target.value)} />
+                                                        <Input
+                                                            type="number"
+                                                            value={data.cook_time_minutes}
+                                                            onChange={(e) => setData('cook_time_minutes', e.target.value)}
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="grid gap-2">
                                                     <Label>Instructions</Label>
-                                                    <textarea value={data.instructions} onChange={(e) => setData('instructions', e.target.value)} rows={5} required className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring" />
+                                                    <textarea
+                                                        value={data.instructions}
+                                                        onChange={(e) => setData('instructions', e.target.value)}
+                                                        rows={5}
+                                                        required
+                                                        className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:ring-1 focus:ring-ring focus:outline-none"
+                                                    />
                                                     <InputError message={errors.instructions} />
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-3">
                                                     <div className="grid gap-2">
                                                         <Label>Rating</Label>
-                                                        <Input type="number" min="1" max="5" value={data.rating} onChange={(e) => setData('rating', e.target.value)} />
+                                                        <Input
+                                                            type="number"
+                                                            min="1"
+                                                            max="5"
+                                                            value={data.rating}
+                                                            onChange={(e) => setData('rating', e.target.value)}
+                                                        />
                                                     </div>
                                                     <div className="flex items-center gap-2 pt-6">
-                                                        <input id="is_favorite" type="checkbox" checked={data.is_favorite === '1'} onChange={(e) => setData('is_favorite', e.target.checked ? '1' : '')} className="rounded" />
+                                                        <input
+                                                            id="is_favorite"
+                                                            type="checkbox"
+                                                            checked={data.is_favorite === '1'}
+                                                            onChange={(e) => setData('is_favorite', e.target.checked ? '1' : '')}
+                                                            className="rounded"
+                                                        />
                                                         <Label htmlFor="is_favorite">Favourite</Label>
                                                     </div>
                                                 </div>
-                                                <Button type="submit" className="w-full" disabled={processing}>{processing ? 'Saving…' : 'Save Changes'}</Button>
+                                                <Button type="submit" className="w-full" disabled={processing}>
+                                                    {processing ? 'Saving…' : 'Save Changes'}
+                                                </Button>
                                             </form>
                                         </DialogContent>
                                     </Dialog>
@@ -117,9 +152,21 @@ export default function RecipesShow({ recipe }: Props) {
                                 </div>
                             </div>
                             <div className="mt-4 flex flex-wrap gap-4 text-sm">
-                                {recipe.servings && <span className="flex items-center gap-1 text-muted-foreground"><Users className="size-4" /> {recipe.servings} servings</span>}
-                                {recipe.total_time_minutes > 0 && <span className="flex items-center gap-1 text-muted-foreground"><Clock className="size-4" /> {recipe.total_time_minutes} min total</span>}
-                                {recipe.rating && <span className="flex items-center gap-1 text-muted-foreground"><Star className="size-4 fill-yellow-400 text-yellow-400" /> {recipe.rating}/5</span>}
+                                {recipe.servings && (
+                                    <span className="flex items-center gap-1 text-muted-foreground">
+                                        <Users className="size-4" /> {recipe.servings} servings
+                                    </span>
+                                )}
+                                {recipe.total_time_minutes > 0 && (
+                                    <span className="flex items-center gap-1 text-muted-foreground">
+                                        <Clock className="size-4" /> {recipe.total_time_minutes} min total
+                                    </span>
+                                )}
+                                {recipe.rating && (
+                                    <span className="flex items-center gap-1 text-muted-foreground">
+                                        <Star className="size-4 fill-yellow-400 text-yellow-400" /> {recipe.rating}/5
+                                    </span>
+                                )}
                                 {recipe.category && <span className="rounded-full bg-secondary px-2 py-0.5 capitalize">{recipe.category}</span>}
                             </div>
                         </div>
@@ -148,7 +195,7 @@ export default function RecipesShow({ recipe }: Props) {
                         </div>
                         <div className="rounded-xl border p-4 lg:col-span-2">
                             <h2 className="mb-3 font-semibold">Instructions</h2>
-                            <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-line text-sm">{recipe.instructions}</div>
+                            <div className="prose prose-sm dark:prose-invert max-w-none text-sm whitespace-pre-line">{recipe.instructions}</div>
                         </div>
                     </div>
                 </div>

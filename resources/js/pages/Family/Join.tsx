@@ -30,7 +30,14 @@ export default function FamilyJoin() {
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="invite_code">Invite Code</Label>
-                                <Input id="invite_code" value={data.invite_code} onChange={(e) => setData('invite_code', e.target.value.toUpperCase())} placeholder="e.g. ABCD1234" required className="uppercase" />
+                                <Input
+                                    id="invite_code"
+                                    value={data.invite_code}
+                                    onChange={(e) => setData('invite_code', e.target.value.toUpperCase())}
+                                    placeholder="e.g. ABCD1234"
+                                    required
+                                    className="uppercase"
+                                />
                                 <InputError message={errors.invite_code} />
                             </div>
                             <Button type="submit" className="w-full" disabled={processing}>

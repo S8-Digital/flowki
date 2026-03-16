@@ -30,7 +30,9 @@ export default function FamilyShow({ family }: Props) {
     const addChildForm = useForm({ name: '' });
 
     useEffect(() => {
-        if (editNameOpen) editNameForm.setData('name', family.name);
+        if (editNameOpen) {
+            editNameForm.setData('name', family.name);
+        }
     }, [editNameOpen]);
 
     function copyInviteCode() {
@@ -46,16 +48,29 @@ export default function FamilyShow({ family }: Props) {
 
     function handleInvite(e: React.FormEvent) {
         e.preventDefault();
-        inviteForm.post(inviteMember().url, { onSuccess: () => { setInviteMemberOpen(false); inviteForm.reset(); } });
+        inviteForm.post(inviteMember().url, {
+            onSuccess: () => {
+                setInviteMemberOpen(false);
+                inviteForm.reset();
+            },
+        });
     }
 
     function handleAddChild(e: React.FormEvent) {
         e.preventDefault();
-        addChildForm.post(addChild().url, { onSuccess: () => { setAddChildOpen(false); addChildForm.reset(); } });
+        addChildForm.post(addChild().url, {
+            onSuccess: () => {
+                setAddChildOpen(false);
+                addChildForm.reset();
+            },
+        });
     }
 
     function removeUser(userId: number) {
-        if (!confirm('Remove this member from your family?')) return;
+        if (!confirm('Remove this member from your family?')) {
+            return;
+        }
+
         router.delete(removeMember({ family: family.id, userId }).url);
     }
 
@@ -82,11 +97,19 @@ export default function FamilyShow({ family }: Props) {
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent>
-                                    <DialogHeader><DialogTitle>Edit Family Name</DialogTitle></DialogHeader>
+                                    <DialogHeader>
+                                        <DialogTitle>Edit Family Name</DialogTitle>
+                                    </DialogHeader>
                                     <form onSubmit={handleEditName} className="space-y-4">
                                         <div className="grid gap-2">
                                             <Label htmlFor="name">Family Name</Label>
-                                            <Input id="name" value={editNameForm.data.name} onChange={(e) => editNameForm.setData('name', e.target.value)} required placeholder="e.g. The Smith Family" />
+                                            <Input
+                                                id="name"
+                                                value={editNameForm.data.name}
+                                                onChange={(e) => editNameForm.setData('name', e.target.value)}
+                                                required
+                                                placeholder="e.g. The Smith Family"
+                                            />
                                             <InputError message={editNameForm.errors.name} />
                                         </div>
                                         <Button type="submit" className="w-full" disabled={editNameForm.processing}>
@@ -113,15 +136,27 @@ export default function FamilyShow({ family }: Props) {
                             <div className="flex items-center gap-2">
                                 <Dialog open={addChildOpen} onOpenChange={setAddChildOpen}>
                                     <DialogTrigger asChild>
-                                        <Button size="sm" variant="outline"><Baby className="mr-1 size-4" /> Add Child</Button>
+                                        <Button size="sm" variant="outline">
+                                            <Baby className="mr-1 size-4" /> Add Child
+                                        </Button>
                                     </DialogTrigger>
                                     <DialogContent>
-                                        <DialogHeader><DialogTitle>Add Child</DialogTitle></DialogHeader>
-                                        <p className="text-sm text-muted-foreground">Children are added directly and don't need to log in. They can be assigned todos and chores.</p>
+                                        <DialogHeader>
+                                            <DialogTitle>Add Child</DialogTitle>
+                                        </DialogHeader>
+                                        <p className="text-sm text-muted-foreground">
+                                            Children are added directly and don't need to log in. They can be assigned todos and chores.
+                                        </p>
                                         <form onSubmit={handleAddChild} className="space-y-4">
                                             <div className="grid gap-2">
                                                 <Label htmlFor="child-name">Child's Name</Label>
-                                                <Input id="child-name" value={addChildForm.data.name} onChange={(e) => addChildForm.setData('name', e.target.value)} placeholder="e.g. Emma" required />
+                                                <Input
+                                                    id="child-name"
+                                                    value={addChildForm.data.name}
+                                                    onChange={(e) => addChildForm.setData('name', e.target.value)}
+                                                    placeholder="e.g. Emma"
+                                                    required
+                                                />
                                                 <InputError message={addChildForm.errors.name} />
                                             </div>
                                             <Button type="submit" className="w-full" disabled={addChildForm.processing}>
@@ -133,20 +168,39 @@ export default function FamilyShow({ family }: Props) {
 
                                 <Dialog open={inviteMemberOpen} onOpenChange={setInviteMemberOpen}>
                                     <DialogTrigger asChild>
-                                        <Button size="sm" variant="outline"><UserPlus className="mr-1 size-4" /> Invite Member</Button>
+                                        <Button size="sm" variant="outline">
+                                            <UserPlus className="mr-1 size-4" /> Invite Member
+                                        </Button>
                                     </DialogTrigger>
                                     <DialogContent>
-                                        <DialogHeader><DialogTitle>Invite Family Member</DialogTitle></DialogHeader>
+                                        <DialogHeader>
+                                            <DialogTitle>Invite Family Member</DialogTitle>
+                                        </DialogHeader>
                                         <form onSubmit={handleInvite} className="space-y-4">
-                                            <p className="text-sm text-muted-foreground">An invitation email will be sent with a link to set up their account and join your family.</p>
+                                            <p className="text-sm text-muted-foreground">
+                                                An invitation email will be sent with a link to set up their account and join your family.
+                                            </p>
                                             <div className="grid gap-2">
                                                 <Label htmlFor="invite-email">Email Address</Label>
-                                                <Input id="invite-email" type="email" value={inviteForm.data.email} onChange={(e) => inviteForm.setData('email', e.target.value)} placeholder="their@email.com" required />
+                                                <Input
+                                                    id="invite-email"
+                                                    type="email"
+                                                    value={inviteForm.data.email}
+                                                    onChange={(e) => inviteForm.setData('email', e.target.value)}
+                                                    placeholder="their@email.com"
+                                                    required
+                                                />
                                                 <InputError message={inviteForm.errors.email} />
                                             </div>
                                             <div className="grid gap-2">
                                                 <Label htmlFor="invite-role">Role</Label>
-                                                <select id="invite-role" value={inviteForm.data.role} onChange={(e) => inviteForm.setData('role', e.target.value)} className="rounded-md border border-input bg-background px-3 py-2 text-sm" required>
+                                                <select
+                                                    id="invite-role"
+                                                    value={inviteForm.data.role}
+                                                    onChange={(e) => inviteForm.setData('role', e.target.value)}
+                                                    className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                                    required
+                                                >
                                                     <option value="member">Member</option>
                                                     <option value="guest">Guest (read-only)</option>
                                                 </select>
@@ -166,14 +220,26 @@ export default function FamilyShow({ family }: Props) {
                                     <div>
                                         <div className="flex items-center gap-2">
                                             <p className="font-medium">{member.name || member.email}</p>
-                                            {member.is_pending && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">Pending</span>}
-                                            {member.is_child && <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">Child</span>}
+                                            {member.is_pending && (
+                                                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                                                    Pending
+                                                </span>
+                                            )}
+                                            {member.is_child && (
+                                                <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                                    Child
+                                                </span>
+                                            )}
                                         </div>
                                         <p className="text-sm text-muted-foreground">{member.email ?? 'No email'}</p>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         {member.id !== currentUserId && !member.is_child ? (
-                                            <select value={member.role} onChange={(e) => changeRole(member.id, e.target.value)} className="rounded-full border border-input bg-transparent px-2 py-0.5 text-xs capitalize">
+                                            <select
+                                                value={member.role}
+                                                onChange={(e) => changeRole(member.id, e.target.value)}
+                                                className="rounded-full border border-input bg-transparent px-2 py-0.5 text-xs capitalize"
+                                            >
                                                 <option value="admin">Admin</option>
                                                 <option value="member">Member</option>
                                                 <option value="guest">Guest</option>

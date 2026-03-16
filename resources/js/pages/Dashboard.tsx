@@ -12,7 +12,7 @@ import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { GripVertical, Plus, Settings2, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 interface Widget {
     id: number;
@@ -63,7 +63,15 @@ interface Props {
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard() }];
 
-export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppingLists, todoCategories, calendarEvents, todosToday, shoppingItems }: Props) {
+export default function Dashboard({
+    widgets: initialWidgets,
+    widgetTypes,
+    shoppingLists,
+    todoCategories,
+    calendarEvents,
+    todosToday,
+    shoppingItems,
+}: Props) {
     const [localWidgets, setLocalWidgets] = useState<Widget[]>([...initialWidgets]);
     const [addOpen, setAddOpen] = useState(false);
     const [newWidgetType, setNewWidgetType] = useState('');
@@ -81,23 +89,44 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
 
     function todayEvents() {
         const todayStr = new Date().toDateString();
+
         return calendarEvents.filter((e) => new Date(e.start_at).toDateString() === todayStr);
     }
 
     function filteredTodos(widget: Widget) {
         const cat = widget.settings?.category as string | undefined;
+
         return cat ? todosToday.filter((t) => t.category === cat) : todosToday;
     }
 
     function addWidget() {
-        if (!newWidgetType) return;
+        if (!newWidgetType) {
+            return;
+        }
+
         const settings: Record<string, unknown> = {};
-        if (newWidgetListId) settings.list_id = newWidgetListId;
-        if (newWidgetCategory) settings.category = newWidgetCategory;
-        router.post(store().url, { type: newWidgetType, settings }, {
-            onSuccess: () => { setAddOpen(false); setNewWidgetType(''); setNewWidgetListId(''); setNewWidgetCategory(''); },
-            preserveScroll: true,
-        });
+
+        if (newWidgetListId) {
+            settings.list_id = newWidgetListId;
+        }
+
+        if (newWidgetCategory) {
+            settings.category = newWidgetCategory;
+        }
+
+        router.post(
+            store().url,
+            { type: newWidgetType, settings },
+            {
+                onSuccess: () => {
+                    setAddOpen(false);
+                    setNewWidgetType('');
+                    setNewWidgetListId('');
+                    setNewWidgetCategory('');
+                },
+                preserveScroll: true,
+            },
+        );
     }
 
     function removeWidget(widget: Widget) {
@@ -112,25 +141,46 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
     }
 
     function saveSettings() {
-        if (!settingsWidget) return;
+        if (!settingsWidget) {
+            return;
+        }
+
         const settings: Record<string, unknown> = {};
-        if (settingsListId) settings.list_id = settingsListId;
-        if (settingsCategory) settings.category = settingsCategory;
+
+        if (settingsListId) {
+            settings.list_id = settingsListId;
+        }
+
+        if (settingsCategory) {
+            settings.category = settingsCategory;
+        }
+
         router.patch(update(settingsWidget.id).url, { settings }, { onSuccess: () => setSettingsOpen(false), preserveScroll: true });
     }
 
-    function onDragStart(widget: Widget) { setDraggingId(widget.id); }
+    function onDragStart(widget: Widget) {
+        setDraggingId(widget.id);
+    }
 
     function onDragOver(e: React.DragEvent, widget: Widget) {
         e.preventDefault();
-        if (draggingId === widget.id) return;
+
+        if (draggingId === widget.id) {
+            return;
+        }
+
         setLocalWidgets((prev) => {
             const from = prev.findIndex((w) => w.id === draggingId);
             const to = prev.findIndex((w) => w.id === widget.id);
-            if (from === -1 || to === -1) return prev;
+
+            if (from === -1 || to === -1) {
+                return prev;
+            }
+
             const updated = [...prev];
             const [moved] = updated.splice(from, 1);
             updated.splice(to, 0, moved);
+
             return updated;
         });
     }
@@ -141,7 +191,9 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
         router.post(reorder().url, { order: localWidgets.map((w) => w.id) }, { preserveScroll: true });
     }
 
-    function hasSettings(type: string) { return type === 'todo_list' || type === 'shopping_list'; }
+    function hasSettings(type: string) {
+        return type === 'todo_list' || type === 'shopping_list';
+    }
 
     const showListFilter = newWidgetType === 'shopping_list';
     const showCategoryFilter = newWidgetType === 'todo_list';
@@ -162,7 +214,7 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
                         {localWidgets.map((widget) => (
                             <div
                                 key={widget.id}
-                                className={`rounded-xl border bg-card transition-shadow${draggingId === widget.id ? ' scale-[0.98] opacity-50' : ''}`}
+                                className={`rounded-xl border bg-card transition-shadow${draggingId === widget.id ? 'scale-[0.98] opacity-50' : ''}`}
                                 draggable
                                 onDragStart={() => onDragStart(widget)}
                                 onDragOver={(e) => onDragOver(e, widget)}
@@ -220,15 +272,21 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
                 {/* Add Widget Dialog */}
                 <Dialog open={addOpen} onOpenChange={setAddOpen}>
                     <DialogContent>
-                        <DialogHeader><DialogTitle>Add Widget</DialogTitle></DialogHeader>
+                        <DialogHeader>
+                            <DialogTitle>Add Widget</DialogTitle>
+                        </DialogHeader>
                         <div className="space-y-4">
                             <div className="grid gap-2">
                                 <Label>Widget Type</Label>
                                 <Select value={newWidgetType} onValueChange={setNewWidgetType}>
-                                    <SelectTrigger><SelectValue placeholder="Choose a widget…" /></SelectTrigger>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Choose a widget…" />
+                                    </SelectTrigger>
                                     <SelectContent>
                                         {widgetTypes.map((wt) => (
-                                            <SelectItem key={wt.value} value={wt.value}>{wt.label}</SelectItem>
+                                            <SelectItem key={wt.value} value={wt.value}>
+                                                {wt.label}
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -237,10 +295,14 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
                                 <div className="grid gap-2">
                                     <Label>Shopping List</Label>
                                     <Select value={newWidgetListId} onValueChange={setNewWidgetListId}>
-                                        <SelectTrigger><SelectValue placeholder="All lists (first list)" /></SelectTrigger>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="All lists (first list)" />
+                                        </SelectTrigger>
                                         <SelectContent>
                                             {shoppingLists.map((list) => (
-                                                <SelectItem key={list.id} value={String(list.id)}>{list.name}</SelectItem>
+                                                <SelectItem key={list.id} value={String(list.id)}>
+                                                    {list.name}
+                                                </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -248,19 +310,27 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
                             )}
                             {showCategoryFilter && (
                                 <div className="grid gap-2">
-                                    <Label>Category Filter <span className="text-xs text-muted-foreground">(optional)</span></Label>
+                                    <Label>
+                                        Category Filter <span className="text-xs text-muted-foreground">(optional)</span>
+                                    </Label>
                                     <Select value={newWidgetCategory} onValueChange={setNewWidgetCategory}>
-                                        <SelectTrigger><SelectValue placeholder="All categories" /></SelectTrigger>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="All categories" />
+                                        </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="">All categories</SelectItem>
                                             {todoCategories.map((cat) => (
-                                                <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                                                <SelectItem key={cat.value} value={cat.value}>
+                                                    {cat.label}
+                                                </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
                             )}
-                            <Button className="w-full" disabled={!newWidgetType} onClick={addWidget}>Add Widget</Button>
+                            <Button className="w-full" disabled={!newWidgetType} onClick={addWidget}>
+                                Add Widget
+                            </Button>
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -268,17 +338,23 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
                 {/* Settings Dialog */}
                 <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
                     <DialogContent>
-                        <DialogHeader><DialogTitle>Widget Settings</DialogTitle></DialogHeader>
+                        <DialogHeader>
+                            <DialogTitle>Widget Settings</DialogTitle>
+                        </DialogHeader>
                         {settingsWidget && (
                             <div className="space-y-4">
                                 {settingsWidget.type === 'shopping_list' && (
                                     <div className="grid gap-2">
                                         <Label>Shopping List</Label>
                                         <Select value={settingsListId} onValueChange={setSettingsListId}>
-                                            <SelectTrigger><SelectValue placeholder="First list" /></SelectTrigger>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="First list" />
+                                            </SelectTrigger>
                                             <SelectContent>
                                                 {shoppingLists.map((list) => (
-                                                    <SelectItem key={list.id} value={String(list.id)}>{list.name}</SelectItem>
+                                                    <SelectItem key={list.id} value={String(list.id)}>
+                                                        {list.name}
+                                                    </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -286,19 +362,27 @@ export default function Dashboard({ widgets: initialWidgets, widgetTypes, shoppi
                                 )}
                                 {settingsWidget.type === 'todo_list' && (
                                     <div className="grid gap-2">
-                                        <Label>Category Filter <span className="text-xs text-muted-foreground">(optional)</span></Label>
+                                        <Label>
+                                            Category Filter <span className="text-xs text-muted-foreground">(optional)</span>
+                                        </Label>
                                         <Select value={settingsCategory} onValueChange={setSettingsCategory}>
-                                            <SelectTrigger><SelectValue placeholder="All categories" /></SelectTrigger>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="All categories" />
+                                            </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="">All categories</SelectItem>
                                                 {todoCategories.map((cat) => (
-                                                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                                                    <SelectItem key={cat.value} value={cat.value}>
+                                                        {cat.label}
+                                                    </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
                                 )}
-                                <Button className="w-full" onClick={saveSettings}>Save Settings</Button>
+                                <Button className="w-full" onClick={saveSettings}>
+                                    Save Settings
+                                </Button>
                             </div>
                         )}
                     </DialogContent>

@@ -23,11 +23,19 @@ export default function ShoppingIndex({ lists }: Props) {
 
     function handleCreate(e: React.FormEvent) {
         e.preventDefault();
-        post(store().url, { onSuccess: () => { setCreateOpen(false); reset(); } });
+        post(store().url, {
+            onSuccess: () => {
+                setCreateOpen(false);
+                reset();
+            },
+        });
     }
 
     function deleteList(list: ShoppingList) {
-        if (!confirm('Delete this shopping list?')) return;
+        if (!confirm('Delete this shopping list?')) {
+            return;
+        }
+
         router.delete(destroy(list.id).url);
     }
 
@@ -40,18 +48,34 @@ export default function ShoppingIndex({ lists }: Props) {
                         <h1 className="text-xl font-semibold">Shopping Lists</h1>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button size="sm"><Plus className="mr-1 size-4" /> New List</Button>
+                                <Button size="sm">
+                                    <Plus className="mr-1 size-4" /> New List
+                                </Button>
                             </DialogTrigger>
                             <DialogContent>
-                                <DialogHeader><DialogTitle>Create Shopping List</DialogTitle></DialogHeader>
+                                <DialogHeader>
+                                    <DialogTitle>Create Shopping List</DialogTitle>
+                                </DialogHeader>
                                 <form onSubmit={handleCreate} className="space-y-4">
                                     <div className="grid gap-2">
                                         <Label htmlFor="name">List Name</Label>
-                                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} placeholder="e.g. Weekly Groceries" required />
+                                        <Input
+                                            id="name"
+                                            value={data.name}
+                                            onChange={(e) => setData('name', e.target.value)}
+                                            placeholder="e.g. Weekly Groceries"
+                                            required
+                                        />
                                         <InputError message={errors.name} />
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <input id="is_shared" type="checkbox" checked={data.is_shared} onChange={(e) => setData('is_shared', e.target.checked)} className="rounded" />
+                                        <input
+                                            id="is_shared"
+                                            type="checkbox"
+                                            checked={data.is_shared}
+                                            onChange={(e) => setData('is_shared', e.target.checked)}
+                                            className="rounded"
+                                        />
                                         <Label htmlFor="is_shared">Shared with family</Label>
                                     </div>
                                     <Button type="submit" className="w-full" disabled={processing}>
@@ -64,7 +88,9 @@ export default function ShoppingIndex({ lists }: Props) {
 
                     {!lists ? (
                         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                            {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+                            {[...Array(6)].map((_, i) => (
+                                <Skeleton key={i} className="h-24 rounded-xl" />
+                            ))}
                         </div>
                     ) : lists.length === 0 ? (
                         <div className="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">

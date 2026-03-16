@@ -22,7 +22,10 @@ interface Props {
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Chores', href: '/chores' }];
 
 function formatDateTime(value: string | null) {
-    if (!value) return null;
+    if (!value) {
+        return null;
+    }
+
     return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 }
 
@@ -56,17 +59,29 @@ export default function ChoresIndex({ chores, members }: Props) {
 
     function handleCreate(e: React.FormEvent) {
         e.preventDefault();
-        createForm.post(store().url, { onSuccess: () => { setCreateOpen(false); createForm.reset(); } });
+        createForm.post(store().url, {
+            onSuccess: () => {
+                setCreateOpen(false);
+                createForm.reset();
+            },
+        });
     }
 
     function handleEdit(e: React.FormEvent) {
         e.preventDefault();
-        if (!editingChore) return;
+
+        if (!editingChore) {
+            return;
+        }
+
         editForm.patch(update(editingChore.id).url, { onSuccess: () => setEditOpen(false) });
     }
 
     function deleteChore(chore: Chore) {
-        if (!confirm('Delete this chore?')) return;
+        if (!confirm('Delete this chore?')) {
+            return;
+        }
+
         router.delete(destroy(chore.id).url);
     }
 
@@ -87,39 +102,73 @@ export default function ChoresIndex({ chores, members }: Props) {
                         <h1 className="text-xl font-semibold">Chores</h1>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button size="sm"><Plus className="mr-1 size-4" /> New Chore</Button>
+                                <Button size="sm">
+                                    <Plus className="mr-1 size-4" /> New Chore
+                                </Button>
                             </DialogTrigger>
                             <DialogContent>
-                                <DialogHeader><DialogTitle>Create Chore</DialogTitle></DialogHeader>
+                                <DialogHeader>
+                                    <DialogTitle>Create Chore</DialogTitle>
+                                </DialogHeader>
                                 <form onSubmit={handleCreate} className="space-y-4">
                                     <div className="grid gap-2">
                                         <Label>Title</Label>
-                                        <Input value={createForm.data.title} onChange={(e) => createForm.setData('title', e.target.value)} placeholder="Chore name" required />
+                                        <Input
+                                            value={createForm.data.title}
+                                            onChange={(e) => createForm.setData('title', e.target.value)}
+                                            placeholder="Chore name"
+                                            required
+                                        />
                                         <InputError message={createForm.errors.title} />
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Description</Label>
-                                        <Input value={createForm.data.description} onChange={(e) => createForm.setData('description', e.target.value)} placeholder="Optional" />
+                                        <Input
+                                            value={createForm.data.description}
+                                            onChange={(e) => createForm.setData('description', e.target.value)}
+                                            placeholder="Optional"
+                                        />
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
                                         <div className="grid gap-2">
                                             <Label>Frequency</Label>
                                             <Select value={createForm.data.frequency} onValueChange={(v) => createForm.setData('frequency', v)}>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                                <SelectContent>{FREQUENCIES.map((f) => <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>)}</SelectContent>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {FREQUENCIES.map((f) => (
+                                                        <SelectItem key={f.value} value={f.value}>
+                                                            {f.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
                                             </Select>
                                         </div>
                                         <div className="grid gap-2">
                                             <Label>Next Due</Label>
-                                            <DateTimeInput value={createForm.data.next_due_date} onChange={(e) => createForm.setData('next_due_date', e.target.value)} />
+                                            <DateTimeInput
+                                                value={createForm.data.next_due_date}
+                                                onChange={(e) => createForm.setData('next_due_date', e.target.value)}
+                                            />
                                         </div>
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Assign To</Label>
                                         <div className="flex flex-col gap-1.5">
                                             {members.map((m) => (
-                                                <label key={m.id} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-accent">
-                                                    <input type="checkbox" checked={createForm.data.assignee_ids.includes(String(m.id))} onChange={() => toggleAssignee(createForm.setData, createForm.data.assignee_ids, String(m.id))} className="rounded border-input" />
+                                                <label
+                                                    key={m.id}
+                                                    className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-accent"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={createForm.data.assignee_ids.includes(String(m.id))}
+                                                        onChange={() =>
+                                                            toggleAssignee(createForm.setData, createForm.data.assignee_ids, String(m.id))
+                                                        }
+                                                        className="rounded border-input"
+                                                    />
                                                     {m.name}
                                                 </label>
                                             ))}
@@ -134,9 +183,15 @@ export default function ChoresIndex({ chores, members }: Props) {
                     </div>
 
                     {!chores ? (
-                        <div className="space-y-2">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}</div>
+                        <div className="space-y-2">
+                            {[...Array(5)].map((_, i) => (
+                                <Skeleton key={i} className="h-16 w-full rounded-xl" />
+                            ))}
+                        </div>
                     ) : chores.data.length === 0 ? (
-                        <div className="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">No chores yet. Add your first one!</div>
+                        <div className="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">
+                            No chores yet. Add your first one!
+                        </div>
                     ) : (
                         <ul className="divide-y rounded-xl border">
                             {chores.data.map((chore) => (
@@ -154,7 +209,14 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             <CheckCircle className="size-4 text-green-500" />
                                         </Button>
                                         <Button variant="ghost" size="icon" onClick={() => openEdit(chore)}>
-                                            <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                            <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                />
+                                            </svg>
                                         </Button>
                                         <Button variant="ghost" size="icon" onClick={() => deleteChore(chore)}>
                                             <Trash2 className="size-4 text-destructive" />
@@ -167,7 +229,9 @@ export default function ChoresIndex({ chores, members }: Props) {
 
                     <Dialog open={editOpen} onOpenChange={setEditOpen}>
                         <DialogContent>
-                            <DialogHeader><DialogTitle>Edit Chore</DialogTitle></DialogHeader>
+                            <DialogHeader>
+                                <DialogTitle>Edit Chore</DialogTitle>
+                            </DialogHeader>
                             {editingChore && (
                                 <form onSubmit={handleEdit} className="space-y-4">
                                     <div className="grid gap-2">
@@ -183,21 +247,40 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         <div className="grid gap-2">
                                             <Label>Frequency</Label>
                                             <Select value={editForm.data.frequency} onValueChange={(v) => editForm.setData('frequency', v)}>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                                <SelectContent>{FREQUENCIES.map((f) => <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>)}</SelectContent>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {FREQUENCIES.map((f) => (
+                                                        <SelectItem key={f.value} value={f.value}>
+                                                            {f.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
                                             </Select>
                                         </div>
                                         <div className="grid gap-2">
                                             <Label>Next Due</Label>
-                                            <DateTimeInput value={editForm.data.next_due_date} onChange={(e) => editForm.setData('next_due_date', e.target.value)} />
+                                            <DateTimeInput
+                                                value={editForm.data.next_due_date}
+                                                onChange={(e) => editForm.setData('next_due_date', e.target.value)}
+                                            />
                                         </div>
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Assign To</Label>
                                         <div className="flex flex-col gap-1.5">
                                             {members.map((m) => (
-                                                <label key={m.id} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-accent">
-                                                    <input type="checkbox" checked={editForm.data.assignee_ids.includes(String(m.id))} onChange={() => toggleAssignee(editForm.setData, editForm.data.assignee_ids, String(m.id))} className="rounded border-input" />
+                                                <label
+                                                    key={m.id}
+                                                    className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-accent"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={editForm.data.assignee_ids.includes(String(m.id))}
+                                                        onChange={() => toggleAssignee(editForm.setData, editForm.data.assignee_ids, String(m.id))}
+                                                        className="rounded border-input"
+                                                    />
                                                     {m.name}
                                                 </label>
                                             ))}

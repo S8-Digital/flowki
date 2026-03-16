@@ -30,7 +30,13 @@ export default function FamilyCreate() {
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Family Name</Label>
-                                <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} placeholder="e.g. The Smith Family" required />
+                                <Input
+                                    id="name"
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    placeholder="e.g. The Smith Family"
+                                    required
+                                />
                                 <InputError message={errors.name} />
                             </div>
                             <Button type="submit" className="w-full" disabled={processing}>

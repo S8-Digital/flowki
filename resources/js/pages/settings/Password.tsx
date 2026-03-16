@@ -1,6 +1,6 @@
 import { update } from '@/actions/App/Http/Controllers/Settings/PasswordController';
-import InputError from '@/components/InputError';
 import HeadingSmall from '@/components/HeadingSmall';
+import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -36,17 +36,41 @@ export default function Password() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid gap-2">
                             <Label htmlFor="current_password">Current password</Label>
-                            <Input id="current_password" type="password" value={data.current_password} onChange={(e) => setData('current_password', e.target.value)} className="mt-1 block w-full" autoComplete="current-password" placeholder="Current password" />
+                            <Input
+                                id="current_password"
+                                type="password"
+                                value={data.current_password}
+                                onChange={(e) => setData('current_password', e.target.value)}
+                                className="mt-1 block w-full"
+                                autoComplete="current-password"
+                                placeholder="Current password"
+                            />
                             <InputError message={errors.current_password} />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="password">New password</Label>
-                            <Input id="password" type="password" value={data.password} onChange={(e) => setData('password', e.target.value)} className="mt-1 block w-full" autoComplete="new-password" placeholder="New password" />
+                            <Input
+                                id="password"
+                                type="password"
+                                value={data.password}
+                                onChange={(e) => setData('password', e.target.value)}
+                                className="mt-1 block w-full"
+                                autoComplete="new-password"
+                                placeholder="New password"
+                            />
                             <InputError message={errors.password} />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="password_confirmation">Confirm password</Label>
-                            <Input id="password_confirmation" type="password" value={data.password_confirmation} onChange={(e) => setData('password_confirmation', e.target.value)} className="mt-1 block w-full" autoComplete="new-password" placeholder="Confirm password" />
+                            <Input
+                                id="password_confirmation"
+                                type="password"
+                                value={data.password_confirmation}
+                                onChange={(e) => setData('password_confirmation', e.target.value)}
+                                className="mt-1 block w-full"
+                                autoComplete="new-password"
+                                placeholder="Confirm password"
+                            />
                             <InputError message={errors.password_confirmation} />
                         </div>
                         <div className="flex items-center gap-4">

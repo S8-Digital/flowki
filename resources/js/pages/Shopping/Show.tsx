@@ -52,7 +52,11 @@ export default function ShoppingShow({ list }: Props) {
                             <InputError message={errors.name} />
                         </div>
                         <Input value={data.quantity} onChange={(e) => setData('quantity', e.target.value)} placeholder="Qty" className="w-20" />
-                        <select value={data.category} onChange={(e) => setData('category', e.target.value)} className="h-9 rounded-md border bg-background px-3 text-sm">
+                        <select
+                            value={data.category}
+                            onChange={(e) => setData('category', e.target.value)}
+                            className="h-9 rounded-md border bg-background px-3 text-sm"
+                        >
                             <option value="groceries">Groceries</option>
                             <option value="household">Household</option>
                             <option value="personal_care">Personal Care</option>
@@ -67,7 +71,12 @@ export default function ShoppingShow({ list }: Props) {
                         <ul className="divide-y rounded-xl border">
                             {unchecked.map((item) => (
                                 <li key={item.id} className="flex items-center gap-3 px-4 py-2">
-                                    <input type="checkbox" checked={item.is_checked} onChange={() => toggleItem(item)} className="size-4 cursor-pointer rounded" />
+                                    <input
+                                        type="checkbox"
+                                        checked={item.is_checked}
+                                        onChange={() => toggleItem(item)}
+                                        className="size-4 cursor-pointer rounded"
+                                    />
                                     <div className="flex-1">
                                         <span className="font-medium">{item.name}</span>
                                         {item.quantity && <span className="ml-2 text-sm text-muted-foreground">{item.quantity}</span>}
@@ -87,7 +96,12 @@ export default function ShoppingShow({ list }: Props) {
                             <ul className="divide-y rounded-xl border opacity-60">
                                 {checked.map((item) => (
                                     <li key={item.id} className="flex items-center gap-3 px-4 py-2">
-                                        <input type="checkbox" checked={item.is_checked} onChange={() => toggleItem(item)} className="size-4 cursor-pointer rounded" />
+                                        <input
+                                            type="checkbox"
+                                            checked={item.is_checked}
+                                            onChange={() => toggleItem(item)}
+                                            className="size-4 cursor-pointer rounded"
+                                        />
                                         <span className="flex-1 text-muted-foreground line-through">{item.name}</span>
                                         <Button variant="ghost" size="icon" onClick={() => deleteItem(item)}>
                                             <Trash2 className="size-3.5 text-destructive" />

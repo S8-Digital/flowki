@@ -13,7 +13,10 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-interface Category { value: string; label: string; }
+interface Category {
+    value: string;
+    label: string;
+}
 
 interface Props {
     todos: PaginatedResource<Todo> | null;
@@ -31,7 +34,10 @@ function priorityColor(priority: string) {
     return { low: 'text-green-600', medium: 'text-yellow-600', high: 'text-red-600' }[priority] ?? '';
 }
 function formatDateTime(value: string | null) {
-    if (!value) return null;
+    if (!value) {
+        return null;
+    }
+
     return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 }
 
@@ -40,7 +46,15 @@ export default function TodosIndex({ todos, members, categories }: Props) {
     const [editOpen, setEditOpen] = useState(false);
     const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
 
-    const createForm = useForm({ title: '', description: '', category: 'home', priority: 'medium', status: 'pending', due_date: '', assigned_to: '' });
+    const createForm = useForm({
+        title: '',
+        description: '',
+        category: 'home',
+        priority: 'medium',
+        status: 'pending',
+        due_date: '',
+        assigned_to: '',
+    });
     const editForm = useForm({ title: '', description: '', category: '', priority: '', status: '', due_date: '', assigned_to: '' });
 
     function openEdit(todo: Todo) {
@@ -59,17 +73,29 @@ export default function TodosIndex({ todos, members, categories }: Props) {
 
     function handleCreate(e: React.FormEvent) {
         e.preventDefault();
-        createForm.post(store().url, { onSuccess: () => { setCreateOpen(false); createForm.reset(); } });
+        createForm.post(store().url, {
+            onSuccess: () => {
+                setCreateOpen(false);
+                createForm.reset();
+            },
+        });
     }
 
     function handleEdit(e: React.FormEvent) {
         e.preventDefault();
-        if (!editingTodo) return;
+
+        if (!editingTodo) {
+            return;
+        }
+
         editForm.patch(update(editingTodo.id).url, { onSuccess: () => setEditOpen(false) });
     }
 
     function deleteTodo(todo: Todo) {
-        if (!confirm('Delete this todo?')) return;
+        if (!confirm('Delete this todo?')) {
+            return;
+        }
+
         router.delete(destroy(todo.id).url);
     }
 
@@ -82,32 +108,56 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                         <h1 className="text-xl font-semibold">Todos</h1>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button size="sm"><Plus className="mr-1 size-4" /> New Todo</Button>
+                                <Button size="sm">
+                                    <Plus className="mr-1 size-4" /> New Todo
+                                </Button>
                             </DialogTrigger>
                             <DialogContent>
-                                <DialogHeader><DialogTitle>Create Todo</DialogTitle></DialogHeader>
+                                <DialogHeader>
+                                    <DialogTitle>Create Todo</DialogTitle>
+                                </DialogHeader>
                                 <form onSubmit={handleCreate} className="space-y-4">
                                     <div className="grid gap-2">
                                         <Label htmlFor="title">Title</Label>
-                                        <Input id="title" value={createForm.data.title} onChange={(e) => createForm.setData('title', e.target.value)} placeholder="What needs doing?" required />
+                                        <Input
+                                            id="title"
+                                            value={createForm.data.title}
+                                            onChange={(e) => createForm.setData('title', e.target.value)}
+                                            placeholder="What needs doing?"
+                                            required
+                                        />
                                         <InputError message={createForm.errors.title} />
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Description</Label>
-                                        <Input value={createForm.data.description} onChange={(e) => createForm.setData('description', e.target.value)} placeholder="Optional details" />
+                                        <Input
+                                            value={createForm.data.description}
+                                            onChange={(e) => createForm.setData('description', e.target.value)}
+                                            placeholder="Optional details"
+                                        />
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
                                         <div className="grid gap-2">
                                             <Label>Category</Label>
                                             <Select value={createForm.data.category} onValueChange={(v) => createForm.setData('category', v)}>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                                <SelectContent>{categories.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {categories.map((c) => (
+                                                        <SelectItem key={c.value} value={c.value}>
+                                                            {c.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
                                             </Select>
                                         </div>
                                         <div className="grid gap-2">
                                             <Label>Priority</Label>
                                             <Select value={createForm.data.priority} onValueChange={(v) => createForm.setData('priority', v)}>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="low">Low</SelectItem>
                                                     <SelectItem value="medium">Medium</SelectItem>
@@ -120,7 +170,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         <div className="grid gap-2">
                                             <Label>Status</Label>
                                             <Select value={createForm.data.status} onValueChange={(v) => createForm.setData('status', v)}>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="pending">Pending</SelectItem>
                                                     <SelectItem value="in_progress">In Progress</SelectItem>
@@ -130,16 +182,25 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </div>
                                         <div className="grid gap-2">
                                             <Label>Due Date &amp; Time</Label>
-                                            <DateTimeInput value={createForm.data.due_date} onChange={(e) => createForm.setData('due_date', e.target.value)} />
+                                            <DateTimeInput
+                                                value={createForm.data.due_date}
+                                                onChange={(e) => createForm.setData('due_date', e.target.value)}
+                                            />
                                         </div>
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Assign To</Label>
                                         <Select value={createForm.data.assigned_to} onValueChange={(v) => createForm.setData('assigned_to', v)}>
-                                            <SelectTrigger><SelectValue placeholder="Unassigned" /></SelectTrigger>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Unassigned" />
+                                            </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="">Unassigned</SelectItem>
-                                                {members.map((m) => <SelectItem key={m.id} value={String(m.id)}>{m.name}</SelectItem>)}
+                                                {members.map((m) => (
+                                                    <SelectItem key={m.id} value={String(m.id)}>
+                                                        {m.name}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -152,15 +213,23 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                     </div>
 
                     {!todos ? (
-                        <div className="space-y-2">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}</div>
+                        <div className="space-y-2">
+                            {[...Array(5)].map((_, i) => (
+                                <Skeleton key={i} className="h-16 w-full rounded-xl" />
+                            ))}
+                        </div>
                     ) : todos.data.length === 0 ? (
-                        <div className="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">No todos yet. Create your first one!</div>
+                        <div className="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">
+                            No todos yet. Create your first one!
+                        </div>
                     ) : (
                         <ul className="divide-y rounded-xl border">
                             {todos.data.map((todo) => (
                                 <li key={todo.id} className="flex items-center justify-between gap-3 px-4 py-3">
                                     <div className="min-w-0 flex-1">
-                                        <p className={`truncate font-medium${todo.status === 'completed' ? ' line-through opacity-50' : ''}`}>{todo.title}</p>
+                                        <p className={`truncate font-medium${todo.status === 'completed' ? 'line-through opacity-50' : ''}`}>
+                                            {todo.title}
+                                        </p>
                                         <p className="mt-0.5 flex gap-2 text-xs text-muted-foreground">
                                             <span className="capitalize">{todo.category}</span>
                                             <span className={`font-medium capitalize ${priorityColor(todo.priority)}`}>{todo.priority}</span>
@@ -171,7 +240,14 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                     <div className="flex shrink-0 items-center gap-2">
                                         <span className="rounded-full bg-secondary px-2 py-0.5 text-xs">{statusLabel(todo.status)}</span>
                                         <Button variant="ghost" size="icon" onClick={() => openEdit(todo)}>
-                                            <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                            <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                />
+                                            </svg>
                                         </Button>
                                         <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo)}>
                                             <Trash2 className="size-4 text-destructive" />
@@ -184,7 +260,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
 
                     <Dialog open={editOpen} onOpenChange={setEditOpen}>
                         <DialogContent>
-                            <DialogHeader><DialogTitle>Edit Todo</DialogTitle></DialogHeader>
+                            <DialogHeader>
+                                <DialogTitle>Edit Todo</DialogTitle>
+                            </DialogHeader>
                             {editingTodo && (
                                 <form onSubmit={handleEdit} className="space-y-4">
                                     <div className="grid gap-2">
@@ -200,14 +278,24 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         <div className="grid gap-2">
                                             <Label>Category</Label>
                                             <Select value={editForm.data.category} onValueChange={(v) => editForm.setData('category', v)}>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                                <SelectContent>{categories.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}</SelectContent>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {categories.map((c) => (
+                                                        <SelectItem key={c.value} value={c.value}>
+                                                            {c.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
                                             </Select>
                                         </div>
                                         <div className="grid gap-2">
                                             <Label>Priority</Label>
                                             <Select value={editForm.data.priority} onValueChange={(v) => editForm.setData('priority', v)}>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="low">Low</SelectItem>
                                                     <SelectItem value="medium">Medium</SelectItem>
@@ -220,7 +308,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         <div className="grid gap-2">
                                             <Label>Status</Label>
                                             <Select value={editForm.data.status} onValueChange={(v) => editForm.setData('status', v)}>
-                                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="pending">Pending</SelectItem>
                                                     <SelectItem value="in_progress">In Progress</SelectItem>
@@ -230,16 +320,25 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </div>
                                         <div className="grid gap-2">
                                             <Label>Due Date &amp; Time</Label>
-                                            <DateTimeInput value={editForm.data.due_date} onChange={(e) => editForm.setData('due_date', e.target.value)} />
+                                            <DateTimeInput
+                                                value={editForm.data.due_date}
+                                                onChange={(e) => editForm.setData('due_date', e.target.value)}
+                                            />
                                         </div>
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Assign To</Label>
                                         <Select value={editForm.data.assigned_to} onValueChange={(v) => editForm.setData('assigned_to', v)}>
-                                            <SelectTrigger><SelectValue placeholder="Unassigned" /></SelectTrigger>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Unassigned" />
+                                            </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="">Unassigned</SelectItem>
-                                                {members.map((m) => <SelectItem key={m.id} value={String(m.id)}>{m.name}</SelectItem>)}
+                                                {members.map((m) => (
+                                                    <SelectItem key={m.id} value={String(m.id)}>
+                                                        {m.name}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>

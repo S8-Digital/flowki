@@ -1,7 +1,7 @@
-import calendar from './calendar'
+import calendar from './calendar';
 
 const google = {
     calendar: Object.assign(calendar, calendar),
-}
+};
 
-export default google
+export default google;

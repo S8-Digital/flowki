@@ -31,13 +31,19 @@ export default function AssistantIndex() {
 
     function scrollToBottom() {
         setTimeout(() => {
-            if (containerRef.current) containerRef.current.scrollTop = containerRef.current.scrollHeight;
+            if (containerRef.current) {
+                containerRef.current.scrollTop = containerRef.current.scrollHeight;
+            }
         }, 0);
     }
 
     async function sendMessage(text?: string) {
         const message = text ?? input.trim();
-        if (!message || isLoading) return;
+
+        if (!message || isLoading) {
+            return;
+        }
+
         setInput('');
         setIsLoading(true);
 
@@ -61,7 +67,8 @@ export default function AssistantIndex() {
             });
 
             if (!response.ok || !response.body) {
-                setMessages((prev) => prev.map((m, i) => i === assistantIdx ? { ...m, content: 'Something went wrong.', isStreaming: false } : m));
+                setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: 'Something went wrong.', isStreaming: false } : m)));
+
                 return;
             }
 
@@ -71,34 +78,52 @@ export default function AssistantIndex() {
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) break;
+
+                if (done) {
+                    break;
+                }
+
                 buffer += decoder.decode(value, { stream: true });
                 const lines = buffer.split('\n');
                 buffer = lines.pop() ?? '';
+
                 for (const line of lines) {
-                    if (!line.startsWith('data: ')) continue;
+                    if (!line.startsWith('data: ')) {
+                        continue;
+                    }
+
                     const data = line.slice(6).trim();
-                    if (data === '[DONE]') break;
+
+                    if (data === '[DONE]') {
+                        break;
+                    }
+
                     try {
                         const parsed = JSON.parse(data);
+
                         if (parsed.text) {
-                            setMessages((prev) => prev.map((m, i) => i === assistantIdx ? { ...m, content: m.content + parsed.text } : m));
+                            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: m.content + parsed.text } : m)));
                             scrollToBottom();
                         }
-                    } catch { /* non-JSON */ }
+                    } catch {
+                        /* non-JSON */
+                    }
                 }
             }
         } catch {
-            setMessages((prev) => prev.map((m, i) => i === assistantIdx ? { ...m, content: 'Something went wrong.', isStreaming: false } : m));
+            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: 'Something went wrong.', isStreaming: false } : m)));
         } finally {
-            setMessages((prev) => prev.map((m, i) => i === assistantIdx ? { ...m, isStreaming: false } : m));
+            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, isStreaming: false } : m)));
             setIsLoading(false);
             scrollToBottom();
         }
     }
 
     function handleKeyDown(e: React.KeyboardEvent) {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
     }
 
     return (
@@ -120,7 +145,11 @@ export default function AssistantIndex() {
                                 </div>
                                 <div className="flex flex-wrap justify-center gap-2">
                                     {suggestions.map((s) => (
-                                        <button key={s} onClick={() => sendMessage(s)} className="rounded-full border px-3 py-1.5 text-sm transition hover:bg-accent">
+                                        <button
+                                            key={s}
+                                            onClick={() => sendMessage(s)}
+                                            className="rounded-full border px-3 py-1.5 text-sm transition hover:bg-accent"
+                                        >
                                             {s}
                                         </button>
                                     ))}
@@ -128,13 +157,15 @@ export default function AssistantIndex() {
                             </div>
                         ) : (
                             messages.map((msg, i) => (
-                                <div key={i} className={`flex gap-3${msg.role === 'user' ? ' justify-end' : ' justify-start'}`}>
+                                <div key={i} className={`flex gap-3${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     {msg.role === 'assistant' && (
                                         <div className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10">
                                             <Bot className="size-4 text-primary" />
                                         </div>
                                     )}
-                                    <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm${msg.role === 'user' ? ' rounded-br-sm bg-primary text-primary-foreground' : ' rounded-bl-sm bg-muted'}`}>
+                                    <div
+                                        className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm${msg.role === 'user' ? 'rounded-br-sm bg-primary text-primary-foreground' : 'rounded-bl-sm bg-muted'}`}
+                                    >
                                         {msg.isStreaming && !msg.content ? (
                                             <span className="flex items-center gap-1 text-muted-foreground">
                                                 <span className="animate-bounce">●</span>
@@ -156,7 +187,14 @@ export default function AssistantIndex() {
                     </div>
                     <div className="border-t p-4">
                         <div className="flex items-end gap-2">
-                            <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask me anything about your family's tasks…" className="flex-1" disabled={isLoading} onKeyDown={handleKeyDown} />
+                            <Input
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Ask me anything about your family's tasks…"
+                                className="flex-1"
+                                disabled={isLoading}
+                                onKeyDown={handleKeyDown}
+                            />
                             <Button size="icon" disabled={isLoading || !input.trim()} onClick={() => sendMessage()}>
                                 <Send className="size-4" />
                             </Button>

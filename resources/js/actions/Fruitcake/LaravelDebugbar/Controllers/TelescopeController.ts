@@ -1,103 +1,113 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { applyUrlDefaults, queryParams, type RouteDefinition, type RouteFormDefinition, type RouteQueryOptions } from './../../../../wayfinder';
 /**
-* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
-* @route '/_debugbar/telescope/{id}'
-*/
-export const show = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
+ * @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+ * @route '/_debugbar/telescope/{id}'
+ */
+export const show = (
+    args: { id: string | number } | [id: string | number] | string | number,
+    options?: RouteQueryOptions,
+): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
-})
+});
 
 show.definition = {
-    methods: ["get","head"],
+    methods: ['get', 'head'],
     url: '/_debugbar/telescope/{id}',
-} satisfies RouteDefinition<["get","head"]>
+} satisfies RouteDefinition<['get', 'head']>;
 
 /**
-* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
-* @route '/_debugbar/telescope/{id}'
-*/
-show.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
+ * @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
+ * @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+ * @route '/_debugbar/telescope/{id}'
+ */
+show.url = (args: { id: string | number } | [id: string | number] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { id: args }
+        args = { id: args };
     }
 
     if (Array.isArray(args)) {
         args = {
             id: args[0],
-        }
+        };
     }
 
-    args = applyUrlDefaults(args)
+    args = applyUrlDefaults(args);
 
     const parsedArgs = {
         id: args.id,
-    }
+    };
 
-    return show.definition.url
-            .replace('{id}', parsedArgs.id.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
+    return show.definition.url.replace('{id}', parsedArgs.id.toString()).replace(/\/+$/, '') + queryParams(options);
+};
 
 /**
-* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
-* @route '/_debugbar/telescope/{id}'
-*/
-show.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
+ * @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+ * @route '/_debugbar/telescope/{id}'
+ */
+show.get = (args: { id: string | number } | [id: string | number] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
-})
+});
 
 /**
-* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
-* @route '/_debugbar/telescope/{id}'
-*/
-show.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
+ * @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+ * @route '/_debugbar/telescope/{id}'
+ */
+show.head = (args: { id: string | number } | [id: string | number] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
-})
+});
 
 /**
-* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
-* @route '/_debugbar/telescope/{id}'
-*/
-const showForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+ * @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
+ * @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+ * @route '/_debugbar/telescope/{id}'
+ */
+const showForm = (
+    args: { id: string | number } | [id: string | number] | string | number,
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
-})
+});
 
 /**
-* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
-* @route '/_debugbar/telescope/{id}'
-*/
-showForm.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+ * @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
+ * @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+ * @route '/_debugbar/telescope/{id}'
+ */
+showForm.get = (
+    args: { id: string | number } | [id: string | number] | string | number,
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
-})
+});
 
 /**
-* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
-* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
-* @route '/_debugbar/telescope/{id}'
-*/
-showForm.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+ * @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::show
+ * @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+ * @route '/_debugbar/telescope/{id}'
+ */
+showForm.head = (
+    args: { id: string | number } | [id: string | number] | string | number,
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
+        },
     }),
     method: 'get',
-})
+});
 
-show.form = showForm
+show.form = showForm;
 
-const TelescopeController = { show }
+const TelescopeController = { show };
 
-export default TelescopeController
+export default TelescopeController;
