@@ -27,7 +27,7 @@ class UpdatePermissionRequest extends FormRequest
 
         return [
             'permissions' => ['present', 'array'],
-            'permissions.*' => ['string', 'in:' . $allPermissionNames],
+            'permissions.*' => ['string', 'in:'.$allPermissionNames],
         ];
     }
 

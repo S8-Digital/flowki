@@ -141,7 +141,7 @@ store.form = storeForm
 * @see app/Http/Controllers/TodoController.php:62
 * @route '/todos/{todo}'
 */
-export const update = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -156,7 +156,7 @@ update.definition = {
 * @see app/Http/Controllers/TodoController.php:62
 * @route '/todos/{todo}'
 */
-update.url = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { todo: args }
     }
@@ -189,7 +189,7 @@ update.url = (args: { todo: string | number | { id: string | number } } | [todo:
 * @see app/Http/Controllers/TodoController.php:62
 * @route '/todos/{todo}'
 */
-update.patch = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -199,7 +199,7 @@ update.patch = (args: { todo: string | number | { id: string | number } } | [tod
 * @see app/Http/Controllers/TodoController.php:62
 * @route '/todos/{todo}'
 */
-const updateForm = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -214,7 +214,7 @@ const updateForm = (args: { todo: string | number | { id: string | number } } | 
 * @see app/Http/Controllers/TodoController.php:62
 * @route '/todos/{todo}'
 */
-updateForm.patch = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -231,7 +231,7 @@ update.form = updateForm
 * @see app/Http/Controllers/TodoController.php:74
 * @route '/todos/{todo}'
 */
-export const destroy = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -246,7 +246,7 @@ destroy.definition = {
 * @see app/Http/Controllers/TodoController.php:74
 * @route '/todos/{todo}'
 */
-destroy.url = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { todo: args }
     }
@@ -279,7 +279,7 @@ destroy.url = (args: { todo: string | number | { id: string | number } } | [todo
 * @see app/Http/Controllers/TodoController.php:74
 * @route '/todos/{todo}'
 */
-destroy.delete = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -289,7 +289,7 @@ destroy.delete = (args: { todo: string | number | { id: string | number } } | [t
 * @see app/Http/Controllers/TodoController.php:74
 * @route '/todos/{todo}'
 */
-const destroyForm = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -304,7 +304,7 @@ const destroyForm = (args: { todo: string | number | { id: string | number } } |
 * @see app/Http/Controllers/TodoController.php:74
 * @route '/todos/{todo}'
 */
-destroyForm.delete = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { todo: number | { id: number } } | [todo: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
