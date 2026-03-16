@@ -537,7 +537,7 @@ addChild.form = addChildForm
 * @see app/Http/Controllers/FamilyController.php:161
 * @route '/family/{family}/members/{userId}/role'
 */
-export const updateMemberRole = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const updateMemberRole = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: updateMemberRole.url(args, options),
     method: 'patch',
 })
@@ -552,7 +552,7 @@ updateMemberRole.definition = {
 * @see app/Http/Controllers/FamilyController.php:161
 * @route '/family/{family}/members/{userId}/role'
 */
-updateMemberRole.url = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions) => {
+updateMemberRole.url = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
             family: args[0],
@@ -580,7 +580,7 @@ updateMemberRole.url = (args: { family: number | { id: number }, userId: string 
 * @see app/Http/Controllers/FamilyController.php:161
 * @route '/family/{family}/members/{userId}/role'
 */
-updateMemberRole.patch = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+updateMemberRole.patch = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: updateMemberRole.url(args, options),
     method: 'patch',
 })
@@ -590,7 +590,7 @@ updateMemberRole.patch = (args: { family: number | { id: number }, userId: strin
 * @see app/Http/Controllers/FamilyController.php:161
 * @route '/family/{family}/members/{userId}/role'
 */
-const updateMemberRoleForm = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateMemberRoleForm = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: updateMemberRole.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -605,7 +605,7 @@ const updateMemberRoleForm = (args: { family: number | { id: number }, userId: s
 * @see app/Http/Controllers/FamilyController.php:161
 * @route '/family/{family}/members/{userId}/role'
 */
-updateMemberRoleForm.patch = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateMemberRoleForm.patch = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: updateMemberRole.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -622,7 +622,7 @@ updateMemberRole.form = updateMemberRoleForm
 * @see app/Http/Controllers/FamilyController.php:177
 * @route '/family/{family}/members/{userId}'
 */
-export const removeMember = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const removeMember = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: removeMember.url(args, options),
     method: 'delete',
 })
@@ -637,7 +637,7 @@ removeMember.definition = {
 * @see app/Http/Controllers/FamilyController.php:177
 * @route '/family/{family}/members/{userId}'
 */
-removeMember.url = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions) => {
+removeMember.url = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
             family: args[0],
@@ -665,7 +665,7 @@ removeMember.url = (args: { family: number | { id: number }, userId: string | nu
 * @see app/Http/Controllers/FamilyController.php:177
 * @route '/family/{family}/members/{userId}'
 */
-removeMember.delete = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+removeMember.delete = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: removeMember.url(args, options),
     method: 'delete',
 })
@@ -675,7 +675,7 @@ removeMember.delete = (args: { family: number | { id: number }, userId: string |
 * @see app/Http/Controllers/FamilyController.php:177
 * @route '/family/{family}/members/{userId}'
 */
-const removeMemberForm = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const removeMemberForm = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: removeMember.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -690,7 +690,7 @@ const removeMemberForm = (args: { family: number | { id: number }, userId: strin
 * @see app/Http/Controllers/FamilyController.php:177
 * @route '/family/{family}/members/{userId}'
 */
-removeMemberForm.delete = (args: { family: number | { id: number }, userId: string | number } | [family: number | { id: number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+removeMemberForm.delete = (args: { family: string | number | { id: string | number }, userId: string | number } | [family: string | number | { id: string | number }, userId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: removeMember.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
