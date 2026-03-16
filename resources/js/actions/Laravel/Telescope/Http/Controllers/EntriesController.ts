@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \Laravel\Telescope\Http\Controllers\EntriesController::destroy
 * @see vendor/laravel/telescope/src/Http/Controllers/EntriesController.php:16
@@ -32,6 +32,38 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(options),
     method: 'delete',
 })
+
+/**
+* @see \Laravel\Telescope\Http\Controllers\EntriesController::destroy
+* @see vendor/laravel/telescope/src/Http/Controllers/EntriesController.php:16
+* @route '/telescope/telescope-api/entries'
+*/
+const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \Laravel\Telescope\Http\Controllers\EntriesController::destroy
+* @see vendor/laravel/telescope/src/Http/Controllers/EntriesController.php:16
+* @route '/telescope/telescope-api/entries'
+*/
+destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const EntriesController = { destroy }
 

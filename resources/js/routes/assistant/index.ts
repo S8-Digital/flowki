@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\AiController::index
 * @see app/Http/Controllers/AiController.php:13
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\AiController::index
+* @see app/Http/Controllers/AiController.php:13
+* @route '/assistant'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\AiController::index
+* @see app/Http/Controllers/AiController.php:13
+* @route '/assistant'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\AiController::index
+* @see app/Http/Controllers/AiController.php:13
+* @route '/assistant'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\AiController::chat
 * @see app/Http/Controllers/AiController.php:18
 * @route '/assistant/chat'
@@ -76,6 +113,28 @@ chat.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: chat.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\AiController::chat
+* @see app/Http/Controllers/AiController.php:18
+* @route '/assistant/chat'
+*/
+const chatForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: chat.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\AiController::chat
+* @see app/Http/Controllers/AiController.php:18
+* @route '/assistant/chat'
+*/
+chatForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: chat.url(options),
+    method: 'post',
+})
+
+chat.form = chatForm
 
 const assistant = {
     index: Object.assign(index, index),

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 import join0c68bd from './join'
 import members from './members'
 import children from './children'
@@ -47,6 +47,43 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\FamilyController::create
+* @see app/Http/Controllers/FamilyController.php:26
+* @route '/family/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\FamilyController::create
+* @see app/Http/Controllers/FamilyController.php:26
+* @route '/family/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\FamilyController::create
+* @see app/Http/Controllers/FamilyController.php:26
+* @route '/family/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
+
+/**
 * @see \App\Http\Controllers\FamilyController::store
 * @see app/Http/Controllers/FamilyController.php:31
 * @route '/family'
@@ -79,6 +116,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\FamilyController::store
+* @see app/Http/Controllers/FamilyController.php:31
+* @route '/family'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\FamilyController::store
+* @see app/Http/Controllers/FamilyController.php:31
+* @route '/family'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\FamilyController::join
@@ -125,6 +184,43 @@ join.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\FamilyController::join
+* @see app/Http/Controllers/FamilyController.php:45
+* @route '/family/join'
+*/
+const joinForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: join.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\FamilyController::join
+* @see app/Http/Controllers/FamilyController.php:45
+* @route '/family/join'
+*/
+joinForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: join.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\FamilyController::join
+* @see app/Http/Controllers/FamilyController.php:45
+* @route '/family/join'
+*/
+joinForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: join.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+join.form = joinForm
+
+/**
 * @see \App\Http\Controllers\FamilyController::show
 * @see app/Http/Controllers/FamilyController.php:67
 * @route '/family'
@@ -169,6 +265,43 @@ show.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\FamilyController::show
+* @see app/Http/Controllers/FamilyController.php:67
+* @route '/family'
+*/
+const showForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\FamilyController::show
+* @see app/Http/Controllers/FamilyController.php:67
+* @route '/family'
+*/
+showForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\FamilyController::show
+* @see app/Http/Controllers/FamilyController.php:67
+* @route '/family'
+*/
+showForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+show.form = showForm
+
+/**
 * @see \App\Http\Controllers\FamilyController::update
 * @see app/Http/Controllers/FamilyController.php:89
 * @route '/family'
@@ -201,6 +334,38 @@ update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(options),
     method: 'patch',
 })
+
+/**
+* @see \App\Http\Controllers\FamilyController::update
+* @see app/Http/Controllers/FamilyController.php:89
+* @route '/family'
+*/
+const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\FamilyController::update
+* @see app/Http/Controllers/FamilyController.php:89
+* @route '/family'
+*/
+updateForm.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
 
 const family = {
     create: Object.assign(create, create),

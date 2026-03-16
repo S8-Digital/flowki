@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\GlobalSearchController::__invoke
 * @see app/Http/Controllers/GlobalSearchController.php:20
@@ -42,5 +42,42 @@ GlobalSearchController.head = (options?: RouteQueryOptions): RouteDefinition<'he
     url: GlobalSearchController.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\GlobalSearchController::__invoke
+* @see app/Http/Controllers/GlobalSearchController.php:20
+* @route '/search'
+*/
+const GlobalSearchControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: GlobalSearchController.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\GlobalSearchController::__invoke
+* @see app/Http/Controllers/GlobalSearchController.php:20
+* @route '/search'
+*/
+GlobalSearchControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: GlobalSearchController.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\GlobalSearchController::__invoke
+* @see app/Http/Controllers/GlobalSearchController.php:20
+* @route '/search'
+*/
+GlobalSearchControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: GlobalSearchController.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+GlobalSearchController.form = GlobalSearchControllerForm
 
 export default GlobalSearchController

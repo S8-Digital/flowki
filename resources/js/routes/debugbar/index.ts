@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 import cache from './cache'
 import queries from './queries'
 /**
@@ -44,6 +44,43 @@ openhandler.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: openhandler.url(options),
     method: 'head',
 })
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::openhandler
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:18
+* @route '/_debugbar/open'
+*/
+const openhandlerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: openhandler.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::openhandler
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:18
+* @route '/_debugbar/open'
+*/
+openhandlerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: openhandler.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::openhandler
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:18
+* @route '/_debugbar/open'
+*/
+openhandlerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: openhandler.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+openhandler.form = openhandlerForm
 
 /**
 * @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::clockwork
@@ -108,6 +145,43 @@ clockwork.head = (args: { id: string | number } | [id: string | number ] | strin
 })
 
 /**
+* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::clockwork
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:49
+* @route '/_debugbar/clockwork/{id}'
+*/
+const clockworkForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: clockwork.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::clockwork
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:49
+* @route '/_debugbar/clockwork/{id}'
+*/
+clockworkForm.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: clockwork.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\OpenHandlerController::clockwork
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/OpenHandlerController.php:49
+* @route '/_debugbar/clockwork/{id}'
+*/
+clockworkForm.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: clockwork.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+clockwork.form = clockworkForm
+
+/**
 * @see \Fruitcake\LaravelDebugbar\Controllers\AssetController::assets
 * @see vendor/fruitcake/laravel-debugbar/src/Controllers/AssetController.php:16
 * @route '/_debugbar/assets'
@@ -150,6 +224,43 @@ assets.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: assets.url(options),
     method: 'head',
 })
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\AssetController::assets
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/AssetController.php:16
+* @route '/_debugbar/assets'
+*/
+const assetsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assets.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\AssetController::assets
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/AssetController.php:16
+* @route '/_debugbar/assets'
+*/
+assetsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assets.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\AssetController::assets
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/AssetController.php:16
+* @route '/_debugbar/assets'
+*/
+assetsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assets.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+assets.form = assetsForm
 
 /**
 * @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::telescope
@@ -212,6 +323,43 @@ telescope.head = (args: { id: string | number } | [id: string | number ] | strin
     url: telescope.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::telescope
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+* @route '/_debugbar/telescope/{id}'
+*/
+const telescopeForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: telescope.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::telescope
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+* @route '/_debugbar/telescope/{id}'
+*/
+telescopeForm.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: telescope.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\TelescopeController::telescope
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/TelescopeController.php:12
+* @route '/_debugbar/telescope/{id}'
+*/
+telescopeForm.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: telescope.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+telescope.form = telescopeForm
 
 const debugbar = {
     openhandler: Object.assign(openhandler, openhandler),

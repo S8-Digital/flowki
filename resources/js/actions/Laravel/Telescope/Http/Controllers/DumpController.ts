@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \Laravel\Telescope\Http\Controllers\DumpController::index
 * @see vendor/laravel/telescope/src/Http/Controllers/DumpController.php:42
@@ -32,6 +32,28 @@ index.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: index.url(options),
     method: 'post',
 })
+
+/**
+* @see \Laravel\Telescope\Http\Controllers\DumpController::index
+* @see vendor/laravel/telescope/src/Http/Controllers/DumpController.php:42
+* @route '/telescope/telescope-api/dumps'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: index.url(options),
+    method: 'post',
+})
+
+/**
+* @see \Laravel\Telescope\Http\Controllers\DumpController::index
+* @see vendor/laravel/telescope/src/Http/Controllers/DumpController.php:42
+* @route '/telescope/telescope-api/dumps'
+*/
+indexForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: index.url(options),
+    method: 'post',
+})
+
+index.form = indexForm
 
 const DumpController = { index }
 

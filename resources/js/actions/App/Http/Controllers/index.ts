@@ -1,3 +1,4 @@
+import FirebaseServiceWorkerController from './FirebaseServiceWorkerController'
 import DashboardController from './DashboardController'
 import FamilyController from './FamilyController'
 import TodoController from './TodoController'
@@ -15,6 +16,7 @@ import Auth from './Auth'
 import AcceptInviteController from './AcceptInviteController'
 
 const Controllers = {
+    FirebaseServiceWorkerController: Object.assign(FirebaseServiceWorkerController, FirebaseServiceWorkerController),
     DashboardController: Object.assign(DashboardController, DashboardController),
     FamilyController: Object.assign(FamilyController, FamilyController),
     TodoController: Object.assign(TodoController, TodoController),

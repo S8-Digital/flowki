@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \Fruitcake\LaravelDebugbar\Controllers\QueriesController::explain
 * @see vendor/fruitcake/laravel-debugbar/src/Controllers/QueriesController.php:17
@@ -32,6 +32,28 @@ explain.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: explain.url(options),
     method: 'post',
 })
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\QueriesController::explain
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/QueriesController.php:17
+* @route '/_debugbar/queries/explain'
+*/
+const explainForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: explain.url(options),
+    method: 'post',
+})
+
+/**
+* @see \Fruitcake\LaravelDebugbar\Controllers\QueriesController::explain
+* @see vendor/fruitcake/laravel-debugbar/src/Controllers/QueriesController.php:17
+* @route '/_debugbar/queries/explain'
+*/
+explainForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: explain.url(options),
+    method: 'post',
+})
+
+explain.form = explainForm
 
 const queries = {
     explain: Object.assign(explain, explain),

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Auth\SocialAuthController::redirect
 * @see app/Http/Controllers/Auth/SocialAuthController.php:23
@@ -60,6 +60,43 @@ redirect.head = (args: { provider: string | number } | [provider: string | numbe
     url: redirect.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::redirect
+* @see app/Http/Controllers/Auth/SocialAuthController.php:23
+* @route '/auth/{provider}/redirect'
+*/
+const redirectForm = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: redirect.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::redirect
+* @see app/Http/Controllers/Auth/SocialAuthController.php:23
+* @route '/auth/{provider}/redirect'
+*/
+redirectForm.get = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: redirect.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::redirect
+* @see app/Http/Controllers/Auth/SocialAuthController.php:23
+* @route '/auth/{provider}/redirect'
+*/
+redirectForm.head = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: redirect.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+redirect.form = redirectForm
 
 /**
 * @see \App\Http\Controllers\Auth\SocialAuthController::callback
@@ -134,6 +171,53 @@ callback.head = (args: { provider: string | number } | [provider: string | numbe
 })
 
 /**
+* @see \App\Http\Controllers\Auth\SocialAuthController::callback
+* @see app/Http/Controllers/Auth/SocialAuthController.php:55
+* @route '/auth/{provider}/callback'
+*/
+const callbackForm = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: callback.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::callback
+* @see app/Http/Controllers/Auth/SocialAuthController.php:55
+* @route '/auth/{provider}/callback'
+*/
+callbackForm.get = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: callback.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::callback
+* @see app/Http/Controllers/Auth/SocialAuthController.php:55
+* @route '/auth/{provider}/callback'
+*/
+callbackForm.post = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: callback.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::callback
+* @see app/Http/Controllers/Auth/SocialAuthController.php:55
+* @route '/auth/{provider}/callback'
+*/
+callbackForm.head = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: callback.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+callback.form = callbackForm
+
+/**
 * @see \App\Http\Controllers\Auth\SocialAuthController::resume
 * @see app/Http/Controllers/Auth/SocialAuthController.php:87
 * @route '/auth/social/resume'
@@ -176,6 +260,43 @@ resume.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: resume.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::resume
+* @see app/Http/Controllers/Auth/SocialAuthController.php:87
+* @route '/auth/social/resume'
+*/
+const resumeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: resume.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::resume
+* @see app/Http/Controllers/Auth/SocialAuthController.php:87
+* @route '/auth/social/resume'
+*/
+resumeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: resume.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::resume
+* @see app/Http/Controllers/Auth/SocialAuthController.php:87
+* @route '/auth/social/resume'
+*/
+resumeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: resume.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+resume.form = resumeForm
 
 /**
 * @see \App\Http\Controllers\Auth\SocialAuthController::link
@@ -240,6 +361,43 @@ link.head = (args: { provider: string | number } | [provider: string | number ] 
 })
 
 /**
+* @see \App\Http\Controllers\Auth\SocialAuthController::link
+* @see app/Http/Controllers/Auth/SocialAuthController.php:37
+* @route '/auth/{provider}/link'
+*/
+const linkForm = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: link.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::link
+* @see app/Http/Controllers/Auth/SocialAuthController.php:37
+* @route '/auth/{provider}/link'
+*/
+linkForm.get = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: link.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::link
+* @see app/Http/Controllers/Auth/SocialAuthController.php:37
+* @route '/auth/{provider}/link'
+*/
+linkForm.head = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: link.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+link.form = linkForm
+
+/**
 * @see \App\Http\Controllers\Auth\SocialAuthController::unlink
 * @see app/Http/Controllers/Auth/SocialAuthController.php:114
 * @route '/auth/{provider}/unlink'
@@ -290,6 +448,38 @@ unlink.delete = (args: { provider: string | number } | [provider: string | numbe
     url: unlink.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::unlink
+* @see app/Http/Controllers/Auth/SocialAuthController.php:114
+* @route '/auth/{provider}/unlink'
+*/
+const unlinkForm = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: unlink.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\SocialAuthController::unlink
+* @see app/Http/Controllers/Auth/SocialAuthController.php:114
+* @route '/auth/{provider}/unlink'
+*/
+unlinkForm.delete = (args: { provider: string | number } | [provider: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: unlink.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+unlink.form = unlinkForm
 
 const SocialAuthController = { redirect, callback, resume, link, unlink }
 

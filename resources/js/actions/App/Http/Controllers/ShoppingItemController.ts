@@ -1,10 +1,10 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ShoppingItemController::store
 * @see app/Http/Controllers/ShoppingItemController.php:13
 * @route '/shopping/{shoppingList}/items'
 */
-export const store = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ store.definition = {
 * @see app/Http/Controllers/ShoppingItemController.php:13
 * @route '/shopping/{shoppingList}/items'
 */
-store.url = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+store.url = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { shoppingList: args }
     }
@@ -52,17 +52,39 @@ store.url = (args: { shoppingList: number | { id: number } } | [shoppingList: nu
 * @see app/Http/Controllers/ShoppingItemController.php:13
 * @route '/shopping/{shoppingList}/items'
 */
-store.post = (args: { shoppingList: number | { id: number } } | [shoppingList: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\ShoppingItemController::store
+* @see app/Http/Controllers/ShoppingItemController.php:13
+* @route '/shopping/{shoppingList}/items'
+*/
+const storeForm = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\ShoppingItemController::store
+* @see app/Http/Controllers/ShoppingItemController.php:13
+* @route '/shopping/{shoppingList}/items'
+*/
+storeForm.post = (args: { shoppingList: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(args, options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\ShoppingItemController::update
 * @see app/Http/Controllers/ShoppingItemController.php:24
 * @route '/shopping/{shoppingList}/items/{shoppingItem}'
 */
-export const update = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -77,7 +99,7 @@ update.definition = {
 * @see app/Http/Controllers/ShoppingItemController.php:24
 * @route '/shopping/{shoppingList}/items/{shoppingItem}'
 */
-update.url = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions) => {
+update.url = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
             shoppingList: args[0],
@@ -107,17 +129,49 @@ update.url = (args: { shoppingList: number | { id: number }, shoppingItem: numbe
 * @see app/Http/Controllers/ShoppingItemController.php:24
 * @route '/shopping/{shoppingList}/items/{shoppingItem}'
 */
-update.patch = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
+
+/**
+* @see \App\Http\Controllers\ShoppingItemController::update
+* @see app/Http/Controllers/ShoppingItemController.php:24
+* @route '/shopping/{shoppingList}/items/{shoppingItem}'
+*/
+const updateForm = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\ShoppingItemController::update
+* @see app/Http/Controllers/ShoppingItemController.php:24
+* @route '/shopping/{shoppingList}/items/{shoppingItem}'
+*/
+updateForm.patch = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\ShoppingItemController::toggle
 * @see app/Http/Controllers/ShoppingItemController.php:33
 * @route '/shopping/{shoppingList}/items/{shoppingItem}/toggle'
 */
-export const toggle = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggle = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggle.url(args, options),
     method: 'patch',
 })
@@ -132,7 +186,7 @@ toggle.definition = {
 * @see app/Http/Controllers/ShoppingItemController.php:33
 * @route '/shopping/{shoppingList}/items/{shoppingItem}/toggle'
 */
-toggle.url = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions) => {
+toggle.url = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
             shoppingList: args[0],
@@ -162,17 +216,49 @@ toggle.url = (args: { shoppingList: number | { id: number }, shoppingItem: numbe
 * @see app/Http/Controllers/ShoppingItemController.php:33
 * @route '/shopping/{shoppingList}/items/{shoppingItem}/toggle'
 */
-toggle.patch = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggle.patch = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggle.url(args, options),
     method: 'patch',
 })
+
+/**
+* @see \App\Http\Controllers\ShoppingItemController::toggle
+* @see app/Http/Controllers/ShoppingItemController.php:33
+* @route '/shopping/{shoppingList}/items/{shoppingItem}/toggle'
+*/
+const toggleForm = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggle.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\ShoppingItemController::toggle
+* @see app/Http/Controllers/ShoppingItemController.php:33
+* @route '/shopping/{shoppingList}/items/{shoppingItem}/toggle'
+*/
+toggleForm.patch = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggle.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+toggle.form = toggleForm
 
 /**
 * @see \App\Http\Controllers\ShoppingItemController::destroy
 * @see app/Http/Controllers/ShoppingItemController.php:42
 * @route '/shopping/{shoppingList}/items/{shoppingItem}'
 */
-export const destroy = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -187,7 +273,7 @@ destroy.definition = {
 * @see app/Http/Controllers/ShoppingItemController.php:42
 * @route '/shopping/{shoppingList}/items/{shoppingItem}'
 */
-destroy.url = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
             shoppingList: args[0],
@@ -217,10 +303,42 @@ destroy.url = (args: { shoppingList: number | { id: number }, shoppingItem: numb
 * @see app/Http/Controllers/ShoppingItemController.php:42
 * @route '/shopping/{shoppingList}/items/{shoppingItem}'
 */
-destroy.delete = (args: { shoppingList: number | { id: number }, shoppingItem: number | { id: number } } | [shoppingList: number | { id: number }, shoppingItem: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\ShoppingItemController::destroy
+* @see app/Http/Controllers/ShoppingItemController.php:42
+* @route '/shopping/{shoppingList}/items/{shoppingItem}'
+*/
+const destroyForm = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\ShoppingItemController::destroy
+* @see app/Http/Controllers/ShoppingItemController.php:42
+* @route '/shopping/{shoppingList}/items/{shoppingItem}'
+*/
+destroyForm.delete = (args: { shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } } | [shoppingList: string | number | { id: string | number }, shoppingItem: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const ShoppingItemController = { store, update, toggle, destroy }
 
