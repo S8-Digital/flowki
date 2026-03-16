@@ -30,7 +30,7 @@ jobs:
           node-version: '22'
 
       - name: Install Node Dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Copy Environment File
         run: cp .env.example .env
