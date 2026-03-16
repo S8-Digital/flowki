@@ -1,0 +1,51 @@
+name: Generate Wayfinder Routes
+
+on:
+  push:
+    paths:
+      - 'routes/**'
+      - 'app/Http/Controllers/**'
+      - '.github/workflows/wayfinder.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          tools: composer:v2
+
+      - name: Install PHP Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Bootstrap Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Generate Wayfinder Routes
+        run: php artisan wayfinder:generate --with-form --no-interaction
+
+      - name: Commit Generated Routes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add resources/js/actions resources/js/routes resources/js/wayfinder 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No Wayfinder changes to commit."
+          else
+            git commit -m "chore: regenerate Wayfinder routes [skip ci]"
+            git push
+          fi

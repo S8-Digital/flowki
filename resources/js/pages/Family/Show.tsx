@@ -1,0 +1,264 @@
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { Baby, Copy, Pencil, UserMinus, UserPlus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
+import InputError from '@/components/InputError';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/AppLayout';
+import type { BreadcrumbItem, Family } from '@/types';
+
+interface Props {
+    family: Family;
+}
+
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Family', href: '/family' }];
+
+export default function FamilyShow({ family }: Props) {
+    const page = usePage<{ auth: { user: { id: number } } }>();
+    const currentUserId = page.props.auth.user.id;
+
+    const [copied, setCopied] = useState(false);
+    const [editNameOpen, setEditNameOpen] = useState(false);
+    const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
+    const [addChildOpen, setAddChildOpen] = useState(false);
+
+    const editNameForm = useForm({ name: family.name });
+    const inviteForm = useForm({ email: '', role: 'member' });
+    const addChildForm = useForm({ name: '' });
+
+    useEffect(() => {
+        if (editNameOpen) {
+            editNameForm.setData('name', family.name);
+        }
+    }, [editNameForm, editNameOpen, family.name]);
+
+    function copyInviteCode() {
+        navigator.clipboard.writeText(family.invite_code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    }
+
+    function handleEditName(e: React.FormEvent) {
+        e.preventDefault();
+        editNameForm.patch(update().url, { onSuccess: () => setEditNameOpen(false) });
+    }
+
+    function handleInvite(e: React.FormEvent) {
+        e.preventDefault();
+        inviteForm.post(inviteMember().url, {
+            onSuccess: () => {
+                setInviteMemberOpen(false);
+                inviteForm.reset();
+            },
+        });
+    }
+
+    function handleAddChild(e: React.FormEvent) {
+        e.preventDefault();
+        addChildForm.post(addChild().url, {
+            onSuccess: () => {
+                setAddChildOpen(false);
+                addChildForm.reset();
+            },
+        });
+    }
+
+    function removeUser(userId: number) {
+        if (!confirm('Remove this member from your family?')) {
+            return;
+        }
+
+        router.delete(removeMember({ family: family.id, userId }).url);
+    }
+
+    function changeRole(memberId: number, role: string) {
+        router.patch(updateMemberRole({ family: family.id, userId: memberId }).url, { role });
+    }
+
+    return (
+        <>
+            <Head title="Family" />
+            <AppLayout breadcrumbs={breadcrumbs}>
+                <div className="flex flex-col gap-6 p-6">
+                    <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                            <div>
+                                <h1 className="text-2xl font-bold">{family.name}</h1>
+                                <p className="text-sm text-muted-foreground">{family.members?.length ?? 0} members</p>
+                            </div>
+                            <Dialog open={editNameOpen} onOpenChange={setEditNameOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                                        <Pencil className="size-3.5" />
+                                        <span className="text-xs">Edit name</span>
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Edit Family Name</DialogTitle>
+                                    </DialogHeader>
+                                    <form onSubmit={handleEditName} className="space-y-4">
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="name">Family Name</Label>
+                                            <Input
+                                                id="name"
+                                                value={editNameForm.data.name}
+                                                onChange={(e) => editNameForm.setData('name', e.target.value)}
+                                                required
+                                                placeholder="e.g. The Smith Family"
+                                            />
+                                            <InputError message={editNameForm.errors.name} />
+                                        </div>
+                                        <Button type="submit" className="w-full" disabled={editNameForm.processing}>
+                                            {editNameForm.processing ? 'Saving…' : 'Save Name'}
+                                        </Button>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+
+                        <div className="flex items-center gap-2 rounded-lg border px-3 py-2">
+                            <span className="text-xs text-muted-foreground">Invite code:</span>
+                            <span className="font-mono text-sm tracking-widest">{family.invite_code}</span>
+                            <button onClick={copyInviteCode} className="text-muted-foreground transition hover:text-foreground">
+                                <Copy className="size-4" />
+                            </button>
+                            {copied && <span className="text-xs text-green-500">Copied!</span>}
+                        </div>
+                    </div>
+
+                    <div className="rounded-xl border">
+                        <div className="flex items-center justify-between border-b px-4 py-3">
+                            <h2 className="font-semibold">Members</h2>
+                            <div className="flex items-center gap-2">
+                                <Dialog open={addChildOpen} onOpenChange={setAddChildOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button size="sm" variant="outline">
+                                            <Baby className="mr-1 size-4" /> Add Child
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Add Child</DialogTitle>
+                                        </DialogHeader>
+                                        <p className="text-sm text-muted-foreground">
+                                            Children are added directly and don't need to log in. They can be assigned todos and chores.
+                                        </p>
+                                        <form onSubmit={handleAddChild} className="space-y-4">
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="child-name">Child's Name</Label>
+                                                <Input
+                                                    id="child-name"
+                                                    value={addChildForm.data.name}
+                                                    onChange={(e) => addChildForm.setData('name', e.target.value)}
+                                                    placeholder="e.g. Emma"
+                                                    required
+                                                />
+                                                <InputError message={addChildForm.errors.name} />
+                                            </div>
+                                            <Button type="submit" className="w-full" disabled={addChildForm.processing}>
+                                                {addChildForm.processing ? 'Adding…' : 'Add Child'}
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+
+                                <Dialog open={inviteMemberOpen} onOpenChange={setInviteMemberOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button size="sm" variant="outline">
+                                            <UserPlus className="mr-1 size-4" /> Invite Member
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Invite Family Member</DialogTitle>
+                                        </DialogHeader>
+                                        <form onSubmit={handleInvite} className="space-y-4">
+                                            <p className="text-sm text-muted-foreground">
+                                                An invitation email will be sent with a link to set up their account and join your family.
+                                            </p>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="invite-email">Email Address</Label>
+                                                <Input
+                                                    id="invite-email"
+                                                    type="email"
+                                                    value={inviteForm.data.email}
+                                                    onChange={(e) => inviteForm.setData('email', e.target.value)}
+                                                    placeholder="their@email.com"
+                                                    required
+                                                />
+                                                <InputError message={inviteForm.errors.email} />
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="invite-role">Role</Label>
+                                                <select
+                                                    id="invite-role"
+                                                    value={inviteForm.data.role}
+                                                    onChange={(e) => inviteForm.setData('role', e.target.value)}
+                                                    className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                                    required
+                                                >
+                                                    <option value="member">Member</option>
+                                                    <option value="guest">Guest (read-only)</option>
+                                                </select>
+                                                <InputError message={inviteForm.errors.role} />
+                                            </div>
+                                            <Button type="submit" className="w-full" disabled={inviteForm.processing}>
+                                                {inviteForm.processing ? 'Sending Invite…' : 'Send Invitation'}
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                        </div>
+                        <ul className="divide-y">
+                            {family.members?.map((member) => (
+                                <li key={member.id} className="flex items-center justify-between px-4 py-3">
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <p className="font-medium">{member.name || member.email}</p>
+                                            {member.is_pending && (
+                                                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                                                    Pending
+                                                </span>
+                                            )}
+                                            {member.is_child && (
+                                                <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                                    Child
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-sm text-muted-foreground">{member.email ?? 'No email'}</p>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        {member.id !== currentUserId && !member.is_child ? (
+                                            <select
+                                                value={member.role}
+                                                onChange={(e) => changeRole(member.id, e.target.value)}
+                                                className="rounded-full border border-input bg-transparent px-2 py-0.5 text-xs capitalize"
+                                            >
+                                                <option value="admin">Admin</option>
+                                                <option value="member">Member</option>
+                                                <option value="guest">Guest</option>
+                                            </select>
+                                        ) : (
+                                            <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">{member.role}</span>
+                                        )}
+                                        {member.id !== currentUserId && (
+                                            <Button variant="ghost" size="icon" onClick={() => removeUser(member.id)}>
+                                                <UserMinus className="size-4 text-destructive" />
+                                            </Button>
+                                        )}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </AppLayout>
+        </>
+    );
+}
