@@ -18,7 +18,7 @@ export default function NavMain({ items }: NavMainProps) {
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton asChild isActive={urlIsActive(item.href, page.url)} tooltip={item.title}>
                             <Link href={item.href}>
-                                {item.icon && <item.icon />}
+                                {item.icon && <item.icon style={item.iconColor ? { color: item.iconColor } : undefined} />}
                                 <span>{item.title}</span>
                             </Link>
                         </SidebarMenuButton>

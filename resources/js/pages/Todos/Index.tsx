@@ -223,14 +223,17 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                             No todos yet. Create your first one!
                         </div>
                     ) : (
-                        <ul className="divide-y rounded-xl border">
+                        <ul className="space-y-2">
                             {todos.data.map((todo) => (
-                                <li key={todo.id} className="flex items-center justify-between gap-3 px-4 py-3">
+                                <li
+                                    key={todo.id}
+                                    className="category-todos-item flex items-center justify-between gap-3 overflow-hidden rounded-xl px-4 py-3"
+                                >
                                     <div className="min-w-0 flex-1">
                                         <p className={`truncate font-medium${todo.status === 'completed' ? 'line-through opacity-50' : ''}`}>
                                             {todo.title}
                                         </p>
-                                        <p className="mt-0.5 flex gap-2 text-xs text-muted-foreground">
+                                        <p className="mt-0.5 flex gap-2 text-xs opacity-70">
                                             <span className="capitalize">{todo.category}</span>
                                             <span className={`font-medium capitalize ${priorityColor(todo.priority)}`}>{todo.priority}</span>
                                             {todo.due_date && <span>Due {formatDateTime(todo.due_date)}</span>}
@@ -238,7 +241,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </p>
                                     </div>
                                     <div className="flex shrink-0 items-center gap-2">
-                                        <span className="rounded-full bg-secondary px-2 py-0.5 text-xs">{statusLabel(todo.status)}</span>
+                                        <span className="rounded-full bg-white/60 px-2 py-0.5 text-xs">{statusLabel(todo.status)}</span>
                                         <Button variant="ghost" size="icon" onClick={() => openEdit(todo)}>
                                             <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path

@@ -13,7 +13,7 @@ interface TodoListWidgetProps {
 }
 
 function priorityColor(priority: string): string {
-    return { low: 'bg-green-500', medium: 'bg-yellow-500', high: 'bg-red-500' }[priority] ?? 'bg-muted';
+    return { low: 'bg-green-500', medium: 'bg-amber-400', high: 'bg-red-500' }[priority] ?? 'bg-muted';
 }
 
 export default function TodoListWidget({ todos }: TodoListWidgetProps) {
@@ -24,15 +24,15 @@ export default function TodoListWidget({ todos }: TodoListWidgetProps) {
             ) : (
                 <ul className="space-y-2">
                     {todos.map((todo) => (
-                        <li key={todo.id} className="flex items-center gap-3 rounded-lg border p-3">
+                        <li key={todo.id} className="category-todos-item flex items-center gap-3 overflow-hidden rounded-lg p-3">
                             <div className={`size-2 shrink-0 rounded-full ${priorityColor(todo.priority)}`} />
                             <div className="min-w-0 flex-1">
                                 <p className={`truncate text-sm font-medium ${todo.status === 'completed' ? 'line-through opacity-50' : ''}`}>
                                     {todo.title}
                                 </p>
-                                <p className="text-xs text-muted-foreground capitalize">{todo.category}</p>
+                                <p className="text-xs capitalize opacity-70">{todo.category}</p>
                             </div>
-                            <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">{todo.status.replace('_', ' ')}</span>
+                            <span className="shrink-0 rounded-full bg-white/60 px-2 py-0.5 text-xs capitalize">{todo.status.replace('_', ' ')}</span>
                         </li>
                     ))}
                 </ul>

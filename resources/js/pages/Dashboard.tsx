@@ -214,7 +214,7 @@ export default function Dashboard({
                         {localWidgets.map((widget) => (
                             <div
                                 key={widget.id}
-                                className={`rounded-xl border bg-card transition-shadow${draggingId === widget.id ? 'scale-[0.98] opacity-50' : ''}`}
+                                className={`rounded-xl border bg-card shadow-sm transition-shadow hover:shadow-md${draggingId === widget.id ? 'scale-[0.98] opacity-50' : ''}`}
                                 draggable
                                 onDragStart={() => onDragStart(widget)}
                                 onDragOver={(e) => onDragOver(e, widget)}
