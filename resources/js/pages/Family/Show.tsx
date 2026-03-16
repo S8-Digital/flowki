@@ -33,7 +33,7 @@ export default function FamilyShow({ family }: Props) {
         if (editNameOpen) {
             editNameForm.setData('name', family.name);
         }
-    }, [editNameOpen]);
+    }, [editNameForm, editNameOpen, family.name]);
 
     function copyInviteCode() {
         navigator.clipboard.writeText(family.invite_code);

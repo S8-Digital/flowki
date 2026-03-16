@@ -4,7 +4,9 @@ interface InputErrorProps {
 }
 
 export default function InputError({ message, className }: InputErrorProps) {
-    if (!message) return null;
+    if (!message) {
+        return null;
+    }
 
     return (
         <div className={className}>

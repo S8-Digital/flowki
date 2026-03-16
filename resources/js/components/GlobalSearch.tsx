@@ -29,6 +29,7 @@ export default function GlobalSearch() {
 
         if (query.length < 2) {
             setResults(null);
+
             return;
         }
 

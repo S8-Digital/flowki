@@ -4,7 +4,8 @@ import { show as familyShow } from '@/actions/App/Http/Controllers/FamilyControl
 import { index as recipeIndex } from '@/actions/App/Http/Controllers/RecipeController';
 import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
 import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
-import AiChatModal, { type AiChatModalHandle } from '@/components/AiChatModal';
+import type { AiChatModalHandle } from '@/components/AiChatModal';
+import AiChatModal from '@/components/AiChatModal';
 import AppLogo from '@/components/AppLogo';
 import NavFooter from '@/components/NavFooter';
 import NavMain from '@/components/NavMain';

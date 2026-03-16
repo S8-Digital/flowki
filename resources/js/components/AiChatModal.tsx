@@ -46,7 +46,10 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
 
     async function sendMessage(text?: string) {
         const message = text ?? input.trim();
-        if (!message || isLoading) return;
+
+        if (!message || isLoading) {
+            return;
+        }
 
         setInput('');
         setIsLoading(true);
@@ -71,8 +74,10 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                 setMessages((prev) => {
                     const updated = [...prev];
                     updated[updated.length - 1] = { role: 'assistant', content: 'Something went wrong. Please try again.', isStreaming: false };
+
                     return updated;
                 });
+
                 return;
             }
 
@@ -82,24 +87,35 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) break;
+
+                if (done) {
+                    break;
+                }
 
                 buffer += decoder.decode(value, { stream: true });
                 const lines = buffer.split('\n');
                 buffer = lines.pop() ?? '';
 
                 for (const line of lines) {
-                    if (!line.startsWith('data: ')) continue;
+                    if (!line.startsWith('data: ')) {
+                        continue;
+                    }
+
                     const data = line.slice(6).trim();
-                    if (data === '[DONE]') break;
+
+                    if (data === '[DONE]') {
+                        break;
+                    }
 
                     try {
                         const parsed = JSON.parse(data);
+
                         if (parsed.text) {
                             setMessages((prev) => {
                                 const updated = [...prev];
                                 const last = updated[updated.length - 1];
                                 updated[updated.length - 1] = { ...last, content: last.content + parsed.text };
+
                                 return updated;
                             });
                             scrollToBottom();
@@ -113,6 +129,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
             setMessages((prev) => {
                 const updated = [...prev];
                 updated[updated.length - 1] = { role: 'assistant', content: 'Something went wrong. Please try again.', isStreaming: false };
+
                 return updated;
             });
         } finally {
@@ -120,6 +137,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                 const updated = [...prev];
                 const last = updated[updated.length - 1];
                 updated[updated.length - 1] = { ...last, isStreaming: false };
+
                 return updated;
             });
             setIsLoading(false);

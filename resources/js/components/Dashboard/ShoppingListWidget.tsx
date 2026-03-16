@@ -20,8 +20,12 @@ interface ShoppingListWidgetProps {
 
 export default function ShoppingListWidget({ shoppingItems, listId }: ShoppingListWidgetProps) {
     function resolvedList(): ShoppingListData | null {
-        if (listId) return shoppingItems[Number(listId)] ?? null;
+        if (listId) {
+            return shoppingItems[Number(listId)] ?? null;
+        }
+
         const first = Object.values(shoppingItems)[0];
+
         return first ?? null;
     }
 
