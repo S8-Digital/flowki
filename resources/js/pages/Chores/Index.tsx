@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import AppLayout from '@/layouts/AppLayout';
+import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, Chore, PaginatedResource, User } from '@/types';
 
 interface Props {
@@ -194,39 +195,45 @@ export default function ChoresIndex({ chores, members }: Props) {
                         </div>
                     ) : (
                         <ul className="space-y-2">
-                            {chores.data.map((chore) => (
-                                <li
-                                    key={chore.id}
-                                    className="category-chores-item flex items-center justify-between gap-3 overflow-hidden rounded-xl px-4 py-3"
-                                >
-                                    <div className="min-w-0 flex-1">
-                                        <p className="truncate font-medium">{chore.title}</p>
-                                        <p className="mt-0.5 flex gap-2 text-xs opacity-70">
-                                            <span className="capitalize">{chore.frequency}</span>
-                                            {chore.next_due_date && <span>Due {formatDateTime(chore.next_due_date)}</span>}
-                                            {chore.assignees?.length ? <span>→ {chore.assignees.map((a) => a.name).join(', ')}</span> : null}
-                                        </p>
-                                    </div>
-                                    <div className="flex shrink-0 items-center gap-2">
-                                        <Button variant="ghost" size="icon" onClick={() => markComplete(chore)} title="Mark complete">
-                                            <CheckCircle className="size-4 text-green-500" />
-                                        </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => openEdit(chore)}>
-                                            <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                />
-                                            </svg>
-                                        </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => deleteChore(chore)}>
-                                            <Trash2 className="size-4 text-destructive" />
-                                        </Button>
-                                    </div>
-                                </li>
-                            ))}
+                            {chores.data.map((chore) => {
+                                const primaryAssignee = chore.assignees?.[0];
+                                const assigneeColor = getProfileColor(primaryAssignee);
+
+                                return (
+                                    <li
+                                        key={chore.id}
+                                        className="category-chores-item flex items-center justify-between gap-3 overflow-hidden rounded-xl px-4 py-3"
+                                        style={assigneeColor ? { borderLeft: `4px solid ${assigneeColor}` } : undefined}
+                                    >
+                                        <div className="min-w-0 flex-1">
+                                            <p className="truncate font-medium">{chore.title}</p>
+                                            <p className="mt-0.5 flex gap-2 text-xs opacity-70">
+                                                <span className="capitalize">{chore.frequency}</span>
+                                                {chore.next_due_date && <span>Due {formatDateTime(chore.next_due_date)}</span>}
+                                                {chore.assignees?.length ? <span>→ {chore.assignees.map((a) => a.name).join(', ')}</span> : null}
+                                            </p>
+                                        </div>
+                                        <div className="flex shrink-0 items-center gap-2">
+                                            <Button variant="ghost" size="icon" onClick={() => markComplete(chore)} title="Mark complete">
+                                                <CheckCircle className="size-4 text-green-500" />
+                                            </Button>
+                                            <Button variant="ghost" size="icon" onClick={() => openEdit(chore)}>
+                                                <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                    />
+                                                </svg>
+                                            </Button>
+                                            <Button variant="ghost" size="icon" onClick={() => deleteChore(chore)}>
+                                                <Trash2 className="size-4 text-destructive" />
+                                            </Button>
+                                        </div>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     )}
 
