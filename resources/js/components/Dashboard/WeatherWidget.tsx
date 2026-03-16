@@ -27,15 +27,9 @@ export default function WeatherWidget() {
         <div className="flex flex-col gap-4">
             {/* Current conditions */}
             <div className="flex items-center gap-3">
-                <img
-                    src={weatherIconUrl(data.current.icon)}
-                    alt={data.current.description}
-                    width={64}
-                    height={64}
-                    className="-my-2 -ml-2"
-                />
+                <img src={weatherIconUrl(data.current.icon)} alt={data.current.description} width={64} height={64} className="-my-2 -ml-2" />
                 <div>
-                    <p className="text-3xl font-semibold leading-none">{data.current.temp}°C</p>
+                    <p className="text-3xl leading-none font-semibold">{data.current.temp}°C</p>
                     <p className="mt-1 text-sm text-muted-foreground capitalize">{data.current.description}</p>
                     <p className="text-xs text-muted-foreground">
                         Feels {data.current.feels_like}°C · Humidity {data.current.humidity}% · Wind {data.current.wind_speed} m/s
@@ -44,7 +38,7 @@ export default function WeatherWidget() {
             </div>
 
             {/* Location */}
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{data.location}</p>
+            <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{data.location}</p>
 
             {/* 5-day forecast */}
             {data.forecast.length > 0 && (

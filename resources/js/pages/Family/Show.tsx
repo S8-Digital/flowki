@@ -177,8 +177,8 @@ export default function FamilyShow({ family }: Props) {
                                         </DialogHeader>
                                         <form onSubmit={handleEditLocation} className="space-y-4">
                                             <p className="text-sm text-muted-foreground">
-                                                Used to show local weather on the dashboard and calendar. Enter a city name, or provide
-                                                coordinates for more accuracy.
+                                                Used to show local weather on the dashboard and calendar. Enter a city name, or provide coordinates
+                                                for more accuracy.
                                             </p>
                                             <div className="grid gap-2">
                                                 <Label htmlFor="location_name">City / Location Name</Label>

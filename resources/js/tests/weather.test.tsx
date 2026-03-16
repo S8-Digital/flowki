@@ -1,15 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import WeatherWidget from '@/components/Dashboard/WeatherWidget';
+import WeatherStrip from '@/components/WeatherStrip';
+import { useWeather } from '@/hooks/useWeather';
 import type { WeatherData } from '@/types';
 
-// Mock the useWeather hook
+// Mock the useWeather hook – vi.mock is hoisted by Vitest so this runs before imports.
 vi.mock('@/hooks/useWeather', () => ({
     useWeather: vi.fn(),
 }));
-
-import { useWeather } from '@/hooks/useWeather';
-import WeatherWidget from '@/components/Dashboard/WeatherWidget';
-import WeatherStrip from '@/components/WeatherStrip';
 
 const mockWeatherData: WeatherData = {
     location: 'London',

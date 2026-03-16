@@ -12,11 +12,11 @@ import { destroy, move, store, update } from '@/actions/App/Http/Controllers/Cal
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
 import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
 import InputError from '@/components/InputError';
-import WeatherStrip from '@/components/WeatherStrip';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
 
