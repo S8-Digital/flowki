@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
-import { Bot, Send, Sparkles, User } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Bot, Send, Sparkles, Trash2, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ interface Message {
     isStreaming?: boolean;
 }
 
+const HISTORY_KEY = 'assistant_history';
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'AI Assistant', href: '/assistant' }];
 
 const suggestions = [
@@ -21,13 +22,41 @@ const suggestions = [
     'Create a todo: Book dentist appointment',
     'Schedule a family dinner on Saturday at 6pm',
     'Add weekly vacuuming as a chore',
+    'Import a recipe for spaghetti bolognese',
+    "What's on the shopping list?",
+    "List this week's chores",
 ];
 
+function loadHistory(): Message[] {
+    try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        if (raw) {
+            return JSON.parse(raw) as Message[];
+        }
+    } catch {
+        /* ignore */
+    }
+    return [];
+}
+
+function saveHistory(messages: Message[]): void {
+    try {
+        const persisted = messages.filter((m) => !m.isStreaming).map(({ role, content }) => ({ role, content }));
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(persisted));
+    } catch {
+        /* ignore */
+    }
+}
+
 export default function AssistantIndex() {
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<Message[]>(() => loadHistory());
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        saveHistory(messages);
+    }, [messages]);
 
     function scrollToBottom() {
         setTimeout(() => {
@@ -35,6 +64,11 @@ export default function AssistantIndex() {
                 containerRef.current.scrollTop = containerRef.current.scrollHeight;
             }
         }, 0);
+    }
+
+    function clearConversation() {
+        setMessages([]);
+        localStorage.removeItem(HISTORY_KEY);
     }
 
     async function sendMessage(text?: string) {
@@ -140,7 +174,7 @@ export default function AssistantIndex() {
                                 <div>
                                     <h2 className="text-xl font-semibold">Family Assistant</h2>
                                     <p className="mt-1 text-sm text-muted-foreground">
-                                        Ask me to create todos, schedule events, add chores, or manage your shopping list.
+                                        Ask me to create todos, schedule events, manage chores, import recipes, or manage your shopping list.
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap justify-center gap-2">
@@ -157,14 +191,14 @@ export default function AssistantIndex() {
                             </div>
                         ) : (
                             messages.map((msg, i) => (
-                                <div key={i} className={`flex gap-3${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     {msg.role === 'assistant' && (
                                         <div className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10">
                                             <Bot className="size-4 text-primary" />
                                         </div>
                                     )}
                                     <div
-                                        className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm${msg.role === 'user' ? 'rounded-br-sm bg-primary text-primary-foreground' : 'rounded-bl-sm bg-muted'}`}
+                                        className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === 'user' ? 'rounded-br-sm bg-primary text-primary-foreground' : 'rounded-bl-sm bg-muted'}`}
                                     >
                                         {msg.isStreaming && !msg.content ? (
                                             <span className="flex items-center gap-1 text-muted-foreground">
@@ -198,6 +232,11 @@ export default function AssistantIndex() {
                             <Button size="icon" disabled={isLoading || !input.trim()} onClick={() => sendMessage()}>
                                 <Send className="size-4" />
                             </Button>
+                            {messages.length > 0 && (
+                                <Button size="icon" variant="ghost" disabled={isLoading} onClick={clearConversation} title="Clear conversation">
+                                    <Trash2 className="size-4" />
+                                </Button>
+                            )}
                         </div>
                         <p className="mt-1.5 text-center text-xs text-muted-foreground">AI can make mistakes. Verify important information.</p>
                     </div>
