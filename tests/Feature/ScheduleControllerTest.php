@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
-class RosterControllerTest extends TestCase
+class ScheduleControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,7 +18,7 @@ class RosterControllerTest extends TestCase
 
     public function test_upload_requires_authentication(): void
     {
-        $file = UploadedFile::fake()->createWithContent('roster.txt', '2026-03-17 07:00-15:00 Morning Shift');
+        $file = UploadedFile::fake()->createWithContent('schedule.txt', '2026-03-17 07:00-15:00 Morning Shift');
 
         $this->postJson(route('schedule.upload'), ['file' => $file])
             ->assertUnauthorized();
@@ -29,7 +29,7 @@ class RosterControllerTest extends TestCase
         $user = User::factory()->withFamily()->create();
         $user->syncRoles('Guest'); // Guests cannot create events
 
-        $file = UploadedFile::fake()->createWithContent('roster.txt', '2026-03-17 07:00-15:00 Morning Shift');
+        $file = UploadedFile::fake()->createWithContent('schedule.txt', '2026-03-17 07:00-15:00 Morning Shift');
 
         $this->actingAs($user)
             ->postJson(route('schedule.upload'), ['file' => $file])
@@ -63,7 +63,7 @@ class RosterControllerTest extends TestCase
     {
         $user = User::factory()->withFamily()->create();
 
-        $file = UploadedFile::fake()->create('roster.zip', 100, 'application/zip');
+        $file = UploadedFile::fake()->create('schedule.zip', 100, 'application/zip');
 
         $this->actingAs($user)
             ->postJson(route('schedule.upload'), ['file' => $file])
@@ -80,7 +80,7 @@ class RosterControllerTest extends TestCase
             '2026-03-18 15:00-23:00 Afternoon Shift',
         ]);
 
-        $file = UploadedFile::fake()->createWithContent('roster.txt', $content);
+        $file = UploadedFile::fake()->createWithContent('schedule.txt', $content);
 
         $this->actingAs($user)
             ->postJson(route('schedule.upload'), ['file' => $file])

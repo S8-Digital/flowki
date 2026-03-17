@@ -8,7 +8,7 @@ use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 
-class ListRoster implements Tool
+class ListSchedule implements Tool
 {
     public function __construct(protected User $user) {}
 

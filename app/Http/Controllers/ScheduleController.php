@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ConfirmScheduleRequest;
 use App\Http\Requests\UploadScheduleRequest;
 use App\Models\CalendarEvent;
-use App\Services\RosterParserService;
+use App\Services\ScheduleParserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
-class RosterController extends Controller
+class ScheduleController extends Controller
 {
-    public function __construct(private RosterParserService $parser) {}
+    public function __construct(private ScheduleParserService $parser) {}
 
     /**
      * Upload a schedule file and return parsed shifts as JSON for preview.

@@ -10,8 +10,8 @@ use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Attributes\Description;
 use Laravel\Mcp\Server\Tool;
 
-#[Description('List calendar events for the authenticated user filtered by attendee (i.e. their personal schedule / imported roster shifts), with optional date range filters.')]
-class ListRosterTool extends Tool
+#[Description('List calendar events for the authenticated user filtered by attendee (i.e. their personal schedule or imported roster shifts), with optional date range filters.')]
+class ListScheduleTool extends Tool
 {
     /**
      * Handle the tool request.

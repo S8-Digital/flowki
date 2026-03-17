@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/react';
 import { CalendarDays, FileText, Upload, X } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { confirm, upload } from '@/actions/App/Http/Controllers/RosterController';
+import { confirm, upload } from '@/actions/App/Http/Controllers/ScheduleController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { ParsedShift, RosterItem } from '@/types';
@@ -176,7 +176,12 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                     : 'border-muted-foreground/30 hover:border-primary hover:bg-muted/30'
                             }`}
                             onClick={() => fileInputRef.current?.click()}
-                            onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    fileInputRef.current?.click();
+                                }
+                            }}
                             onDragOver={(e) => {
                                 e.preventDefault();
                                 setIsDragging(true);

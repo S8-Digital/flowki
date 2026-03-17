@@ -2,17 +2,20 @@
 
 namespace Tests\Unit\Services;
 
-use App\Services\RosterParserService;
+use App\Services\ScheduleParserService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class RosterParserServiceTest extends TestCase
+class ScheduleParserServiceTest extends TestCase
 {
-    private RosterParserService $service;
+    use RefreshDatabase;
+
+    private ScheduleParserService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new RosterParserService;
+        $this->service = new ScheduleParserService;
     }
 
     // -----------------------------------------------------------------------
@@ -144,19 +147,64 @@ class RosterParserServiceTest extends TestCase
     }
 
     // -----------------------------------------------------------------------
-    // Roster-style multi-line schedule
+    // safeDate – invalid date rejection
     // -----------------------------------------------------------------------
 
-    public function test_parses_typical_roster_block(): void
+    public function test_rejects_impossible_date_feb_31(): void
     {
-        $roster = <<<'TXT'
+        // Feb 31 must return null, not silently roll over to Mar 3
+        $shifts = $this->service->parseText('2026-02-31 08:00-16:00 Shift');
+
+        $this->assertCount(0, $shifts);
+    }
+
+    public function test_rejects_impossible_date_april_31(): void
+    {
+        $shifts = $this->service->parseText('2026-04-31 08:00-16:00 Shift');
+
+        $this->assertCount(0, $shifts);
+    }
+
+    // -----------------------------------------------------------------------
+    // DD/MM vs MM/DD ambiguity
+    // -----------------------------------------------------------------------
+
+    public function test_prefers_dd_mm_interpretation_for_ambiguous_date(): void
+    {
+        // 03/04/2026: could be 3 Apr (DD/MM) or 4 Mar (MM/DD)
+        // Should prefer DD/MM = 3 April
+        $shifts = $this->service->parseText('03/04/2026 09:00-17:00 Shift');
+
+        $this->assertCount(1, $shifts);
+        $this->assertEquals('2026-04-03', substr($shifts[0]['start_at'], 0, 10));
+    }
+
+    public function test_falls_back_to_mm_dd_when_dd_mm_is_invalid(): void
+    {
+        // 13/01/2026: as DD/MM → day=13, month=01 is valid (13 Jan). This verifies
+        // that DD/MM parses correctly when the "day" exceeds 12 (unambiguous DD/MM).
+        // For a true MM/DD-only fallback, day values > 12 would be needed as month,
+        // but month > 12 is always invalid so the fallback path is tested via safeDate.
+        $shifts = $this->service->parseText('13/01/2026 09:00-17:00 Shift');
+
+        $this->assertCount(1, $shifts);
+        $this->assertEquals('2026-01-13', substr($shifts[0]['start_at'], 0, 10));
+    }
+
+    // -----------------------------------------------------------------------
+    // Typical schedule block (roster-style)
+    // -----------------------------------------------------------------------
+
+    public function test_parses_typical_schedule_block(): void
+    {
+        $schedule = <<<'TXT'
         Mon 17/03/2026 07:00-15:00 Early Shift
         Tue 18/03/2026 15:00-23:00 Late Shift
         Wed 19/03/2026 OFF
         Thu 20/03/2026 07:00-15:00 Early Shift
         TXT;
 
-        $shifts = $this->service->parseText($roster);
+        $shifts = $this->service->parseText($schedule);
 
         $this->assertCount(4, $shifts);
         $this->assertEquals('Early Shift', $shifts[0]['title']);

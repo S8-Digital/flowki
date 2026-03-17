@@ -1,8 +1,8 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 
 /**
- * @see \App\Http\Controllers\RosterController::upload
- * @see app/Http/Controllers/RosterController.php
+ * @see \App\Http\Controllers\ScheduleController::upload
+ * @see app/Http/Controllers/ScheduleController.php
  * @route '/schedule/upload'
  */
 export const upload = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -37,8 +37,8 @@ uploadForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 upload.form = uploadForm
 
 /**
- * @see \App\Http\Controllers\RosterController::confirm
- * @see app/Http/Controllers/RosterController.php
+ * @see \App\Http\Controllers\ScheduleController::confirm
+ * @see app/Http/Controllers/ScheduleController.php
  * @route '/schedule/confirm'
  */
 export const confirm = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -72,6 +72,6 @@ confirmForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =>
 
 confirm.form = confirmForm
 
-const RosterController = { upload, confirm }
+const ScheduleController = { upload, confirm }
 
-export default RosterController
+export default ScheduleController

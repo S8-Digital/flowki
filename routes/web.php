@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AiController;
 use App\Http\Controllers\CalendarEventController;
-use App\Http\Controllers\RosterController;
 use App\Http\Controllers\ChoreController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FamilyController;
@@ -11,6 +10,7 @@ use App\Http\Controllers\FirebaseServiceWorkerController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\TodoController;
@@ -70,8 +70,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('calendar/{calendarEvent}', [CalendarEventController::class, 'destroy'])->name('calendar.destroy');
 
     // Schedule Import
-    Route::post('schedule/upload', [RosterController::class, 'upload'])->name('schedule.upload');
-    Route::post('schedule/confirm', [RosterController::class, 'confirm'])->name('schedule.confirm');
+    Route::post('schedule/upload', [ScheduleController::class, 'upload'])->name('schedule.upload');
+    Route::post('schedule/confirm', [ScheduleController::class, 'confirm'])->name('schedule.confirm');
 
     // Shopping
     Route::get('shopping', [ShoppingListController::class, 'index'])->name('shopping.index');

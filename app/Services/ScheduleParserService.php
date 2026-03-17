@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Ai\AnonymousAgent;
 use Laravel\Ai\Messages\UserMessage;
 
-class RosterParserService
+class ScheduleParserService
 {
     /**
      * Parse an uploaded schedule file and return an array of parsed shifts.
@@ -78,9 +78,9 @@ class RosterParserService
      */
     public function parseLine(string $line): ?array
     {
-        // Normalise separators
-        $line = preg_replace('/\s*[:\-–—]\s*/', ' ', $line) ?? $line;
-        $line = preg_replace('/\s+/', ' ', trim($line));
+        // Collapse multiple spaces but leave date/time separators intact so
+        // extractDate() and extractTimeRange() can match them correctly.
+        $line = preg_replace('/\s+/', ' ', trim($line)) ?? $line;
 
         $date = $this->extractDate($line);
 
@@ -131,16 +131,23 @@ class RosterParserService
             return $this->safeDate((int) $m[1], (int) $m[2], (int) $m[3]);
         }
 
-        // DD/MM/YYYY or MM/DD/YYYY — assume DD/MM when day ≤ 12 is ambiguous; try both
+        // DD/MM/YYYY or MM/DD/YYYY
+        // Prefer DD/MM (common in AU/NZ/UK schedules). When both orderings yield
+        // a valid date we return the DD/MM interpretation; when DD/MM is invalid
+        // we fall back to MM/DD.
         if (preg_match('/\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})\b/', $line, $m)) {
             $a = (int) $m[1];
             $b = (int) $m[2];
             $y = (int) $m[3];
-            // Prefer day/month (common in AU/NZ/UK schedules)
-            if ($a >= 1 && $a <= 31 && $b >= 1 && $b <= 12) {
-                return $this->safeDate($y, $b, $a);
+
+            // Try DD/MM first
+            $ddMm = $this->safeDate($y, $b, $a);
+
+            if ($ddMm !== null) {
+                return $ddMm;
             }
 
+            // Fall back to MM/DD
             return $this->safeDate($y, $a, $b);
         }
 
@@ -149,6 +156,7 @@ class RosterParserService
             $year = (int) date('Y');
             $a = (int) $m[1];
             $b = (int) $m[2];
+
             if ($b >= 1 && $b <= 31 && $a >= 1 && $a <= 12) {
                 return $this->safeDate($year, $a, $b);
             }
@@ -194,7 +202,7 @@ class RosterParserService
      */
     private function extractTimeRange(string $line): array
     {
-        // HH:MM - HH:MM  or  HHhMM - HHhMM
+        // HH:MM - HH:MM  or  HH.MM - HH.MM
         if (preg_match('/(\d{1,2})[:\.](\d{2})\s*[\-–—to]+\s*(\d{1,2})[:\.](\d{2})/i', $line, $m)) {
             $start = sprintf('%02d:%02d', (int) $m[1], (int) $m[2]);
             $end = sprintf('%02d:%02d', (int) $m[3], (int) $m[4]);
@@ -232,24 +240,24 @@ class RosterParserService
 
         // Clean separators and whitespace
         $title = preg_replace('/[\-–—\/|,]+/', ' ', $title) ?? $title;
-        $title = preg_replace('/\s+/', ' ', trim($title));
+        $title = preg_replace('/\s+/', ' ', trim($title)) ?? trim($title);
 
         return $title;
     }
 
+    /**
+     * Validate the date components and return a YYYY-MM-DD string, or null if invalid.
+     *
+     * Uses checkdate() to reject impossible dates (e.g. Feb 31) instead of
+     * silently rolling them over to the next valid date.
+     */
     private function safeDate(int $year, int $month, int $day): ?string
     {
-        if ($month < 1 || $month > 12 || $day < 1 || $day > 31) {
+        if (! checkdate($month, $day, $year)) {
             return null;
         }
 
-        $ts = mktime(0, 0, 0, $month, $day, $year);
-
-        if ($ts === false) {
-            return null;
-        }
-
-        return date('Y-m-d', $ts);
+        return sprintf('%04d-%02d-%02d', $year, $month, $day);
     }
 
     private function monthNumber(string $name): int
@@ -288,7 +296,7 @@ class RosterParserService
 
             return $this->parseAiJsonResponse((string) $response);
         } catch (\Throwable $e) {
-            Log::warning('RosterParserService: AI image parse failed', ['error' => $e->getMessage()]);
+            Log::warning('ScheduleParserService: AI image parse failed', ['error' => $e->getMessage()]);
 
             return [];
         }
@@ -323,7 +331,7 @@ class RosterParserService
 
             return $this->parseAiJsonResponse((string) $response);
         } catch (\Throwable $e) {
-            Log::warning('RosterParserService: AI PDF parse failed', ['error' => $e->getMessage()]);
+            Log::warning('ScheduleParserService: AI PDF parse failed', ['error' => $e->getMessage()]);
 
             return [];
         }
