@@ -24,7 +24,7 @@ class ChoreController extends Controller
         $this->authorize('viewAny', Chore::class);
 
         $family = $request->user()->family;
-        $members = UserResource::collection($family->members()->get())->resolve();
+        $members = UserResource::collection($family->getOrderedMembers())->resolve();
 
         $chores = Inertia::defer(fn () => ChoreResource::collection(
             Chore::query()
@@ -33,14 +33,12 @@ class ChoreController extends Controller
                 ->when($request->search, fn ($q) => $q->search($request->search))
                 ->when($request->assigned_to, fn ($q) => $q->whereHas('assignees', fn ($q) => $q->where('users.id', $request->assigned_to)))
                 ->orderBy($request->sort_by ?? 'next_due_date', $request->sort_dir ?? 'asc')
-                ->paginate(20)
-                ->withQueryString()
+                ->get()
         ));
 
         return Inertia::render('Chores/Index', [
             'chores' => $chores,
             'members' => $members,
-            'filters' => $request->only(['search', 'assigned_to', 'sort_by', 'sort_dir']),
         ]);
     }
 

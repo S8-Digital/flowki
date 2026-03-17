@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:47
+* @see app/Http/Controllers/ChoreController.php:43
 * @route '/chores'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:47
+* @see app/Http/Controllers/ChoreController.php:43
 * @route '/chores'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:47
+* @see app/Http/Controllers/ChoreController.php:43
 * @route '/chores'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:47
+* @see app/Http/Controllers/ChoreController.php:43
 * @route '/chores'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\ChoreController::store
-* @see app/Http/Controllers/ChoreController.php:47
+* @see app/Http/Controllers/ChoreController.php:43
 * @route '/chores'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\ChoreController::update
-* @see app/Http/Controllers/ChoreController.php:69
+* @see app/Http/Controllers/ChoreController.php:64
 * @route '/chores/{chore}'
 */
 export const update = (args: { chore: string | number | { id: string | number } } | [chore: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({

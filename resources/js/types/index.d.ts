@@ -54,6 +54,7 @@ export interface Family {
     latitude: number | null;
     longitude: number | null;
     members?: User[];
+    member_order?: number[];
     created_at: string;
 }
 
