@@ -28,7 +28,7 @@ class TodoController extends Controller
         $todos = Inertia::defer(fn () => TodoResource::collection(
             Todo::query()
                 ->forFamily($family->id)
-                ->with(['assignee:id,name', 'creator:id,name'])
+                ->with(['assignee:id,name,profile_color', 'creator:id,name'])
                 ->when($request->search, fn ($q) => $q->search($request->search))
                 ->when($request->status, fn ($q) => $q->where('status', $request->status))
                 ->when($request->priority, fn ($q) => $q->where('priority', $request->priority))

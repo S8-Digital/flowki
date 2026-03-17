@@ -1,10 +1,11 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import { Bell, CheckCheck, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import type { AppNotification, AppPageProps } from '@/types';
+import { getEcho } from '@/lib/echo';
+import type { AppNotification, AppPageProps, Auth } from '@/types';
 
 function notificationMessage(notification: AppNotification): string {
     const d = notification.data;
@@ -53,11 +54,38 @@ function formatRelativeTime(dateStr: string): string {
 
 export default function NotificationBell() {
     const page = usePage<AppPageProps>();
-    const unreadCount = page.props.unreadNotificationsCount ?? 0;
+    const { auth } = page.props as AppPageProps & { auth: Auth };
+    const serverUnreadCount = page.props.unreadNotificationsCount ?? 0;
+    const [realtimeUnreadCount, setRealtimeUnreadCount] = useState<number | null>(null);
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [loading, setLoading] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const [open, setOpen] = useState(false);
+    const channelRef = useRef<{ listen: (...args: unknown[]) => void } | null>(null);
+
+    // Subscribe to the user's private channel for real-time notification count
+    useEffect(() => {
+        const echo = getEcho();
+
+        if (!echo || !auth?.user?.id) {
+            return;
+        }
+
+        const channel = echo.private(`App.Models.User.${auth.user.id}`);
+        channelRef.current = channel as typeof channelRef.current;
+
+        channel.listen('.NotificationReceived', (data: { unread_count: number }) => {
+            setRealtimeUnreadCount(data.unread_count);
+            // Reset the loaded flag so the bell re-fetches fresh notifications on next open
+            setLoaded(false);
+        });
+
+        return () => {
+            echo.leave(`App.Models.User.${auth.user.id}`);
+        };
+    }, [auth?.user?.id]);
+
+    const unreadCount = realtimeUnreadCount !== null ? realtimeUnreadCount : serverUnreadCount;
 
     function fetchNotifications() {
         if (loaded) {
@@ -94,6 +122,7 @@ export default function NotificationBell() {
                 preserveScroll: true,
                 onSuccess: () => {
                     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read_at: new Date().toISOString() } : n)));
+                    setRealtimeUnreadCount((prev) => (prev !== null ? Math.max(0, prev - 1) : null));
                 },
             },
         );
@@ -107,6 +136,7 @@ export default function NotificationBell() {
                 preserveScroll: true,
                 onSuccess: () => {
                     setNotifications((prev) => prev.map((n) => ({ ...n, read_at: n.read_at ?? new Date().toISOString() })));
+                    setRealtimeUnreadCount(0);
                 },
             },
         );

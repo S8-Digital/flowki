@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
+import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, PaginatedResource, Todo, User } from '@/types';
 
 interface Category {
@@ -284,7 +285,20 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             <span className="capitalize">{todo.category}</span>
                                             <span className={`font-medium capitalize ${priorityColor(todo.priority)}`}>{todo.priority}</span>
                                             {todo.due_date && <span>Due {formatDateTime(todo.due_date)}</span>}
-                                            {todo.assignee && <span>→ {todo.assignee.name}</span>}
+                                            {todo.assignee && (
+                                                <span className="flex items-center gap-1">
+                                                    <span
+                                                        className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full text-[7px] font-bold text-white"
+                                                        style={{
+                                                            backgroundColor: getProfileColor(todo.assignee) ?? '#94a3b8',
+                                                        }}
+                                                        title={todo.assignee.name}
+                                                    >
+                                                        {todo.assignee.name[0]?.toUpperCase()}
+                                                    </span>
+                                                    {todo.assignee.name}
+                                                </span>
+                                            )}
                                         </p>
                                     </div>
                                     <div className="flex shrink-0 items-center gap-2">

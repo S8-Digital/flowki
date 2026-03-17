@@ -26,6 +26,8 @@ class StoreTodoRequest extends FormRequest
      */
     public function rules(): array
     {
+        $familyId = $this->user()?->family_id;
+
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
@@ -33,7 +35,10 @@ class StoreTodoRequest extends FormRequest
             'priority' => ['required', Rule::enum(Priority::class)],
             'status' => ['required', Rule::enum(TodoStatus::class)],
             'due_date' => ['nullable', 'date'],
-            'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
+            'assigned_to' => [
+                'nullable', 'integer',
+                Rule::exists('users', 'id')->where('family_id', $familyId),
+            ],
             'reminder_enabled' => ['nullable', 'boolean'],
             'reminder_lead_time' => ['nullable', 'integer', 'min:1', 'max:10080'],
         ];

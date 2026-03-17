@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
+import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, Chore, PaginatedResource, User } from '@/types';
 
 interface Props {
@@ -255,7 +256,22 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         <p className="mt-0.5 flex gap-2 text-xs opacity-70">
                                             <span className="capitalize">{chore.frequency}</span>
                                             {chore.next_due_date && <span>Due {formatDateTime(chore.next_due_date)}</span>}
-                                            {chore.assignees?.length ? <span>→ {chore.assignees.map((a) => a.name).join(', ')}</span> : null}
+                                            {chore.assignees?.length ? (
+                                                <span className="flex flex-wrap items-center gap-1">
+                                                    {chore.assignees.map((a) => (
+                                                        <span key={a.id} className="flex items-center gap-0.5">
+                                                            <span
+                                                                className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full text-[7px] font-bold text-white"
+                                                                style={{ backgroundColor: getProfileColor(a) ?? '#94a3b8' }}
+                                                                title={a.name}
+                                                            >
+                                                                {a.name[0]?.toUpperCase()}
+                                                            </span>
+                                                            {a.name}
+                                                        </span>
+                                                    ))}
+                                                </span>
+                                            ) : null}
                                         </p>
                                     </div>
                                     <div className="flex shrink-0 items-center gap-2">
