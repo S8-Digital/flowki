@@ -8,6 +8,7 @@ use App\Mcp\Tools\CreateEventTool;
 use App\Mcp\Tools\CreateTodoTool;
 use App\Mcp\Tools\ListChoresTool;
 use App\Mcp\Tools\ListEventsTool;
+use App\Mcp\Tools\ListScheduleTool;
 use App\Mcp\Tools\ListShoppingItemsTool;
 use App\Mcp\Tools\ListTodosTool;
 use Laravel\Mcp\Server;
@@ -27,6 +28,7 @@ use Laravel\Mcp\Server\Attributes\Version;
     - list_todos: List todos with optional filters
     - create_event: Schedule a calendar event
     - list_events: List calendar events with optional date range filters
+    - list_schedule: List the authenticated user's personal schedule shifts (imported from rosters or schedules), with optional date range filters
     - create_chore: Add a recurring chore
     - list_chores: List chores with optional filters
     - add_shopping_item: Add an item to a shopping list
@@ -39,6 +41,7 @@ class FamilyOrganizerServer extends Server
         ListTodosTool::class,
         CreateEventTool::class,
         ListEventsTool::class,
+        ListScheduleTool::class,
         CreateChoreTool::class,
         ListChoresTool::class,
         AddShoppingItemTool::class,

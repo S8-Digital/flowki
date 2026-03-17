@@ -10,6 +10,7 @@ use App\Http\Controllers\FirebaseServiceWorkerController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\TodoController;
@@ -67,6 +68,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('calendar/{calendarEvent}', [CalendarEventController::class, 'update'])->name('calendar.update');
     Route::patch('calendar/{calendarEvent}/move', [CalendarEventController::class, 'move'])->name('calendar.move');
     Route::delete('calendar/{calendarEvent}', [CalendarEventController::class, 'destroy'])->name('calendar.destroy');
+
+    // Schedule Import
+    Route::post('schedule/upload', [ScheduleController::class, 'upload'])->name('schedule.upload');
+    Route::post('schedule/confirm', [ScheduleController::class, 'confirm'])->name('schedule.confirm');
 
     // Shopping
     Route::get('shopping', [ShoppingListController::class, 'index'])->name('shopping.index');

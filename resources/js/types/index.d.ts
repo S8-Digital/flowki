@@ -243,3 +243,16 @@ export interface FamilyScheduleColumn extends MemberSummary {
     todos: Todo[];
     chores: Chore[];
 }
+
+/** A single shift item returned from the schedule upload parse endpoint. */
+export interface ParsedShift {
+    title: string;
+    start_at: string;
+    end_at: string | null;
+    is_all_day: boolean;
+}
+
+/** A roster item that includes a client-side unique key for list rendering. */
+export interface RosterItem extends ParsedShift {
+    _key: string;
+}

@@ -4,6 +4,7 @@ import FamilyController from './FamilyController'
 import TodoController from './TodoController'
 import ChoreController from './ChoreController'
 import CalendarEventController from './CalendarEventController'
+import ScheduleController from './ScheduleController'
 import ShoppingListController from './ShoppingListController'
 import ShoppingItemController from './ShoppingItemController'
 import RecipeController from './RecipeController'
@@ -24,6 +25,7 @@ const Controllers = {
     TodoController: Object.assign(TodoController, TodoController),
     ChoreController: Object.assign(ChoreController, ChoreController),
     CalendarEventController: Object.assign(CalendarEventController, CalendarEventController),
+    ScheduleController: Object.assign(ScheduleController, ScheduleController),
     ShoppingListController: Object.assign(ShoppingListController, ShoppingListController),
     ShoppingItemController: Object.assign(ShoppingItemController, ShoppingItemController),
     RecipeController: Object.assign(RecipeController, RecipeController),
