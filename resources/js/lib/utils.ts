@@ -14,3 +14,15 @@ export function urlIsActive(urlToCheck: NonNullable<InertiaLinkProps['href']>, c
 export function toUrl(href: NonNullable<InertiaLinkProps['href']>) {
     return typeof href === 'string' ? href : href?.url;
 }
+
+/**
+ * Returns a user's profile_color if it is a valid 6-digit hex (e.g. #rrggbb),
+ * otherwise returns null.
+ */
+export function getProfileColor(user: { profile_color?: string | null } | undefined): string | null {
+    if (user?.profile_color && /^#[0-9a-fA-F]{6}$/.test(user.profile_color)) {
+        return user.profile_color;
+    }
+
+    return null;
+}

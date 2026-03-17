@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
+import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
 
 interface Props {
@@ -78,6 +79,23 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         color: '#6366f1',
         attendee_ids: [] as string[],
     });
+
+    /** When attendees change in the create form, auto-apply the sole attendee's profile colour. */
+    function handleCreateAttendeesChange(ids: string[]) {
+        let color = createForm.data.color;
+
+        if (ids.length === 1) {
+            const member = members.find((m) => String(m.id) === ids[0]);
+            const memberColor = getProfileColor(member);
+
+            if (memberColor) {
+                color = memberColor;
+            }
+        }
+
+        createForm.setData({ ...createForm.data, attendee_ids: ids, color });
+    }
+
     const editEventForm = useForm({
         title: '',
         description: '',
@@ -456,12 +474,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     multiple
                                     className="h-24 w-full rounded-md border bg-background px-3 text-sm"
                                     value={createForm.data.attendee_ids}
-                                    onChange={(e) =>
-                                        createForm.setData(
-                                            'attendee_ids',
-                                            Array.from(e.target.selectedOptions, (o) => o.value),
-                                        )
-                                    }
+                                    onChange={(e) => handleCreateAttendeesChange(Array.from(e.target.selectedOptions, (o) => o.value))}
                                 >
                                     {members.map((m) => (
                                         <option key={m.id} value={String(m.id)}>

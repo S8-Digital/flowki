@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import AppLayout from '@/layouts/AppLayout';
+import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, PaginatedResource, Todo, User } from '@/types';
 
 interface Category {
@@ -30,9 +31,11 @@ const breadcrumbs: BreadcrumbItem[] = [{ title: 'Todos', href: '/todos' }];
 function statusLabel(status: string) {
     return { pending: 'Pending', in_progress: 'In Progress', completed: 'Completed' }[status] ?? status;
 }
+
 function priorityColor(priority: string) {
     return { low: 'text-green-600', medium: 'text-yellow-600', high: 'text-red-600' }[priority] ?? '';
 }
+
 function formatDateTime(value: string | null) {
     if (!value) {
         return null;
@@ -224,40 +227,45 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                         </div>
                     ) : (
                         <ul className="space-y-2">
-                            {todos.data.map((todo) => (
-                                <li
-                                    key={todo.id}
-                                    className="category-todos-item flex items-center justify-between gap-3 overflow-hidden rounded-xl px-4 py-3"
-                                >
-                                    <div className="min-w-0 flex-1">
-                                        <p className={`truncate font-medium${todo.status === 'completed' ? 'line-through opacity-50' : ''}`}>
-                                            {todo.title}
-                                        </p>
-                                        <p className="mt-0.5 flex gap-2 text-xs opacity-70">
-                                            <span className="capitalize">{todo.category}</span>
-                                            <span className={`font-medium capitalize ${priorityColor(todo.priority)}`}>{todo.priority}</span>
-                                            {todo.due_date && <span>Due {formatDateTime(todo.due_date)}</span>}
-                                            {todo.assignee && <span>→ {todo.assignee.name}</span>}
-                                        </p>
-                                    </div>
-                                    <div className="flex shrink-0 items-center gap-2">
-                                        <span className="rounded-full bg-white/60 px-2 py-0.5 text-xs">{statusLabel(todo.status)}</span>
-                                        <Button variant="ghost" size="icon" onClick={() => openEdit(todo)}>
-                                            <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                />
-                                            </svg>
-                                        </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo)}>
-                                            <Trash2 className="size-4 text-destructive" />
-                                        </Button>
-                                    </div>
-                                </li>
-                            ))}
+                            {todos.data.map((todo) => {
+                                const assigneeColor = getProfileColor(todo.assignee);
+
+                                return (
+                                    <li
+                                        key={todo.id}
+                                        className="category-todos-item flex items-center justify-between gap-3 overflow-hidden rounded-xl px-4 py-3"
+                                        style={assigneeColor ? { borderLeft: `4px solid ${assigneeColor}` } : undefined}
+                                    >
+                                        <div className="min-w-0 flex-1">
+                                            <p className={`truncate font-medium${todo.status === 'completed' ? 'line-through opacity-50' : ''}`}>
+                                                {todo.title}
+                                            </p>
+                                            <p className="mt-0.5 flex gap-2 text-xs opacity-70">
+                                                <span className="capitalize">{todo.category}</span>
+                                                <span className={`font-medium capitalize ${priorityColor(todo.priority)}`}>{todo.priority}</span>
+                                                {todo.due_date && <span>Due {formatDateTime(todo.due_date)}</span>}
+                                                {todo.assignee && <span>→ {todo.assignee.name}</span>}
+                                            </p>
+                                        </div>
+                                        <div className="flex shrink-0 items-center gap-2">
+                                            <span className="rounded-full bg-white/60 px-2 py-0.5 text-xs">{statusLabel(todo.status)}</span>
+                                            <Button variant="ghost" size="icon" onClick={() => openEdit(todo)}>
+                                                <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                    />
+                                                </svg>
+                                            </Button>
+                                            <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo)}>
+                                                <Trash2 className="size-4 text-destructive" />
+                                            </Button>
+                                        </div>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     )}
 
