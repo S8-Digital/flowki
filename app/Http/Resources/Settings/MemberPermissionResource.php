@@ -19,6 +19,7 @@ class MemberPermissionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'role' => $this->getRoleNames()->first(),
+            'profile_color' => $this->profile_color,
             'permissionGroups' => collect(RolePermissionSeeder::PERMISSIONS)
                 ->map(fn (array $perms, string $group) => [
                     'group' => $group,

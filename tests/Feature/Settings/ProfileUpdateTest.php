@@ -96,4 +96,102 @@ class ProfileUpdateTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+
+    public function test_profile_color_can_be_updated()
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_color' => '#ff6600',
+            ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('profile.edit'));
+
+        $this->assertSame('#ff6600', $user->refresh()->profile_color);
+    }
+
+    public function test_profile_color_must_be_valid_hex()
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->from(route('profile.edit'))
+            ->patch(route('profile.update'), [
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_color' => 'not-a-color',
+            ]);
+
+        $response->assertSessionHasErrors('profile_color');
+    }
+
+    public function test_profile_color_can_be_cleared()
+    {
+        $user = User::factory()->create(['profile_color' => '#ff6600']);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch(route('profile.update'), [
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_color' => null,
+            ]);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertNull($user->refresh()->profile_color);
+    }
+
+    public function test_admin_can_update_another_members_color()
+    {
+        $admin = User::factory()->withFamily()->create();
+        $family = $admin->family;
+        $member = User::factory()->asMemberOf($family)->create();
+
+        $response = $this
+            ->actingAs($admin)
+            ->patch(route('settings.members.color.update', $member), [
+                'profile_color' => '#3b82f6',
+            ]);
+
+        $response->assertRedirect();
+        $this->assertSame('#3b82f6', $member->refresh()->profile_color);
+    }
+
+    public function test_non_admin_cannot_update_another_members_color()
+    {
+        $admin = User::factory()->withFamily()->create();
+        $family = $admin->family;
+        $member = User::factory()->asMemberOf($family)->create();
+
+        $response = $this
+            ->actingAs($member)
+            ->patch(route('settings.members.color.update', $admin), [
+                'profile_color' => '#3b82f6',
+            ]);
+
+        $response->assertForbidden();
+    }
+
+    public function test_admin_color_update_rejects_invalid_hex()
+    {
+        $admin = User::factory()->withFamily()->create();
+        $family = $admin->family;
+        $member = User::factory()->asMemberOf($family)->create();
+
+        $response = $this
+            ->actingAs($admin)
+            ->from(route('settings.permissions.edit', $member))
+            ->patch(route('settings.members.color.update', $member), [
+                'profile_color' => 'red',
+            ]);
+
+        $response->assertSessionHasErrors('profile_color');
+    }
 }

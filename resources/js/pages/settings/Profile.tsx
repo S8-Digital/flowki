@@ -29,7 +29,7 @@ const socialProviders = [
 export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConnected }: Props) {
     const page = usePage<{
         auth: {
-            user: { id: number; name: string; email: string; email_verified_at: string | null };
+            user: { id: number; name: string; email: string; profile_color?: string | null; email_verified_at: string | null };
             connectedProviders: string[];
             hasPasswordSet: boolean;
         };
@@ -38,7 +38,11 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
     const connectedProviders = page.props.auth.connectedProviders;
     const hasPasswordSet = page.props.auth.hasPasswordSet;
 
-    const { data, setData, patch, processing, errors, recentlySuccessful } = useForm({ name: user.name, email: user.email });
+    const { data, setData, patch, processing, errors, recentlySuccessful } = useForm({
+        name: user.name,
+        email: user.email,
+        profile_color: user.profile_color ?? '',
+    });
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -110,6 +114,30 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                                 placeholder="Email address"
                             />
                             <InputError className="mt-2" message={errors.email} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="profile_color">Profile Colour</Label>
+                            <div className="flex items-center gap-3">
+                                <input
+                                    id="profile_color"
+                                    type="color"
+                                    className="h-9 w-14 cursor-pointer rounded-md border bg-background p-1"
+                                    value={data.profile_color || '#6366f1'}
+                                    onChange={(e) => setData('profile_color', e.target.value)}
+                                    aria-label="Pick your profile colour"
+                                />
+                                <span className="text-sm text-muted-foreground">{data.profile_color ? data.profile_color : 'No colour set'}</span>
+                                {data.profile_color && (
+                                    <button
+                                        type="button"
+                                        className="text-xs text-muted-foreground underline"
+                                        onClick={() => setData('profile_color', '')}
+                                    >
+                                        Clear
+                                    </button>
+                                )}
+                            </div>
+                            <InputError className="mt-2" message={errors.profile_color} />
                         </div>
                         {mustVerifyEmail && !user.email_verified_at && (
                             <div>
