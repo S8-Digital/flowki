@@ -339,7 +339,7 @@ searchForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 search.form = searchForm
 
 /**
-* @see routes/settings.php:26
+* @see routes/settings.php:27
 * @route '/settings/appearance'
 */
 export const appearance = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -353,7 +353,7 @@ appearance.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/settings.php:26
+* @see routes/settings.php:27
 * @route '/settings/appearance'
 */
 appearance.url = (options?: RouteQueryOptions) => {
@@ -361,7 +361,7 @@ appearance.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/settings.php:26
+* @see routes/settings.php:27
 * @route '/settings/appearance'
 */
 appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -370,7 +370,7 @@ appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/settings.php:26
+* @see routes/settings.php:27
 * @route '/settings/appearance'
 */
 appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -379,7 +379,7 @@ appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/settings.php:26
+* @see routes/settings.php:27
 * @route '/settings/appearance'
 */
 const appearanceForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -388,7 +388,7 @@ const appearanceForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 })
 
 /**
-* @see routes/settings.php:26
+* @see routes/settings.php:27
 * @route '/settings/appearance'
 */
 appearanceForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -397,7 +397,7 @@ appearanceForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 })
 
 /**
-* @see routes/settings.php:26
+* @see routes/settings.php:27
 * @route '/settings/appearance'
 */
 appearanceForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
