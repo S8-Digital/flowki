@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AiController;
 use App\Http\Controllers\CalendarEventController;
+use App\Http\Controllers\RosterController;
 use App\Http\Controllers\ChoreController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FamilyController;
@@ -67,6 +68,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('calendar/{calendarEvent}', [CalendarEventController::class, 'update'])->name('calendar.update');
     Route::patch('calendar/{calendarEvent}/move', [CalendarEventController::class, 'move'])->name('calendar.move');
     Route::delete('calendar/{calendarEvent}', [CalendarEventController::class, 'destroy'])->name('calendar.destroy');
+
+    // Schedule Import
+    Route::post('schedule/upload', [RosterController::class, 'upload'])->name('schedule.upload');
+    Route::post('schedule/confirm', [RosterController::class, 'confirm'])->name('schedule.confirm');
 
     // Shopping
     Route::get('shopping', [ShoppingListController::class, 'index'])->name('shopping.index');

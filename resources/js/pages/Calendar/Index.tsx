@@ -6,12 +6,13 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
-import { Plus, Trash2 } from 'lucide-react';
+import { CalendarDays, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
 import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
 import FamilyScheduleView from '@/components/Calendar/FamilyScheduleView';
+import ScheduleUploadModal from '@/components/Calendar/ScheduleUploadModal';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -54,6 +55,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
     const [selectedDate, setSelectedDate] = useState<string>(initialDate ?? localToday());
     const calendarRef = useRef<FullCalendar>(null);
     const [createOpen, setCreateOpen] = useState(false);
+    const [importOpen, setImportOpen] = useState(false);
     const [editEventOpen, setEditEventOpen] = useState(false);
     const [editTodoOpen, setEditTodoOpen] = useState(false);
     const [editChoreOpen, setEditChoreOpen] = useState(false);
@@ -341,6 +343,13 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </option>
                                 ))}
                             </select>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setImportOpen(true)}
+                            >
+                                <CalendarDays className="mr-1 size-4" /> Import Schedule
+                            </Button>
                             <Button
                                 size="sm"
                                 onClick={() => {
@@ -722,6 +731,9 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                         )}
                     </DialogContent>
                 </Dialog>
+
+                {/* Import Schedule Modal */}
+                <ScheduleUploadModal open={importOpen} onOpenChange={setImportOpen} />
             </AppLayout>
         </>
     );
