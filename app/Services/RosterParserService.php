@@ -22,7 +22,7 @@ class RosterParserService
         $ext = strtolower($file->getClientOriginalExtension());
 
         if (str_starts_with($mime, 'text/') || $ext === 'txt' || $ext === 'csv') {
-            return $this->parseText($file->get());
+            return $this->parseText((string) file_get_contents($file->getRealPath()));
         }
 
         if (in_array($mime, ['image/jpeg', 'image/png', 'image/gif', 'image/webp']) ||
@@ -35,7 +35,7 @@ class RosterParserService
         }
 
         // Attempt plain-text fallback for unknown types
-        return $this->parseText($file->get());
+        return $this->parseText((string) file_get_contents($file->getRealPath()));
     }
 
     /**
@@ -269,7 +269,7 @@ class RosterParserService
         }
 
         try {
-            $base64 = base64_encode($file->get());
+            $base64 = base64_encode((string) file_get_contents($file->getRealPath()));
             $mime = $file->getMimeType() ?? 'image/jpeg';
 
             $prompt = <<<PROMPT
@@ -306,7 +306,7 @@ class RosterParserService
         }
 
         try {
-            $base64 = base64_encode($file->get());
+            $base64 = base64_encode((string) file_get_contents($file->getRealPath()));
 
             $prompt = <<<PROMPT
             You are extracting a work schedule from a PDF document (provided as base64). Return ONLY a JSON array.

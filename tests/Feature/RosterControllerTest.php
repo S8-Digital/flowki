@@ -6,7 +6,6 @@ use App\Models\CalendarEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class RosterControllerTest extends TestCase
@@ -22,7 +21,7 @@ class RosterControllerTest extends TestCase
         $file = UploadedFile::fake()->createWithContent('roster.txt', '2026-03-17 07:00-15:00 Morning Shift');
 
         $this->postJson(route('schedule.upload'), ['file' => $file])
-            ->assertRedirect(route('login'));
+            ->assertUnauthorized();
     }
 
     public function test_upload_rejects_user_without_create_events_permission(): void

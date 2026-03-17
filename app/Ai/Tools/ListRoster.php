@@ -14,7 +14,7 @@ class ListRoster implements Tool
 
     public function description(): string
     {
-        return 'List the personal schedule shifts for the current user (e.g. imported work roster entries). '
+        return 'List the personal schedule shifts for the current user (e.g. imported work schedule or roster). '
             .'Use this when the user asks about their work schedule, shifts, roster, or personal calendar entries. '
             .'Optionally filter by date range.';
     }

@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/react';
-import { CalendarDays, FileText, Trash2, Upload, X } from 'lucide-react';
-import { useCallback, useRef, useState } from 'react';
+import { CalendarDays, FileText, Upload, X } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { confirm, upload } from '@/actions/App/Http/Controllers/RosterController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -270,7 +270,6 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                 Cancel
                             </Button>
                             <Button onClick={handleConfirm} disabled={items.length === 0}>
-                                <Trash2 className="mr-1.5 size-4 hidden" aria-hidden="true" />
                                 Import {items.length > 0 ? `${items.length} shift${items.length !== 1 ? 's' : ''}` : ''}
                             </Button>
                         </div>
