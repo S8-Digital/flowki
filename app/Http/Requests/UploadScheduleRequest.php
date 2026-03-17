@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CalendarEvent;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UploadScheduleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('create', \App\Models\CalendarEvent::class) ?? false;
+        return $this->user()?->can('create', CalendarEvent::class) ?? false;
     }
 
     /** @return array<string, mixed> */

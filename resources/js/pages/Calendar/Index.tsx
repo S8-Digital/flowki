@@ -343,11 +343,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </option>
                                 ))}
                             </select>
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setImportOpen(true)}
-                            >
+                            <Button size="sm" variant="outline" onClick={() => setImportOpen(true)}>
                                 <CalendarDays className="mr-1 size-4" /> Import Schedule
                             </Button>
                             <Button

@@ -3,8 +3,8 @@
 use App\Http\Controllers\GoogleCalendarController;
 use App\Http\Controllers\Settings\CategoriesController;
 use App\Http\Controllers\Settings\MemberColorController;
-use App\Http\Controllers\Settings\NotificationPreferencesController;
 use App\Http\Controllers\Settings\MemberOrderController;
+use App\Http\Controllers\Settings\NotificationPreferencesController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\PermissionController;
 use App\Http\Controllers\Settings\ProfileController;

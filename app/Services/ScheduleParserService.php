@@ -198,7 +198,7 @@ class ScheduleParserService
     /**
      * Extract a time range from the line.
      *
-     * @return array{0: string|null, 1: string|null}  [startHH:MM, endHH:MM]
+     * @return array{0: string|null, 1: string|null} [startHH:MM, endHH:MM]
      */
     private function extractTimeRange(string $line): array
     {
@@ -280,7 +280,7 @@ class ScheduleParserService
             $base64 = base64_encode((string) file_get_contents($file->getRealPath()));
             $mime = $file->getMimeType() ?? 'image/jpeg';
 
-            $prompt = <<<PROMPT
+            $prompt = <<<'PROMPT'
             You are extracting a work schedule from an image. Return ONLY a JSON array.
             Each element must have these exact keys: title (shift name/code), start_at (ISO 8601 datetime), end_at (ISO 8601 datetime or null), is_all_day (boolean).
             Example: [{"title":"Morning Shift","start_at":"2026-03-17T07:00:00","end_at":"2026-03-17T15:00:00","is_all_day":false}]
@@ -316,7 +316,7 @@ class ScheduleParserService
         try {
             $base64 = base64_encode((string) file_get_contents($file->getRealPath()));
 
-            $prompt = <<<PROMPT
+            $prompt = <<<'PROMPT'
             You are extracting a work schedule from a PDF document (provided as base64). Return ONLY a JSON array.
             Each element must have these exact keys: title (shift name/code), start_at (ISO 8601 datetime), end_at (ISO 8601 datetime or null), is_all_day (boolean).
             Example: [{"title":"Morning Shift","start_at":"2026-03-17T07:00:00","end_at":"2026-03-17T15:00:00","is_all_day":false}]

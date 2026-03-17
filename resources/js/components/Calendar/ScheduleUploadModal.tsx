@@ -34,7 +34,9 @@ function formatShiftTime(shift: ParsedShift): string {
         minute: '2-digit',
     });
 
-    if (!shift.end_at) return startStr;
+    if (!shift.end_at) {
+        return startStr;
+    }
 
     const end = new Date(shift.end_at);
     const endTime = end.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
@@ -59,7 +61,10 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
     }
 
     function handleOpenChange(val: boolean) {
-        if (!val) resetModal();
+        if (!val) {
+            resetModal();
+        }
+
         onOpenChange(val);
     }
 
@@ -68,6 +73,7 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
 
         if (file.size > MAX_SIZE_MB * 1024 * 1024) {
             setError(`File is too large. Maximum size is ${MAX_SIZE_MB} MB.`);
+
             return;
         }
 
@@ -91,6 +97,7 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
 
             if (!response.ok) {
                 setError(json.message ?? 'Failed to parse the file. Please check the format and try again.');
+
                 return;
             }
 
@@ -111,7 +118,11 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
 
     function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
-        if (file) processFile(file);
+
+        if (file) {
+            processFile(file);
+        }
+
         // Reset so the same file can be re-selected if needed
         e.target.value = '';
     }
@@ -120,7 +131,10 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
         e.preventDefault();
         setIsDragging(false);
         const file = e.dataTransfer.files?.[0];
-        if (file) processFile(file);
+
+        if (file) {
+            processFile(file);
+        }
     }
 
     function removeItem(key: string) {
@@ -128,7 +142,9 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
     }
 
     function handleConfirm() {
-        if (items.length === 0) return;
+        if (items.length === 0) {
+            return;
+        }
 
         const shifts = items.map(({ title, start_at, end_at, is_all_day }) => ({
             title,
@@ -161,9 +177,8 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                 {step === 'upload' && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground">
-                            Upload your schedule file to auto-populate your calendar. Accepted formats: plain text (.txt,
-                            .csv), images (.jpg, .png), and PDFs. Works great with work rosters, shift schedules, and
-                            timetables.
+                            Upload your schedule file to auto-populate your calendar. Accepted formats: plain text (.txt, .csv), images (.jpg, .png),
+                            and PDFs. Works great with work rosters, shift schedules, and timetables.
                         </p>
 
                         {/* Drop zone */}
@@ -171,9 +186,7 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                             role="button"
                             tabIndex={0}
                             className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 transition-colors ${
-                                isDragging
-                                    ? 'border-primary bg-primary/5'
-                                    : 'border-muted-foreground/30 hover:border-primary hover:bg-muted/30'
+                                isDragging ? 'border-primary bg-primary/5' : 'border-muted-foreground/30 hover:border-primary hover:bg-muted/30'
                             }`}
                             onClick={() => fileInputRef.current?.click()}
                             onKeyDown={(e) => {
@@ -194,8 +207,7 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                             <p className="text-sm font-medium">Drop your schedule file here</p>
                             <p className="mt-1 text-xs text-muted-foreground">or click to browse</p>
                             <p className="mt-3 text-xs text-muted-foreground">
-                                {ACCEPTED_TYPES.replace(/\./g, '').toUpperCase().replace(/,/g, ', ')} · max{' '}
-                                {MAX_SIZE_MB} MB
+                                {ACCEPTED_TYPES.replace(/\./g, '').toUpperCase().replace(/,/g, ', ')} · max {MAX_SIZE_MB} MB
                             </p>
                         </div>
 
@@ -208,14 +220,10 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                             aria-hidden="true"
                         />
 
-                        {isLoading && (
-                            <p className="text-center text-sm text-muted-foreground">Parsing your schedule…</p>
-                        )}
+                        {isLoading && <p className="text-center text-sm text-muted-foreground">Parsing your schedule…</p>}
 
                         {error && (
-                            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-                                {error}
-                            </div>
+                            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
                         )}
                     </div>
                 )}
@@ -224,23 +232,16 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <p className="text-sm text-muted-foreground">
-                                {items.length} shift{items.length !== 1 ? 's' : ''} found. Remove any you don't want to
-                                import, then click <strong>Import</strong>.
+                                {items.length} shift{items.length !== 1 ? 's' : ''} found. Remove any you don't want to import, then click{' '}
+                                <strong>Import</strong>.
                             </p>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setStep('upload')}
-                                className="text-xs"
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => setStep('upload')} className="text-xs">
                                 ← Re-upload
                             </Button>
                         </div>
 
                         {items.length === 0 ? (
-                            <p className="py-6 text-center text-sm text-muted-foreground">
-                                All shifts removed. Re-upload a file or close.
-                            </p>
+                            <p className="py-6 text-center text-sm text-muted-foreground">All shifts removed. Re-upload a file or close.</p>
                         ) : (
                             <ul className="divide-y rounded-lg border">
                                 {items.map((item) => (
@@ -250,11 +251,7 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                             <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                                                 <FileText className="size-3 shrink-0" />
                                                 {formatShiftTime(item)}
-                                                {item.is_all_day && (
-                                                    <span className="ml-1 rounded bg-muted px-1 py-0.5 text-[10px]">
-                                                        All day
-                                                    </span>
-                                                )}
+                                                {item.is_all_day && <span className="ml-1 rounded bg-muted px-1 py-0.5 text-[10px]">All day</span>}
                                             </p>
                                         </div>
                                         <button
