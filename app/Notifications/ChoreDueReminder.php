@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ChoreAssigned extends Notification implements ShouldQueue
+class ChoreDueReminder extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -36,12 +36,11 @@ class ChoreAssigned extends Notification implements ShouldQueue
     public function toMail(mixed $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New chore assigned: '.$this->chore->title)
+            ->subject('Reminder: '.$this->chore->title.' is due soon')
             ->greeting('Hi '.$notifiable->name.'!')
-            ->line('You have been assigned a new chore: **'.$this->chore->title.'**')
+            ->line('Just a reminder that the chore **'.$this->chore->title.'** is due soon.')
             ->when($this->chore->next_due_date, fn ($mail) => $mail->line('Due: '.$this->chore->next_due_date->format('D, M j Y g:i A')))
-            ->action('View Chores', url('/chores'))
-            ->line('Thanks for helping keep the home running!');
+            ->action('View Chores', url('/chores'));
     }
 
     /**
@@ -50,10 +49,10 @@ class ChoreAssigned extends Notification implements ShouldQueue
     public function toFcm(mixed $notifiable): array
     {
         return [
-            'title' => 'New chore assigned',
-            'body' => "You have been assigned: {$this->chore->title}",
+            'title' => 'Chore due soon',
+            'body' => "Don't forget: {$this->chore->title}",
             'data' => [
-                'type' => 'chore_assigned',
+                'type' => 'chore_reminder',
                 'chore_id' => (string) $this->chore->id,
             ],
         ];
@@ -65,7 +64,7 @@ class ChoreAssigned extends Notification implements ShouldQueue
     public function toArray(mixed $notifiable): array
     {
         return [
-            'type' => 'chore_assigned',
+            'type' => 'chore_reminder',
             'chore_id' => $this->chore->id,
             'chore_title' => $this->chore->title,
         ];

@@ -3,6 +3,7 @@
 use App\Http\Controllers\GoogleCalendarController;
 use App\Http\Controllers\Settings\CategoriesController;
 use App\Http\Controllers\Settings\MemberColorController;
+use App\Http\Controllers\Settings\NotificationPreferencesController;
 use App\Http\Controllers\Settings\MemberOrderController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\PermissionController;
@@ -36,6 +37,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('settings/members/{user}/permissions', [PermissionController::class, 'edit'])->name('settings.permissions.edit');
     Route::put('settings/members/{user}/permissions', [PermissionController::class, 'update'])->name('settings.permissions.update');
+
+    Route::get('settings/notifications', [NotificationPreferencesController::class, 'edit'])->name('settings.notifications.edit');
+    Route::put('settings/notifications', [NotificationPreferencesController::class, 'update'])->name('settings.notifications.update');
 
     Route::patch('settings/members/{user}/color', [MemberColorController::class, 'update'])->name('settings.members.color.update');
 

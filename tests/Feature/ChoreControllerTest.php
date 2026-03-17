@@ -6,7 +6,10 @@ use App\Enums\ChoreFrequency;
 use App\Enums\FamilyRole;
 use App\Models\Chore;
 use App\Models\User;
+use App\Notifications\ChoreAssigned;
+use App\Notifications\ChoreCompleted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class ChoreControllerTest extends TestCase
@@ -27,6 +30,8 @@ class ChoreControllerTest extends TestCase
 
     public function test_user_can_create_chore(): void
     {
+        Notification::fake();
+
         $user = User::factory()->withFamily()->create();
 
         $this->actingAs($user)
@@ -50,6 +55,8 @@ class ChoreControllerTest extends TestCase
 
     public function test_chore_store_syncs_assignees(): void
     {
+        Notification::fake();
+
         $user = User::factory()->withFamily()->create();
         $member = User::factory()->create(['family_id' => $user->family_id]);
         $user->family->members()->attach($member->id, ['role' => FamilyRole::Member->value]);
@@ -62,8 +69,38 @@ class ChoreControllerTest extends TestCase
         $this->assertTrue($chore->assignees()->where('users.id', $member->id)->exists());
     }
 
+    public function test_chore_store_sends_assigned_notification_to_new_assignee(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->withFamily()->create();
+        $member = User::factory()->create(['family_id' => $user->family_id]);
+        $user->family->members()->attach($member->id, ['role' => FamilyRole::Member->value]);
+
+        $this->actingAs($user)
+            ->post(route('chores.store'), array_merge($this->validChoreData(), ['assignee_ids' => [$member->id]]))
+            ->assertRedirect();
+
+        Notification::assertSentTo($member, ChoreAssigned::class);
+    }
+
+    public function test_chore_store_does_not_notify_self_assignment(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->withFamily()->create();
+
+        $this->actingAs($user)
+            ->post(route('chores.store'), array_merge($this->validChoreData(), ['assignee_ids' => [$user->id]]))
+            ->assertRedirect();
+
+        Notification::assertNotSentTo($user, ChoreAssigned::class);
+    }
+
     public function test_user_can_update_own_chore(): void
     {
+        Notification::fake();
+
         $user = User::factory()->withFamily()->create();
         $chore = Chore::factory()->create([
             'family_id' => $user->family_id,
@@ -105,6 +142,8 @@ class ChoreControllerTest extends TestCase
 
     public function test_user_can_complete_family_chore(): void
     {
+        Notification::fake();
+
         $user = User::factory()->withFamily()->create();
         $chore = Chore::factory()->create([
             'family_id' => $user->family_id,
@@ -117,6 +156,22 @@ class ChoreControllerTest extends TestCase
             'chore_id' => $chore->id,
             'completed_by' => $user->id,
         ]);
+    }
+
+    public function test_chore_completion_notifies_creator(): void
+    {
+        Notification::fake();
+
+        $creator = User::factory()->withFamily()->create();
+        $completer = User::factory()->asMemberOf($creator->family)->create();
+        $chore = Chore::factory()->create([
+            'family_id' => $creator->family_id,
+            'created_by' => $creator->id,
+        ]);
+
+        $this->actingAs($completer)->post(route('chores.complete', $chore))->assertRedirect();
+
+        Notification::assertSentTo($creator, ChoreCompleted::class);
     }
 
     public function test_user_cannot_complete_another_familys_chore(): void

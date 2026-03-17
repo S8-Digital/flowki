@@ -7,7 +7,10 @@ use App\Enums\TodoCategory;
 use App\Enums\TodoStatus;
 use App\Models\Todo;
 use App\Models\User;
+use App\Notifications\TodoAssigned;
+use App\Notifications\TodoCompleted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class TodoControllerTest extends TestCase
@@ -158,5 +161,59 @@ class TodoControllerTest extends TestCase
             'priority' => Priority::Medium->value,
             'status' => TodoStatus::Pending->value,
         ];
+    }
+
+    // ── notification dispatch ──────────────────────────────────────────────────
+
+    public function test_todo_store_sends_assigned_notification_to_assignee(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->withFamily()->create();
+        $assignee = User::factory()->asMemberOf($user->family)->create();
+
+        $this->actingAs($user)
+            ->post(route('todos.store'), array_merge($this->validTodoData(), [
+                'assigned_to' => $assignee->id,
+            ]))
+            ->assertRedirect();
+
+        Notification::assertSentTo($assignee, TodoAssigned::class);
+    }
+
+    public function test_todo_store_does_not_notify_self_assignment(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->withFamily()->create();
+
+        $this->actingAs($user)
+            ->post(route('todos.store'), array_merge($this->validTodoData(), [
+                'assigned_to' => $user->id,
+            ]))
+            ->assertRedirect();
+
+        Notification::assertNotSentTo($user, TodoAssigned::class);
+    }
+
+    public function test_todo_update_notifies_on_completion(): void
+    {
+        Notification::fake();
+
+        $creator = User::factory()->withFamily()->create();
+        $completer = User::factory()->asMemberOf($creator->family)->create();
+        $todo = Todo::factory()->create([
+            'family_id' => $creator->family_id,
+            'created_by' => $creator->id,
+            'status' => TodoStatus::Pending,
+        ]);
+
+        $this->actingAs($completer)
+            ->patch(route('todos.update', $todo), array_merge($this->validTodoData(), [
+                'status' => TodoStatus::Completed->value,
+            ]))
+            ->assertRedirect();
+
+        Notification::assertSentTo($creator, TodoCompleted::class);
     }
 }

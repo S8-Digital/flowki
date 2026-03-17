@@ -24,13 +24,20 @@ class StoreChoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $familyId = $this->user()?->family_id;
+
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'frequency' => ['required', Rule::enum(ChoreFrequency::class)],
             'next_due_date' => ['nullable', 'date'],
             'assignee_ids' => ['nullable', 'array'],
-            'assignee_ids.*' => ['integer', 'exists:users,id'],
+            'assignee_ids.*' => [
+                'integer',
+                Rule::exists('users', 'id')->where('family_id', $familyId),
+            ],
+            'reminder_enabled' => ['nullable', 'boolean'],
+            'reminder_lead_time' => ['nullable', 'integer', 'min:1', 'max:10080'],
         ];
     }
 

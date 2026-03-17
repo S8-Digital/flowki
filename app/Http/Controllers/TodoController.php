@@ -9,6 +9,8 @@ use App\Http\Resources\UserResource;
 use App\Jobs\SyncItemToGoogleCalendar;
 use App\Models\Todo;
 use App\Models\User;
+use App\Notifications\TodoAssigned;
+use App\Notifications\TodoCompleted;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -26,7 +28,7 @@ class TodoController extends Controller
         $todos = Inertia::defer(fn () => TodoResource::collection(
             Todo::query()
                 ->forFamily($family->id)
-                ->with(['assignee:id,name', 'creator:id,name'])
+                ->with(['assignee:id,name,profile_color', 'creator:id,name'])
                 ->when($request->search, fn ($q) => $q->search($request->search))
                 ->when($request->status, fn ($q) => $q->where('status', $request->status))
                 ->when($request->priority, fn ($q) => $q->where('priority', $request->priority))
@@ -52,6 +54,14 @@ class TodoController extends Controller
             'created_by' => $request->user()->id,
         ]));
 
+        if ($todo->assigned_to) {
+            /** @var User|null $assignee */
+            $assignee = User::find($todo->assigned_to);
+            if ($assignee && $assignee->id !== $request->user()->id) {
+                $assignee->notify(new TodoAssigned($todo));
+            }
+        }
+
         $this->syncToGoogleCalendar($todo);
 
         return back();
@@ -61,8 +71,29 @@ class TodoController extends Controller
     {
         $this->authorize('update', $todo);
 
+        $previousAssignee = $todo->assigned_to;
+        $previousStatus = $todo->status;
+
         $todo->update($request->validated());
         $todo->refresh();
+
+        // Notify new assignee if assignment changed
+        if ($todo->assigned_to && $todo->assigned_to !== $previousAssignee) {
+            /** @var User|null $assignee */
+            $assignee = User::find($todo->assigned_to);
+            if ($assignee && $assignee->id !== $request->user()->id) {
+                $assignee->notify(new TodoAssigned($todo));
+            }
+        }
+
+        // Notify creator when todo is marked completed by someone else
+        if ($todo->status->value === 'completed' && $previousStatus->value !== 'completed') {
+            /** @var User|null $creator */
+            $creator = User::find($todo->created_by);
+            if ($creator && $creator->id !== $request->user()->id) {
+                $creator->notify(new TodoCompleted($todo, $request->user()));
+            }
+        }
 
         $this->syncToGoogleCalendar($todo);
 

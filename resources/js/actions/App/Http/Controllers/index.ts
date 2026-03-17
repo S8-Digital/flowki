@@ -11,6 +11,7 @@ import AiController from './AiController'
 import GlobalSearchController from './GlobalSearchController'
 import FcmTokenController from './FcmTokenController'
 import WeatherController from './WeatherController'
+import NotificationController from './NotificationController'
 import Settings from './Settings'
 import GoogleCalendarController from './GoogleCalendarController'
 import Auth from './Auth'
@@ -30,6 +31,7 @@ const Controllers = {
     GlobalSearchController: Object.assign(GlobalSearchController, GlobalSearchController),
     FcmTokenController: Object.assign(FcmTokenController, FcmTokenController),
     WeatherController: Object.assign(WeatherController, WeatherController),
+    NotificationController: Object.assign(NotificationController, NotificationController),
     Settings: Object.assign(Settings, Settings),
     GoogleCalendarController: Object.assign(GoogleCalendarController, GoogleCalendarController),
     Auth: Object.assign(Auth, Auth),

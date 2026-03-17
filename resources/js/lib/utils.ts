@@ -2,6 +2,7 @@ import type { InertiaLinkProps } from '@inertiajs/react';
 import type { ClassValue } from 'clsx';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import type { User } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -16,13 +17,13 @@ export function toUrl(href: NonNullable<InertiaLinkProps['href']>) {
 }
 
 /**
- * Returns a user's profile_color if it is a valid 6-digit hex (e.g. #rrggbb),
- * otherwise returns null.
+ * Returns a validated 6-digit hex color for the given user's profile_color,
+ * or null if the user has no valid color set.
  */
-export function getProfileColor(user: { profile_color?: string | null } | undefined): string | null {
-    if (user?.profile_color && /^#[0-9a-fA-F]{6}$/.test(user.profile_color)) {
-        return user.profile_color;
+export function getProfileColor(user: Pick<User, 'profile_color'> | null | undefined): string | null {
+    if (!user?.profile_color) {
+        return null;
     }
 
-    return null;
+    return /^#[0-9a-fA-F]{6}$/.test(user.profile_color) ? user.profile_color : null;
 }

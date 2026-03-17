@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\TodoController::index
-* @see app/Http/Controllers/TodoController.php:19
+* @see app/Http/Controllers/TodoController.php:21
 * @route '/todos'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\TodoController::index
-* @see app/Http/Controllers/TodoController.php:19
+* @see app/Http/Controllers/TodoController.php:21
 * @route '/todos'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\TodoController::index
-* @see app/Http/Controllers/TodoController.php:19
+* @see app/Http/Controllers/TodoController.php:21
 * @route '/todos'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\TodoController::index
-* @see app/Http/Controllers/TodoController.php:19
+* @see app/Http/Controllers/TodoController.php:21
 * @route '/todos'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\TodoController::index
-* @see app/Http/Controllers/TodoController.php:19
+* @see app/Http/Controllers/TodoController.php:21
 * @route '/todos'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\TodoController::index
-* @see app/Http/Controllers/TodoController.php:19
+* @see app/Http/Controllers/TodoController.php:21
 * @route '/todos'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\TodoController::index
-* @see app/Http/Controllers/TodoController.php:19
+* @see app/Http/Controllers/TodoController.php:21
 * @route '/todos'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\TodoController::store
-* @see app/Http/Controllers/TodoController.php:46
+* @see app/Http/Controllers/TodoController.php:48
 * @route '/todos'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\TodoController::store
-* @see app/Http/Controllers/TodoController.php:46
+* @see app/Http/Controllers/TodoController.php:48
 * @route '/todos'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\TodoController::store
-* @see app/Http/Controllers/TodoController.php:46
+* @see app/Http/Controllers/TodoController.php:48
 * @route '/todos'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\TodoController::store
-* @see app/Http/Controllers/TodoController.php:46
+* @see app/Http/Controllers/TodoController.php:48
 * @route '/todos'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\TodoController::store
-* @see app/Http/Controllers/TodoController.php:46
+* @see app/Http/Controllers/TodoController.php:48
 * @route '/todos'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\TodoController::update
-* @see app/Http/Controllers/TodoController.php:60
+* @see app/Http/Controllers/TodoController.php:70
 * @route '/todos/{todo}'
 */
 export const update = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -153,7 +153,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\TodoController::update
-* @see app/Http/Controllers/TodoController.php:60
+* @see app/Http/Controllers/TodoController.php:70
 * @route '/todos/{todo}'
 */
 update.url = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ update.url = (args: { todo: string | number | { id: string | number } } | [todo:
 
 /**
 * @see \App\Http\Controllers\TodoController::update
-* @see app/Http/Controllers/TodoController.php:60
+* @see app/Http/Controllers/TodoController.php:70
 * @route '/todos/{todo}'
 */
 update.patch = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -196,7 +196,7 @@ update.patch = (args: { todo: string | number | { id: string | number } } | [tod
 
 /**
 * @see \App\Http\Controllers\TodoController::update
-* @see app/Http/Controllers/TodoController.php:60
+* @see app/Http/Controllers/TodoController.php:70
 * @route '/todos/{todo}'
 */
 const updateForm = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +211,7 @@ const updateForm = (args: { todo: string | number | { id: string | number } } | 
 
 /**
 * @see \App\Http\Controllers\TodoController::update
-* @see app/Http/Controllers/TodoController.php:60
+* @see app/Http/Controllers/TodoController.php:70
 * @route '/todos/{todo}'
 */
 updateForm.patch = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -228,7 +228,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\TodoController::destroy
-* @see app/Http/Controllers/TodoController.php:72
+* @see app/Http/Controllers/TodoController.php:103
 * @route '/todos/{todo}'
 */
 export const destroy = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -243,7 +243,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\TodoController::destroy
-* @see app/Http/Controllers/TodoController.php:72
+* @see app/Http/Controllers/TodoController.php:103
 * @route '/todos/{todo}'
 */
 destroy.url = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -276,7 +276,7 @@ destroy.url = (args: { todo: string | number | { id: string | number } } | [todo
 
 /**
 * @see \App\Http\Controllers\TodoController::destroy
-* @see app/Http/Controllers/TodoController.php:72
+* @see app/Http/Controllers/TodoController.php:103
 * @route '/todos/{todo}'
 */
 destroy.delete = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -286,7 +286,7 @@ destroy.delete = (args: { todo: string | number | { id: string | number } } | [t
 
 /**
 * @see \App\Http\Controllers\TodoController::destroy
-* @see app/Http/Controllers/TodoController.php:72
+* @see app/Http/Controllers/TodoController.php:103
 * @route '/todos/{todo}'
 */
 const destroyForm = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -301,7 +301,7 @@ const destroyForm = (args: { todo: string | number | { id: string | number } } |
 
 /**
 * @see \App\Http\Controllers\TodoController::destroy
-* @see app/Http/Controllers/TodoController.php:72
+* @see app/Http/Controllers/TodoController.php:103
 * @route '/todos/{todo}'
 */
 destroyForm.delete = (args: { todo: string | number | { id: string | number } } | [todo: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

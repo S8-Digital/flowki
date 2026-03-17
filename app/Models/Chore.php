@@ -23,6 +23,8 @@ class Chore extends Model
         'description',
         'frequency',
         'next_due_date',
+        'reminder_enabled',
+        'reminder_lead_time',
     ];
 
     protected function casts(): array
@@ -30,6 +32,8 @@ class Chore extends Model
         return [
             'frequency' => ChoreFrequency::class,
             'next_due_date' => 'datetime',
+            'reminder_enabled' => 'boolean',
+            'reminder_lead_time' => 'integer',
         ];
     }
 

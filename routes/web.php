@@ -8,6 +8,7 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FcmTokenController;
 use App\Http\Controllers\FirebaseServiceWorkerController;
 use App\Http\Controllers\GlobalSearchController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\ShoppingListController;
@@ -97,6 +98,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Weather
     Route::get('weather', [WeatherController::class, 'index'])->name('weather.index');
+
+    // Notifications
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/recent', [NotificationController::class, 'recent'])->name('notifications.recent');
+    Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
+    Route::post('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::post('notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::delete('notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 });
 
 require __DIR__.'/settings.php';

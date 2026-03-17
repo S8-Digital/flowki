@@ -55,6 +55,9 @@ class HandleInertiaRequests extends Middleware
             'currentUserPermissions' => $user
                 ? $user->getAllPermissions()->pluck('name')->values()->all()
                 : [],
+            'unreadNotificationsCount' => $user
+                ? $user->unreadNotifications()->count()
+                : 0,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

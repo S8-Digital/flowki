@@ -29,6 +29,7 @@ class User extends Authenticatable
         'password',
         'family_id',
         'profile_color',
+        'notification_preferences',
         'email_verified_at',
         'google_calendar_id',
         'google_calendar_token',
@@ -46,7 +47,24 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'google_calendar_token' => 'array',
+            'notification_preferences' => 'array',
         ];
+    }
+
+    /**
+     * Whether the user wants email notifications.
+     */
+    public function wantsEmailNotifications(): bool
+    {
+        return ($this->notification_preferences['email'] ?? true) === true;
+    }
+
+    /**
+     * Whether the user wants push notifications.
+     */
+    public function wantsPushNotifications(): bool
+    {
+        return ($this->notification_preferences['push'] ?? true) === true;
     }
 
     public function family(): BelongsTo

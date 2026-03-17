@@ -26,6 +26,8 @@ class Todo extends Model
         'priority',
         'status',
         'due_date',
+        'reminder_enabled',
+        'reminder_lead_time',
     ];
 
     protected function casts(): array
@@ -35,6 +37,8 @@ class Todo extends Model
             'priority' => Priority::class,
             'status' => TodoStatus::class,
             'due_date' => 'datetime',
+            'reminder_enabled' => 'boolean',
+            'reminder_lead_time' => 'integer',
         ];
     }
 

@@ -1,6 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 import categories08bc8d from './categories'
 import permissions from './permissions'
+import notifications from './notifications'
 import members from './members'
 /**
 * @see \App\Http\Controllers\Settings\CategoriesController::categories
@@ -86,6 +87,7 @@ categories.form = categoriesForm
 const settings = {
     categories: Object.assign(categories, categories08bc8d),
     permissions: Object.assign(permissions, permissions),
+    notifications: Object.assign(notifications, notifications),
     members: Object.assign(members, members),
 }
 
