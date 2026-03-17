@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\MemberColorController::update
 * @see app/Http/Controllers/Settings/MemberColorController.php:15
@@ -89,6 +89,8 @@ updateForm.patch = (args: { user: string | number | { id: string | number } } | 
 
 update.form = updateForm
 
-const MemberColorController = { update }
+const color = {
+    update: Object.assign(update, update),
+}
 
-export default MemberColorController
+export default color
