@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\MemberOrderController::update
 * @see app/Http/Controllers/Settings/MemberOrderController.php:11
@@ -65,6 +65,8 @@ updateForm.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =>
 
 update.form = updateForm
 
-const MemberOrderController = { update }
+const order = {
+    update: Object.assign(update, update),
+}
 
-export default MemberOrderController
+export default order
