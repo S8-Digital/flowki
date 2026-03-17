@@ -26,6 +26,7 @@ class FamilyResource extends JsonResource
                 fn () => UserResource::collection($this->resource->members)->resolve()
             ),
             'created_at' => $this->created_at,
+            'member_order' => $this->getMemberOrder(),
         ];
     }
 }

@@ -21,7 +21,7 @@ class TodoController extends Controller
         $this->authorize('viewAny', Todo::class);
 
         $family = $request->user()->family;
-        $members = UserResource::collection($family->members()->get())->resolve();
+        $members = UserResource::collection($family->getOrderedMembers())->resolve();
 
         $todos = Inertia::defer(fn () => TodoResource::collection(
             Todo::query()
@@ -33,15 +33,13 @@ class TodoController extends Controller
                 ->when($request->category, fn ($q) => $q->where('category', $request->category))
                 ->when($request->assigned_to, fn ($q) => $q->where('assigned_to', $request->assigned_to))
                 ->orderBy($request->sort_by ?? 'due_date', $request->sort_dir ?? 'asc')
-                ->paginate(20)
-                ->withQueryString()
+                ->get()
         ));
 
         return Inertia::render('Todos/Index', [
             'todos' => $todos,
             'members' => $members,
             'categories' => $family->getTodoCategories(),
-            'filters' => $request->only(['search', 'status', 'priority', 'category', 'assigned_to', 'sort_by', 'sort_dir']),
         ]);
     }
 

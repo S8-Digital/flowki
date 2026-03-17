@@ -44,7 +44,7 @@ class CalendarEventController extends Controller
     {
         $family = $request->user()->family;
 
-        $members = UserResource::collection($family->members()->get())->resolve();
+        $members = UserResource::collection($family->getOrderedMembers())->resolve();
 
         $events = CalendarEventResource::collection(
             CalendarEvent::query()

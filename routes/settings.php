@@ -3,6 +3,7 @@
 use App\Http\Controllers\GoogleCalendarController;
 use App\Http\Controllers\Settings\CategoriesController;
 use App\Http\Controllers\Settings\MemberColorController;
+use App\Http\Controllers\Settings\MemberOrderController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\PermissionController;
 use App\Http\Controllers\Settings\ProfileController;
@@ -37,4 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::put('settings/members/{user}/permissions', [PermissionController::class, 'update'])->name('settings.permissions.update');
 
     Route::patch('settings/members/{user}/color', [MemberColorController::class, 'update'])->name('settings.members.color.update');
+
+    Route::patch('settings/members/order', [MemberOrderController::class, 'update'])->name('settings.members.order.update');
 });

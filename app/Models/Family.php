@@ -6,6 +6,7 @@ use App\Enums\RecipeCategory;
 use App\Enums\ShoppingItemCategory;
 use App\Enums\TodoCategory;
 use Database\Factories\FamilyFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -74,6 +75,31 @@ class Family extends Model
     public function recipes(): HasMany
     {
         return $this->hasMany(Recipe::class);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getMemberOrder(): array
+    {
+        return $this->settings['member_order'] ?? [];
+    }
+
+    /**
+     * Returns members ordered by the family's member_order setting.
+     */
+    public function getOrderedMembers(): Collection
+    {
+        $members = $this->members()->get();
+        $order = $this->getMemberOrder();
+
+        if (empty($order)) {
+            return $members;
+        }
+
+        $orderMap = array_flip($order);
+
+        return $members->sortBy(fn ($member) => $orderMap[$member->id] ?? PHP_INT_MAX)->values();
     }
 
     /**
