@@ -104,6 +104,21 @@ export default [
             'resources/js/wayfinder/**',
         ],
     },
+    {
+        // Relax rules for test files: mock factories commonly use _-prefixed params
+        // to indicate intentionally ignored props without forwarding them to the DOM.
+        files: ['resources/js/tests/**/*.{ts,tsx}'],
+        rules: {
+            '@typescript-eslint/no-unused-vars': [
+                'error',
+                {
+                    varsIgnorePattern: '^_',
+                    argsIgnorePattern: '^_',
+                    destructuredArrayIgnorePattern: '^_',
+                },
+            ],
+        },
+    },
     prettier, // Turn off all rules that might conflict with Prettier
     {
         plugins: {
