@@ -1,7 +1,8 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { Baby, Copy, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
+import { ArrowDown, ArrowUp, Baby, Copy, GripVertical, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
+import { update as updateMemberOrder } from '@/actions/App/Http/Controllers/Settings/MemberOrderController';
 import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
-import type { AppPageProps, BreadcrumbItem, Family } from '@/types';
+import type { AppPageProps, BreadcrumbItem, Family, User } from '@/types';
 
 interface Props {
     family: Family;
@@ -102,6 +103,52 @@ export default function FamilyShow({ family }: Props) {
 
     function changeRole(memberId: number, role: string) {
         router.patch(updateMemberRole({ family: family.id, userId: memberId }).url, { role });
+    }
+
+    // Member ordering (admin only)
+    const initialOrder: User[] = (() => {
+        const members = family.members ?? [];
+        const order = family.member_order ?? [];
+
+        if (!order.length) {
+            return members;
+        }
+
+        const orderMap = new Map(order.map((id, idx) => [id, idx]));
+
+        return [...members].sort((a, b) => (orderMap.get(a.id) ?? Infinity) - (orderMap.get(b.id) ?? Infinity));
+    })();
+
+    const [memberOrder, setMemberOrder] = useState<User[]>(initialOrder);
+    const [orderSaving, setOrderSaving] = useState(false);
+    const [orderSaved, setOrderSaved] = useState(false);
+
+    function moveMember(index: number, direction: -1 | 1) {
+        const newOrder = [...memberOrder];
+        const swapIndex = index + direction;
+
+        if (swapIndex < 0 || swapIndex >= newOrder.length) {
+            return;
+        }
+
+        [newOrder[index], newOrder[swapIndex]] = [newOrder[swapIndex], newOrder[index]];
+        setMemberOrder(newOrder);
+        setOrderSaved(false);
+    }
+
+    function saveMemberOrder() {
+        setOrderSaving(true);
+        router.patch(
+            updateMemberOrder().url,
+            { member_order: memberOrder.map((m) => m.id) },
+            {
+                onSuccess: () => {
+                    setOrderSaved(true);
+                    setTimeout(() => setOrderSaved(false), 2000);
+                },
+                onFinish: () => setOrderSaving(false),
+            },
+        );
     }
 
     return (
@@ -241,6 +288,60 @@ export default function FamilyShow({ family }: Props) {
                             <p className="mt-2 text-sm text-muted-foreground">No location set.</p>
                         )}
                     </div>
+
+                    {/* Member ordering (admin only) */}
+                    {canManageMembers && memberOrder.length > 1 && (
+                        <div className="rounded-xl border">
+                            <div className="flex items-center justify-between border-b px-4 py-3">
+                                <div className="flex items-center gap-2">
+                                    <GripVertical className="size-4 text-muted-foreground" />
+                                    <h2 className="font-semibold">Member Order</h2>
+                                </div>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={saveMemberOrder}
+                                    disabled={orderSaving}
+                                    className={orderSaved ? 'border-green-500 text-green-600' : ''}
+                                >
+                                    {orderSaved ? 'Saved!' : orderSaving ? 'Saving…' : 'Save Order'}
+                                </Button>
+                            </div>
+                            <p className="px-4 py-2 text-xs text-muted-foreground">
+                                This order is used across Todos, Chores, and the Calendar family view.
+                            </p>
+                            <ul className="divide-y">
+                                {memberOrder.map((member, idx) => (
+                                    <li key={member.id} className="flex items-center gap-3 px-4 py-2.5">
+                                        <span className="w-5 text-center text-xs font-medium text-muted-foreground">{idx + 1}</span>
+                                        <p className="flex-1 text-sm font-medium">{member.name || member.email}</p>
+                                        <div className="flex gap-1">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="size-7"
+                                                onClick={() => moveMember(idx, -1)}
+                                                disabled={idx === 0}
+                                                aria-label="Move up"
+                                            >
+                                                <ArrowUp className="size-3.5" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="size-7"
+                                                onClick={() => moveMember(idx, 1)}
+                                                disabled={idx === memberOrder.length - 1}
+                                                aria-label="Move down"
+                                            >
+                                                <ArrowDown className="size-3.5" />
+                                            </Button>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
                     <div className="rounded-xl border">
                         <div className="flex items-center justify-between border-b px-4 py-3">
