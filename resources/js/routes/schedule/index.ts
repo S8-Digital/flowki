@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\ScheduleController::upload
 * @see app/Http/Controllers/ScheduleController.php:19
@@ -111,6 +111,9 @@ confirmForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =>
 
 confirm.form = confirmForm
 
-const ScheduleController = { upload, confirm }
+const schedule = {
+    upload: Object.assign(upload, upload),
+    confirm: Object.assign(confirm, confirm),
+}
 
-export default ScheduleController
+export default schedule
