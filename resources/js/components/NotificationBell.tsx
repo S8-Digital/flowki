@@ -1,11 +1,11 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import { Bell, CheckCheck, Trash2 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getEcho } from '@/lib/echo';
-import type { AppNotification, AppPageProps, Auth } from '@/types';
+import { onForegroundMessage } from '@/lib/firebase-messaging';
+import type { AppNotification, AppPageProps } from '@/types';
 
 function notificationMessage(notification: AppNotification): string {
     const d = notification.data;
@@ -54,36 +54,29 @@ function formatRelativeTime(dateStr: string): string {
 
 export default function NotificationBell() {
     const page = usePage<AppPageProps>();
-    const { auth } = page.props as AppPageProps & { auth: Auth };
     const serverUnreadCount = page.props.unreadNotificationsCount ?? 0;
     const [realtimeUnreadCount, setRealtimeUnreadCount] = useState<number | null>(null);
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [loading, setLoading] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const [open, setOpen] = useState(false);
-    const channelRef = useRef<{ listen: (...args: unknown[]) => void } | null>(null);
 
-    // Subscribe to the user's private channel for real-time notification count
+    // Listen for foreground FCM messages and bump the unread badge
     useEffect(() => {
-        const echo = getEcho();
+        const unsubscribe = onForegroundMessage((payload) => {
+            const notifType = (payload.data?.type as string | undefined) ?? '';
 
-        if (!echo || !auth?.user?.id) {
-            return;
-        }
-
-        const channel = echo.private(`App.Models.User.${auth.user.id}`);
-        channelRef.current = channel as typeof channelRef.current;
-
-        channel.listen('.NotificationReceived', (data: { unread_count: number }) => {
-            setRealtimeUnreadCount(data.unread_count);
-            // Reset the loaded flag so the bell re-fetches fresh notifications on next open
-            setLoaded(false);
+            if (notifType) {
+                // Increment count and force re-fetch on next bell open
+                setRealtimeUnreadCount((prev) => (prev !== null ? prev + 1 : serverUnreadCount + 1));
+                setLoaded(false);
+            }
         });
 
         return () => {
-            echo.leave(`App.Models.User.${auth.user.id}`);
+            unsubscribe?.();
         };
-    }, [auth?.user?.id]);
+    }, [serverUnreadCount]);
 
     const unreadCount = realtimeUnreadCount !== null ? realtimeUnreadCount : serverUnreadCount;
 
