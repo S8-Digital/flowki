@@ -20,8 +20,8 @@ export default function ShoppingShow({ list }: Props) {
 
     const { data, setData, post, processing, errors, reset } = useForm({ name: '', quantity: '', category: 'groceries' });
 
-    const unchecked = useMemo(() => list.items?.filter((i) => !i.is_checked) ?? [], [list.items]);
-    const checked = useMemo(() => list.items?.filter((i) => i.is_checked) ?? [], [list.items]);
+    const unchecked = useMemo(() => list.items?.data.filter((i) => !i.is_checked) ?? [], [list.items]);
+    const checked = useMemo(() => list.items?.data.filter((i) => i.is_checked) ?? [], [list.items]);
 
     function handleAddItem(e: React.FormEvent) {
         e.preventDefault();
@@ -47,7 +47,7 @@ export default function ShoppingShow({ list }: Props) {
                     </div>
 
                     <form onSubmit={handleAddItem} className="flex gap-2">
-                        <div className="flex-1">
+                        <div className="w-80 flex-1">
                             <Input value={data.name} onChange={(e) => setData('name', e.target.value)} placeholder="Add item…" required />
                             <InputError message={errors.name} />
                         </div>

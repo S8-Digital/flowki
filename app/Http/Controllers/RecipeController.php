@@ -42,7 +42,7 @@ class RecipeController extends Controller
         $this->authorize('view', $recipe);
 
         return Inertia::render('Recipes/Show', [
-            'recipe' => new RecipeResource($recipe->load(['ingredients', 'creator:id,name'])),
+            'recipe' => (new RecipeResource($recipe->load(['ingredients', 'creator:id,name'])))->resolve(),
         ]);
     }
 

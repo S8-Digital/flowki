@@ -37,7 +37,7 @@ class ShoppingListController extends Controller
         $this->authorize('view', $shoppingList);
 
         return Inertia::render('Shopping/Show', [
-            'list' => new ShoppingListResource($shoppingList->load(['items.addedBy', 'creator:id,name'])),
+            'list' => (new ShoppingListResource($shoppingList->load(['items.addedBy', 'creator:id,name'])))->resolve(),
         ]);
     }
 
