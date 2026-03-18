@@ -8,7 +8,7 @@ import type { AiChatModalHandle } from '@/components/AiChatModal';
 import AiChatModal from '@/components/AiChatModal';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogo from '@/components/AppLogo';
-import { useAppSidebar } from '@/components/AppSidebarContext';
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, useAppSidebar } from '@/components/AppSidebarContext';
 import { getInitials } from '@/hooks/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
 import { dashboard, logout } from '@/routes';
@@ -32,9 +32,6 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { CalendarDays, CheckSquare, ChefHat, LayoutGrid, LogOut, RotateCcw, Settings, ShoppingCart, Sparkles, Users } from 'lucide-react';
 import * as React from 'react';
-
-const SIDEBAR_WIDTH = 240;
-const SIDEBAR_COLLAPSED_WIDTH = 56;
 
 export default function AppSidebar() {
     const { open, mobileOpen, setMobileOpen } = useAppSidebar();
