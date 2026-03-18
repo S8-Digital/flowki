@@ -40,6 +40,20 @@ interface SelectItemProps {
     className?: string;
 }
 
+/** Extract props from a <SelectTrigger> child (aria-label, className, etc.) */
+function extractTriggerProps(children: React.ReactNode): Record<string, any> {
+    let triggerProps: Record<string, any> = {};
+    React.Children.forEach(children, (child) => {
+        if (!React.isValidElement(child)) return;
+        const el = child as React.ReactElement<any>;
+        if ((el.type as any).displayName === 'SelectTrigger') {
+            const { children: _c, className: _cls, ...rest } = el.props as any;
+            triggerProps = rest;
+        }
+    });
+    return triggerProps;
+}
+
 function Select({
     value,
     onValueChange,
@@ -53,6 +67,10 @@ function Select({
 }) {
     const items = collectSelectItems(children);
     const placeholder = extractPlaceholder(children);
+    const triggerProps = extractTriggerProps(children);
+
+    // MUI Select needs aria-label on inputProps to reach the combobox element
+    const { 'aria-label': ariaLabel, ...otherTriggerProps } = triggerProps;
 
     return (
         <FormControl size="small" fullWidth>
@@ -63,6 +81,8 @@ function Select({
                 renderValue={(val) =>
                     val ? String(val) : <span style={{ color: 'var(--muted-foreground)' }}>{placeholder}</span>
                 }
+                inputProps={ariaLabel ? { 'aria-label': ariaLabel } : undefined}
+                {...otherTriggerProps}
                 {...(props as any)}
             >
                 {items.map((item, i) => (

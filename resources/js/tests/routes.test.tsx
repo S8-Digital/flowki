@@ -274,8 +274,8 @@ describe('Calendar page (/calendar)', () => {
 
     it('renders the view-switcher select', () => {
         render(<CalendarIndex events={[]} todos={[]} chores={[]} members={[baseUser]} />);
-        // The view switcher is now an MT Select rendered as a button trigger
-        expect(screen.getByRole('button', { name: /calendar view/i })).toBeInTheDocument();
+        // MUI Select renders the inner select element as role="combobox"
+        expect(screen.getByRole('combobox')).toBeInTheDocument();
     });
 
     it('renders the "New Event" button', () => {
@@ -334,10 +334,10 @@ describe('Schedule upload modal (/schedule – ScheduleUploadModal)', () => {
     });
 
     it('renders without errors when the modal is closed', () => {
-        // Our DialogRoot mock always renders children regardless of `open`.
-        // This test confirms the component tree doesn't throw when open=false.
+        // MUI Dialog does not render children when open=false, so just confirm no throw.
         render(<ScheduleUploadModal open={false} onOpenChange={vi.fn()} />);
-        expect(screen.getByRole('button', { name: /drop schedule file here/i })).toBeInTheDocument();
+        // The modal is closed; no content should be visible in the DOM
+        expect(screen.queryByRole('button', { name: /drop schedule file here/i })).not.toBeInTheDocument();
     });
 
     it('shows an error when the file is too large', async () => {

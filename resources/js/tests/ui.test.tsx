@@ -1,7 +1,7 @@
+import { Button } from '@/components/ui/button';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Button } from '@/components/ui/button';
 
 describe('Button', () => {
     it('renders with default text', () => {
@@ -19,7 +19,8 @@ describe('Button', () => {
 
     it('is disabled when the disabled prop is set', async () => {
         const handler = vi.fn();
-        const user = userEvent.setup();
+        // MUI applies pointer-events:none to disabled buttons; bypass the pointer check
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         render(
             <Button disabled onClick={handler}>
                 Disabled
