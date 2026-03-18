@@ -266,6 +266,15 @@ describe('Todos page', () => {
         render(<TodosIndex todos={[]} members={[baseUser]} categories={[{ value: 'home', label: 'Home' }]} />);
         expect(screen.getByRole('button', { name: /new todo/i })).toBeInTheDocument();
     });
+
+    it('does not throw when todos resolves to an array after deferred load (regression: todos.filter is not a function)', () => {
+        // Before fix, TodoController returned {data:[...]} instead of [...].
+        // Rendering with a plain array must not throw.
+        expect(() => {
+            render(<TodosIndex todos={[baseTodo]} members={[baseUser]} categories={[]} />);
+        }).not.toThrow();
+        expect(screen.getByText('Buy groceries')).toBeInTheDocument();
+    });
 });
 
 // ---------------------------------------------------------------------------

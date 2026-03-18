@@ -25,7 +25,7 @@ class ShoppingListController extends Controller
                 ->withCount('items')
                 ->orderBy('created_at', 'desc')
                 ->get()
-        ));
+        )->resolve());
 
         return Inertia::render('Shopping/Index', [
             'lists' => $lists,

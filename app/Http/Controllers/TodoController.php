@@ -36,7 +36,7 @@ class TodoController extends Controller
                 ->when($request->assigned_to, fn ($q) => $q->where('assigned_to', $request->assigned_to))
                 ->orderBy($request->sort_by ?? 'due_date', $request->sort_dir ?? 'asc')
                 ->get()
-        ));
+        )->resolve());
 
         return Inertia::render('Todos/Index', [
             'todos' => $todos,
