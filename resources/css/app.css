@@ -2627,3 +2627,79 @@ main.relative.flex.min-h-svh.flex-1 {
 .navigationMenuTriggerStyle:hover {
     background-color: var(--accent);
 }
+
+/* ============================================================
+   SEMANTIC ALIASES — cleaner alternatives to escaped-class syntax
+   ============================================================ */
+
+/* Fractional gap aliases */
+.gap-0-5 {
+    gap: 2px;
+}
+.gap-1-5 {
+    gap: 6px;
+}
+.gap-2-5 {
+    gap: 10px;
+}
+.gap-3-5 {
+    gap: 14px;
+}
+
+/* Fractional spacing aliases */
+.p-0-5 {
+    padding: 2px;
+}
+.py-0-5 {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.px-2-5 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.py-2-5 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.mt-0-5 {
+    margin-top: 2px;
+}
+.mb-0-5 {
+    margin-bottom: 2px;
+}
+
+/* Fixed-pixel max/min-width (simpler names for specific pixel values) */
+.max-w-320 {
+    max-width: 320px;
+}
+.min-w-240 {
+    min-width: 240px;
+}
+
+/* Calc height */
+.h-viewport-offset {
+    height: calc(100vh - 10rem);
+}
+
+/* Descendant SVG sizing (used by sidebar / breadcrumb internals) */
+.svg-sm > svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+}
+.svg-base > svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+.svg-lg > svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* Skeleton variable-width */
+.skeleton-width {
+    max-width: var(--skeleton-width, 80%);
+}

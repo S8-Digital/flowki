@@ -1,5 +1,5 @@
 import MuiCard from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import MuiCardContent from '@mui/material/CardContent';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -12,7 +12,7 @@ function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement
 }
 
 function CardBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <CardContent className={cn(className)} {...(props as any)} />;
+    return <MuiCardContent className={cn(className)} {...(props as any)} />;
 }
 
 function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
