@@ -1,30 +1,13 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../../node_modules/@material-tailwind/react/src/components/**/*.{js,ts,jsx,tsx}';
-@source '../../node_modules/@material-tailwind/react/src/theme/**/*.{js,ts,jsx,tsx}';
-
-@custom-variant dark (&:is(.dark *));
-
-@layer base {
-    button:not(:disabled) {
-        cursor: pointer;
-    }
-}
-
 /* ============================================================
    FLOWKI — Design System
    calm, modern, family-first
    ============================================================ */
 
-@theme inline {
-    /* ---- Typography ---- */
-    --font-sans:
-        'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+/* ---- Typography ---- */
+/* Plus Jakarta Sans loaded via Google Fonts / asset pipeline */
 
-    /* ---- Curious Blue (primary brand) ---- */
+/* ---- Curious Blue (primary brand) ---- */
+:root {
     --color-curious-blue-50: #f0f6fb;
     --color-curious-blue-100: #d6eaf5;
     --color-curious-blue-200: #a8d1ea;
@@ -104,104 +87,11 @@
     --color-warm-300: hsl(40 8% 72%);
 
     /* ---- Border radius ---- */
+    --radius: 0.875rem;
     --radius-xl: calc(var(--radius) + 4px);
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
-
-    /* ---- Semantic color mappings ---- */
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
-
-    --color-chart-1: var(--chart-1);
-    --color-chart-2: var(--chart-2);
-    --color-chart-3: var(--chart-3);
-    --color-chart-4: var(--chart-4);
-    --color-chart-5: var(--chart-5);
-
-    --color-sidebar: var(--sidebar-background);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
-
-    /* ---- Category semantic tokens ---- */
-    --color-category-events: var(--color-curious-blue-100, #d6eaf5);
-    --color-category-chores: var(--color-sage-100, #c8e8d2);
-    --color-category-shopping: var(--color-coral-100, #f8d8d2);
-    --color-category-meals: var(--color-amber-100, #feefc8);
-    --color-category-todos: var(--color-lavender-100, #e2dcf7);
-
-    /* Material Tailwind color tokens - mapped to Flowki palette */
-    --color-surface: var(--mt-surface);
-    --color-surface-dark: var(--mt-surface-dark);
-    --color-surface-light: var(--mt-surface-light);
-    --color-surface-foreground: var(--mt-surface-foreground);
-    --color-primary-dark: var(--mt-primary-dark);
-    --color-primary-light: var(--mt-primary-light);
-    --color-secondary: var(--mt-secondary);
-    --color-secondary-dark: var(--mt-secondary-dark);
-    --color-secondary-light: var(--mt-secondary-light);
-    --color-secondary-foreground: var(--mt-secondary-foreground);
-    --color-error: var(--mt-error);
-    --color-error-dark: var(--mt-error-dark);
-    --color-error-light: var(--mt-error-light);
-    --color-error-foreground: var(--mt-error-foreground);
-    --color-success: var(--mt-success);
-    --color-success-dark: var(--mt-success-dark);
-    --color-success-light: var(--mt-success-light);
-    --color-success-foreground: var(--mt-success-foreground);
-    --color-warning: var(--mt-warning);
-    --color-warning-dark: var(--mt-warning-dark);
-    --color-warning-light: var(--mt-warning-light);
-    --color-warning-foreground: var(--mt-warning-foreground);
-    --color-info: var(--mt-info);
-    --color-info-dark: var(--mt-info-dark);
-    --color-info-light: var(--mt-info-light);
-    --color-info-foreground: var(--mt-info-foreground);
-    --color-black: #020617;
-    --color-white: #ffffff;
-}
-
-/* ============================================================
-   Tailwind v4 border compatibility
-   ============================================================ */
-@layer base {
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-warm-100, currentColor);
-    }
-}
-
-@layer utilities {
-    body,
-    html {
-        --font-sans:
-            'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    }
 }
 
 /* ============================================================
@@ -241,9 +131,6 @@
     --input: hsl(214 13% 91%);
     --ring: hsl(207 55% 44%);
 
-    /* Border radius — softer and more modern */
-    --radius: 0.875rem;
-
     /* Chart / category pastel palette */
     --chart-1: var(--color-pastel-blue-500);
     --chart-2: var(--color-pastel-green-500);
@@ -261,34 +148,6 @@
     --sidebar-border: hsl(214 13% 91%);
     --sidebar-ring: hsl(207 55% 44%);
     --sidebar: hsl(210 20% 98%);
-
-    /* Material Tailwind runtime CSS vars (mapped to Flowki palette) */
-    --mt-surface: hsl(40 10% 90%);
-    --mt-surface-dark: hsl(40 10% 82%);
-    --mt-surface-light: hsl(40 15% 96%);
-    --mt-surface-foreground: hsl(220 15% 12%);
-    --mt-primary-dark: hsl(207 55% 33%);
-    --mt-primary-light: hsl(207 55% 55%);
-    --mt-secondary: hsl(40 12% 92%);
-    --mt-secondary-dark: hsl(40 10% 82%);
-    --mt-secondary-light: hsl(40 15% 96%);
-    --mt-secondary-foreground: hsl(220 12% 18%);
-    --mt-error: hsl(4 72% 56%);
-    --mt-error-dark: hsl(4 72% 44%);
-    --mt-error-light: hsl(4 72% 68%);
-    --mt-error-foreground: hsl(0 0% 100%);
-    --mt-success: hsl(142 42% 35%);
-    --mt-success-dark: hsl(142 42% 25%);
-    --mt-success-light: hsl(142 42% 48%);
-    --mt-success-foreground: hsl(0 0% 100%);
-    --mt-warning: hsl(38 68% 45%);
-    --mt-warning-dark: hsl(38 68% 34%);
-    --mt-warning-light: hsl(38 68% 58%);
-    --mt-warning-foreground: hsl(0 0% 100%);
-    --mt-info: hsl(207 55% 44%);
-    --mt-info-dark: hsl(207 55% 33%);
-    --mt-info-light: hsl(207 55% 55%);
-    --mt-info-foreground: hsl(0 0% 100%);
 
     /* ---- Flowki category color tokens (light) — vivid outlines + soft pastels ---- */
     --category-events-bg: hsl(207 72% 94%);
@@ -367,34 +226,6 @@
     --sidebar-ring: hsl(207 55% 58%);
     --sidebar: hsl(40 6% 8%);
 
-    /* Material Tailwind runtime CSS vars (dark mode) */
-    --mt-surface: hsl(40 5% 22%);
-    --mt-surface-dark: hsl(40 5% 16%);
-    --mt-surface-light: hsl(40 5% 28%);
-    --mt-surface-foreground: hsl(40 12% 94%);
-    --mt-primary-dark: hsl(207 60% 55%);
-    --mt-primary-light: hsl(207 60% 78%);
-    --mt-secondary: hsl(40 5% 18%);
-    --mt-secondary-dark: hsl(40 5% 12%);
-    --mt-secondary-light: hsl(40 5% 24%);
-    --mt-secondary-foreground: hsl(40 10% 90%);
-    --mt-error: hsl(4 72% 58%);
-    --mt-error-dark: hsl(4 72% 46%);
-    --mt-error-light: hsl(4 72% 70%);
-    --mt-error-foreground: hsl(0 0% 100%);
-    --mt-success: hsl(142 40% 48%);
-    --mt-success-dark: hsl(142 40% 36%);
-    --mt-success-light: hsl(142 40% 60%);
-    --mt-success-foreground: hsl(0 0% 100%);
-    --mt-warning: hsl(38 68% 58%);
-    --mt-warning-dark: hsl(38 68% 46%);
-    --mt-warning-light: hsl(38 68% 70%);
-    --mt-warning-foreground: hsl(0 0% 100%);
-    --mt-info: hsl(207 60% 68%);
-    --mt-info-dark: hsl(207 60% 55%);
-    --mt-info-light: hsl(207 60% 78%);
-    --mt-info-foreground: hsl(0 0% 100%);
-
     /* ---- Flowki category color tokens (dark) ---- */
     --category-events-bg: hsl(207 38% 18%);
     --category-events-fg: hsl(207 55% 72%);
@@ -420,43 +251,54 @@
 /* ============================================================
    BASE STYLES
    ============================================================ */
-@layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
+*,
+::after,
+::before {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: var(--color-warm-100, currentColor);
+}
 
-    body {
-        @apply bg-background text-foreground;
-        font-feature-settings:
-            'rlig' 1,
-            'calt' 1;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family:
+        'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    font-feature-settings:
+        'rlig' 1,
+        'calt' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+}
 
-    /* Smooth focus rings */
-    :focus-visible {
-        @apply outline-2 outline-offset-2;
-    }
+button:not(:disabled) {
+    cursor: pointer;
+}
 
-    /* Scrollbar — subtle and warm */
-    ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-    }
+/* Smooth focus rings */
+:focus-visible {
+    outline-offset: 2px;
+}
 
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
+/* Scrollbar — subtle and warm */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
 
-    ::-webkit-scrollbar-thumb {
-        background: var(--color-warm-200);
-        border-radius: 999px;
-    }
+::-webkit-scrollbar-track {
+    background: transparent;
+}
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--color-warm-300);
-    }
+::-webkit-scrollbar-thumb {
+    background: var(--color-warm-200);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-warm-300);
 }
 
 /* ============================================================
@@ -464,69 +306,68 @@
    Category badge helpers — use these on any pill/tag element
    Category item helpers — use .category-X-item for list rows
    ============================================================ */
-@layer utilities {
-    /* Events */
-    .category-events {
-        background-color: var(--category-events-bg);
-        color: var(--category-events-fg);
-        border-color: var(--category-events-border);
-    }
 
-    .category-events-item {
-        background-color: var(--category-events-bg);
-        color: var(--category-events-fg);
-        border: 2px solid var(--category-events-border);
-    }
+/* Events */
+.category-events {
+    background-color: var(--category-events-bg);
+    color: var(--category-events-fg);
+    border-color: var(--category-events-border);
+}
 
-    /* Chores */
-    .category-chores {
-        background-color: var(--category-chores-bg);
-        color: var(--category-chores-fg);
-        border-color: var(--category-chores-border);
-    }
+.category-events-item {
+    background-color: var(--category-events-bg);
+    color: var(--category-events-fg);
+    border: 2px solid var(--category-events-border);
+}
 
-    .category-chores-item {
-        background-color: var(--category-chores-bg);
-        color: var(--category-chores-fg);
-        border: 2px solid var(--category-chores-border);
-    }
+/* Chores */
+.category-chores {
+    background-color: var(--category-chores-bg);
+    color: var(--category-chores-fg);
+    border-color: var(--category-chores-border);
+}
 
-    /* Shopping */
-    .category-shopping {
-        background-color: var(--category-shopping-bg);
-        color: var(--category-shopping-fg);
-        border-color: var(--category-shopping-border);
-    }
+.category-chores-item {
+    background-color: var(--category-chores-bg);
+    color: var(--category-chores-fg);
+    border: 2px solid var(--category-chores-border);
+}
 
-    .category-shopping-item {
-        background-color: var(--category-shopping-bg);
-        color: var(--category-shopping-fg);
-        border: 2px solid var(--category-shopping-border);
-    }
+/* Shopping */
+.category-shopping {
+    background-color: var(--category-shopping-bg);
+    color: var(--category-shopping-fg);
+    border-color: var(--category-shopping-border);
+}
 
-    /* Meals */
-    .category-meals {
-        background-color: var(--category-meals-bg);
-        color: var(--category-meals-fg);
-        border-color: var(--category-meals-border);
-    }
+.category-shopping-item {
+    background-color: var(--category-shopping-bg);
+    color: var(--category-shopping-fg);
+    border: 2px solid var(--category-shopping-border);
+}
 
-    .category-meals-item {
-        background-color: var(--category-meals-bg);
-        color: var(--category-meals-fg);
-        border: 2px solid var(--category-meals-border);
-    }
+/* Meals */
+.category-meals {
+    background-color: var(--category-meals-bg);
+    color: var(--category-meals-fg);
+    border-color: var(--category-meals-border);
+}
 
-    /* To-dos */
-    .category-todos {
-        background-color: var(--category-todos-bg);
-        color: var(--category-todos-fg);
-        border-color: var(--category-todos-border);
-    }
+.category-meals-item {
+    background-color: var(--category-meals-bg);
+    color: var(--category-meals-fg);
+    border: 2px solid var(--category-meals-border);
+}
 
-    .category-todos-item {
-        background-color: var(--category-todos-bg);
-        color: var(--category-todos-fg);
-        border: 2px solid var(--category-todos-border);
-    }
+/* To-dos */
+.category-todos {
+    background-color: var(--category-todos-bg);
+    color: var(--category-todos-fg);
+    border-color: var(--category-todos-border);
+}
+
+.category-todos-item {
+    background-color: var(--category-todos-bg);
+    color: var(--category-todos-fg);
+    border: 2px solid var(--category-todos-border);
 }

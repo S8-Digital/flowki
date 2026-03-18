@@ -1,9 +1,5 @@
-import { Head, router, useForm } from '@inertiajs/react';
-import { Checkbox } from '@material-tailwind/react';
-import { CheckCircle, Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
 import { complete, destroy, store, update } from '@/actions/App/Http/Controllers/ChoreController';
-import { getMemberColor, getInitials } from '@/components/Calendar/MemberColumn';
+import { getInitials, getMemberColor } from '@/components/Calendar/MemberColumn';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { DateTimeInput } from '@/components/ui/datetime-input';
@@ -15,6 +11,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, Chore, User } from '@/types';
+import { Head, router, useForm } from '@inertiajs/react';
+import MuiCheckbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { CheckCircle, Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 interface Props {
     chores: Chore[] | null;
@@ -215,14 +216,19 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         <Label>Assign To</Label>
                                         <div className="flex flex-col gap-1">
                                             {members.map((m) => (
-                                                <Checkbox
+                                                <FormControlLabel
                                                     key={m.id}
-                                                    checked={createForm.data.assignee_ids.includes(String(m.id))}
-                                                    onChange={() => toggleAssignee(createForm.setData, createForm.data.assignee_ids, String(m.id))}
-                                                >
-                                                    <Checkbox.Indicator />
-                                                    <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
-                                                </Checkbox>
+                                                    control={
+                                                        <MuiCheckbox
+                                                            checked={createForm.data.assignee_ids.includes(String(m.id))}
+                                                            onChange={() =>
+                                                                toggleAssignee(createForm.setData, createForm.data.assignee_ids, String(m.id))
+                                                            }
+                                                            size="small"
+                                                        />
+                                                    }
+                                                    label={m.name}
+                                                />
                                             ))}
                                         </div>
                                     </div>
@@ -532,14 +538,17 @@ export default function ChoresIndex({ chores, members }: Props) {
                                     <Label>Assign To</Label>
                                     <div className="flex flex-col gap-1">
                                         {members.map((m) => (
-                                            <Checkbox
+                                            <FormControlLabel
                                                 key={m.id}
-                                                checked={editForm.data.assignee_ids.includes(String(m.id))}
-                                                onChange={() => toggleAssignee(editForm.setData, editForm.data.assignee_ids, String(m.id))}
-                                            >
-                                                <Checkbox.Indicator />
-                                                <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
-                                            </Checkbox>
+                                                control={
+                                                    <MuiCheckbox
+                                                        checked={editForm.data.assignee_ids.includes(String(m.id))}
+                                                        onChange={() => toggleAssignee(editForm.setData, editForm.data.assignee_ids, String(m.id))}
+                                                        size="small"
+                                                    />
+                                                }
+                                                label={m.name}
+                                            />
                                         ))}
                                     </div>
                                 </div>

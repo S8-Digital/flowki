@@ -1,7 +1,3 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Checkbox } from '@material-tailwind/react';
-import { ExternalLink, Plus, ShoppingCart, Trash2 } from 'lucide-react';
-import { useState } from 'react';
 import { destroy, show, store } from '@/actions/App/Http/Controllers/ShoppingListController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -11,6 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, ShoppingList } from '@/types';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import MuiCheckbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { ExternalLink, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface Props {
     lists: ShoppingList[] | null;
@@ -69,10 +70,17 @@ export default function ShoppingIndex({ lists }: Props) {
                                         />
                                         <InputError message={errors.name} />
                                     </div>
-                                    <Checkbox id="is_shared" checked={data.is_shared} onChange={(e) => setData('is_shared', e.target.checked)}>
-                                        <Checkbox.Indicator />
-                                        <span className="ms-2 text-sm font-normal text-black dark:text-white">Shared with family</span>
-                                    </Checkbox>
+                                    <FormControlLabel
+                                        control={
+                                            <MuiCheckbox
+                                                id="is_shared"
+                                                checked={data.is_shared}
+                                                onChange={(e) => setData('is_shared', e.target.checked)}
+                                                size="small"
+                                            />
+                                        }
+                                        label="Shared with family"
+                                    />
                                     <Button type="submit" className="w-full" disabled={processing}>
                                         {processing ? 'Creating…' : 'Create List'}
                                     </Button>

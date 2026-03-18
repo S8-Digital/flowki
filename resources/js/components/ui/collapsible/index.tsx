@@ -1,4 +1,4 @@
-import { Collapse as MtCollapse } from '@material-tailwind/react';
+import MuiCollapse from '@mui/material/Collapse';
 import * as React from 'react';
 
 interface CollapsibleContextProps {
@@ -8,7 +8,13 @@ interface CollapsibleContextProps {
 
 const CollapsibleContext = React.createContext<CollapsibleContextProps>({ open: false, setOpen: () => {} });
 
-function Collapsible({ open: controlledOpen, onOpenChange, defaultOpen = false, children, ...props }: {
+function Collapsible({
+    open: controlledOpen,
+    onOpenChange,
+    defaultOpen = false,
+    children,
+    ...props
+}: {
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     defaultOpen?: boolean;
@@ -37,12 +43,20 @@ function CollapsibleTrigger({ asChild, children, ...props }: { asChild?: boolean
             ...(children.props as any),
         });
     }
-    return <button onClick={handleClick} {...props}>{children}</button>;
+    return (
+        <button onClick={handleClick} {...props}>
+            {children}
+        </button>
+    );
 }
 
 function CollapsibleContent({ children, ...props }: { children?: React.ReactNode; className?: string }) {
     const { open } = React.useContext(CollapsibleContext);
-    return <MtCollapse open={open} {...(props as any)}>{children}</MtCollapse>;
+    return (
+        <MuiCollapse in={open} {...(props as any)}>
+            {children}
+        </MuiCollapse>
+    );
 }
 
 export { Collapsible, CollapsibleContent, CollapsibleTrigger };

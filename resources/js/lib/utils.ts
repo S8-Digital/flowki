@@ -1,11 +1,9 @@
-import type { InertiaLinkProps } from '@inertiajs/react';
-import type { ClassValue } from 'clsx';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import type { User } from '@/types';
+import type { InertiaLinkProps } from '@inertiajs/react';
+import { clsx } from 'clsx';
 
-export function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
+export function cn(...inputs: (string | undefined | null | false | 0)[]) {
+    return clsx(inputs);
 }
 
 export function urlIsActive(urlToCheck: NonNullable<InertiaLinkProps['href']>, currentUrl: string) {

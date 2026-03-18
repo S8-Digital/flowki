@@ -1,9 +1,9 @@
+import NotificationsIndex from '@/pages/Notifications/Index';
+import Welcome from '@/pages/Welcome';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import NotificationsIndex from '@/pages/Notifications/Index';
-import Welcome from '@/pages/Welcome';
 
 // ---------------------------------------------------------------------------
 // Global mocks
@@ -45,66 +45,6 @@ vi.mock('@/layouts/AuthLayout', () => ({
             {children}
         </div>
     ),
-}));
-
-vi.mock('@material-tailwind/react', () => ({
-    Button: ({
-        children,
-        as: Tag = 'button',
-        href,
-        isFullWidth: _ifw,
-        color: _c,
-        variant: _v,
-        ripple: _ripple,
-        size: _size,
-        ...rest
-    }: {
-        children: React.ReactNode;
-        as?: string;
-        href?: string;
-        isFullWidth?: boolean;
-        color?: string;
-        variant?: string;
-        ripple?: boolean;
-        size?: string;
-        [k: string]: unknown;
-    }) => (
-        <Tag href={href} {...rest}>
-            {children}
-        </Tag>
-    ),
-    InputRoot: React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ ...props }, ref) => <input ref={ref} {...props} />),
-    Input: Object.assign(
-        React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ className: _cn, ...props }, ref) => <input ref={ref} {...props} />),
-        { Icon: () => null },
-    ),
-    CheckboxRoot: React.forwardRef<
-        HTMLButtonElement,
-        React.ComponentProps<'button'> & { onCheckedChange?: (checked: boolean) => void; ripple?: boolean }
-    >(({ children, onCheckedChange: _occh, ripple: _ripple, ...props }, ref) => (
-        <button ref={ref} role="checkbox" {...props}>
-            {children}
-        </button>
-    )),
-    CheckboxIndicator: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
-    Checkbox: Object.assign(
-        React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ children, ...props }, ref) => (
-            <label className="inline-flex cursor-pointer items-center">
-                <input ref={ref} type="checkbox" {...props} />
-                {children}
-            </label>
-        )),
-        { Indicator: ({ children }: { children?: React.ReactNode }) => <span>{children}</span> },
-    ),
-    ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    Collapse: ({ children, open }: { children: React.ReactNode; open?: boolean }) => (open ? <div>{children}</div> : null),
-    Card: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    CardBody: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    CardHeader: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    CardFooter: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    TooltipRoot: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 // Route stubs

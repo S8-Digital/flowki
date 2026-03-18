@@ -1,14 +1,3 @@
-import type { DateSelectArg, DatesSetArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import type { EventResizeDoneArg } from '@fullcalendar/interaction';
-import interactionPlugin from '@fullcalendar/interaction';
-import listPlugin from '@fullcalendar/list';
-import FullCalendar from '@fullcalendar/react';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import { Head, router, useForm } from '@inertiajs/react';
-import { Checkbox } from '@material-tailwind/react';
-import { CalendarDays, Plus, Trash2 } from 'lucide-react';
-import { useCallback, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
 import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
@@ -25,6 +14,18 @@ import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
 import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
+import type { DateSelectArg, DatesSetArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import type { EventResizeDoneArg } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list';
+import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { Head, router, useForm } from '@inertiajs/react';
+import MuiCheckbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { CalendarDays, Plus, Trash2 } from 'lucide-react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 interface Props {
     events: CalendarEvent[];
@@ -476,21 +477,24 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 <Label>Attendees</Label>
                                 <div className="space-y-1">
                                     {members.map((m) => (
-                                        <Checkbox
+                                        <FormControlLabel
                                             key={m.id}
-                                            id={`create-attendee-${m.id}`}
-                                            checked={createForm.data.attendee_ids.includes(String(m.id))}
-                                            onChange={(e) => {
-                                                const id = String(m.id);
-                                                const next = e.target.checked
-                                                    ? [...createForm.data.attendee_ids, id]
-                                                    : createForm.data.attendee_ids.filter((x) => x !== id);
-                                                handleCreateAttendeesChange(next);
-                                            }}
-                                        >
-                                            <Checkbox.Indicator />
-                                            <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
-                                        </Checkbox>
+                                            control={
+                                                <MuiCheckbox
+                                                    id={`create-attendee-${m.id}`}
+                                                    checked={createForm.data.attendee_ids.includes(String(m.id))}
+                                                    onChange={(e) => {
+                                                        const id = String(m.id);
+                                                        const next = e.target.checked
+                                                            ? [...createForm.data.attendee_ids, id]
+                                                            : createForm.data.attendee_ids.filter((x) => x !== id);
+                                                        handleCreateAttendeesChange(next);
+                                                    }}
+                                                    size="small"
+                                                />
+                                            }
+                                            label={m.name}
+                                        />
                                     ))}
                                 </div>
                             </div>
@@ -575,21 +579,24 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     <Label>Attendees</Label>
                                     <div className="space-y-1">
                                         {members.map((m) => (
-                                            <Checkbox
+                                            <FormControlLabel
                                                 key={m.id}
-                                                id={`edit-attendee-${m.id}`}
-                                                checked={editEventForm.data.attendee_ids.includes(String(m.id))}
-                                                onChange={(e) => {
-                                                    const id = String(m.id);
-                                                    const next = e.target.checked
-                                                        ? [...editEventForm.data.attendee_ids, id]
-                                                        : editEventForm.data.attendee_ids.filter((x) => x !== id);
-                                                    editEventForm.setData('attendee_ids', next);
-                                                }}
-                                            >
-                                                <Checkbox.Indicator />
-                                                <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
-                                            </Checkbox>
+                                                control={
+                                                    <MuiCheckbox
+                                                        id={`edit-attendee-${m.id}`}
+                                                        checked={editEventForm.data.attendee_ids.includes(String(m.id))}
+                                                        onChange={(e) => {
+                                                            const id = String(m.id);
+                                                            const next = e.target.checked
+                                                                ? [...editEventForm.data.attendee_ids, id]
+                                                                : editEventForm.data.attendee_ids.filter((x) => x !== id);
+                                                            editEventForm.setData('attendee_ids', next);
+                                                        }}
+                                                        size="small"
+                                                    />
+                                                }
+                                                label={m.name}
+                                            />
                                         ))}
                                     </div>
                                 </div>
@@ -732,21 +739,24 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     <Label>Assign To</Label>
                                     <div className="space-y-1">
                                         {members.map((m) => (
-                                            <Checkbox
+                                            <FormControlLabel
                                                 key={m.id}
-                                                id={`assignee-${m.id}`}
-                                                checked={editChoreForm.data.assignee_ids.includes(String(m.id))}
-                                                onChange={(e) => {
-                                                    const id = String(m.id);
-                                                    const next = e.target.checked
-                                                        ? [...editChoreForm.data.assignee_ids, id]
-                                                        : editChoreForm.data.assignee_ids.filter((x) => x !== id);
-                                                    editChoreForm.setData('assignee_ids', next);
-                                                }}
-                                            >
-                                                <Checkbox.Indicator />
-                                                <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
-                                            </Checkbox>
+                                                control={
+                                                    <MuiCheckbox
+                                                        id={`assignee-${m.id}`}
+                                                        checked={editChoreForm.data.assignee_ids.includes(String(m.id))}
+                                                        onChange={(e) => {
+                                                            const id = String(m.id);
+                                                            const next = e.target.checked
+                                                                ? [...editChoreForm.data.assignee_ids, id]
+                                                                : editChoreForm.data.assignee_ids.filter((x) => x !== id);
+                                                            editChoreForm.setData('assignee_ids', next);
+                                                        }}
+                                                        size="small"
+                                                    />
+                                                }
+                                                label={m.name}
+                                            />
                                         ))}
                                     </div>
                                 </div>
