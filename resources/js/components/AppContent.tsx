@@ -1,5 +1,9 @@
-import { SidebarInset } from '@/components/ui/sidebar';
+import { useAppSidebar } from '@/components/AppSidebarContext';
 import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+const SIDEBAR_WIDTH = 240;
+const SIDEBAR_COLLAPSED_WIDTH = 56;
 
 interface AppContentProps {
     variant?: 'header' | 'sidebar';
@@ -8,8 +12,29 @@ interface AppContentProps {
 }
 
 export default function AppContent({ variant = 'sidebar', className, children }: AppContentProps) {
+    const { open } = useAppSidebar();
+    const isMobile = useMediaQuery('(max-width:899px)');
+
     if (variant === 'sidebar') {
-        return <SidebarInset className={className}>{children}</SidebarInset>;
+        const marginLeft = isMobile ? 0 : open ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH;
+
+        return (
+            <Box
+                component="main"
+                className={className}
+                sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minWidth: 0,
+                    minHeight: '100vh',
+                    ml: `${marginLeft}px`,
+                    transition: 'margin-left 0.2s ease',
+                }}
+            >
+                {children}
+            </Box>
+        );
     }
 
     return (
