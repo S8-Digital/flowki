@@ -222,7 +222,7 @@ store.form = storeForm
 * @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
-export const update = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -237,7 +237,7 @@ update.definition = {
 * @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
-update.url = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update.url = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { calendarEvent: args }
     }
@@ -270,7 +270,7 @@ update.url = (args: { calendarEvent: number | { id: number } } | [calendarEvent:
 * @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
-update.patch = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -280,7 +280,7 @@ update.patch = (args: { calendarEvent: number | { id: number } } | [calendarEven
 * @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
-const updateForm = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -295,7 +295,7 @@ const updateForm = (args: { calendarEvent: number | { id: number } } | [calendar
 * @see app/Http/Controllers/CalendarEventController.php:95
 * @route '/calendar/{calendarEvent}'
 */
-updateForm.patch = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -312,7 +312,7 @@ update.form = updateForm
 * @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
-export const move = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const move = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: move.url(args, options),
     method: 'patch',
 })
@@ -327,7 +327,7 @@ move.definition = {
 * @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
-move.url = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+move.url = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { calendarEvent: args }
     }
@@ -360,7 +360,7 @@ move.url = (args: { calendarEvent: number | { id: number } } | [calendarEvent: n
 * @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
-move.patch = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+move.patch = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: move.url(args, options),
     method: 'patch',
 })
@@ -370,7 +370,7 @@ move.patch = (args: { calendarEvent: number | { id: number } } | [calendarEvent:
 * @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
-const moveForm = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const moveForm = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: move.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -385,7 +385,7 @@ const moveForm = (args: { calendarEvent: number | { id: number } } | [calendarEv
 * @see app/Http/Controllers/CalendarEventController.php:108
 * @route '/calendar/{calendarEvent}/move'
 */
-moveForm.patch = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+moveForm.patch = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: move.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -402,7 +402,7 @@ move.form = moveForm
 * @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
-export const destroy = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -417,7 +417,7 @@ destroy.definition = {
 * @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
-destroy.url = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { calendarEvent: args }
     }
@@ -450,7 +450,7 @@ destroy.url = (args: { calendarEvent: number | { id: number } } | [calendarEvent
 * @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
-destroy.delete = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -460,7 +460,7 @@ destroy.delete = (args: { calendarEvent: number | { id: number } } | [calendarEv
 * @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
-const destroyForm = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -475,7 +475,7 @@ const destroyForm = (args: { calendarEvent: number | { id: number } } | [calenda
 * @see app/Http/Controllers/CalendarEventController.php:117
 * @route '/calendar/{calendarEvent}'
 */
-destroyForm.delete = (args: { calendarEvent: number | { id: number } } | [calendarEvent: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { calendarEvent: string | number | { id: string | number } } | [calendarEvent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
