@@ -5,6 +5,7 @@ import { destroy as destroyItem, store as storeItem, toggle } from '@/actions/Ap
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, ShoppingItem, ShoppingList } from '@/types';
 
@@ -52,16 +53,17 @@ export default function ShoppingShow({ list }: Props) {
                             <InputError message={errors.name} />
                         </div>
                         <Input value={data.quantity} onChange={(e) => setData('quantity', e.target.value)} placeholder="Qty" className="w-20" />
-                        <select
-                            value={data.category}
-                            onChange={(e) => setData('category', e.target.value)}
-                            className="h-9 rounded-md border bg-background px-3 text-sm"
-                        >
-                            <option value="groceries">Groceries</option>
-                            <option value="household">Household</option>
-                            <option value="personal_care">Personal Care</option>
-                            <option value="other">Other</option>
-                        </select>
+                        <Select value={data.category} onValueChange={(v) => setData('category', v)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="groceries">Groceries</SelectItem>
+                                <SelectItem value="household">Household</SelectItem>
+                                <SelectItem value="personal_care">Personal Care</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                        </Select>
                         <Button type="submit" size="sm" disabled={processing}>
                             <Plus className="size-4" />
                         </Button>

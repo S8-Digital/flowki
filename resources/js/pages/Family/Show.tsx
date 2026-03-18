@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
 import type { AppPageProps, BreadcrumbItem, Family, User } from '@/types';
 
@@ -393,16 +394,15 @@ export default function FamilyShow({ family }: Props) {
                                             </div>
                                             <div className="grid gap-2">
                                                 <Label htmlFor="invite-role">Role</Label>
-                                                <select
-                                                    id="invite-role"
-                                                    value={inviteForm.data.role}
-                                                    onChange={(e) => inviteForm.setData('role', e.target.value)}
-                                                    className="rounded-md border border-input bg-background px-3 py-2 text-sm"
-                                                    required
-                                                >
-                                                    <option value="member">Member</option>
-                                                    <option value="guest">Guest (read-only)</option>
-                                                </select>
+                                                <Select value={inviteForm.data.role} onValueChange={(v) => inviteForm.setData('role', v)}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select role" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="member">Member</SelectItem>
+                                                        <SelectItem value="guest">Guest (read-only)</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
                                                 <InputError message={inviteForm.errors.role} />
                                             </div>
                                             <Button type="submit" className="w-full" disabled={inviteForm.processing}>
@@ -445,15 +445,16 @@ export default function FamilyShow({ family }: Props) {
                                     </div>
                                     <div className="flex items-center gap-3">
                                         {member.id !== currentUserId && !member.is_child ? (
-                                            <select
-                                                value={member.role}
-                                                onChange={(e) => changeRole(member.id, e.target.value)}
-                                                className="rounded-full border border-input bg-transparent px-2 py-0.5 text-xs capitalize"
-                                            >
-                                                <option value="admin">Admin</option>
-                                                <option value="member">Member</option>
-                                                <option value="guest">Guest</option>
-                                            </select>
+                                            <Select value={member.role} onValueChange={(v) => changeRole(member.id, v)}>
+                                                <SelectTrigger className="h-6 rounded-full border border-input bg-transparent px-2 py-0.5 text-xs capitalize">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="admin">Admin</SelectItem>
+                                                    <SelectItem value="member">Member</SelectItem>
+                                                    <SelectItem value="guest">Guest</SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                         ) : (
                                             <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">{member.role}</span>
                                         )}

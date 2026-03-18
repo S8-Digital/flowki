@@ -352,7 +352,28 @@ describe('Chores page (/chores)', () => {
 
 describe('Calendar page (/calendar)', () => {
     beforeEach(() => {
-        mockForm({ data: { title: '', start_at: '', end_at: '', is_all_day: false, color: '' }, errors: {} });
+        mockForm({
+            data: {
+                title: '',
+                description: '',
+                location: '',
+                start_at: '',
+                end_at: '',
+                recurrence: '',
+                color: '#6366f1',
+                attendee_ids: [],
+                is_all_day: false,
+                status: '',
+                priority: '',
+                category: '',
+                due_date: '',
+                assigned_to: '',
+                frequency: '',
+                next_due_date: '',
+                assignee_ids: [],
+            },
+            errors: {},
+        });
     });
 
     it('renders the Calendar heading', () => {
@@ -362,7 +383,7 @@ describe('Calendar page (/calendar)', () => {
 
     it('renders the view-switcher select', () => {
         render(<CalendarIndex events={[]} todos={[]} chores={[]} members={[baseUser]} />);
-        // The view switcher is a <select> element with aria-label="Calendar view"
+        // The view switcher is a SelectInput (styled native <select>) with aria-label="Calendar view"
         const viewSelect = screen.getByRole('combobox', { name: /calendar view/i });
         expect(viewSelect).toBeInTheDocument();
         // Options include Family, Month, Week, Day, Schedule
