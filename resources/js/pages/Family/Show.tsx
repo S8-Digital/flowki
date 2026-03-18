@@ -1,6 +1,6 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { ArrowDown, ArrowUp, Baby, Copy, GripVertical, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Baby, Copy, GripVertical, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
 import { update as updateMemberOrder } from '@/actions/App/Http/Controllers/Settings/MemberOrderController';
 import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';
@@ -122,33 +122,66 @@ export default function FamilyShow({ family }: Props) {
     const [memberOrder, setMemberOrder] = useState<User[]>(initialOrder);
     const [orderSaving, setOrderSaving] = useState(false);
     const [orderSaved, setOrderSaved] = useState(false);
+    const [draggingId, setDraggingId] = useState<number | null>(null);
+    const [dragOverId, setDragOverId] = useState<number | null>(null);
+    const isFirstRender = useRef(true);
 
-    function moveMember(index: number, direction: -1 | 1) {
-        const newOrder = [...memberOrder];
-        const swapIndex = index + direction;
+    // Auto-save member order whenever it changes (debounced)
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
 
-        if (swapIndex < 0 || swapIndex >= newOrder.length) {
             return;
         }
 
-        [newOrder[index], newOrder[swapIndex]] = [newOrder[swapIndex], newOrder[index]];
-        setMemberOrder(newOrder);
-        setOrderSaved(false);
+        const timer = setTimeout(() => {
+            setOrderSaving(true);
+            router.patch(
+                updateMemberOrder().url,
+                { member_order: memberOrder.map((m) => m.id) },
+                {
+                    onSuccess: () => {
+                        setOrderSaved(true);
+                        setTimeout(() => setOrderSaved(false), 2000);
+                    },
+                    onFinish: () => setOrderSaving(false),
+                },
+            );
+        }, 600);
+
+        return () => clearTimeout(timer);
+    }, [memberOrder]);
+
+    function onDragStart(memberId: number) {
+        setDraggingId(memberId);
     }
 
-    function saveMemberOrder() {
-        setOrderSaving(true);
-        router.patch(
-            updateMemberOrder().url,
-            { member_order: memberOrder.map((m) => m.id) },
-            {
-                onSuccess: () => {
-                    setOrderSaved(true);
-                    setTimeout(() => setOrderSaved(false), 2000);
-                },
-                onFinish: () => setOrderSaving(false),
-            },
-        );
+    function onDragOver(e: React.DragEvent, memberId: number) {
+        e.preventDefault();
+        setDragOverId(memberId);
+    }
+
+    function onDrop(targetMemberId: number) {
+        if (draggingId === null || draggingId === targetMemberId) {
+            setDraggingId(null);
+            setDragOverId(null);
+
+            return;
+        }
+
+        const newOrder = [...memberOrder];
+        const fromIdx = newOrder.findIndex((m) => m.id === draggingId);
+        const toIdx = newOrder.findIndex((m) => m.id === targetMemberId);
+        const [moved] = newOrder.splice(fromIdx, 1);
+        newOrder.splice(toIdx, 0, moved);
+        setMemberOrder(newOrder);
+        setDraggingId(null);
+        setDragOverId(null);
+    }
+
+    function onDragEnd() {
+        setDraggingId(null);
+        setDragOverId(null);
     }
 
     return (
@@ -289,63 +322,16 @@ export default function FamilyShow({ family }: Props) {
                         )}
                     </div>
 
-                    {/* Member ordering (admin only) */}
-                    {canManageMembers && memberOrder.length > 1 && (
-                        <div className="rounded-xl border">
-                            <div className="flex items-center justify-between border-b px-4 py-3">
-                                <div className="flex items-center gap-2">
-                                    <GripVertical className="size-4 text-muted-foreground" />
-                                    <h2 className="font-semibold">Member Order</h2>
-                                </div>
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={saveMemberOrder}
-                                    disabled={orderSaving}
-                                    className={orderSaved ? 'border-green-500 text-green-600' : ''}
-                                >
-                                    {orderSaved ? 'Saved!' : orderSaving ? 'Saving…' : 'Save Order'}
-                                </Button>
-                            </div>
-                            <p className="px-4 py-2 text-xs text-muted-foreground">
-                                This order is used across Todos, Chores, and the Calendar family view.
-                            </p>
-                            <ul className="divide-y">
-                                {memberOrder.map((member, idx) => (
-                                    <li key={member.id} className="flex items-center gap-3 px-4 py-2.5">
-                                        <span className="w-5 text-center text-xs font-medium text-muted-foreground">{idx + 1}</span>
-                                        <p className="flex-1 text-sm font-medium">{member.name || member.email}</p>
-                                        <div className="flex gap-1">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="size-7"
-                                                onClick={() => moveMember(idx, -1)}
-                                                disabled={idx === 0}
-                                                aria-label="Move up"
-                                            >
-                                                <ArrowUp className="size-3.5" />
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="size-7"
-                                                onClick={() => moveMember(idx, 1)}
-                                                disabled={idx === memberOrder.length - 1}
-                                                aria-label="Move down"
-                                            >
-                                                <ArrowDown className="size-3.5" />
-                                            </Button>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-
                     <div className="rounded-xl border">
                         <div className="flex items-center justify-between border-b px-4 py-3">
-                            <h2 className="font-semibold">Members</h2>
+                            <div className="flex items-center gap-2">
+                                <h2 className="font-semibold">Members</h2>
+                                {canManageMembers && memberOrder.length > 1 && (
+                                    <span role="status" aria-live="polite" className="text-xs text-muted-foreground">
+                                        {orderSaving ? 'Saving…' : orderSaved ? 'Order saved' : ''}
+                                    </span>
+                                )}
+                            </div>
                             <div className="flex items-center gap-2">
                                 <Dialog open={addChildOpen} onOpenChange={setAddChildOpen}>
                                     <DialogTrigger asChild>
@@ -428,9 +414,20 @@ export default function FamilyShow({ family }: Props) {
                             </div>
                         </div>
                         <ul className="divide-y">
-                            {family.members?.map((member) => (
-                                <li key={member.id} className="flex items-center justify-between px-4 py-3">
-                                    <div>
+                            {memberOrder.map((member) => (
+                                <li
+                                    key={member.id}
+                                    className={`flex items-center gap-3 px-4 py-3 transition-colors ${draggingId === member.id ? 'opacity-40' : ''} ${dragOverId === member.id && draggingId !== member.id ? 'bg-muted/50' : ''}`}
+                                    draggable={canManageMembers && memberOrder.length > 1}
+                                    onDragStart={() => onDragStart(member.id)}
+                                    onDragOver={(e) => onDragOver(e, member.id)}
+                                    onDrop={() => onDrop(member.id)}
+                                    onDragEnd={onDragEnd}
+                                >
+                                    {canManageMembers && memberOrder.length > 1 && (
+                                        <GripVertical className="size-4 shrink-0 cursor-grab text-muted-foreground" aria-hidden="true" />
+                                    )}
+                                    <div className="flex-1">
                                         <div className="flex items-center gap-2">
                                             <p className="font-medium">{member.name || member.email}</p>
                                             {member.is_pending && (
