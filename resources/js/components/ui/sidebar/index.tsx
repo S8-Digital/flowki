@@ -1,4 +1,4 @@
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from '@/lib/slot';
 import { PanelLeftIcon } from 'lucide-react';
 import * as React from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';

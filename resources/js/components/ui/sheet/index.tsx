@@ -5,7 +5,7 @@ import {
     DrawerPanel as MtDrawerPanel,
     DrawerDismissTrigger as MtDrawerDismissTrigger,
 } from '@material-tailwind/react';
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from '@/lib/slot';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';

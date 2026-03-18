@@ -1,4 +1,4 @@
-import { Slot } from '@radix-ui/react-slot';
+import { Slot } from '@/lib/slot';
 import { Button as MtButton } from '@material-tailwind/react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
