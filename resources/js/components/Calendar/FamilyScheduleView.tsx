@@ -177,7 +177,6 @@ export default function FamilyScheduleView({
                                     opacity: hidden ? 0.4 : 1,
                                     color: hidden ? undefined : color,
                                     backgroundColor: hidden ? undefined : `${color}15`,
-                                    background: hidden ? 'none' : undefined,
                                 }}
                                 aria-pressed={!hidden}
                                 title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
