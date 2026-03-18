@@ -75,6 +75,10 @@ vi.mock('@material-tailwind/react', () => ({
         </Tag>
     ),
     InputRoot: React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ ...props }, ref) => <input ref={ref} {...props} />),
+    Input: Object.assign(
+        React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ className: _cn, ...props }, ref) => <input ref={ref} {...props} />),
+        { Icon: () => null },
+    ),
     CheckboxRoot: React.forwardRef<
         HTMLButtonElement,
         React.ComponentProps<'button'> & { onCheckedChange?: (checked: boolean) => void; ripple?: boolean }

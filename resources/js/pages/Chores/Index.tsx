@@ -1,4 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { Checkbox } from '@material-tailwind/react';
 import { CheckCircle, Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { complete, destroy, store, update } from '@/actions/App/Http/Controllers/ChoreController';
@@ -212,22 +213,16 @@ export default function ChoresIndex({ chores, members }: Props) {
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Assign To</Label>
-                                        <div className="flex flex-col gap-1.5">
+                                        <div className="flex flex-col gap-1">
                                             {members.map((m) => (
-                                                <label
+                                                <Checkbox
                                                     key={m.id}
-                                                    className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-accent"
+                                                    checked={createForm.data.assignee_ids.includes(String(m.id))}
+                                                    onChange={() => toggleAssignee(createForm.setData, createForm.data.assignee_ids, String(m.id))}
                                                 >
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={createForm.data.assignee_ids.includes(String(m.id))}
-                                                        onChange={() =>
-                                                            toggleAssignee(createForm.setData, createForm.data.assignee_ids, String(m.id))
-                                                        }
-                                                        className="rounded border-input"
-                                                    />
-                                                    {m.name}
-                                                </label>
+                                                    <Checkbox.Indicator />
+                                                    <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
+                                                </Checkbox>
                                             ))}
                                         </div>
                                     </div>
@@ -535,20 +530,16 @@ export default function ChoresIndex({ chores, members }: Props) {
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>Assign To</Label>
-                                    <div className="flex flex-col gap-1.5">
+                                    <div className="flex flex-col gap-1">
                                         {members.map((m) => (
-                                            <label
+                                            <Checkbox
                                                 key={m.id}
-                                                className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-accent"
+                                                checked={editForm.data.assignee_ids.includes(String(m.id))}
+                                                onChange={() => toggleAssignee(editForm.setData, editForm.data.assignee_ids, String(m.id))}
                                             >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={editForm.data.assignee_ids.includes(String(m.id))}
-                                                    onChange={() => toggleAssignee(editForm.setData, editForm.data.assignee_ids, String(m.id))}
-                                                    className="rounded border-input"
-                                                />
-                                                {m.name}
-                                            </label>
+                                                <Checkbox.Indicator />
+                                                <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
+                                            </Checkbox>
                                         ))}
                                     </div>
                                 </div>

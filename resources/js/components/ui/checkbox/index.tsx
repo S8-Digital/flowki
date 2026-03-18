@@ -1,8 +1,14 @@
-import { CheckboxRoot as MtCheckboxRoot, CheckboxIndicator as MtCheckboxIndicator } from '@material-tailwind/react';
+import { Checkbox as MtCheckbox } from '@material-tailwind/react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-function Checkbox({ className, checked, onCheckedChange, disabled, ...props }: {
+function Checkbox({
+    className,
+    checked,
+    onCheckedChange,
+    disabled,
+    ...props
+}: {
     className?: string;
     checked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
@@ -12,15 +18,17 @@ function Checkbox({ className, checked, onCheckedChange, disabled, ...props }: {
     tabIndex?: number;
 }) {
     return (
-        <MtCheckboxRoot
+        <MtCheckbox
             checked={checked}
-            onCheckedChange={onCheckedChange}
             disabled={disabled}
             className={cn(className)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                onCheckedChange?.(e.target.checked);
+            }}
             {...(props as any)}
         >
-            <MtCheckboxIndicator />
-        </MtCheckboxRoot>
+            <MtCheckbox.Indicator />
+        </MtCheckbox>
     );
 }
 

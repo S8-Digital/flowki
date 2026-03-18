@@ -146,7 +146,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                             rows={4}
                                             required
                                             placeholder="Step by step instructions…"
-                                            className="w-full rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:outline-none"
+                                            className="w-full rounded-md border border-surface bg-transparent px-2.5 py-2 text-sm text-black shadow-sm ring ring-transparent transition-all duration-300 ease-in outline-none select-none placeholder:text-foreground/60 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white"
                                         />
                                         <InputError message={errors.instructions} />
                                     </div>
