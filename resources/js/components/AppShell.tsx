@@ -1,11 +1,8 @@
-import { AppSidebarContext } from '@/components/AppSidebarContext';
+import { AppSidebarContext, SIDEBAR_COOKIE } from '@/components/AppSidebarContext';
 import type { AppPageProps } from '@/types';
 import { usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import * as React from 'react';
-
-export const SIDEBAR_WIDTH = 240;
-export const SIDEBAR_COOKIE = 'sidebar_state';
 
 interface AppShellProps {
     variant?: 'header' | 'sidebar';

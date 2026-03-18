@@ -1,10 +1,6 @@
-import { useAppSidebar } from '@/components/AppSidebarContext';
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, useAppSidebar } from '@/components/AppSidebarContext';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
-const SIDEBAR_WIDTH = 240;
-const SIDEBAR_COLLAPSED_WIDTH = 56;
-
 interface AppContentProps {
     variant?: 'header' | 'sidebar';
     className?: string;
