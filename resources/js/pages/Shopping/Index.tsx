@@ -1,4 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Checkbox } from '@material-tailwind/react';
 import { ExternalLink, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { destroy, show, store } from '@/actions/App/Http/Controllers/ShoppingListController';
@@ -68,16 +69,10 @@ export default function ShoppingIndex({ lists }: Props) {
                                         />
                                         <InputError message={errors.name} />
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            id="is_shared"
-                                            type="checkbox"
-                                            checked={data.is_shared}
-                                            onChange={(e) => setData('is_shared', e.target.checked)}
-                                            className="rounded"
-                                        />
-                                        <Label htmlFor="is_shared">Shared with family</Label>
-                                    </div>
+                                    <Checkbox id="is_shared" checked={data.is_shared} onChange={(e) => setData('is_shared', e.target.checked)}>
+                                        <Checkbox.Indicator />
+                                        <span className="ms-2 text-sm font-normal text-black dark:text-white">Shared with family</span>
+                                    </Checkbox>
                                     <Button type="submit" className="w-full" disabled={processing}>
                                         {processing ? 'Creating…' : 'Create List'}
                                     </Button>

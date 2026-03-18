@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, PaginatedResource, Recipe } from '@/types';
@@ -89,19 +90,20 @@ export default function RecipesIndex({ recipes }: Props) {
                                     <div className="grid grid-cols-2 gap-3">
                                         <div className="grid gap-2">
                                             <Label>Category</Label>
-                                            <select
-                                                value={data.category}
-                                                onChange={(e) => setData('category', e.target.value)}
-                                                className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                                            >
-                                                <option value="">None</option>
-                                                <option value="breakfast">Breakfast</option>
-                                                <option value="lunch">Lunch</option>
-                                                <option value="dinner">Dinner</option>
-                                                <option value="snack">Snack</option>
-                                                <option value="dessert">Dessert</option>
-                                                <option value="drink">Drink</option>
-                                            </select>
+                                            <Select value={data.category} onValueChange={(v) => setData('category', v)}>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="None" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="">None</SelectItem>
+                                                    <SelectItem value="breakfast">Breakfast</SelectItem>
+                                                    <SelectItem value="lunch">Lunch</SelectItem>
+                                                    <SelectItem value="dinner">Dinner</SelectItem>
+                                                    <SelectItem value="snack">Snack</SelectItem>
+                                                    <SelectItem value="dessert">Dessert</SelectItem>
+                                                    <SelectItem value="drink">Drink</SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                         </div>
                                         <div className="grid gap-2">
                                             <Label>Servings</Label>
@@ -144,7 +146,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                             rows={4}
                                             required
                                             placeholder="Step by step instructions…"
-                                            className="w-full rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:outline-none"
+                                            className="w-full rounded-md border border-surface bg-transparent px-2.5 py-2 text-sm text-black shadow-sm ring ring-transparent transition-all duration-300 ease-in outline-none select-none placeholder:text-foreground/60 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white"
                                         />
                                         <InputError message={errors.instructions} />
                                     </div>

@@ -6,6 +6,7 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
+import { Checkbox } from '@material-tailwind/react';
 import { CalendarDays, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
@@ -15,9 +16,11 @@ import FamilyScheduleView from '@/components/Calendar/FamilyScheduleView';
 import ScheduleUploadModal from '@/components/Calendar/ScheduleUploadModal';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
+import { DateTimeInput } from '@/components/ui/datetime-input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
 import { getProfileColor } from '@/lib/utils';
@@ -331,18 +334,18 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                     <div className="flex items-center justify-between">
                         <h1 className="text-xl font-semibold">Calendar</h1>
                         <div className="flex items-center gap-2">
-                            <select
-                                value={calendarView}
-                                onChange={(e) => switchView(e.target.value as CalendarViewType)}
-                                className="h-9 rounded-md border bg-background px-3 text-sm"
-                                aria-label="Calendar view"
-                            >
-                                {VIEW_OPTIONS.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                    </option>
-                                ))}
-                            </select>
+                            <Select value={calendarView} onValueChange={(v) => switchView(v as CalendarViewType)}>
+                                <SelectTrigger aria-label="Calendar view">
+                                    <SelectValue placeholder="View" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {VIEW_OPTIONS.map((opt) => (
+                                        <SelectItem key={opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                             <Button size="sm" variant="outline" onClick={() => setImportOpen(true)}>
                                 <CalendarDays className="mr-1 size-4" /> Import Schedule
                             </Button>
@@ -432,8 +435,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="grid gap-2">
                                     <Label>Start</Label>
-                                    <Input
-                                        type="datetime-local"
+                                    <DateTimeInput
                                         value={createForm.data.start_at}
                                         onChange={(e) => createForm.setData('start_at', e.target.value)}
                                         required
@@ -442,52 +444,55 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>End</Label>
-                                    <Input
-                                        type="datetime-local"
-                                        value={createForm.data.end_at}
-                                        onChange={(e) => createForm.setData('end_at', e.target.value)}
-                                    />
+                                    <DateTimeInput value={createForm.data.end_at} onChange={(e) => createForm.setData('end_at', e.target.value)} />
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="grid gap-2">
                                     <Label>Recurrence</Label>
-                                    <select
-                                        value={createForm.data.recurrence}
-                                        onChange={(e) => createForm.setData('recurrence', e.target.value)}
-                                        className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                                    >
-                                        <option value="">None</option>
-                                        <option value="daily">Daily</option>
-                                        <option value="weekly">Weekly</option>
-                                        <option value="monthly">Monthly</option>
-                                    </select>
+                                    <Select value={createForm.data.recurrence} onValueChange={(v) => createForm.setData('recurrence', v)}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="None" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="">None</SelectItem>
+                                            <SelectItem value="daily">Daily</SelectItem>
+                                            <SelectItem value="weekly">Weekly</SelectItem>
+                                            <SelectItem value="monthly">Monthly</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>Colour</Label>
-                                    <Input
+                                    <input
                                         type="color"
                                         value={createForm.data.color}
                                         onChange={(e) => createForm.setData('color', e.target.value)}
-                                        className="h-9 w-full cursor-pointer rounded-md border px-1"
+                                        className="h-9 w-full cursor-pointer rounded-md border border-surface bg-transparent shadow-sm ring ring-transparent transition-all duration-300 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none"
                                     />
                                 </div>
                             </div>
                             <div className="grid gap-2">
                                 <Label>Attendees</Label>
-                                <select
-                                    multiple
-                                    className="h-24 w-full rounded-md border bg-background px-3 text-sm"
-                                    value={createForm.data.attendee_ids}
-                                    onChange={(e) => handleCreateAttendeesChange(Array.from(e.target.selectedOptions, (o) => o.value))}
-                                >
+                                <div className="space-y-1">
                                     {members.map((m) => (
-                                        <option key={m.id} value={String(m.id)}>
-                                            {m.name}
-                                        </option>
+                                        <Checkbox
+                                            key={m.id}
+                                            id={`create-attendee-${m.id}`}
+                                            checked={createForm.data.attendee_ids.includes(String(m.id))}
+                                            onChange={(e) => {
+                                                const id = String(m.id);
+                                                const next = e.target.checked
+                                                    ? [...createForm.data.attendee_ids, id]
+                                                    : createForm.data.attendee_ids.filter((x) => x !== id);
+                                                handleCreateAttendeesChange(next);
+                                            }}
+                                        >
+                                            <Checkbox.Indicator />
+                                            <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
+                                        </Checkbox>
                                     ))}
-                                </select>
-                                <p className="text-xs text-muted-foreground">Hold Ctrl/Cmd to select multiple</p>
+                                </div>
                             </div>
                             <Button type="submit" className="w-full" disabled={createForm.processing}>
                                 {createForm.processing ? 'Creating…' : 'Create Event'}
@@ -527,8 +532,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-2">
                                         <Label>Start</Label>
-                                        <Input
-                                            type="datetime-local"
+                                        <DateTimeInput
                                             value={editEventForm.data.start_at}
                                             onChange={(e) => editEventForm.setData('start_at', e.target.value)}
                                             required
@@ -536,8 +540,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>End</Label>
-                                        <Input
-                                            type="datetime-local"
+                                        <DateTimeInput
                                             value={editEventForm.data.end_at}
                                             onChange={(e) => editEventForm.setData('end_at', e.target.value)}
                                         />
@@ -546,25 +549,48 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-2">
                                         <Label>Recurrence</Label>
-                                        <select
-                                            value={editEventForm.data.recurrence}
-                                            onChange={(e) => editEventForm.setData('recurrence', e.target.value)}
-                                            className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                                        >
-                                            <option value="">None</option>
-                                            <option value="daily">Daily</option>
-                                            <option value="weekly">Weekly</option>
-                                            <option value="monthly">Monthly</option>
-                                        </select>
+                                        <Select value={editEventForm.data.recurrence} onValueChange={(v) => editEventForm.setData('recurrence', v)}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="None" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="">None</SelectItem>
+                                                <SelectItem value="daily">Daily</SelectItem>
+                                                <SelectItem value="weekly">Weekly</SelectItem>
+                                                <SelectItem value="monthly">Monthly</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Colour</Label>
-                                        <Input
+                                        <input
                                             type="color"
                                             value={editEventForm.data.color}
                                             onChange={(e) => editEventForm.setData('color', e.target.value)}
-                                            className="h-9 w-full cursor-pointer rounded-md border px-1"
+                                            className="h-9 w-full cursor-pointer rounded-md border border-surface bg-transparent shadow-sm ring ring-transparent transition-all duration-300 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none"
                                         />
+                                    </div>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label>Attendees</Label>
+                                    <div className="space-y-1">
+                                        {members.map((m) => (
+                                            <Checkbox
+                                                key={m.id}
+                                                id={`edit-attendee-${m.id}`}
+                                                checked={editEventForm.data.attendee_ids.includes(String(m.id))}
+                                                onChange={(e) => {
+                                                    const id = String(m.id);
+                                                    const next = e.target.checked
+                                                        ? [...editEventForm.data.attendee_ids, id]
+                                                        : editEventForm.data.attendee_ids.filter((x) => x !== id);
+                                                    editEventForm.setData('attendee_ids', next);
+                                                }}
+                                            >
+                                                <Checkbox.Indicator />
+                                                <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
+                                            </Checkbox>
+                                        ))}
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
@@ -596,27 +622,29 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-2">
                                         <Label>Status</Label>
-                                        <select
-                                            value={editTodoForm.data.status}
-                                            onChange={(e) => editTodoForm.setData('status', e.target.value)}
-                                            className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                                        >
-                                            <option value="pending">Pending</option>
-                                            <option value="in_progress">In Progress</option>
-                                            <option value="completed">Completed</option>
-                                        </select>
+                                        <Select value={editTodoForm.data.status} onValueChange={(v) => editTodoForm.setData('status', v)}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="pending">Pending</SelectItem>
+                                                <SelectItem value="in_progress">In Progress</SelectItem>
+                                                <SelectItem value="completed">Completed</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Priority</Label>
-                                        <select
-                                            value={editTodoForm.data.priority}
-                                            onChange={(e) => editTodoForm.setData('priority', e.target.value)}
-                                            className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                                        >
-                                            <option value="low">Low</option>
-                                            <option value="medium">Medium</option>
-                                            <option value="high">High</option>
-                                        </select>
+                                        <Select value={editTodoForm.data.priority} onValueChange={(v) => editTodoForm.setData('priority', v)}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Priority" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="low">Low</SelectItem>
+                                                <SelectItem value="medium">Medium</SelectItem>
+                                                <SelectItem value="high">High</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
@@ -629,8 +657,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Due Date &amp; Time</Label>
-                                        <Input
-                                            type="datetime-local"
+                                        <DateTimeInput
                                             value={editTodoForm.data.due_date}
                                             onChange={(e) => editTodoForm.setData('due_date', e.target.value)}
                                         />
@@ -638,18 +665,19 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>Assign To</Label>
-                                    <select
-                                        value={editTodoForm.data.assigned_to}
-                                        onChange={(e) => editTodoForm.setData('assigned_to', e.target.value)}
-                                        className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                                    >
-                                        <option value="">Unassigned</option>
-                                        {members.map((m) => (
-                                            <option key={m.id} value={String(m.id)}>
-                                                {m.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <Select value={editTodoForm.data.assigned_to} onValueChange={(v) => editTodoForm.setData('assigned_to', v)}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Unassigned" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="">Unassigned</SelectItem>
+                                            {members.map((m) => (
+                                                <SelectItem key={m.id} value={String(m.id)}>
+                                                    {m.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <Button type="submit" className="w-full" disabled={editTodoForm.processing}>
                                     {editTodoForm.processing ? 'Saving…' : 'Save Todo'}
@@ -679,22 +707,22 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-2">
                                         <Label>Frequency</Label>
-                                        <select
-                                            value={editChoreForm.data.frequency}
-                                            onChange={(e) => editChoreForm.setData('frequency', e.target.value)}
-                                            className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                                        >
-                                            <option value="daily">Daily</option>
-                                            <option value="weekly">Weekly</option>
-                                            <option value="biweekly">Bi-weekly</option>
-                                            <option value="monthly">Monthly</option>
-                                            <option value="as_needed">As Needed</option>
-                                        </select>
+                                        <Select value={editChoreForm.data.frequency} onValueChange={(v) => editChoreForm.setData('frequency', v)}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Frequency" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="daily">Daily</SelectItem>
+                                                <SelectItem value="weekly">Weekly</SelectItem>
+                                                <SelectItem value="biweekly">Bi-weekly</SelectItem>
+                                                <SelectItem value="monthly">Monthly</SelectItem>
+                                                <SelectItem value="as_needed">As Needed</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Next Due</Label>
-                                        <Input
-                                            type="datetime-local"
+                                        <DateTimeInput
                                             value={editChoreForm.data.next_due_date}
                                             onChange={(e) => editChoreForm.setData('next_due_date', e.target.value)}
                                         />
@@ -702,23 +730,25 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>Assign To</Label>
-                                    <select
-                                        multiple
-                                        className="h-20 w-full rounded-md border bg-background px-3 text-sm"
-                                        value={editChoreForm.data.assignee_ids}
-                                        onChange={(e) =>
-                                            editChoreForm.setData(
-                                                'assignee_ids',
-                                                Array.from(e.target.selectedOptions, (o) => o.value),
-                                            )
-                                        }
-                                    >
+                                    <div className="space-y-1">
                                         {members.map((m) => (
-                                            <option key={m.id} value={String(m.id)}>
-                                                {m.name}
-                                            </option>
+                                            <Checkbox
+                                                key={m.id}
+                                                id={`assignee-${m.id}`}
+                                                checked={editChoreForm.data.assignee_ids.includes(String(m.id))}
+                                                onChange={(e) => {
+                                                    const id = String(m.id);
+                                                    const next = e.target.checked
+                                                        ? [...editChoreForm.data.assignee_ids, id]
+                                                        : editChoreForm.data.assignee_ids.filter((x) => x !== id);
+                                                    editChoreForm.setData('assignee_ids', next);
+                                                }}
+                                            >
+                                                <Checkbox.Indicator />
+                                                <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
+                                            </Checkbox>
                                         ))}
-                                    </select>
+                                    </div>
                                 </div>
                                 <Button type="submit" className="w-full" disabled={editChoreForm.processing}>
                                     {editChoreForm.processing ? 'Saving…' : 'Save Chore'}

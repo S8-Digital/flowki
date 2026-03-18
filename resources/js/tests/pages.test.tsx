@@ -74,6 +74,10 @@ vi.mock('@material-tailwind/react', () => ({
         </Tag>
     ),
     InputRoot: React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ ...props }, ref) => <input ref={ref} {...props} />),
+    Input: Object.assign(
+        React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ className: _cn, ...props }, ref) => <input ref={ref} {...props} />),
+        { Icon: () => null },
+    ),
     CheckboxRoot: React.forwardRef<
         HTMLButtonElement,
         React.ComponentProps<'button'> & { onCheckedChange?: (checked: boolean) => void; ripple?: boolean }
@@ -83,6 +87,15 @@ vi.mock('@material-tailwind/react', () => ({
         </button>
     )),
     CheckboxIndicator: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
+    Checkbox: Object.assign(
+        React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ children, ...props }, ref) => (
+            <label className="inline-flex cursor-pointer items-center">
+                <input ref={ref} type="checkbox" {...props} />
+                {children}
+            </label>
+        )),
+        { Indicator: ({ children }: { children?: React.ReactNode }) => <span>{children}</span> },
+    ),
     ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     Collapse: ({ children, open }: { children: React.ReactNode; open?: boolean }) => (open ? <div>{children}</div> : null),
     Card: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
