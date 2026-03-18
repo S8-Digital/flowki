@@ -26,7 +26,7 @@ class CalendarEventResource extends JsonResource
             'reminder_at' => $this->reminder_at?->toIso8601String(),
             'color' => $this->color,
             'family_id' => $this->family_id,
-            'attendees' => UserResource::collection($this->whenLoaded('attendees')),
+            'attendees' => $this->whenLoaded('attendees', fn ($attendees) => UserResource::collection($attendees)->resolve()),
             'creator' => new UserResource($this->whenLoaded('creator')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
