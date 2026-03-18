@@ -1,5 +1,6 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
+import MuiLink from '@mui/material/Link';
 
 type TextLinkProps = InertiaLinkProps & {
     tabIndex?: number;
@@ -7,12 +8,22 @@ type TextLinkProps = InertiaLinkProps & {
 
 export default function TextLink({ href, children, ...props }: TextLinkProps) {
     return (
-        <Link
+        <MuiLink
+            component={Link}
             href={href}
-            className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+            sx={{
+                color: 'var(--foreground)',
+                textDecoration: 'underline',
+                textDecorationColor: '#d4d4d4',
+                textUnderlineOffset: '4px',
+                transition: 'color 300ms ease-out, text-decoration-color 300ms ease-out',
+                '&:hover': {
+                    textDecorationColor: 'currentColor',
+                },
+            }}
             {...props}
         >
             {children}
-        </Link>
+        </MuiLink>
     );
 }

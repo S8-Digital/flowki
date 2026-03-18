@@ -1,3 +1,6 @@
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
 interface InputErrorProps {
     message?: string;
     className?: string;
@@ -9,8 +12,10 @@ export default function InputError({ message, className }: InputErrorProps) {
     }
 
     return (
-        <div className={className}>
-            <p className="text-sm text-red-600 dark:text-red-500">{message}</p>
-        </div>
+        <Box className={className}>
+            <Typography variant="body2" sx={{ color: 'error.main' }}>
+                {message}
+            </Typography>
+        </Box>
     );
 }

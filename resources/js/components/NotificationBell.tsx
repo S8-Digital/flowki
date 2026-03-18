@@ -209,15 +209,14 @@ export default function NotificationBell() {
                     <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No notifications</Box>
                 ) : (
                     <ScrollArea style={{ maxHeight: 288 }}>
-                        {notifications.map((n, idx) => (
+                        {notifications.map((n) => (
                             <Box
                                 key={n.id}
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'flex-start',
                                     gap: 1.5,
-                                    borderBottom: idx < notifications.length - 1 ? '1px solid' : 'none',
-                                    borderColor: 'var(--border)',
+                                    '&:not(:last-child)': { borderBottom: '1px solid', borderColor: 'var(--border)' },
                                     px: 2,
                                     py: 1.5,
                                     bgcolor: !n.read_at ? 'color-mix(in srgb, var(--primary) 5%, transparent)' : 'transparent',

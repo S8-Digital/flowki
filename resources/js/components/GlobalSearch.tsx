@@ -162,7 +162,7 @@ export default function GlobalSearch() {
                                                 {results.todos.map((t) => (
                                                     <Box
                                                         key={t.id}
-                                                        component={Link as any}
+                                                        component={Link as React.ElementType}
                                                         href={todoIndex().url}
                                                         sx={{
                                                             display: 'flex',
@@ -205,7 +205,7 @@ export default function GlobalSearch() {
                                                 {results.chores.map((c) => (
                                                     <Box
                                                         key={c.id}
-                                                        component={Link as any}
+                                                        component={Link as React.ElementType}
                                                         href={choreIndex().url}
                                                         sx={{
                                                             display: 'flex',
@@ -248,7 +248,7 @@ export default function GlobalSearch() {
                                                 {results.events.map((e) => (
                                                     <Box
                                                         key={e.id}
-                                                        component={Link as any}
+                                                        component={Link as React.ElementType}
                                                         href={calendarIndex().url}
                                                         sx={{
                                                             display: 'flex',
@@ -291,7 +291,7 @@ export default function GlobalSearch() {
                                                 {results.recipes.map((r) => (
                                                     <Box
                                                         key={r.id}
-                                                        component={Link as any}
+                                                        component={Link as React.ElementType}
                                                         href={recipeShow(r.id).url}
                                                         sx={{
                                                             display: 'flex',

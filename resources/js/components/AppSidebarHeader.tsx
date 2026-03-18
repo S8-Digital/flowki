@@ -2,6 +2,8 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import NotificationBell from '@/components/NotificationBell';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem } from '@/types';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 interface AppSidebarHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
@@ -9,14 +11,28 @@ interface AppSidebarHeaderProps {
 
 export default function AppSidebarHeader({ breadcrumbs = [] }: AppSidebarHeaderProps) {
     return (
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border/70 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4">
-            <div className="flex flex-1 items-center gap-2">
-                <SidebarTrigger className="-ml-1" />
+        <Box
+            component="header"
+            sx={{
+                display: 'flex',
+                height: 64,
+                flexShrink: 0,
+                alignItems: 'center',
+                gap: 1,
+                borderBottom: '1px solid',
+                borderColor: 'var(--sidebar-border)',
+                px: 3,
+            }}
+        >
+            <Stack direction="row" sx={{ flex: 1, alignItems: 'center', gap: 1 }}>
+                <Box sx={{ ml: -1 }}>
+                    <SidebarTrigger />
+                </Box>
                 {breadcrumbs.length > 0 && <Breadcrumbs breadcrumbs={breadcrumbs} />}
-            </div>
-            <div className="flex items-center">
+            </Stack>
+            <Stack direction="row" sx={{ alignItems: 'center' }}>
                 <NotificationBell />
-            </div>
-        </header>
+            </Stack>
+        </Box>
     );
 }

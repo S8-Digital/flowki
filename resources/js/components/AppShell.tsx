@@ -1,6 +1,7 @@
-import { usePage } from '@inertiajs/react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import type { AppPageProps } from '@/types';
+import { usePage } from '@inertiajs/react';
+import Box from '@mui/material/Box';
 
 interface AppShellProps {
     variant?: 'header' | 'sidebar';
@@ -11,7 +12,7 @@ export default function AppShell({ variant = 'sidebar', children }: AppShellProp
     const page = usePage<AppPageProps>();
 
     if (variant === 'header') {
-        return <div className="flex min-h-screen w-full flex-col">{children}</div>;
+        return <Box sx={{ display: 'flex', minHeight: '100vh', width: '100%', flexDirection: 'column' }}>{children}</Box>;
     }
 
     return <SidebarProvider defaultOpen={page.props.sidebarOpen}>{children}</SidebarProvider>;

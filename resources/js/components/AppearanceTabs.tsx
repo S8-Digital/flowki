@@ -33,7 +33,7 @@ export default function AppearanceTabs() {
                         '&:hover':
                             appearance !== value
                                 ? { bgcolor: 'color-mix(in srgb, var(--muted-foreground) 15%, transparent)', color: 'var(--foreground)' }
-                                : {},
+                                : undefined,
                     }}
                 >
                     <Icon style={{ marginLeft: -4, width: 16, height: 16 }} />

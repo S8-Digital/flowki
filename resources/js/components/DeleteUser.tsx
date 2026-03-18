@@ -51,12 +51,12 @@ export default function DeleteUser() {
                     gap: 2,
                     borderRadius: 2,
                     border: '1px solid',
-                    borderColor: '#fecaca',
-                    bgcolor: '#fef2f2',
+                    borderColor: 'color-mix(in srgb, var(--destructive) 30%, transparent)',
+                    bgcolor: 'color-mix(in srgb, var(--destructive) 10%, transparent)',
                     p: 2,
                 }}
             >
-                <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '2px', color: '#dc2626' }}>
+                <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '2px', color: 'var(--destructive)' }}>
                     <Typography sx={{ fontWeight: 500, color: 'inherit' }}>Warning</Typography>
                     <Typography sx={{ fontSize: '0.875rem', color: 'inherit' }}>Please proceed with caution, this cannot be undone.</Typography>
                 </Box>
