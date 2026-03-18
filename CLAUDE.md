@@ -163,6 +163,14 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `vendor/bin/sail artisan test --compact` with a specific filename or filter.
 
+## Frontend Tests (Vitest)
+
+- Every new feature and bug fix that touches frontend routes, pages, or components **must** include associated frontend tests. This is a hard requirement for all PRs—reviews must verify test coverage before approving.
+- Frontend tests use **Vitest** with **React Testing Library**. Configuration is in [`vitest.config.ts`](vitest.config.ts) (environment: `jsdom`, setup file: `resources/js/tests/setup.ts`, includes `resources/js/tests/**/*.{test,spec}.{ts,tsx}`).
+- Place new test files in `resources/js/tests/`, following the naming convention of existing files (e.g., `auth.test.tsx`, `feature-pages.test.tsx`). See those files for the required mocking patterns for `@inertiajs/react` and `@material-tailwind/react`.
+- Tests must cover all happy paths, failure paths, and conditional rendering paths relevant to the change.
+- Run frontend tests with `npm run test` (single pass) or `npm run test:watch` (interactive watch mode).
+
 === inertia-laravel/core rules ===
 
 # Inertia
