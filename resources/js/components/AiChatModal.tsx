@@ -313,14 +313,16 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                 {/* Input */}
                 <Box sx={{ borderTop: '1px solid', borderColor: 'var(--border)', p: 1.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
-                        <Input
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask me anything about your family's tasks…"
-                            className="flex-1"
-                            disabled={isLoading}
-                            onKeyDown={handleKeyDown}
-                        />
+                        <Box sx={{ flex: 1 }}>
+                            <Input
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Ask me anything about your family's tasks…"
+                                style={{ width: '100%' }}
+                                disabled={isLoading}
+                                onKeyDown={handleKeyDown}
+                            />
+                        </Box>
                         <Button size="icon" disabled={isLoading || !input.trim()} onClick={() => sendMessage()}>
                             <Send style={{ width: 16, height: 16 }} />
                         </Button>
