@@ -37,13 +37,13 @@ export default function TodoListWidget({ todos }: TodoListWidgetProps) {
                             <Box sx={{ width: 8, height: 8, flexShrink: 0, borderRadius: '50%', bgcolor: priorityColor(todo.priority) }} />
                             <Box sx={{ minWidth: 0, flex: 1 }}>
                                 <Typography
+                                    className={todo.status === 'completed' ? 'line-through opacity-50' : undefined}
                                     sx={{
                                         overflow: 'hidden',
                                         textOverflow: 'ellipsis',
                                         whiteSpace: 'nowrap',
                                         fontSize: '0.875rem',
                                         fontWeight: 500,
-                                        ...(todo.status === 'completed' ? { textDecoration: 'line-through', opacity: 0.5 } : {}),
                                     }}
                                 >
                                     {todo.title}

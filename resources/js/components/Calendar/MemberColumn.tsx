@@ -226,12 +226,13 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                             )}
                             <Box
                                 component="span"
+                                className={todo.status === 'completed' ? 'line-through' : undefined}
                                 sx={{
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap',
                                     fontWeight: 500,
-                                    ...(todo.status === 'completed' ? { color: 'var(--muted-foreground)', textDecoration: 'line-through' } : {}),
+                                    ...(todo.status === 'completed' ? { color: 'var(--muted-foreground)' } : {}),
                                 }}
                             >
                                 {todo.title}
