@@ -1,7 +1,7 @@
-import { Link, usePage } from '@inertiajs/react';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { urlIsActive } from '@/lib/utils';
 import type { NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 
 interface NavMainProps {
     items: NavItem[];
@@ -11,7 +11,7 @@ export default function NavMain({ items }: NavMainProps) {
     const page = usePage();
 
     return (
-        <SidebarGroup className="px-2 py-0">
+        <SidebarGroup style={{ padding: '0 8px' }}>
             <SidebarGroupLabel>Platform</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (

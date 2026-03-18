@@ -1,11 +1,12 @@
-import { Link, router, usePage } from '@inertiajs/react';
-import { Bell, CheckCheck, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { onForegroundMessage } from '@/lib/firebase-messaging';
 import type { AppNotification, AppPageProps } from '@/types';
+import { Link, router, usePage } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import { Bell, CheckCheck, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 function notificationMessage(notification: AppNotification): string {
     const d = notification.data;
@@ -149,77 +150,132 @@ export default function NotificationBell() {
     return (
         <DropdownMenu open={open} onOpenChange={handleOpen}>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative h-9 w-9" aria-label="Notifications">
-                    <Bell className="size-5" />
+                <Button variant="ghost" size="icon" style={{ position: 'relative', width: 36, height: 36 }} aria-label="Notifications">
+                    <Bell style={{ width: 20, height: 20 }} />
                     {displayedUnreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive p-0 text-xs font-medium text-destructive-foreground">
+                        <Box
+                            component="span"
+                            sx={{
+                                position: 'absolute',
+                                top: -4,
+                                right: -4,
+                                display: 'flex',
+                                width: 20,
+                                minWidth: 20,
+                                height: 20,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: '50%',
+                                bgcolor: 'var(--destructive)',
+                                color: 'var(--destructive-foreground)',
+                                fontSize: '0.75rem',
+                                fontWeight: 500,
+                                p: 0,
+                            }}
+                        >
                             {displayedUnreadCount > 99 ? '99+' : displayedUnreadCount}
-                        </span>
+                        </Box>
                     )}
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80 p-0">
-                <div className="flex items-center justify-between border-b px-4 py-3">
-                    <span className="font-semibold">Notifications</span>
+            <DropdownMenuContent align="end" style={{ width: 320, padding: 0 }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        borderBottom: '1px solid',
+                        borderColor: 'var(--border)',
+                        px: 2,
+                        py: 1.5,
+                    }}
+                >
+                    <Box component="span" sx={{ fontWeight: 600 }}>
+                        Notifications
+                    </Box>
                     {displayedUnreadCount > 0 && (
-                        <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" onClick={markAllRead}>
-                            <CheckCheck className="size-3" />
+                        <Button variant="ghost" size="sm" style={{ height: 28, gap: 4, fontSize: '0.75rem' }} onClick={markAllRead}>
+                            <CheckCheck style={{ width: 12, height: 12 }} />
                             Mark all read
                         </Button>
                     )}
-                </div>
+                </Box>
 
                 {loading ? (
-                    <div className="py-6 text-center text-sm text-muted-foreground">Loading…</div>
+                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Loading…</Box>
                 ) : loaded && notifications.length === 0 ? (
-                    <div className="py-6 text-center text-sm text-muted-foreground">No notifications</div>
+                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No notifications</Box>
                 ) : !loaded && unreadCount === 0 ? (
-                    <div className="py-6 text-center text-sm text-muted-foreground">No notifications</div>
+                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No notifications</Box>
                 ) : (
-                    <ScrollArea className="max-h-72">
-                        {notifications.map((n) => (
-                            <div
+                    <ScrollArea style={{ maxHeight: 288 }}>
+                        {notifications.map((n, idx) => (
+                            <Box
                                 key={n.id}
-                                className={`flex items-start gap-3 border-b px-4 py-3 last:border-b-0 ${!n.read_at ? 'bg-primary/5' : ''}`}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: 1.5,
+                                    borderBottom: idx < notifications.length - 1 ? '1px solid' : 'none',
+                                    borderColor: 'var(--border)',
+                                    px: 2,
+                                    py: 1.5,
+                                    bgcolor: !n.read_at ? 'color-mix(in srgb, var(--primary) 5%, transparent)' : 'transparent',
+                                }}
                             >
-                                <div className="flex-1 space-y-0.5">
-                                    <p className={`text-sm leading-snug ${!n.read_at ? 'font-medium' : 'text-muted-foreground'}`}>
+                                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                    <Box
+                                        component="p"
+                                        sx={{
+                                            m: 0,
+                                            fontSize: '0.875rem',
+                                            lineHeight: 1.4,
+                                            fontWeight: !n.read_at ? 500 : 400,
+                                            color: !n.read_at ? 'var(--foreground)' : 'var(--muted-foreground)',
+                                        }}
+                                    >
                                         {notificationMessage(n)}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">{formatRelativeTime(n.created_at)}</p>
-                                </div>
-                                <div className="flex shrink-0 gap-1">
+                                    </Box>
+                                    <Box component="p" sx={{ m: 0, fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                                        {formatRelativeTime(n.created_at)}
+                                    </Box>
+                                </Box>
+                                <Box sx={{ display: 'flex', flexShrink: 0, gap: '4px' }}>
                                     {!n.read_at && (
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="h-6 w-6"
+                                            style={{ width: 24, height: 24 }}
                                             onClick={() => markRead(n.id)}
                                             aria-label="Mark as read"
                                         >
-                                            <CheckCheck className="size-3" />
+                                            <CheckCheck style={{ width: 12, height: 12 }} />
                                         </Button>
                                     )}
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                        style={{ width: 24, height: 24, color: 'var(--muted-foreground)' }}
                                         onClick={() => deleteNotification(n.id)}
                                         aria-label="Delete notification"
                                     >
-                                        <Trash2 className="size-3" />
+                                        <Trash2 style={{ width: 12, height: 12 }} />
                                     </Button>
-                                </div>
-                            </div>
+                                </Box>
+                            </Box>
                         ))}
                     </ScrollArea>
                 )}
 
-                <div className="border-t px-4 py-2">
-                    <Link href="/notifications" className="block text-center text-xs text-primary hover:underline" onClick={() => setOpen(false)}>
+                <Box sx={{ borderTop: '1px solid', borderColor: 'var(--border)', px: 2, py: 1 }}>
+                    <Link
+                        href="/notifications"
+                        style={{ display: 'block', textAlign: 'center', fontSize: '0.75rem', color: 'var(--primary)', textDecoration: 'none' }}
+                        onClick={() => setOpen(false)}
+                    >
                         View all notifications
                     </Link>
-                </div>
+                </Box>
             </DropdownMenuContent>
         </DropdownMenu>
     );

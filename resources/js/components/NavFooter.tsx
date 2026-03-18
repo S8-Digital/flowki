@@ -14,10 +14,7 @@ export default function NavFooter({ items, className }: NavFooterProps) {
                 <SidebarMenu>
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton
-                                asChild
-                                className="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100"
-                            >
+                            <SidebarMenuButton asChild style={{ color: '#525252' }}>
                                 <a href={toUrl(item.href)} target="_blank" rel="noopener noreferrer">
                                     {item.icon && <item.icon />}
                                     <span>{item.title}</span>

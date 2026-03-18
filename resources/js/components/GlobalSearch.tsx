@@ -1,13 +1,14 @@
-import { Link } from '@inertiajs/react';
-import { Search, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
 import { show as recipeShow } from '@/actions/App/Http/Controllers/RecipeController';
 import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Link } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import { Search, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 
 interface SearchResults {
     todos: Array<{ id: number; title: string }>;
@@ -62,134 +63,302 @@ export default function GlobalSearch() {
         results && results.todos.length + results.chores.length + results.events.length + results.recipes.length + results.shopping_items.length > 0;
 
     return (
-        <div className="relative">
-            <Button variant="ghost" size="icon" className="group h-9 w-9 cursor-pointer" onClick={open}>
-                <Search className="size-5 opacity-80 group-hover:opacity-100" />
+        <Box sx={{ position: 'relative' }}>
+            <Button variant="ghost" size="icon" style={{ width: 36, height: 36, cursor: 'pointer' }} onClick={open}>
+                <Search style={{ width: 20, height: 20, opacity: 0.8 }} />
             </Button>
 
             {isOpen &&
                 ReactDOM.createPortal(
-                    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
-                        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={close} />
+                    <Box
+                        sx={{
+                            position: 'fixed',
+                            inset: 0,
+                            zIndex: 50,
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            justifyContent: 'center',
+                            pt: '80px',
+                        }}
+                    >
+                        <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={close} />
 
-                        <div className="relative z-10 w-full max-w-lg rounded-xl border bg-background shadow-2xl">
-                            <div className="flex items-center gap-2 border-b px-4 py-3">
-                                <Search className="size-4 shrink-0 text-muted-foreground" />
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                zIndex: 10,
+                                width: '100%',
+                                maxWidth: '32rem',
+                                borderRadius: '12px',
+                                border: '1px solid',
+                                borderColor: 'var(--border)',
+                                bgcolor: 'var(--background)',
+                                boxShadow: 24,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                    borderBottom: '1px solid',
+                                    borderColor: 'var(--border)',
+                                    px: 2,
+                                    py: 1.5,
+                                }}
+                            >
+                                <Search style={{ width: 16, height: 16, flexShrink: 0, color: 'var(--muted-foreground)' }} />
                                 <Input
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
                                     placeholder="Search todos, chores, events, recipes…"
-                                    className="border-0 p-0 shadow-none focus-visible:ring-0"
+                                    style={{ border: 0, padding: 0, boxShadow: 'none', flex: 1 }}
                                     autoFocus
                                 />
-                                <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={close}>
-                                    <X className="size-4" />
+                                <Button variant="ghost" size="icon" style={{ width: 24, height: 24, flexShrink: 0 }} onClick={close}>
+                                    <X style={{ width: 16, height: 16 }} />
                                 </Button>
-                            </div>
+                            </Box>
 
-                            <div className="max-h-96 overflow-y-auto p-2">
-                                {isLoading && <p className="py-4 text-center text-sm text-muted-foreground">Searching…</p>}
+                            <Box sx={{ maxHeight: '24rem', overflowY: 'auto', p: 1 }}>
+                                {isLoading && (
+                                    <Box
+                                        component="p"
+                                        sx={{ py: 2, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)', m: 0 }}
+                                    >
+                                        Searching…
+                                    </Box>
+                                )}
 
                                 {!isLoading && query.length >= 2 && !hasResults && (
-                                    <p className="py-4 text-center text-sm text-muted-foreground">No results for &ldquo;{query}&rdquo;</p>
+                                    <Box
+                                        component="p"
+                                        sx={{ py: 2, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)', m: 0 }}
+                                    >
+                                        No results for &ldquo;{query}&rdquo;
+                                    </Box>
                                 )}
 
                                 {results && (
                                     <>
                                         {results.todos.length > 0 && (
-                                            <div>
-                                                <p className="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                                            <Box>
+                                                <Box
+                                                    component="p"
+                                                    sx={{
+                                                        px: 1,
+                                                        pt: 1,
+                                                        pb: 0.5,
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        letterSpacing: '0.05em',
+                                                        color: 'var(--muted-foreground)',
+                                                        textTransform: 'uppercase',
+                                                        m: 0,
+                                                    }}
+                                                >
                                                     Todos
-                                                </p>
+                                                </Box>
                                                 {results.todos.map((t) => (
-                                                    <Link
+                                                    <Box
                                                         key={t.id}
+                                                        component={Link as any}
                                                         href={todoIndex().url}
-                                                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent"
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1,
+                                                            borderRadius: 1.5,
+                                                            px: 1,
+                                                            py: '6px',
+                                                            fontSize: '0.875rem',
+                                                            textDecoration: 'none',
+                                                            color: 'inherit',
+                                                            '&:hover': { bgcolor: 'var(--accent)' },
+                                                        }}
                                                         onClick={close}
                                                     >
                                                         {t.title}
-                                                    </Link>
+                                                    </Box>
                                                 ))}
-                                            </div>
+                                            </Box>
                                         )}
 
                                         {results.chores.length > 0 && (
-                                            <div>
-                                                <p className="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                                            <Box>
+                                                <Box
+                                                    component="p"
+                                                    sx={{
+                                                        px: 1,
+                                                        pt: 1,
+                                                        pb: 0.5,
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        letterSpacing: '0.05em',
+                                                        color: 'var(--muted-foreground)',
+                                                        textTransform: 'uppercase',
+                                                        m: 0,
+                                                    }}
+                                                >
                                                     Chores
-                                                </p>
+                                                </Box>
                                                 {results.chores.map((c) => (
-                                                    <Link
+                                                    <Box
                                                         key={c.id}
+                                                        component={Link as any}
                                                         href={choreIndex().url}
-                                                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent"
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1,
+                                                            borderRadius: 1.5,
+                                                            px: 1,
+                                                            py: '6px',
+                                                            fontSize: '0.875rem',
+                                                            textDecoration: 'none',
+                                                            color: 'inherit',
+                                                            '&:hover': { bgcolor: 'var(--accent)' },
+                                                        }}
                                                         onClick={close}
                                                     >
                                                         {c.title}
-                                                    </Link>
+                                                    </Box>
                                                 ))}
-                                            </div>
+                                            </Box>
                                         )}
 
                                         {results.events.length > 0 && (
-                                            <div>
-                                                <p className="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                                            <Box>
+                                                <Box
+                                                    component="p"
+                                                    sx={{
+                                                        px: 1,
+                                                        pt: 1,
+                                                        pb: 0.5,
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        letterSpacing: '0.05em',
+                                                        color: 'var(--muted-foreground)',
+                                                        textTransform: 'uppercase',
+                                                        m: 0,
+                                                    }}
+                                                >
                                                     Events
-                                                </p>
+                                                </Box>
                                                 {results.events.map((e) => (
-                                                    <Link
+                                                    <Box
                                                         key={e.id}
+                                                        component={Link as any}
                                                         href={calendarIndex().url}
-                                                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent"
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1,
+                                                            borderRadius: 1.5,
+                                                            px: 1,
+                                                            py: '6px',
+                                                            fontSize: '0.875rem',
+                                                            textDecoration: 'none',
+                                                            color: 'inherit',
+                                                            '&:hover': { bgcolor: 'var(--accent)' },
+                                                        }}
                                                         onClick={close}
                                                     >
                                                         {e.title}
-                                                    </Link>
+                                                    </Box>
                                                 ))}
-                                            </div>
+                                            </Box>
                                         )}
 
                                         {results.recipes.length > 0 && (
-                                            <div>
-                                                <p className="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                                            <Box>
+                                                <Box
+                                                    component="p"
+                                                    sx={{
+                                                        px: 1,
+                                                        pt: 1,
+                                                        pb: 0.5,
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        letterSpacing: '0.05em',
+                                                        color: 'var(--muted-foreground)',
+                                                        textTransform: 'uppercase',
+                                                        m: 0,
+                                                    }}
+                                                >
                                                     Recipes
-                                                </p>
+                                                </Box>
                                                 {results.recipes.map((r) => (
-                                                    <Link
+                                                    <Box
                                                         key={r.id}
+                                                        component={Link as any}
                                                         href={recipeShow(r.id).url}
-                                                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent"
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1,
+                                                            borderRadius: 1.5,
+                                                            px: 1,
+                                                            py: '6px',
+                                                            fontSize: '0.875rem',
+                                                            textDecoration: 'none',
+                                                            color: 'inherit',
+                                                            '&:hover': { bgcolor: 'var(--accent)' },
+                                                        }}
                                                         onClick={close}
                                                     >
                                                         {r.title}
-                                                    </Link>
+                                                    </Box>
                                                 ))}
-                                            </div>
+                                            </Box>
                                         )}
 
                                         {results.shopping_items.length > 0 && (
-                                            <div>
-                                                <p className="px-2 pt-2 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                                            <Box>
+                                                <Box
+                                                    component="p"
+                                                    sx={{
+                                                        px: 1,
+                                                        pt: 1,
+                                                        pb: 0.5,
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        letterSpacing: '0.05em',
+                                                        color: 'var(--muted-foreground)',
+                                                        textTransform: 'uppercase',
+                                                        m: 0,
+                                                    }}
+                                                >
                                                     Shopping Items
-                                                </p>
+                                                </Box>
                                                 {results.shopping_items.map((item) => (
-                                                    <p
+                                                    <Box
                                                         key={item.id}
-                                                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground"
+                                                        component="p"
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1,
+                                                            borderRadius: 1.5,
+                                                            px: 1,
+                                                            py: '6px',
+                                                            fontSize: '0.875rem',
+                                                            color: 'var(--muted-foreground)',
+                                                            m: 0,
+                                                        }}
                                                     >
                                                         {item.name}
-                                                    </p>
+                                                    </Box>
                                                 ))}
-                                            </div>
+                                            </Box>
                                         )}
                                     </>
                                 )}
-                            </div>
-                        </div>
-                    </div>,
+                            </Box>
+                        </Box>
+                    </Box>,
                     document.body,
                 )}
-        </div>
+        </Box>
     );
 }
