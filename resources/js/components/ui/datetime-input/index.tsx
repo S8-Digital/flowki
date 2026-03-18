@@ -7,7 +7,9 @@ function DateTimeInput({ className, ...props }: React.ComponentProps<'input'>) {
             type="datetime-local"
             data-slot="datetime-input"
             className={cn(
-                'border-input dark:bg-input/30 [color-scheme:light] dark:[color-scheme:dark] flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+                // Mimics MT's outlined input appearance without using InputRoot
+                // (InputRoot coerces unsupported types like datetime-local back to text)
+                'w-full select-none rounded-md border border-surface bg-transparent px-2.5 py-2 text-sm text-black shadow-sm ring ring-transparent outline-none transition-all duration-300 ease-in [color-scheme:light] hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:[color-scheme:dark]',
                 className,
             )}
             {...props}

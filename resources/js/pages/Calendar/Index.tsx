@@ -6,6 +6,7 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
+import { Checkbox } from '@material-tailwind/react';
 import { CalendarDays, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
@@ -15,12 +16,11 @@ import FamilyScheduleView from '@/components/Calendar/FamilyScheduleView';
 import ScheduleUploadModal from '@/components/Calendar/ScheduleUploadModal';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { DateTimeInput } from '@/components/ui/datetime-input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SelectInput } from '@/components/ui/select-input';
 import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
 import { getProfileColor } from '@/lib/utils';
@@ -334,12 +334,18 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                     <div className="flex items-center justify-between">
                         <h1 className="text-xl font-semibold">Calendar</h1>
                         <div className="flex items-center gap-2">
-                            <SelectInput
-                                value={calendarView}
-                                onChange={(e) => switchView(e.target.value as CalendarViewType)}
-                                aria-label="Calendar view"
-                                options={VIEW_OPTIONS}
-                            />
+                            <Select value={calendarView} onValueChange={(v) => switchView(v as CalendarViewType)}>
+                                <SelectTrigger aria-label="Calendar view">
+                                    <SelectValue placeholder="View" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {VIEW_OPTIONS.map((opt) => (
+                                        <SelectItem key={opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                             <Button size="sm" variant="outline" onClick={() => setImportOpen(true)}>
                                 <CalendarDays className="mr-1 size-4" /> Import Schedule
                             </Button>
@@ -429,8 +435,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="grid gap-2">
                                     <Label>Start</Label>
-                                    <Input
-                                        type="datetime-local"
+                                    <DateTimeInput
                                         value={createForm.data.start_at}
                                         onChange={(e) => createForm.setData('start_at', e.target.value)}
                                         required
@@ -439,11 +444,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>End</Label>
-                                    <Input
-                                        type="datetime-local"
-                                        value={createForm.data.end_at}
-                                        onChange={(e) => createForm.setData('end_at', e.target.value)}
-                                    />
+                                    <DateTimeInput value={createForm.data.end_at} onChange={(e) => createForm.setData('end_at', e.target.value)} />
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-3">
@@ -463,32 +464,33 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>Colour</Label>
-                                    <Input
+                                    <input
                                         type="color"
                                         value={createForm.data.color}
                                         onChange={(e) => createForm.setData('color', e.target.value)}
-                                        className="h-9 w-full cursor-pointer rounded-md border px-1"
+                                        className="h-9 w-full cursor-pointer rounded-md border border-surface bg-transparent shadow-sm ring ring-transparent transition-all duration-300 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none"
                                     />
                                 </div>
                             </div>
                             <div className="grid gap-2">
                                 <Label>Attendees</Label>
-                                <div className="space-y-2">
+                                <div className="space-y-1">
                                     {members.map((m) => (
-                                        <label key={m.id} htmlFor={`create-attendee-${m.id}`} className="flex cursor-pointer items-center gap-2">
-                                            <Checkbox
-                                                id={`create-attendee-${m.id}`}
-                                                checked={createForm.data.attendee_ids.includes(String(m.id))}
-                                                onCheckedChange={(checked) => {
-                                                    const id = String(m.id);
-                                                    const next = checked
-                                                        ? [...createForm.data.attendee_ids, id]
-                                                        : createForm.data.attendee_ids.filter((x) => x !== id);
-                                                    handleCreateAttendeesChange(next);
-                                                }}
-                                            />
-                                            <span className="text-sm">{m.name}</span>
-                                        </label>
+                                        <Checkbox
+                                            key={m.id}
+                                            id={`create-attendee-${m.id}`}
+                                            checked={createForm.data.attendee_ids.includes(String(m.id))}
+                                            onChange={(e) => {
+                                                const id = String(m.id);
+                                                const next = e.target.checked
+                                                    ? [...createForm.data.attendee_ids, id]
+                                                    : createForm.data.attendee_ids.filter((x) => x !== id);
+                                                handleCreateAttendeesChange(next);
+                                            }}
+                                        >
+                                            <Checkbox.Indicator />
+                                            <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
+                                        </Checkbox>
                                     ))}
                                 </div>
                             </div>
@@ -530,8 +532,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-2">
                                         <Label>Start</Label>
-                                        <Input
-                                            type="datetime-local"
+                                        <DateTimeInput
                                             value={editEventForm.data.start_at}
                                             onChange={(e) => editEventForm.setData('start_at', e.target.value)}
                                             required
@@ -539,8 +540,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>End</Label>
-                                        <Input
-                                            type="datetime-local"
+                                        <DateTimeInput
                                             value={editEventForm.data.end_at}
                                             onChange={(e) => editEventForm.setData('end_at', e.target.value)}
                                         />
@@ -563,32 +563,33 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Colour</Label>
-                                        <Input
+                                        <input
                                             type="color"
                                             value={editEventForm.data.color}
                                             onChange={(e) => editEventForm.setData('color', e.target.value)}
-                                            className="h-9 w-full cursor-pointer rounded-md border px-1"
+                                            className="h-9 w-full cursor-pointer rounded-md border border-surface bg-transparent shadow-sm ring ring-transparent transition-all duration-300 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none"
                                         />
                                     </div>
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>Attendees</Label>
-                                    <div className="space-y-2">
+                                    <div className="space-y-1">
                                         {members.map((m) => (
-                                            <label key={m.id} htmlFor={`edit-attendee-${m.id}`} className="flex cursor-pointer items-center gap-2">
-                                                <Checkbox
-                                                    id={`edit-attendee-${m.id}`}
-                                                    checked={editEventForm.data.attendee_ids.includes(String(m.id))}
-                                                    onCheckedChange={(checked) => {
-                                                        const id = String(m.id);
-                                                        const next = checked
-                                                            ? [...editEventForm.data.attendee_ids, id]
-                                                            : editEventForm.data.attendee_ids.filter((x) => x !== id);
-                                                        editEventForm.setData('attendee_ids', next);
-                                                    }}
-                                                />
-                                                <span className="text-sm">{m.name}</span>
-                                            </label>
+                                            <Checkbox
+                                                key={m.id}
+                                                id={`edit-attendee-${m.id}`}
+                                                checked={editEventForm.data.attendee_ids.includes(String(m.id))}
+                                                onChange={(e) => {
+                                                    const id = String(m.id);
+                                                    const next = e.target.checked
+                                                        ? [...editEventForm.data.attendee_ids, id]
+                                                        : editEventForm.data.attendee_ids.filter((x) => x !== id);
+                                                    editEventForm.setData('attendee_ids', next);
+                                                }}
+                                            >
+                                                <Checkbox.Indicator />
+                                                <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
+                                            </Checkbox>
                                         ))}
                                     </div>
                                 </div>
@@ -656,8 +657,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Due Date &amp; Time</Label>
-                                        <Input
-                                            type="datetime-local"
+                                        <DateTimeInput
                                             value={editTodoForm.data.due_date}
                                             onChange={(e) => editTodoForm.setData('due_date', e.target.value)}
                                         />
@@ -722,8 +722,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </div>
                                     <div className="grid gap-2">
                                         <Label>Next Due</Label>
-                                        <Input
-                                            type="datetime-local"
+                                        <DateTimeInput
                                             value={editChoreForm.data.next_due_date}
                                             onChange={(e) => editChoreForm.setData('next_due_date', e.target.value)}
                                         />
@@ -731,22 +730,23 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </div>
                                 <div className="grid gap-2">
                                     <Label>Assign To</Label>
-                                    <div className="space-y-2">
+                                    <div className="space-y-1">
                                         {members.map((m) => (
-                                            <label key={m.id} htmlFor={`assignee-${m.id}`} className="flex cursor-pointer items-center gap-2">
-                                                <Checkbox
-                                                    id={`assignee-${m.id}`}
-                                                    checked={editChoreForm.data.assignee_ids.includes(String(m.id))}
-                                                    onCheckedChange={(checked) => {
-                                                        const id = String(m.id);
-                                                        const next = checked
-                                                            ? [...editChoreForm.data.assignee_ids, id]
-                                                            : editChoreForm.data.assignee_ids.filter((x) => x !== id);
-                                                        editChoreForm.setData('assignee_ids', next);
-                                                    }}
-                                                />
-                                                <span className="text-sm">{m.name}</span>
-                                            </label>
+                                            <Checkbox
+                                                key={m.id}
+                                                id={`assignee-${m.id}`}
+                                                checked={editChoreForm.data.assignee_ids.includes(String(m.id))}
+                                                onChange={(e) => {
+                                                    const id = String(m.id);
+                                                    const next = e.target.checked
+                                                        ? [...editChoreForm.data.assignee_ids, id]
+                                                        : editChoreForm.data.assignee_ids.filter((x) => x !== id);
+                                                    editChoreForm.setData('assignee_ids', next);
+                                                }}
+                                            >
+                                                <Checkbox.Indicator />
+                                                <span className="ms-2 text-sm font-normal text-black dark:text-white">{m.name}</span>
+                                            </Checkbox>
                                         ))}
                                     </div>
                                 </div>

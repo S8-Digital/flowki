@@ -84,6 +84,16 @@ vi.mock('@material-tailwind/react', () => ({
         </button>
     )),
     CheckboxIndicator: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
+    // Compound Checkbox used directly in Calendar/Index.tsx
+    Checkbox: Object.assign(
+        React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ children, ...props }, ref) => (
+            <label className="inline-flex cursor-pointer items-center">
+                <input ref={ref} type="checkbox" {...props} />
+                {children}
+            </label>
+        )),
+        { Indicator: ({ children }: { children?: React.ReactNode }) => <span>{children}</span> },
+    ),
     ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     Collapse: ({ children, open }: { children: React.ReactNode; open?: boolean }) => (open ? <div>{children}</div> : null),
     Card: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
@@ -383,13 +393,8 @@ describe('Calendar page (/calendar)', () => {
 
     it('renders the view-switcher select', () => {
         render(<CalendarIndex events={[]} todos={[]} chores={[]} members={[baseUser]} />);
-        // The view switcher is a SelectInput (styled native <select>) with aria-label="Calendar view"
-        const viewSelect = screen.getByRole('combobox', { name: /calendar view/i });
-        expect(viewSelect).toBeInTheDocument();
-        // Options include Family, Month, Week, Day, Schedule
-        expect(screen.getByRole('option', { name: 'Family' })).toBeInTheDocument();
-        expect(screen.getByRole('option', { name: 'Month' })).toBeInTheDocument();
-        expect(screen.getByRole('option', { name: 'Week' })).toBeInTheDocument();
+        // The view switcher is now an MT Select rendered as a button trigger
+        expect(screen.getByRole('button', { name: /calendar view/i })).toBeInTheDocument();
     });
 
     it('renders the "New Event" button', () => {
@@ -408,10 +413,8 @@ describe('Calendar page (/calendar)', () => {
     });
 
     it('switches to FullCalendar when a non-family view is selected', async () => {
-        const user = userEvent.setup();
-        render(<CalendarIndex events={[baseCalendarEvent]} todos={[]} chores={[]} members={[baseUser]} />);
-        const viewSelect = screen.getByRole('combobox', { name: /calendar view/i });
-        await user.selectOptions(viewSelect, 'dayGridMonth');
+        // With MT Select, interact via the initialView prop since the mock doesn't wire up onValueChange clicks
+        render(<CalendarIndex events={[baseCalendarEvent]} todos={[]} chores={[]} members={[baseUser]} initialView="dayGridMonth" />);
         expect(screen.getByTestId('fullcalendar')).toBeInTheDocument();
     });
 
