@@ -1,8 +1,10 @@
-import { ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
-import { useMemo, useState } from 'react';
 import MemberColumn, { getMemberColor } from '@/components/Calendar/MemberColumn';
 import { Button } from '@/components/ui/button';
 import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo, User } from '@/types';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 interface Props {
     members: User[];
@@ -118,33 +120,40 @@ export default function FamilyScheduleView({
     }
 
     return (
-        <div className="flex flex-col gap-4">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Date navigation */}
-            <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-1">
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Button variant="outline" size="icon" onClick={() => onDateChange(shiftDate(selectedDate, -1))} aria-label="Previous day">
-                        <ChevronLeft className="size-4" />
+                        <ChevronLeft style={{ width: 16, height: 16 }} />
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => onDateChange(localToday())} className="px-3">
+                    <Button variant="outline" size="sm" onClick={() => onDateChange(localToday())}>
                         Today
                     </Button>
                     <Button variant="outline" size="icon" onClick={() => onDateChange(shiftDate(selectedDate, 1))} aria-label="Next day">
-                        <ChevronRight className="size-4" />
+                        <ChevronRight style={{ width: 16, height: 16 }} />
                     </Button>
-                </div>
+                </Box>
 
                 <input
                     type="date"
                     value={selectedDate}
                     onChange={(e) => onDateChange(e.target.value)}
-                    className="h-9 rounded-md border bg-background px-3 text-sm"
+                    style={{
+                        height: 36,
+                        borderRadius: 6,
+                        border: '1px solid var(--border)',
+                        backgroundColor: 'var(--background)',
+                        padding: '0 12px',
+                        fontSize: '0.875rem',
+                    }}
                     aria-label="Select date"
                 />
 
-                <p className="text-sm font-medium text-muted-foreground">{dateLabel(selectedDate)}</p>
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>{dateLabel(selectedDate)}</Typography>
 
                 {/* Member toggles */}
-                <div className="ml-auto flex flex-wrap gap-1">
+                <Box sx={{ ml: 'auto', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                     {members.map((member, idx) => {
                         const color = getMemberColor(member, idx);
                         const hidden = hiddenMembers.has(member.id);
@@ -154,26 +163,50 @@ export default function FamilyScheduleView({
                                 key={member.id}
                                 type="button"
                                 onClick={() => toggleMember(member.id)}
-                                className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-all ${hidden ? 'opacity-40' : ''}`}
-                                style={{ borderColor: color, color: hidden ? undefined : color, backgroundColor: hidden ? undefined : `${color}15` }}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 6,
+                                    borderRadius: 9999,
+                                    border: `1px solid ${color}`,
+                                    padding: '4px 10px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 500,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.15s',
+                                    opacity: hidden ? 0.4 : 1,
+                                    color: hidden ? undefined : color,
+                                    backgroundColor: hidden ? undefined : `${color}15`,
+                                    background: hidden ? 'none' : undefined,
+                                }}
                                 aria-pressed={!hidden}
                                 title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
                             >
-                                {hidden ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
+                                {hidden ? <EyeOff style={{ width: 12, height: 12 }} /> : <Eye style={{ width: 12, height: 12 }} />}
                                 {member.name}
                             </button>
                         );
                     })}
-                </div>
-            </div>
+                </Box>
+            </Box>
 
             {/* Columns */}
             {visibleColumns.length === 0 ? (
-                <div className="rounded-xl border py-16 text-center text-sm text-muted-foreground">
+                <Box
+                    sx={{
+                        borderRadius: 3,
+                        border: '1px solid',
+                        borderColor: 'var(--border)',
+                        py: 8,
+                        textAlign: 'center',
+                        fontSize: '0.875rem',
+                        color: 'var(--muted-foreground)',
+                    }}
+                >
                     No members visible. Toggle members above to show their schedules.
-                </div>
+                </Box>
             ) : (
-                <div className="flex gap-3 overflow-x-auto pb-2">
+                <Box sx={{ display: 'flex', gap: '12px', overflowX: 'auto', pb: 1 }}>
                     {visibleColumns.map((column) => (
                         <MemberColumn
                             key={column.user.id}
@@ -183,9 +216,9 @@ export default function FamilyScheduleView({
                             onChoreClick={onChoreClick}
                         />
                     ))}
-                </div>
+                </Box>
             )}
-        </div>
+        </Box>
     );
 }
 

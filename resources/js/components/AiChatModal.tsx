@@ -1,9 +1,11 @@
-import { Bot, Send, Sparkles, User } from 'lucide-react';
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { Bot, Send, Sparkles, User } from 'lucide-react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -154,77 +156,163 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent className="flex h-[80vh] max-h-[700px] flex-col gap-0 p-0 sm:max-w-2xl">
-                <DialogHeader className="flex-row items-center justify-between border-b px-4 py-3">
-                    <div className="flex items-center gap-2">
-                        <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
-                            <Sparkles className="size-4 text-primary" />
-                        </div>
-                        <DialogTitle className="text-base font-semibold">Family Assistant</DialogTitle>
-                    </div>
+            <DialogContent
+                style={{ display: 'flex', height: '80vh', maxHeight: 700, flexDirection: 'column', gap: 0, padding: 0, maxWidth: '42rem' }}
+            >
+                <DialogHeader
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        borderBottom: '1px solid var(--border)',
+                        padding: '12px 16px',
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                width: 32,
+                                height: 32,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: '50%',
+                                bgcolor: 'rgba(var(--primary-rgb), 0.1)',
+                            }}
+                        >
+                            <Sparkles style={{ width: 16, height: 16, color: 'var(--primary)' }} />
+                        </Box>
+                        <DialogTitle style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>Family Assistant</DialogTitle>
+                    </Box>
                 </DialogHeader>
 
                 {/* Messages */}
-                <div ref={messagesContainerRef} className="flex-1 space-y-4 overflow-y-auto p-4">
+                <Box ref={messagesContainerRef} sx={{ flex: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {messages.length === 0 ? (
-                        <div className="flex h-full flex-col items-center justify-center gap-6 text-center">
-                            <div className="flex size-14 items-center justify-center rounded-full bg-primary/10">
-                                <Sparkles className="size-7 text-primary" />
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold">How can I help?</h2>
-                                <p className="mt-1 text-sm text-muted-foreground">
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                height: '100%',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '24px',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    width: 56,
+                                    height: 56,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: '50%',
+                                    bgcolor: 'rgba(var(--primary-rgb), 0.1)',
+                                }}
+                            >
+                                <Sparkles style={{ width: 28, height: 28, color: 'var(--primary)' }} />
+                            </Box>
+                            <Box>
+                                <Typography sx={{ fontSize: '1.125rem', fontWeight: 600 }}>How can I help?</Typography>
+                                <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
                                     Ask me to create todos, schedule events, add chores, or manage your shopping list.
-                                </p>
-                            </div>
-                            <div className="flex flex-wrap justify-center gap-2">
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
                                 {suggestions.map((suggestion) => (
                                     <button
                                         key={suggestion}
-                                        className="rounded-full border px-3 py-1.5 text-sm transition hover:bg-accent hover:text-accent-foreground"
+                                        style={{
+                                            borderRadius: 9999,
+                                            border: '1px solid var(--border)',
+                                            padding: '6px 12px',
+                                            fontSize: '0.875rem',
+                                            cursor: 'pointer',
+                                            background: 'none',
+                                            transition: 'background-color 0.15s',
+                                        }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--accent)')}
+                                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                                         onClick={() => sendMessage(suggestion)}
                                     >
                                         {suggestion}
                                     </button>
                                 ))}
-                            </div>
-                        </div>
+                            </Box>
+                        </Box>
                     ) : (
                         messages.map((msg, i) => (
-                            <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <Box key={i} sx={{ display: 'flex', gap: '12px', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                 {msg.role === 'assistant' && (
-                                    <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                                        <Bot className="size-3.5 text-primary" />
-                                    </div>
+                                    <Box
+                                        sx={{
+                                            mt: 0.5,
+                                            display: 'flex',
+                                            width: 28,
+                                            height: 28,
+                                            flexShrink: 0,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: '50%',
+                                            bgcolor: 'rgba(var(--primary-rgb), 0.1)',
+                                        }}
+                                    >
+                                        <Bot style={{ width: 14, height: 14, color: 'var(--primary)' }} />
+                                    </Box>
                                 )}
-                                <div
-                                    className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
-                                        msg.role === 'user' ? 'rounded-br-sm bg-primary text-primary-foreground' : 'rounded-bl-sm bg-muted'
-                                    }`}
+                                <Box
+                                    sx={{
+                                        maxWidth: '80%',
+                                        borderRadius: '16px',
+                                        px: 2,
+                                        py: 1.25,
+                                        fontSize: '0.875rem',
+                                        ...(msg.role === 'user'
+                                            ? { borderBottomRightRadius: '4px', bgcolor: 'primary.main', color: 'primary.contrastText' }
+                                            : { borderBottomLeftRadius: '4px', bgcolor: 'var(--muted)' }),
+                                    }}
                                 >
                                     {msg.isStreaming && !msg.content ? (
-                                        <span className="flex items-center gap-1 text-muted-foreground">
-                                            <span className="animate-bounce">●</span>
-                                            <span className="animate-bounce delay-100">●</span>
-                                            <span className="animate-bounce delay-200">●</span>
-                                        </span>
+                                        <Box
+                                            component="span"
+                                            sx={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--muted-foreground)' }}
+                                        >
+                                            <span style={{ animation: 'bounce 1s infinite' }}>●</span>
+                                            <span style={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>●</span>
+                                            <span style={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>●</span>
+                                        </Box>
                                     ) : (
-                                        <span className="whitespace-pre-wrap">{msg.content}</span>
+                                        <Box component="span" sx={{ whiteSpace: 'pre-wrap' }}>
+                                            {msg.content}
+                                        </Box>
                                     )}
-                                </div>
+                                </Box>
                                 {msg.role === 'user' && (
-                                    <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full bg-secondary">
-                                        <User className="size-3.5" />
-                                    </div>
+                                    <Box
+                                        sx={{
+                                            mt: 0.5,
+                                            display: 'flex',
+                                            width: 28,
+                                            height: 28,
+                                            flexShrink: 0,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: '50%',
+                                            bgcolor: 'var(--secondary)',
+                                        }}
+                                    >
+                                        <User style={{ width: 14, height: 14 }} />
+                                    </Box>
                                 )}
-                            </div>
+                            </Box>
                         ))
                     )}
-                </div>
+                </Box>
 
                 {/* Input */}
-                <div className="border-t p-3">
-                    <div className="flex items-end gap-2">
+                <Box sx={{ borderTop: '1px solid', borderColor: 'var(--border)', p: 1.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
                         <Input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -234,11 +322,13 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                             onKeyDown={handleKeyDown}
                         />
                         <Button size="icon" disabled={isLoading || !input.trim()} onClick={() => sendMessage()}>
-                            <Send className="size-4" />
+                            <Send style={{ width: 16, height: 16 }} />
                         </Button>
-                    </div>
-                    <p className="mt-1.5 text-center text-xs text-muted-foreground">AI can make mistakes. Verify important information.</p>
-                </div>
+                    </Box>
+                    <Typography sx={{ mt: 0.75, textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                        AI can make mistakes. Verify important information.
+                    </Typography>
+                </Box>
             </DialogContent>
         </Dialog>
     );

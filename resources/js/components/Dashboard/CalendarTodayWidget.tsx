@@ -1,3 +1,7 @@
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 interface CalendarEventItem {
     id: number;
     title: string;
@@ -28,34 +32,45 @@ function safeColor(color: string | null, fallback: string): string {
 
 export default function CalendarTodayWidget({ events }: CalendarTodayWidgetProps) {
     return (
-        <div className="flex flex-col gap-2">
-            <p className="text-xs font-medium text-muted-foreground">{today}</p>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>{today}</Typography>
             {events.length === 0 ? (
-                <div className="py-8 text-center text-sm text-muted-foreground">Nothing scheduled for today.</div>
+                <Box sx={{ py: 4, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Nothing scheduled for today.</Box>
             ) : (
-                <ul className="space-y-2">
+                <Stack spacing={1} component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
                     {events.map((event) => {
                         const color = safeColor(event.color, '#3282b0');
 
                         return (
-                            <li
+                            <Box
+                                component="li"
                                 key={event.id}
-                                className="flex items-center gap-3 overflow-hidden rounded-lg p-3"
+                                sx={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', borderRadius: 2, p: 1.5 }}
                                 style={{ border: `2px solid ${color}`, backgroundColor: `${color}18` }}
                             >
-                                <div className="min-w-0 flex-1">
-                                    <p className="truncate text-sm font-medium">{event.title}</p>
-                                    <p className="text-xs text-muted-foreground">
+                                <Box sx={{ minWidth: 0, flex: 1 }}>
+                                    <Typography
+                                        sx={{
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
+                                            fontSize: '0.875rem',
+                                            fontWeight: 500,
+                                        }}
+                                    >
+                                        {event.title}
+                                    </Typography>
+                                    <Typography sx={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
                                         {event.is_all_day
                                             ? 'All day'
                                             : `${formatTime(event.start_at)}${event.end_at ? ` – ${formatTime(event.end_at)}` : ''}`}
-                                    </p>
-                                </div>
-                            </li>
+                                    </Typography>
+                                </Box>
+                            </Box>
                         );
                     })}
-                </ul>
+                </Stack>
             )}
-        </div>
+        </Box>
     );
 }

@@ -1,3 +1,7 @@
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 interface TodoItem {
     id: number;
     title: string;
@@ -13,30 +17,57 @@ interface TodoListWidgetProps {
 }
 
 function priorityColor(priority: string): string {
-    return { low: 'bg-green-500', medium: 'bg-amber-400', high: 'bg-red-500' }[priority] ?? 'bg-muted';
+    return { low: '#22c55e', medium: '#fbbf24', high: '#ef4444' }[priority] ?? 'var(--muted)';
 }
 
 export default function TodoListWidget({ todos }: TodoListWidgetProps) {
     return (
-        <div className="flex flex-col gap-2">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {todos.length === 0 ? (
-                <div className="py-8 text-center text-sm text-muted-foreground">No todos due today.</div>
+                <Box sx={{ py: 4, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No todos due today.</Box>
             ) : (
-                <ul className="space-y-2">
+                <Stack spacing={1} component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
                     {todos.map((todo) => (
-                        <li key={todo.id} className="category-todos-item flex items-center gap-3 overflow-hidden rounded-lg p-3">
-                            <div className={`size-2 shrink-0 rounded-full ${priorityColor(todo.priority)}`} />
-                            <div className="min-w-0 flex-1">
-                                <p className={`truncate text-sm font-medium ${todo.status === 'completed' ? 'line-through opacity-50' : ''}`}>
+                        <Box
+                            component="li"
+                            key={todo.id}
+                            className="category-todos-item"
+                            sx={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', borderRadius: 2, p: 1.5 }}
+                        >
+                            <Box sx={{ width: 8, height: 8, flexShrink: 0, borderRadius: '50%', bgcolor: priorityColor(todo.priority) }} />
+                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                                <Typography
+                                    sx={{
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        fontSize: '0.875rem',
+                                        fontWeight: 500,
+                                        ...(todo.status === 'completed' ? { textDecoration: 'line-through', opacity: 0.5 } : {}),
+                                    }}
+                                >
                                     {todo.title}
-                                </p>
-                                <p className="text-xs capitalize opacity-70">{todo.category}</p>
-                            </div>
-                            <span className="shrink-0 rounded-full bg-white/60 px-2 py-0.5 text-xs capitalize">{todo.status.replace('_', ' ')}</span>
-                        </li>
+                                </Typography>
+                                <Typography sx={{ fontSize: '0.75rem', textTransform: 'capitalize', opacity: 0.7 }}>{todo.category}</Typography>
+                            </Box>
+                            <Box
+                                component="span"
+                                sx={{
+                                    flexShrink: 0,
+                                    borderRadius: '9999px',
+                                    bgcolor: 'rgba(255,255,255,0.6)',
+                                    px: '8px',
+                                    py: '2px',
+                                    fontSize: '0.75rem',
+                                    textTransform: 'capitalize',
+                                }}
+                            >
+                                {todo.status.replace('_', ' ')}
+                            </Box>
+                        </Box>
                     ))}
-                </ul>
+                </Stack>
             )}
-        </div>
+        </Box>
     );
 }

@@ -1,3 +1,7 @@
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+
 interface ShoppingItemData {
     id: number;
     name: string;
@@ -32,30 +36,47 @@ export default function ShoppingListWidget({ shoppingItems, listId }: ShoppingLi
     const list = resolvedList();
 
     return (
-        <div className="flex flex-col gap-2">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {list ? (
                 <>
-                    <p className="text-xs font-medium text-muted-foreground">{list.name}</p>
+                    <Typography sx={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>{list.name}</Typography>
                     {list.items.length === 0 ? (
-                        <div className="py-8 text-center text-sm text-muted-foreground">Nothing left to buy!</div>
+                        <Box sx={{ py: 4, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Nothing left to buy!</Box>
                     ) : (
-                        <ul className="space-y-1.5">
+                        <Stack spacing={0.75} component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
                             {list.items.map((item) => (
-                                <li
+                                <Box
+                                    component="li"
                                     key={item.id}
-                                    className="category-shopping-item flex items-center gap-2 overflow-hidden rounded-md px-2 py-1.5 text-sm"
+                                    className="category-shopping-item"
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        overflow: 'hidden',
+                                        borderRadius: 1,
+                                        px: 1,
+                                        py: 0.75,
+                                        fontSize: '0.875rem',
+                                    }}
                                 >
-                                    <div className="size-1.5 shrink-0 rounded-full bg-current opacity-60" />
-                                    <span className="flex-1 truncate">{item.name}</span>
-                                    {item.quantity && <span className="shrink-0 text-xs opacity-70">{item.quantity}</span>}
-                                </li>
+                                    <Box sx={{ width: 6, height: 6, flexShrink: 0, borderRadius: '50%', bgcolor: 'currentColor', opacity: 0.6 }} />
+                                    <Box component="span" sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        {item.name}
+                                    </Box>
+                                    {item.quantity && (
+                                        <Box component="span" sx={{ flexShrink: 0, fontSize: '0.75rem', opacity: 0.7 }}>
+                                            {item.quantity}
+                                        </Box>
+                                    )}
+                                </Box>
                             ))}
-                        </ul>
+                        </Stack>
                     )}
                 </>
             ) : (
-                <div className="py-8 text-center text-sm text-muted-foreground">No shopping lists yet.</div>
+                <Box sx={{ py: 4, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No shopping lists yet.</Box>
             )}
-        </div>
+        </Box>
     );
 }
