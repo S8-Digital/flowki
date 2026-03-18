@@ -5,26 +5,78 @@ import {
     DrawerPanel as MtDrawerPanel,
     DrawerDismissTrigger as MtDrawerDismissTrigger,
 } from '@material-tailwind/react';
+import { Slot } from '@radix-ui/react-slot';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-function Sheet({ open, onOpenChange, children }: { open?: boolean; onOpenChange?: (open: boolean) => void; children?: React.ReactNode }) {
-    return <MtDrawerRoot open={open} onOpenChange={onOpenChange as any}>{children}</MtDrawerRoot>;
+interface SheetContextValue {
+    open: boolean;
+    setOpen: (value: boolean) => void;
 }
 
-function SheetTrigger({ asChild, children, ...props }: { asChild?: boolean; children?: React.ReactNode; [key: string]: any }) {
-    if (asChild && React.isValidElement(children)) {
-        return <MtDrawerTrigger as={children.type as any} {...(children.props as any)} {...props} />;
-    }
-    return <MtDrawerTrigger {...props}>{children}</MtDrawerTrigger>;
+const SheetContext = React.createContext<SheetContextValue | null>(null);
+
+function Sheet({ open: openProp, onOpenChange, children }: { open?: boolean; onOpenChange?: (open: boolean) => void; children?: React.ReactNode }) {
+    const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+    const isControlled = openProp !== undefined;
+    const open = isControlled ? openProp! : uncontrolledOpen;
+
+    const setOpen = React.useCallback(
+        (value: boolean) => {
+            if (openProp === undefined) setUncontrolledOpen(value);
+            onOpenChange?.(value);
+        },
+        [openProp, onOpenChange],
+    );
+
+    return (
+        <SheetContext.Provider value={{ open, setOpen }}>
+            <MtDrawerRoot open={open} onOpenChange={setOpen as any}>
+                {children}
+            </MtDrawerRoot>
+        </SheetContext.Provider>
+    );
 }
 
-function SheetClose({ asChild, children, ...props }: { asChild?: boolean; children?: React.ReactNode; [key: string]: any }) {
-    if (asChild && React.isValidElement(children)) {
-        return <MtDrawerDismissTrigger as={children.type as any} {...(children.props as any)} {...props} />;
+function SheetTrigger({ asChild, onClick, children, ...props }: { asChild?: boolean; onClick?: React.MouseEventHandler; children?: React.ReactNode; [key: string]: any }) {
+    const ctx = React.useContext(SheetContext);
+    if (asChild) {
+        const handleClick = (e: React.MouseEvent) => {
+            onClick?.(e);
+            ctx?.setOpen(true);
+        };
+        return (
+            <Slot {...props} onClick={handleClick}>
+                {children}
+            </Slot>
+        );
     }
-    return <MtDrawerDismissTrigger {...props}>{children}</MtDrawerDismissTrigger>;
+    return (
+        <MtDrawerTrigger onClick={onClick} {...props}>
+            {children}
+        </MtDrawerTrigger>
+    );
+}
+
+function SheetClose({ asChild, onClick, children, ...props }: { asChild?: boolean; onClick?: React.MouseEventHandler; children?: React.ReactNode; [key: string]: any }) {
+    const ctx = React.useContext(SheetContext);
+    if (asChild) {
+        const handleClick = (e: React.MouseEvent) => {
+            onClick?.(e);
+            ctx?.setOpen(false);
+        };
+        return (
+            <Slot {...props} onClick={handleClick}>
+                {children}
+            </Slot>
+        );
+    }
+    return (
+        <MtDrawerDismissTrigger onClick={onClick} {...props}>
+            {children}
+        </MtDrawerDismissTrigger>
+    );
 }
 
 function SheetOverlay({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

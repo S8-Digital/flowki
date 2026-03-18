@@ -3,7 +3,9 @@ import {
     MenuTrigger as MtMenuTrigger,
     MenuContent as MtMenuContent,
     MenuItem as MtMenuItem,
+    MenuContext as MtMenuContext,
 } from '@material-tailwind/react';
+import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -11,11 +13,21 @@ function DropdownMenu({ children, ...props }: { children?: React.ReactNode; [key
     return <MtMenuRoot {...props}>{children}</MtMenuRoot>;
 }
 
-function DropdownMenuTrigger({ asChild, children, ...props }: { asChild?: boolean; children?: React.ReactNode; [key: string]: any }) {
-    if (asChild && React.isValidElement(children)) {
-        return <MtMenuTrigger as={children.type as any} {...(children.props as any)} {...props} />;
+function DropdownMenuTrigger({ asChild, onClick, children, ...props }: { asChild?: boolean; onClick?: React.MouseEventHandler; children?: React.ReactNode; [key: string]: any }) {
+    const ctx = React.useContext(MtMenuContext);
+    if (asChild) {
+        const refProps = ctx?.getReferenceProps ? ctx.getReferenceProps({ onClick, ...props }) : { onClick, ...props };
+        return (
+            <Slot ref={ctx?.refs?.setReference as any} {...refProps}>
+                {children}
+            </Slot>
+        );
     }
-    return <MtMenuTrigger {...props}>{children}</MtMenuTrigger>;
+    return (
+        <MtMenuTrigger onClick={onClick} {...props}>
+            {children}
+        </MtMenuTrigger>
+    );
 }
 
 function DropdownMenuContent({ className, align, side, children, ...props }: React.HTMLAttributes<HTMLDivElement> & { align?: string; sideOffset?: number; side?: string }) {
