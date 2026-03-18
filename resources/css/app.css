@@ -1956,3 +1956,674 @@ button:not(:disabled) {
 .max-w-\[--skeleton-width\] {
     max-width: var(--skeleton-width, 100%);
 }
+
+/* --- Animation delay (arbitrary values) --- */
+.\[animation-delay\:100ms\] {
+    animation-delay: 100ms;
+}
+.\[animation-delay\:200ms\] {
+    animation-delay: 200ms;
+}
+.\[animation-delay\:300ms\] {
+    animation-delay: 300ms;
+}
+
+/* ============================================================
+   SIDEBAR DATA-ATTRIBUTE VARIANTS
+   These replace Tailwind's data-[attr=val]: prefix syntax
+   ============================================================ */
+
+/* SidebarMenuButton active state */
+[data-active='true'] {
+    background-color: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+    font-weight: 500;
+}
+
+/* Open state hover */
+[data-state='open']:hover {
+    background-color: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+}
+
+/* data-[state=open] utilities */
+[data-state='open'].data-\[state\=open\]\:bg-sidebar-accent {
+    background-color: var(--sidebar-accent);
+}
+[data-state='open'].data-\[state\=open\]\:text-sidebar-accent-foreground {
+    color: var(--sidebar-accent-foreground);
+}
+[data-state='open'].data-\[state\=open\]\:opacity-100 {
+    opacity: 1;
+}
+[data-state='open']:hover .data-\[state\=open\]\:hover\:bg-sidebar-accent {
+    background-color: var(--sidebar-accent);
+}
+[data-state='open']:hover .data-\[state\=open\]\:hover\:text-sidebar-accent-foreground {
+    color: var(--sidebar-accent-foreground);
+}
+
+/* data-[active=true] utilities */
+[data-active='true'].data-\[active\=true\]\:bg-sidebar-accent {
+    background-color: var(--sidebar-accent);
+}
+[data-active='true'].data-\[active\=true\]\:text-sidebar-accent-foreground {
+    color: var(--sidebar-accent-foreground);
+}
+[data-active='true'].data-\[active\=true\]\:font-medium {
+    font-weight: 500;
+}
+
+/* Sidebar ring */
+.ring-sidebar-ring {
+    box-shadow: 0 0 0 2px var(--sidebar-ring);
+}
+
+/* ============================================================
+   SIDEBAR LAYOUT SYSTEM
+   All sidebar variables + structural layout classes
+   ============================================================ */
+
+/* Sidebar-specific colour utilities */
+.bg-sidebar {
+    background-color: var(--sidebar-background, var(--sidebar));
+}
+.text-sidebar-foreground {
+    color: var(--sidebar-foreground);
+}
+.bg-sidebar-accent {
+    background-color: var(--sidebar-accent);
+}
+.text-sidebar-accent-foreground {
+    color: var(--sidebar-accent-foreground);
+}
+.border-sidebar-border {
+    border-color: var(--sidebar-border);
+}
+.text-sidebar-foreground\/70 {
+    color: color-mix(in srgb, var(--sidebar-foreground) 70%, transparent);
+}
+.text-sidebar-primary {
+    color: var(--sidebar-primary);
+}
+.bg-surface {
+    background-color: var(--card);
+}
+
+/* Sidebar widths / heights */
+.h-svh {
+    height: 100svh;
+}
+.min-h-svh {
+    min-height: 100svh;
+}
+.w-\[var\(--sidebar-width\)\] {
+    width: var(--sidebar-width, 16rem);
+}
+.w-\[var\(--sidebar-width-icon\)\] {
+    width: var(--sidebar-width-icon, 3.5rem);
+}
+
+/* inset-y-0 */
+.inset-y-0 {
+    top: 0;
+    bottom: 0;
+}
+
+/* Transition helpers */
+.transition-\[width\,height\,padding\] {
+    transition-property: width, height, padding;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+.transition-\[width\] {
+    transition-property: width;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+.transition-\[left\,right\,width\] {
+    transition-property: left, right, width;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+.transition-\[margin\,opacity\] {
+    transition-property: margin, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+.duration-200 {
+    transition-duration: 200ms;
+}
+
+/* tabular-nums */
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Peer & group helpers (structural) */
+.peer\/menu-button {
+    /* named peer — no styles needed, just a marker */
+}
+
+/* ============================================================
+   SIDEBAR STRUCTURAL STYLES
+   Using data-attribute selectors instead of Tailwind group- / peer-
+   ============================================================ */
+
+/* ---- SidebarProvider wrapper ---- */
+.group\/sidebar-wrapper {
+    display: flex;
+    min-height: 100svh;
+    width: 100%;
+}
+
+/* ---- Sidebar outer peer ---- */
+/* Hidden on mobile, visible md+ */
+.peer[data-sidebar] {
+    display: none;
+}
+@media (min-width: 768px) {
+    .peer[data-sidebar] {
+        display: block;
+    }
+}
+
+/* ---- Spacer div inside Sidebar ---- */
+/* When icon-collapsed, spacer becomes narrow */
+[data-state='collapsed'][data-collapsible='icon'] ~ * [data-sidebar='content'],
+.group[data-collapsible='icon'] .group-data-\[collapsible\=icon\]\:overflow-hidden {
+    overflow: hidden;
+}
+
+/* ---- SidebarMenuButton ---- */
+[data-sidebar='menu-button'] {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    border-radius: var(--radius-xl, 0.875rem);
+    padding: 8px;
+    text-align: left;
+    font-size: 0.875rem;
+    outline: none;
+    transition-property: width, height, padding;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    background: none;
+    border: none;
+    color: var(--sidebar-foreground);
+    cursor: pointer;
+}
+[data-sidebar='menu-button']:hover {
+    background-color: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+}
+[data-sidebar='menu-button']:focus-visible {
+    box-shadow: 0 0 0 2px var(--sidebar-ring);
+}
+[data-sidebar='menu-button']:active,
+[data-sidebar='menu-button'][data-active='true'] {
+    background-color: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+}
+[data-sidebar='menu-button'][data-active='true'] {
+    font-weight: 500;
+}
+[data-sidebar='menu-button']:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Size variants */
+[data-sidebar='menu-button'][data-size='default'] {
+    height: 2rem;
+}
+[data-sidebar='menu-button'][data-size='sm'] {
+    height: 1.75rem;
+    font-size: 0.75rem;
+}
+[data-sidebar='menu-button'][data-size='lg'] {
+    height: 3rem;
+}
+
+/* Child SVG inside menu-button */
+[data-sidebar='menu-button'] > svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+/* ---- Collapsed icon mode ---- */
+/* When the sidebar peer has data-collapsible="icon" and is collapsed */
+[data-sidebar='sidebar'] [data-state='collapsed'][data-collapsible='icon'] [data-sidebar='menu-button'],
+.group[data-collapsible='icon'] [data-sidebar='menu-button'] {
+    width: 2rem !important;
+    height: 2rem !important;
+    padding: 0.5rem !important;
+}
+.group[data-collapsible='icon'] [data-sidebar='group-label'],
+.group[data-collapsible='icon'] [data-sidebar='menu-action'],
+.group[data-collapsible='icon'] [data-sidebar='menu-badge'],
+.group[data-collapsible='icon'] [data-sidebar='group-action'] {
+    display: none;
+}
+.group[data-collapsible='icon'] [data-sidebar='group-label'] {
+    margin-top: -2rem;
+    opacity: 0;
+}
+.group[data-collapsible='icon'] [data-sidebar='content'] {
+    overflow: hidden;
+}
+
+/* ---- SidebarInset ---- */
+[data-sidebar='inset-main'],
+main.relative.flex.min-h-svh.flex-1 {
+    position: relative;
+    display: flex;
+    min-height: 100svh;
+    flex: 1;
+    flex-direction: column;
+    background-color: var(--background);
+}
+
+/* peer state for inset variant */
+.peer[data-variant='inset'] ~ main {
+    min-height: calc(100svh - 1rem);
+}
+@media (min-width: 768px) {
+    .peer[data-variant='inset'] ~ main {
+        margin: 0.5rem;
+        border-radius: var(--radius);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    }
+    .peer[data-state='collapsed'][data-variant='inset'] ~ main {
+        margin-left: 0.5rem;
+    }
+}
+
+/* ---- SidebarHeader / Footer / Content ---- */
+[data-sidebar='header'],
+[data-sidebar='footer'] {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+}
+[data-sidebar='content'] {
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    overflow: auto;
+}
+[data-sidebar='group'] {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    padding: 8px;
+}
+[data-sidebar='group-label'] {
+    display: flex;
+    height: 2rem;
+    flex-shrink: 0;
+    align-items: center;
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: color-mix(in srgb, var(--sidebar-foreground) 70%, transparent);
+    outline: none;
+    transition-property: margin, opacity;
+    transition-duration: 200ms;
+}
+[data-sidebar='group-content'] {
+    width: 100%;
+    font-size: 0.875rem;
+}
+[data-sidebar='menu'] {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+[data-sidebar='menu-item'] {
+    position: relative;
+}
+[data-sidebar='menu-action'] {
+    position: absolute;
+    right: 4px;
+    top: 6px;
+    display: flex;
+    aspect-ratio: 1;
+    width: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--sidebar-foreground);
+    outline: none;
+    cursor: pointer;
+    transition: transform 150ms;
+}
+[data-sidebar='menu-action']:hover {
+    background-color: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+}
+[data-sidebar='menu-action'] > svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+[data-sidebar='menu-badge'] {
+    position: absolute;
+    right: 4px;
+    display: flex;
+    height: 20px;
+    min-width: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 0 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--sidebar-foreground);
+    user-select: none;
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+}
+[data-sidebar='menu-skeleton'] {
+    display: flex;
+    height: 2rem;
+    gap: 8px;
+    padding: 0 8px;
+    align-items: center;
+    border-radius: 6px;
+}
+
+/* ---- SidebarSeparator ---- */
+[data-sidebar='separator'] {
+    margin: 0 8px;
+    width: auto;
+    background-color: var(--sidebar-border);
+}
+
+/* ---- SidebarRail ---- */
+[data-sidebar='rail'] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 20;
+    display: none;
+    width: 1rem;
+    transform: translateX(-50%);
+    transition: all 150ms;
+}
+@media (min-width: 640px) {
+    [data-sidebar='rail'] {
+        display: flex;
+    }
+}
+[data-sidebar='rail']::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+}
+[data-sidebar='rail']:hover::after {
+    background-color: var(--sidebar-border);
+}
+
+/* ---- Sidebar outer wrapper ---- */
+[data-sidebar='sidebar'] {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    background-color: var(--sidebar-background, var(--sidebar));
+}
+
+/* ---- SidebarInput ---- */
+[data-sidebar='input'] {
+    height: 2rem;
+    width: 100%;
+    background-color: var(--background);
+    box-shadow: none;
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 0.875rem;
+    border: 1px solid var(--sidebar-border);
+}
+[data-sidebar='input']:focus-visible {
+    box-shadow: 0 0 0 2px var(--sidebar-ring);
+    outline: none;
+}
+
+/* ---- Hover for SidebarMenuButton child spans ---- */
+[data-sidebar='menu-button'] > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Mobile overlay */
+.sidebar-mobile-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+/* Mobile sidebar drawer */
+.sidebar-mobile-drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    background-color: var(--sidebar-background, var(--sidebar));
+    transition: transform 300ms ease-in-out;
+}
+
+/* ============================================================
+   TAILWIND GROUP-DATA PATTERN REPLACEMENTS
+   Replace group-data-[attr=val]:utility patterns with
+   CSS descendant selectors on data attributes
+   ============================================================ */
+
+/* group-data-[collapsible=icon] patterns */
+.group[data-collapsible='icon'] .group-data-\[collapsible\=icon\]\:-mt-8 {
+    margin-top: -2rem;
+}
+.group[data-collapsible='icon'] .group-data-\[collapsible\=icon\]\:opacity-0 {
+    opacity: 0;
+}
+
+/* Sidebar main structural: collapsible icon width */
+.group[data-collapsible='icon'] ~ main {
+    /* SidebarInset peer */
+}
+
+/* Mobile sidebar state */
+.sidebar-open {
+    transform: translateX(0);
+}
+.sidebar-closed {
+    transform: translateX(-100%);
+}
+
+/* peer-data patterns — peer sidebar state applied to sibling main */
+[data-state='expanded'].peer + * {
+    /* peer expanded — sibling visible */
+}
+
+/* Sidebar floating variant */
+[data-variant='floating'] [data-sidebar='sidebar'] {
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--sidebar-border);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+/* Sidebar inset variant */
+[data-variant='inset'] ~ main {
+    min-height: calc(100svh - 1rem);
+}
+@media (min-width: 768px) {
+    [data-variant='inset'] ~ main {
+        margin: 0.5rem;
+        border-radius: var(--radius-xl);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    }
+}
+
+/* ---- AppHeader Sheet pattern (mobile nav overlay) ---- */
+.h-7 {
+    height: 28px;
+}
+.w-7 {
+    width: 28px;
+}
+
+/* ---- SidebarMenuButton hover states via className ---- */
+.hover\:bg-sidebar-accent:hover {
+    background-color: var(--sidebar-accent);
+}
+.hover\:text-sidebar-accent-foreground:hover {
+    color: var(--sidebar-accent-foreground);
+}
+.active\:bg-sidebar-accent:active {
+    background-color: var(--sidebar-accent);
+}
+.active\:text-sidebar-accent-foreground:active {
+    color: var(--sidebar-accent-foreground);
+}
+
+/* ---- Peer hover patterns ---- */
+.peer\/menu-button:hover ~ * .peer-hover\/menu-button\:text-sidebar-accent-foreground {
+    color: var(--sidebar-accent-foreground);
+}
+
+/* ---- Child selector utilities ---- */
+.\[\&\>svg\]\:size-4 > svg {
+    width: 1rem;
+    height: 1rem;
+}
+.\[\&\>svg\]\:shrink-0 > svg {
+    flex-shrink: 0;
+}
+.\[\&\>span\:last-child\]\:truncate > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ---- Translate ---- */
+.translate-x-0 {
+    transform: translateX(0);
+}
+.-translate-x-full {
+    transform: translateX(-100%);
+}
+.-translate-x-1\/2 {
+    transform: translateX(-50%);
+}
+
+/* ---- Inset utility ---- */
+.inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/* ---- Additional missing utilities ---- */
+.top-3\.5 {
+    top: 14px;
+}
+.right-3 {
+    right: 12px;
+}
+.right-1 {
+    right: 4px;
+}
+.top-1\.5 {
+    top: 6px;
+}
+.h-7 {
+    height: 28px;
+}
+.w-4 {
+    width: 16px;
+}
+.w-5 {
+    width: 20px;
+}
+.bg-transparent {
+    background-color: transparent;
+}
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* ---- After/before pseudo-elements ---- */
+.after\:absolute::after {
+    position: absolute;
+}
+.after\:inset-y-0::after {
+    top: 0;
+    bottom: 0;
+}
+.after\:left-1\/2::after {
+    left: 50%;
+}
+.after\:w-\[2px\]::after {
+    width: 2px;
+}
+.after\:-inset-2::after {
+    top: -8px;
+    right: -8px;
+    bottom: -8px;
+    left: -8px;
+}
+.hover\:after\:bg-sidebar-border:hover::after {
+    background-color: var(--sidebar-border);
+}
+
+/* ---- Aria disabled ---- */
+[aria-disabled='true'] {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* ---- NavigationMenu trigger style ---- */
+.navigationMenuTriggerStyle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 150ms;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--foreground);
+    text-decoration: none;
+}
+.navigationMenuTriggerStyle:hover {
+    background-color: var(--accent);
+}
