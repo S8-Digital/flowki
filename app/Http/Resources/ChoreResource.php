@@ -23,7 +23,7 @@ class ChoreResource extends JsonResource
             'reminder_enabled' => $this->reminder_enabled,
             'reminder_lead_time' => $this->reminder_lead_time,
             'family_id' => $this->family_id,
-            'assignees' => UserResource::collection($this->whenLoaded('assignees')),
+            'assignees' => $this->whenLoaded('assignees', fn ($assignees) => UserResource::collection($assignees)->resolve()),
             'creator' => new UserResource($this->whenLoaded('creator')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

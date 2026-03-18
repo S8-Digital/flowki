@@ -34,7 +34,7 @@ class ChoreController extends Controller
                 ->when($request->assigned_to, fn ($q) => $q->whereHas('assignees', fn ($q) => $q->where('users.id', $request->assigned_to)))
                 ->orderBy($request->sort_by ?? 'next_due_date', $request->sort_dir ?? 'asc')
                 ->get()
-        ));
+        )->resolve());
 
         return Inertia::render('Chores/Index', [
             'chores' => $chores,

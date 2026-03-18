@@ -1,4 +1,10 @@
-import { TooltipRoot as MtTooltipRoot, TooltipTrigger as MtTooltipTrigger, TooltipContent as MtTooltipContent } from '@material-tailwind/react';
+import {
+    TooltipRoot as MtTooltipRoot,
+    TooltipTrigger as MtTooltipTrigger,
+    TooltipContent as MtTooltipContent,
+    TooltipContext as MtTooltipContext,
+} from '@material-tailwind/react';
+import { Slot } from '@/lib/slot';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -11,8 +17,14 @@ function Tooltip({ children, ...props }: { children?: React.ReactNode; [key: str
 }
 
 function TooltipTrigger({ asChild, children, ...props }: { asChild?: boolean; children?: React.ReactNode; [key: string]: any }) {
-    if (asChild && React.isValidElement(children)) {
-        return <MtTooltipTrigger as={children.type as any} {...(children.props as any)} {...props} />;
+    const ctx = React.useContext(MtTooltipContext);
+    if (asChild) {
+        const refProps = ctx?.getReferenceProps ? ctx.getReferenceProps(props) : props;
+        return (
+            <Slot ref={ctx?.refs?.setReference as any} {...refProps}>
+                {children}
+            </Slot>
+        );
     }
     return <MtTooltipTrigger {...props}>{children}</MtTooltipTrigger>;
 }

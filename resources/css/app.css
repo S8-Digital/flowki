@@ -8,6 +8,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@layer base {
+    button:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
 /* ============================================================
    FLOWKI — Design System
    calm, modern, family-first

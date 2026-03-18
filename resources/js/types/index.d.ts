@@ -8,6 +8,30 @@ export interface Auth {
     hasPasswordSet: boolean;
 }
 
+export interface Resource<T> {
+    data: T;
+}
+
+export interface ResourceCollection<T> {
+    data: T[];
+}
+
+export interface PaginatedResource<T> extends ResourceCollection<T> {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    links: { url: string | null; label: string; active: boolean }[];
+}
+
+export interface PaginatedResource<T> extends ResourceCollection<T> {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    links: { url: string | null; label: string; active: boolean }[];
+}
+
 export interface BreadcrumbItem {
     title: string;
     href: string | RouteDefinition<string>;
@@ -142,7 +166,7 @@ export interface ShoppingList {
     name: string;
     is_shared: boolean;
     family_id: number;
-    items?: ShoppingItem[];
+    items?: ResourceCollection<ShoppingItem>;
     items_count?: number;
     creator?: User;
     created_at: string;
@@ -175,15 +199,6 @@ export interface Recipe {
     creator?: User;
     created_at: string;
     updated_at: string;
-}
-
-export interface PaginatedResource<T> {
-    data: T[];
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-    links: { url: string | null; label: string; active: boolean }[];
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

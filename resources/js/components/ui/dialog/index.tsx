@@ -5,38 +5,90 @@ import {
     DialogContent as MtDialogContent,
     DialogDismissTrigger as MtDialogDismissTrigger,
 } from '@material-tailwind/react';
+import { Slot } from '@/lib/slot';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-function Dialog({ open, onOpenChange, children }: {
+interface DialogContextValue {
+    open: boolean;
+    setOpen: (value: boolean) => void;
+}
+
+const DialogContext = React.createContext<DialogContextValue | null>(null);
+
+function Dialog({
+    open: openProp,
+    onOpenChange,
+    children,
+}: {
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     children?: React.ReactNode;
 }) {
+    const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+    const isControlled = openProp !== undefined;
+    const open = isControlled ? openProp! : uncontrolledOpen;
+
+    const setOpen = React.useCallback(
+        (value: boolean) => {
+            if (openProp === undefined) setUncontrolledOpen(value);
+            onOpenChange?.(value);
+        },
+        [openProp, onOpenChange],
+    );
+
     return (
-        <MtDialogRoot open={open} onOpenChange={onOpenChange as any}>
-            {children}
-        </MtDialogRoot>
+        <DialogContext.Provider value={{ open, setOpen }}>
+            <MtDialogRoot open={open} onOpenChange={setOpen as any}>
+                {children}
+            </MtDialogRoot>
+        </DialogContext.Provider>
     );
 }
 
-function DialogTrigger({ asChild, children, ...props }: { asChild?: boolean; children?: React.ReactNode; [key: string]: any }) {
-    if (asChild && React.isValidElement(children)) {
-        return <MtDialogTrigger as={children.type as any} {...(children.props as any)} {...props} />;
+function DialogTrigger({ asChild, onClick, children, ...props }: { asChild?: boolean; onClick?: React.MouseEventHandler; children?: React.ReactNode; [key: string]: any }) {
+    const ctx = React.useContext(DialogContext);
+    if (asChild) {
+        const handleClick = (e: React.MouseEvent) => {
+            onClick?.(e);
+            ctx?.setOpen(true);
+        };
+        return (
+            <Slot {...props} onClick={handleClick}>
+                {children}
+            </Slot>
+        );
     }
-    return <MtDialogTrigger {...props}>{children}</MtDialogTrigger>;
+    return (
+        <MtDialogTrigger onClick={onClick} {...props}>
+            {children}
+        </MtDialogTrigger>
+    );
 }
 
 function DialogPortal({ children }: { children?: React.ReactNode }) {
     return <>{children}</>;
 }
 
-function DialogClose({ asChild, children, ...props }: { asChild?: boolean; children?: React.ReactNode; [key: string]: any }) {
-    if (asChild && React.isValidElement(children)) {
-        return <MtDialogDismissTrigger as={children.type as any} {...(children.props as any)} {...props} />;
+function DialogClose({ asChild, onClick, children, ...props }: { asChild?: boolean; onClick?: React.MouseEventHandler; children?: React.ReactNode; [key: string]: any }) {
+    const ctx = React.useContext(DialogContext);
+    if (asChild) {
+        const handleClick = (e: React.MouseEvent) => {
+            onClick?.(e);
+            ctx?.setOpen(false);
+        };
+        return (
+            <Slot {...props} onClick={handleClick}>
+                {children}
+            </Slot>
+        );
     }
-    return <MtDialogDismissTrigger {...props}>{children}</MtDialogDismissTrigger>;
+    return (
+        <MtDialogDismissTrigger onClick={onClick} {...props}>
+            {children}
+        </MtDialogDismissTrigger>
+    );
 }
 
 function DialogOverlay({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

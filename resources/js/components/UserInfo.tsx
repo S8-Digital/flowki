@@ -1,3 +1,4 @@
+import AppearanceToggle from '@/components/AppearanceToggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/hooks/useInitials';
 import type { User } from '@/types';
@@ -5,10 +6,12 @@ import type { User } from '@/types';
 interface UserInfoProps {
     user: User;
     showEmail?: boolean;
+    showAvatar?: boolean;
+    showAppearanceToggle?: boolean;
 }
 
-export default function UserInfo({ user, showEmail = false }: UserInfoProps) {
-    const hasAvatar = Boolean(user.avatar);
+export default function UserInfo({ user, showEmail = false, showAvatar = true, showAppearanceToggle = false }: UserInfoProps) {
+    const hasAvatar = Boolean(user.avatar) && showAvatar;
 
     return (
         <>
@@ -21,6 +24,8 @@ export default function UserInfo({ user, showEmail = false }: UserInfoProps) {
                 <span className="truncate font-medium">{user.name}</span>
                 {showEmail && <span className="truncate text-xs text-muted-foreground">{user.email}</span>}
             </div>
+
+            {showAppearanceToggle && <AppearanceToggle />}
         </>
     );
 }

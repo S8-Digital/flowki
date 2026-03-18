@@ -23,7 +23,7 @@ export default function AppearanceToggle() {
             title={label}
             aria-label={`Switch theme (current: ${label})`}
             onClick={toggle}
-            className="flex size-8 items-center justify-center p-1.5"
+            className="flex size-8 cursor-pointer items-center justify-center p-1.5"
             ripple={false}
         >
             <Icon className="size-4" />
