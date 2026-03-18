@@ -48,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 variant={mtVariant as any}
                 size={mtSize}
                 ripple={false}
-                className={cn(isIcon && 'p-1.5 aspect-square', className)}
+                className={cn('cursor-pointer', isIcon && 'p-1.5 aspect-square', className)}
                 {...(props as any)}
             >
                 {children}
