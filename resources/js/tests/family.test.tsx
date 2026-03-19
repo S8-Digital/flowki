@@ -1,10 +1,11 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import FamilyCreate from '@/pages/Family/Create';
 import FamilyJoin from '@/pages/Family/Join';
+import FamilyShow from '@/pages/Family/Show';
 import { makeUseFormReturn } from './__mocks__/inertia';
 
 // ---------------------------------------------------------------------------
@@ -45,6 +46,19 @@ vi.mock('@/actions/App/Http/Controllers/FamilyController', () => ({
     join: () => ({ url: '/family/join' }),
     joinStore: () => ({ url: '/family/join' }),
     create: () => ({ url: '/family/create' }),
+    update: () => ({ url: '/family' }),
+    inviteMember: () => ({ url: '/family/invite' }),
+    removeMember: (id: number) => ({ url: `/family/members/${id}` }),
+    updateMemberRole: (id: number) => ({ url: `/family/members/${id}/role` }),
+    addChild: () => ({ url: '/family/children' }),
+}));
+
+vi.mock('@/actions/App/Http/Controllers/Settings/MemberOrderController', () => ({
+    update: () => ({ url: '/settings/members/order' }),
+}));
+
+vi.mock('@/actions/App/Http/Controllers/Settings/MemberProfileController', () => ({
+    edit: (args: { user: number }) => ({ url: `/settings/members/${args.user}` }),
 }));
 
 vi.mock('@/routes', () => ({
@@ -61,6 +75,29 @@ vi.mock('@/routes', () => ({
 function mockForm(overrides = {}) {
     vi.mocked(useForm).mockReturnValue(makeUseFormReturn(overrides) as ReturnType<typeof useForm>);
 }
+
+const mockFamily = {
+    id: 1,
+    name: 'Test Family',
+    invite_code: 'ABC123',
+    location_name: null,
+    latitude: null,
+    longitude: null,
+    created_at: '2024-01-01T00:00:00.000000Z',
+    members: [
+        {
+            id: 2,
+            name: 'Bob',
+            email: 'bob@example.com',
+            role: 'member',
+            profile_color: null,
+            email_verified_at: null,
+            created_at: '2024-01-01T00:00:00.000000Z',
+            updated_at: '2024-01-01T00:00:00.000000Z',
+        },
+    ],
+    member_order: [2],
+};
 
 // ---------------------------------------------------------------------------
 // Family Create page
@@ -137,5 +174,39 @@ describe('Family Join page', () => {
         render(<FamilyJoin />);
         await user.click(screen.getByRole('button', { name: /join family/i }));
         expect(postFn).toHaveBeenCalledOnce();
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Family Show page – member settings navigation
+// ---------------------------------------------------------------------------
+
+describe('Family Show page', () => {
+    beforeEach(() => {
+        mockForm({ data: {}, errors: {} });
+        vi.mocked(usePage).mockReturnValue({
+            props: {
+                auth: { user: { id: 1, name: 'Alice', email: 'alice@example.com' }, connectedProviders: [], hasPasswordSet: true },
+                currentUserPermissions: ['manage-members'],
+                unreadNotificationsCount: 0,
+            },
+        } as ReturnType<typeof usePage>);
+    });
+
+    it('renders the family name', () => {
+        render(<FamilyShow family={mockFamily} />);
+        expect(screen.getByText('Test Family')).toBeInTheDocument();
+    });
+
+    it('renders the member settings icon linking to the member profile page', () => {
+        render(<FamilyShow family={mockFamily} />);
+        const settingsLink = screen.getByTitle(/manage settings/i).closest('a');
+        expect(settingsLink).toHaveAttribute('href', '/settings/members/2');
+    });
+
+    it('does not link the member settings icon to the permissions page', () => {
+        render(<FamilyShow family={mockFamily} />);
+        const settingsLink = screen.getByTitle(/manage settings/i).closest('a');
+        expect(settingsLink).not.toHaveAttribute('href', expect.stringContaining('/permissions'));
     });
 });

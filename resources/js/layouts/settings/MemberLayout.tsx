@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import type { PropsWithChildren } from 'react';
@@ -20,7 +20,7 @@ interface Props extends PropsWithChildren {
 }
 
 export default function MemberSettingsLayout({ member, children }: Props) {
-    const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+    const { url } = usePage();
 
     const sidebarNavItems: NavItem[] = [
         { title: 'Profile', href: memberProfileEdit({ user: member.id }).url },
@@ -41,7 +41,7 @@ export default function MemberSettingsLayout({ member, children }: Props) {
                                 style={{
                                     width: '100%',
                                     justifyContent: 'flex-start',
-                                    backgroundColor: urlIsActive(item.href, currentPath) ? 'var(--muted)' : undefined,
+                                    backgroundColor: urlIsActive(item.href, url) ? 'var(--muted)' : undefined,
                                 }}
                                 asChild
                             >

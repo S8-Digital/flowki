@@ -33,8 +33,8 @@ export default function MemberProfile({ member }: Props) {
         processing: colorProcessing,
         errors: colorErrors,
         recentlySuccessful: colorRecentlySuccessful,
-    } = useForm({
-        profile_color: member.profile_color ?? '',
+    } = useForm<{ profile_color: string | null }>({
+        profile_color: member.profile_color ?? null,
     });
 
     function handleColorSubmit(e: React.FormEvent) {
@@ -66,7 +66,7 @@ export default function MemberProfile({ member }: Props) {
                                         id={`color-${member.id}`}
                                         type="color"
                                         className="h-9 w-14 cursor-pointer rounded-md border bg-background p-1"
-                                        value={colorData.profile_color || '#6366f1'}
+                                        value={colorData.profile_color ?? '#6366f1'}
                                         onChange={(e) => setColorData('profile_color', e.target.value)}
                                         aria-label={`Pick colour for ${member.name}`}
                                     />
@@ -77,7 +77,7 @@ export default function MemberProfile({ member }: Props) {
                                         <button
                                             type="button"
                                             className="text-xs text-muted-foreground underline"
-                                            onClick={() => setColorData('profile_color', '')}
+                                            onClick={() => setColorData('profile_color', null)}
                                         >
                                             Clear
                                         </button>

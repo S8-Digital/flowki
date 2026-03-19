@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Appearance from '@/pages/settings/Appearance';
+import MemberProfile from '@/pages/settings/MemberProfile';
 import NotificationSettings from '@/pages/settings/Notifications';
 import Password from '@/pages/settings/Password';
 import { makeUseFormReturn } from './__mocks__/inertia';
@@ -72,6 +73,18 @@ vi.mock('@/routes/verification', () => ({
 
 vi.mock('@/hooks/useAppearance', () => ({
     useAppearance: () => ({ appearance: 'system', updateAppearance: vi.fn() }),
+}));
+
+vi.mock('@/layouts/settings/MemberLayout', () => ({
+    default: ({ children }: { children: React.ReactNode }) => <div data-testid="member-settings-layout">{children}</div>,
+}));
+
+vi.mock('@/actions/App/Http/Controllers/Settings/MemberColorController', () => ({
+    update: (args: { user: number }) => ({ url: `/settings/members/${args.user}/color` }),
+}));
+
+vi.mock('@/actions/App/Http/Controllers/Settings/MemberProfileController', () => ({
+    edit: (args: { user: number }) => ({ url: `/settings/members/${args.user}` }),
 }));
 
 // ---------------------------------------------------------------------------
@@ -191,5 +204,57 @@ describe('Notification settings page', () => {
         render(<NotificationSettings preferences={defaultPrefs} />);
         await user.click(screen.getByRole('button', { name: /save preferences/i }));
         expect(putFn).toHaveBeenCalledOnce();
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Member Profile settings page
+// ---------------------------------------------------------------------------
+
+const mockMember = {
+    id: 5,
+    name: 'Bob',
+    role: 'member',
+    profile_color: null,
+};
+
+describe('Member Profile settings page', () => {
+    beforeEach(() => {
+        mockForm({ data: { profile_color: null }, errors: {} });
+    });
+
+    it('renders the member settings layout', () => {
+        render(<MemberProfile member={mockMember} />);
+        expect(screen.getByTestId('member-settings-layout')).toBeInTheDocument();
+    });
+
+    it('renders the Profile Colour section', () => {
+        render(<MemberProfile member={mockMember} />);
+        expect(screen.getByText(/profile colour/i)).toBeInTheDocument();
+    });
+
+    it('renders the Save colour button', () => {
+        render(<MemberProfile member={mockMember} />);
+        expect(screen.getByRole('button', { name: /save colour/i })).toBeInTheDocument();
+    });
+
+    it('shows "No colour set" when profile_color is null', () => {
+        render(<MemberProfile member={mockMember} />);
+        expect(screen.getByText(/no colour set/i)).toBeInTheDocument();
+    });
+
+    it('shows the colour value when profile_color is set', () => {
+        mockForm({ data: { profile_color: '#ff0000' }, errors: {} });
+        render(<MemberProfile member={{ ...mockMember, profile_color: '#ff0000' }} />);
+        expect(screen.getByText('#ff0000')).toBeInTheDocument();
+    });
+
+    it('calls patch when colour form is submitted', async () => {
+        const patchFn = vi.fn();
+        mockForm({ data: { profile_color: '#ff0000' }, errors: {}, patch: patchFn });
+        const user = userEvent.setup();
+        render(<MemberProfile member={{ ...mockMember, profile_color: '#ff0000' }} />);
+        await user.click(screen.getByRole('button', { name: /save colour/i }));
+        expect(patchFn).toHaveBeenCalledOnce();
     });
 });
