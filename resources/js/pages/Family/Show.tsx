@@ -477,7 +477,7 @@ export default function FamilyShow({ family }: Props) {
                                 </Dialog>
                             </Box>
                         </Box>
-                        <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0, '& > li + li': { borderTop: 1, borderColor: 'divider' } }}>
+                        <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0, '& > li + li': { borderTop: '1px solid', borderColor: 'divider' } }}>
                             {memberOrder.map((member) => (
                                 <Box
                                     component="li"
