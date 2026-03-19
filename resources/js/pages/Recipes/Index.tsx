@@ -1,4 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { ChefHat, Clock, Plus, Star, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { destroy, show, store } from '@/actions/App/Http/Controllers/RecipeController';
@@ -55,9 +58,11 @@ export default function RecipesIndex({ recipes }: Props) {
         <>
             <Head title="Recipes" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-4 p-6">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-semibold">Recipes</h1>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            Recipes
+                        </Typography>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
                                 <Button size="sm">
@@ -68,8 +73,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                 <DialogHeader>
                                     <DialogTitle>Create Recipe</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={handleCreate} className="space-y-4">
-                                    <div className="grid gap-2">
+                                <Stack component="form" onSubmit={handleCreate} spacing={2}>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Title</Label>
                                         <Input
                                             value={data.title}
@@ -78,17 +83,17 @@ export default function RecipesIndex({ recipes }: Props) {
                                             required
                                         />
                                         <InputError message={errors.title} />
-                                    </div>
-                                    <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Description</Label>
                                         <Input
                                             value={data.description}
                                             onChange={(e) => setData('description', e.target.value)}
                                             placeholder="Brief description"
                                         />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Category</Label>
                                             <Select value={data.category} onValueChange={(v) => setData('category', v)}>
                                                 <SelectTrigger>
@@ -104,8 +109,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                                     <SelectItem value="drink">Drink</SelectItem>
                                                 </SelectContent>
                                             </Select>
-                                        </div>
-                                        <div className="grid gap-2">
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Servings</Label>
                                             <Input
                                                 type="number"
@@ -114,10 +119,10 @@ export default function RecipesIndex({ recipes }: Props) {
                                                 onChange={(e) => setData('servings', e.target.value)}
                                                 placeholder="4"
                                             />
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="grid gap-2">
+                                        </Box>
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Prep (min)</Label>
                                             <Input
                                                 type="number"
@@ -126,8 +131,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                                 onChange={(e) => setData('prep_time_minutes', e.target.value)}
                                                 placeholder="15"
                                             />
-                                        </div>
-                                        <div className="grid gap-2">
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Cook (min)</Label>
                                             <Input
                                                 type="number"
@@ -136,9 +141,9 @@ export default function RecipesIndex({ recipes }: Props) {
                                                 onChange={(e) => setData('cook_time_minutes', e.target.value)}
                                                 placeholder="30"
                                             />
-                                        </div>
-                                    </div>
-                                    <div className="grid gap-2">
+                                        </Box>
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Instructions</Label>
                                         <textarea
                                             value={data.instructions}
@@ -149,39 +154,61 @@ export default function RecipesIndex({ recipes }: Props) {
                                             className="w-full rounded-md border border-surface bg-transparent px-2.5 py-2 text-sm text-black shadow-sm ring ring-transparent transition-all duration-300 ease-in outline-none select-none placeholder:text-foreground/60 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white"
                                         />
                                         <InputError message={errors.instructions} />
-                                    </div>
-                                    <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Photo</Label>
                                         <Input type="file" accept="image/*" onChange={(e) => setData('photo', e.target.files?.[0] ?? null)} />
                                         <InputError message={errors.photo} />
-                                    </div>
+                                    </Box>
                                     <Button type="submit" className="w-full" disabled={processing}>
                                         {processing ? 'Creating…' : 'Create Recipe'}
                                     </Button>
-                                </form>
+                                </Stack>
                             </DialogContent>
                         </Dialog>
-                    </div>
+                    </Box>
 
                     {!recipes ? (
-                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' } }}>
                             {[...Array(6)].map((_, i) => (
                                 <Skeleton key={i} className="h-40 rounded-xl" />
                             ))}
-                        </div>
+                        </Box>
                     ) : recipes.data.length === 0 ? (
-                        <div className="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">
+                        <Box
+                            sx={{
+                                borderRadius: 2,
+                                border: 1,
+                                borderColor: 'divider',
+                                borderStyle: 'dashed',
+                                py: 8,
+                                textAlign: 'center',
+                                fontSize: '0.875rem',
+                                color: 'text.secondary',
+                            }}
+                        >
                             No recipes yet. Add your first one!
-                        </div>
+                        </Box>
                     ) : (
-                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' } }}>
                             {recipes.data.map((recipe) => (
-                                <div
+                                <Box
                                     key={recipe.id}
                                     role="button"
                                     tabIndex={0}
                                     aria-label={`View ${recipe.title} recipe`}
-                                    className="group relative flex cursor-pointer flex-col overflow-hidden rounded-xl border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                                    sx={{
+                                        position: 'relative',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        overflow: 'hidden',
+                                        borderRadius: 2,
+                                        border: 1,
+                                        borderColor: 'divider',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        '&:hover': { transform: 'translateY(-2px)', boxShadow: 3 },
+                                    }}
                                     onClick={() => router.visit(show(recipe.id).url)}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' || e.key === ' ') {
@@ -191,32 +218,67 @@ export default function RecipesIndex({ recipes }: Props) {
                                     }}
                                 >
                                     {recipe.photo_path ? (
-                                        <div className="aspect-video w-full overflow-hidden">
-                                            <img src={`/storage/${recipe.photo_path}`} alt={recipe.title} className="h-full w-full object-cover" />
-                                        </div>
+                                        <Box sx={{ aspectRatio: '16/9', width: '100%', overflow: 'hidden' }}>
+                                            <Box
+                                                component="img"
+                                                src={`/storage/${recipe.photo_path}`}
+                                                alt={recipe.title}
+                                                sx={{ height: '100%', width: '100%', objectFit: 'cover' }}
+                                            />
+                                        </Box>
                                     ) : (
-                                        <div className="flex aspect-video items-center justify-center bg-muted">
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                aspectRatio: '16/9',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                bgcolor: 'action.hover',
+                                            }}
+                                        >
                                             <ChefHat className="size-8 text-muted-foreground" />
-                                        </div>
+                                        </Box>
                                     )}
-                                    <div className="flex flex-1 flex-col p-4">
-                                        <p className="font-semibold">{recipe.title}</p>
+                                    <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', p: 2 }}>
+                                        <Typography sx={{ fontWeight: 600 }}>{recipe.title}</Typography>
                                         {recipe.description && (
-                                            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{recipe.description}</p>
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    mt: 0.5,
+                                                    color: 'text.secondary',
+                                                    display: '-webkit-box',
+                                                    WebkitLineClamp: 2,
+                                                    WebkitBoxOrient: 'vertical',
+                                                    overflow: 'hidden',
+                                                }}
+                                            >
+                                                {recipe.description}
+                                            </Typography>
                                         )}
-                                        <div className="mt-auto flex items-center justify-between pt-3 text-xs text-muted-foreground">
+                                        <Box
+                                            sx={{
+                                                mt: 'auto',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                pt: 1.5,
+                                                fontSize: '0.75rem',
+                                                color: 'text.secondary',
+                                            }}
+                                        >
                                             {recipe.total_time_minutes > 0 && (
-                                                <span className="flex items-center gap-1">
+                                                <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                                     <Clock className="size-3" /> {recipe.total_time_minutes}m
-                                                </span>
+                                                </Box>
                                             )}
                                             {recipe.rating && (
-                                                <span className="flex items-center gap-1">
+                                                <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                                     <Star className="size-3 fill-yellow-400 text-yellow-400" /> {recipe.rating}/5
-                                                </span>
+                                                </Box>
                                             )}
-                                        </div>
-                                        <div className="mt-3 flex justify-end">
+                                        </Box>
+                                        <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'flex-end' }}>
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
@@ -227,13 +289,13 @@ export default function RecipesIndex({ recipes }: Props) {
                                             >
                                                 <Trash2 className="size-4 text-destructive" />
                                             </Button>
-                                        </div>
-                                    </div>
-                                </div>
+                                        </Box>
+                                    </Box>
+                                </Box>
                             ))}
-                        </div>
+                        </Box>
                     )}
-                </div>
+                </Box>
             </AppLayout>
         </>
     );

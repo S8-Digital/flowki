@@ -1,4 +1,7 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { ChefHat, Clock, Heart, Star, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 import { destroy, update } from '@/actions/App/Http/Controllers/RecipeController';
@@ -50,24 +53,44 @@ export default function RecipesShow({ recipe }: Props) {
         <>
             <Head title={recipe.title} />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-6 p-6">
-                    <div className="overflow-hidden rounded-xl border">
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, p: 3 }}>
+                    <Box sx={{ overflow: 'hidden', borderRadius: 2, border: 1, borderColor: 'divider' }}>
                         {recipe.photo_path ? (
-                            <div className="aspect-video max-h-72 w-full overflow-hidden">
-                                <img src={`/storage/${recipe.photo_path}`} alt={recipe.title} className="h-full w-full object-cover" />
-                            </div>
+                            <Box sx={{ aspectRatio: '16/9', maxHeight: 288, width: '100%', overflow: 'hidden' }}>
+                                <Box
+                                    component="img"
+                                    src={`/storage/${recipe.photo_path}`}
+                                    alt={recipe.title}
+                                    sx={{ height: '100%', width: '100%', objectFit: 'cover' }}
+                                />
+                            </Box>
                         ) : (
-                            <div className="flex aspect-video max-h-44 items-center justify-center bg-muted">
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    aspectRatio: '16/9',
+                                    maxHeight: 176,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    bgcolor: 'action.hover',
+                                }}
+                            >
                                 <ChefHat className="size-12 text-muted-foreground" />
-                            </div>
+                            </Box>
                         )}
-                        <div className="p-5">
-                            <div className="flex items-start justify-between gap-2">
-                                <div>
-                                    <h1 className="text-2xl font-bold">{recipe.title}</h1>
-                                    {recipe.description && <p className="mt-1 text-sm text-muted-foreground">{recipe.description}</p>}
-                                </div>
-                                <div className="flex items-center gap-2">
+                        <Box sx={{ p: 2.5 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}>
+                                <Box>
+                                    <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                                        {recipe.title}
+                                    </Typography>
+                                    {recipe.description && (
+                                        <Typography variant="body2" sx={{ mt: 0.5, color: 'text.secondary' }}>
+                                            {recipe.description}
+                                        </Typography>
+                                    )}
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                     {recipe.is_favorite && <Heart className="size-5 fill-red-500 text-red-500" />}
                                     <Dialog open={editOpen} onOpenChange={setEditOpen}>
                                         <DialogTrigger asChild>
@@ -79,35 +102,35 @@ export default function RecipesShow({ recipe }: Props) {
                                             <DialogHeader>
                                                 <DialogTitle>Edit Recipe</DialogTitle>
                                             </DialogHeader>
-                                            <form onSubmit={handleEdit} className="space-y-4">
-                                                <div className="grid gap-2">
+                                            <Stack component="form" onSubmit={handleEdit} spacing={2}>
+                                                <Box sx={{ display: 'grid', gap: 1 }}>
                                                     <Label>Title</Label>
                                                     <Input value={data.title} onChange={(e) => setData('title', e.target.value)} required />
                                                     <InputError message={errors.title} />
-                                                </div>
-                                                <div className="grid gap-2">
+                                                </Box>
+                                                <Box sx={{ display: 'grid', gap: 1 }}>
                                                     <Label>Description</Label>
                                                     <Input value={data.description} onChange={(e) => setData('description', e.target.value)} />
-                                                </div>
-                                                <div className="grid grid-cols-2 gap-3">
-                                                    <div className="grid gap-2">
+                                                </Box>
+                                                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                                         <Label>Prep (min)</Label>
                                                         <Input
                                                             type="number"
                                                             value={data.prep_time_minutes}
                                                             onChange={(e) => setData('prep_time_minutes', e.target.value)}
                                                         />
-                                                    </div>
-                                                    <div className="grid gap-2">
+                                                    </Box>
+                                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                                         <Label>Cook (min)</Label>
                                                         <Input
                                                             type="number"
                                                             value={data.cook_time_minutes}
                                                             onChange={(e) => setData('cook_time_minutes', e.target.value)}
                                                         />
-                                                    </div>
-                                                </div>
-                                                <div className="grid gap-2">
+                                                    </Box>
+                                                </Box>
+                                                <Box sx={{ display: 'grid', gap: 1 }}>
                                                     <Label>Instructions</Label>
                                                     <textarea
                                                         value={data.instructions}
@@ -117,9 +140,9 @@ export default function RecipesShow({ recipe }: Props) {
                                                         className="w-full rounded-md border border-surface bg-transparent px-2.5 py-2 text-sm text-black shadow-sm ring ring-transparent transition-all duration-300 ease-in outline-none select-none placeholder:text-foreground/60 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white"
                                                     />
                                                     <InputError message={errors.instructions} />
-                                                </div>
-                                                <div className="grid grid-cols-2 gap-3">
-                                                    <div className="grid gap-2">
+                                                </Box>
+                                                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                                         <Label>Rating</Label>
                                                         <Input
                                                             type="number"
@@ -128,8 +151,8 @@ export default function RecipesShow({ recipe }: Props) {
                                                             value={data.rating}
                                                             onChange={(e) => setData('rating', e.target.value)}
                                                         />
-                                                    </div>
-                                                    <div className="flex items-center gap-2 pt-6">
+                                                    </Box>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pt: 3 }}>
                                                         <input
                                                             id="is_favorite"
                                                             type="checkbox"
@@ -138,67 +161,98 @@ export default function RecipesShow({ recipe }: Props) {
                                                             className="rounded"
                                                         />
                                                         <Label htmlFor="is_favorite">Favourite</Label>
-                                                    </div>
-                                                </div>
+                                                    </Box>
+                                                </Box>
                                                 <Button type="submit" className="w-full" disabled={processing}>
                                                     {processing ? 'Saving…' : 'Save Changes'}
                                                 </Button>
-                                            </form>
+                                            </Stack>
                                         </DialogContent>
                                     </Dialog>
                                     <Button variant="ghost" size="icon" onClick={deleteRecipe}>
                                         <Trash2 className="size-4 text-destructive" />
                                     </Button>
-                                </div>
-                            </div>
-                            <div className="mt-4 flex flex-wrap gap-4 text-sm">
+                                </Box>
+                            </Box>
+                            <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 2, fontSize: '0.875rem' }}>
                                 {recipe.servings && (
-                                    <span className="flex items-center gap-1 text-muted-foreground">
+                                    <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
                                         <Users className="size-4" /> {recipe.servings} servings
-                                    </span>
+                                    </Box>
                                 )}
                                 {recipe.total_time_minutes > 0 && (
-                                    <span className="flex items-center gap-1 text-muted-foreground">
+                                    <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
                                         <Clock className="size-4" /> {recipe.total_time_minutes} min total
-                                    </span>
+                                    </Box>
                                 )}
                                 {recipe.rating && (
-                                    <span className="flex items-center gap-1 text-muted-foreground">
+                                    <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
                                         <Star className="size-4 fill-yellow-400 text-yellow-400" /> {recipe.rating}/5
-                                    </span>
+                                    </Box>
                                 )}
-                                {recipe.category && <span className="rounded-full bg-secondary px-2 py-0.5 capitalize">{recipe.category}</span>}
-                            </div>
-                        </div>
-                    </div>
+                                {recipe.category && (
+                                    <Box
+                                        component="span"
+                                        sx={{ borderRadius: '50px', bgcolor: 'secondary.main', px: 1, py: 0.25, textTransform: 'capitalize' }}
+                                    >
+                                        {recipe.category}
+                                    </Box>
+                                )}
+                            </Box>
+                        </Box>
+                    </Box>
 
-                    <div className="grid gap-6 lg:grid-cols-3">
-                        <div className="rounded-xl border p-4">
-                            <h2 className="mb-3 font-semibold">Ingredients</h2>
+                    <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', lg: 'repeat(3, 1fr)' } }}>
+                        <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 2 }}>
+                            <Typography sx={{ mb: 1.5, fontWeight: 600 }}>Ingredients</Typography>
                             {recipe.ingredients?.length ? (
-                                <ul className="space-y-2">
+                                <Stack component="ul" spacing={1} sx={{ pl: 0, listStyle: 'none', m: 0 }}>
                                     {recipe.ingredients.map((ingredient) => (
-                                        <li key={ingredient.id} className="flex items-center gap-2 text-sm">
-                                            <span className="size-1.5 rounded-full bg-foreground" />
-                                            {ingredient.quantity && <span className="font-medium">{ingredient.quantity}</span>}
-                                            {ingredient.unit && <span className="text-muted-foreground">{ingredient.unit}</span>}
+                                        <Box
+                                            component="li"
+                                            key={ingredient.id}
+                                            sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.875rem' }}
+                                        >
+                                            <Box
+                                                component="span"
+                                                sx={{
+                                                    width: 6,
+                                                    height: 6,
+                                                    borderRadius: '50%',
+                                                    bgcolor: 'text.primary',
+                                                    display: 'inline-block',
+                                                    flexShrink: 0,
+                                                }}
+                                            />
+                                            {ingredient.quantity && (
+                                                <Typography component="span" sx={{ fontWeight: 500 }}>
+                                                    {ingredient.quantity}
+                                                </Typography>
+                                            )}
+                                            {ingredient.unit && (
+                                                <Typography component="span" sx={{ color: 'text.secondary' }}>
+                                                    {ingredient.unit}
+                                                </Typography>
+                                            )}
                                             <span>{ingredient.name}</span>
-                                        </li>
+                                        </Box>
                                     ))}
-                                </ul>
+                                </Stack>
                             ) : (
-                                <p className="text-sm text-muted-foreground">No ingredients listed.</p>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    No ingredients listed.
+                                </Typography>
                             )}
                             <Link href={shoppingIndex().url} className="mt-4 block text-xs text-muted-foreground hover:underline">
                                 Add to shopping list →
                             </Link>
-                        </div>
-                        <div className="rounded-xl border p-4 lg:col-span-2">
-                            <h2 className="mb-3 font-semibold">Instructions</h2>
-                            <div className="prose prose-sm dark:prose-invert max-w-none text-sm whitespace-pre-line">{recipe.instructions}</div>
-                        </div>
-                    </div>
-                </div>
+                        </Box>
+                        <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 2, gridColumn: { lg: 'span 2' } }}>
+                            <Typography sx={{ mb: 1.5, fontWeight: 600 }}>Instructions</Typography>
+                            <Box sx={{ fontSize: '0.875rem', whiteSpace: 'pre-wrap' }}>{recipe.instructions}</Box>
+                        </Box>
+                    </Box>
+                </Box>
             </AppLayout>
         </>
     );

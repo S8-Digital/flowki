@@ -1,4 +1,7 @@
 import { Head, router } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { CheckCheck, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -55,33 +58,43 @@ export default function NotificationsIndex({ notifications }: Props) {
         <>
             <Head title="Notifications" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-4 p-6">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-semibold">Notifications</h1>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            Notifications
+                        </Typography>
                         {hasUnread && (
                             <Button variant="outline" size="sm" className="gap-2" onClick={markAllRead}>
                                 <CheckCheck className="size-4" />
                                 Mark all read
                             </Button>
                         )}
-                    </div>
+                    </Box>
 
                     {notifications.data.length === 0 ? (
                         <Card>
                             <CardContent className="py-12 text-center text-muted-foreground">You have no notifications.</CardContent>
                         </Card>
                     ) : (
-                        <div className="space-y-2">
+                        <Stack spacing={1}>
                             {notifications.data.map((notification) => (
                                 <Card key={notification.id} className={!notification.read_at ? 'border-primary/30 bg-primary/5' : ''}>
                                     <CardContent className="flex items-start justify-between gap-4 py-4">
-                                        <div className="space-y-0.5">
-                                            <p className={`text-sm ${!notification.read_at ? 'font-medium' : 'text-muted-foreground'}`}>
+                                        <Stack spacing={0.25}>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    fontWeight: !notification.read_at ? 500 : 400,
+                                                    color: !notification.read_at ? 'text.primary' : 'text.secondary',
+                                                }}
+                                            >
                                                 {notificationMessage(notification)}
-                                            </p>
-                                            <p className="text-xs text-muted-foreground">{formatDateTime(notification.created_at)}</p>
-                                        </div>
-                                        <div className="flex shrink-0 gap-1">
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                {formatDateTime(notification.created_at)}
+                                            </Typography>
+                                        </Stack>
+                                        <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.5 }}>
                                             {!notification.read_at && (
                                                 <Button
                                                     variant="ghost"
@@ -102,16 +115,16 @@ export default function NotificationsIndex({ notifications }: Props) {
                                             >
                                                 <Trash2 className="size-4" />
                                             </Button>
-                                        </div>
+                                        </Box>
                                     </CardContent>
                                 </Card>
                             ))}
-                        </div>
+                        </Stack>
                     )}
 
                     {/* Pagination */}
                     {notifications.last_page > 1 && (
-                        <div className="flex justify-center gap-2">
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
                             {notifications.links.map((link, i) => (
                                 <Button
                                     key={i}
@@ -122,9 +135,9 @@ export default function NotificationsIndex({ notifications }: Props) {
                                     dangerouslySetInnerHTML={{ __html: link.label }}
                                 />
                             ))}
-                        </div>
+                        </Box>
                     )}
-                </div>
+                </Box>
             </AppLayout>
         </>
     );
