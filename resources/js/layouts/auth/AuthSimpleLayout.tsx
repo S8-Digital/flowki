@@ -1,4 +1,7 @@
 import { Link } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import type { PropsWithChildren } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { home } from '@/routes';
@@ -10,24 +13,72 @@ interface Props extends PropsWithChildren {
 
 export default function AuthSimpleLayout({ children, title, description }: Props) {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <div className="flex flex-col gap-8">
-                    <div className="flex flex-col items-center gap-4">
-                        <Link href={home()} className="flex flex-col items-center gap-2 font-medium">
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
-                            </div>
-                            <span className="sr-only">{title}</span>
-                        </Link>
-                        <div className="space-y-2 text-center">
-                            <h1 className="text-xl font-medium">{title}</h1>
-                            <p className="text-center text-sm text-muted-foreground">{description}</p>
-                        </div>
-                    </div>
+        <Stack
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+                minHeight: '100svh',
+                backgroundColor: 'var(--background)',
+                p: { xs: 3, md: 5 },
+                gap: 3,
+            }}
+        >
+            <Box sx={{ width: '100%', maxWidth: 384 }}>
+                <Stack direction="column" sx={{ gap: 4 }}>
+                    <Stack direction="column" alignItems="center" sx={{ gap: 2 }}>
+                        <Box
+                            component={Link}
+                            href={home()}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: 1,
+                                fontWeight: 500,
+                                textDecoration: 'none',
+                                color: 'inherit',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    mb: 0.5,
+                                    display: 'flex',
+                                    width: 36,
+                                    height: 36,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: 1.5,
+                                }}
+                            >
+                                <AppLogoIcon fill="currentColor" style={{ width: 36, height: 36 }} />
+                            </Box>
+                            <Box
+                                component="span"
+                                sx={{
+                                    position: 'absolute',
+                                    width: 1,
+                                    height: 1,
+                                    overflow: 'hidden',
+                                    clip: 'rect(0,0,0,0)',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                {title}
+                            </Box>
+                        </Box>
+                        <Stack spacing={1} sx={{ textAlign: 'center' }}>
+                            <Typography variant="h6" sx={{ fontSize: '1.25rem', fontWeight: 500 }}>
+                                {title}
+                            </Typography>
+                            <Typography sx={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', textAlign: 'center' }}>
+                                {description}
+                            </Typography>
+                        </Stack>
+                    </Stack>
                     {children}
-                </div>
-            </div>
-        </div>
+                </Stack>
+            </Box>
+        </Stack>
     );
 }

@@ -19,7 +19,8 @@ describe('Button', () => {
 
     it('is disabled when the disabled prop is set', async () => {
         const handler = vi.fn();
-        const user = userEvent.setup();
+        // MUI applies pointer-events:none to disabled buttons; bypass the pointer check
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         render(
             <Button disabled onClick={handler}>
                 Disabled

@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import Box from '@mui/material/Box';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
@@ -11,7 +12,7 @@ export default function Breadcrumbs({ breadcrumbs }: BreadcrumbsProps) {
         <Breadcrumb>
             <BreadcrumbList>
                 {breadcrumbs.map((item, index) => (
-                    <span key={item.href ?? item.title} className="contents">
+                    <Box component="span" key={typeof item.href === 'string' ? item.href : item.title} sx={{ display: 'contents' }}>
                         <BreadcrumbItem>
                             {index === breadcrumbs.length - 1 ? (
                                 <BreadcrumbPage>{item.title}</BreadcrumbPage>
@@ -22,7 +23,7 @@ export default function Breadcrumbs({ breadcrumbs }: BreadcrumbsProps) {
                             )}
                         </BreadcrumbItem>
                         {index !== breadcrumbs.length - 1 && <BreadcrumbSeparator />}
-                    </span>
+                    </Box>
                 ))}
             </BreadcrumbList>
         </Breadcrumb>

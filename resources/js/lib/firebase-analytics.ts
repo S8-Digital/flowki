@@ -1,5 +1,5 @@
-import { getAnalytics, logEvent } from 'firebase/analytics';
 import type { Analytics, EventNameString } from 'firebase/analytics';
+import { getAnalytics, logEvent } from 'firebase/analytics';
 import { getFirebaseApp } from './firebase';
 
 let analytics: Analytics | null = null;

@@ -1,4 +1,4 @@
-import { Checkbox as MtCheckbox } from '@material-tailwind/react';
+import MuiCheckbox from '@mui/material/Checkbox';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -18,17 +18,16 @@ function Checkbox({
     tabIndex?: number;
 }) {
     return (
-        <MtCheckbox
+        <MuiCheckbox
             checked={checked}
             disabled={disabled}
             className={cn(className)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 onCheckedChange?.(e.target.checked);
             }}
+            size="small"
             {...(props as any)}
-        >
-            <MtCheckbox.Indicator />
-        </MtCheckbox>
+        />
     );
 }
 

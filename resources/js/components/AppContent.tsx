@@ -1,6 +1,6 @@
-import { SidebarInset } from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
-
+import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, useAppSidebar } from '@/components/AppSidebarContext';
 interface AppContentProps {
     variant?: 'header' | 'sidebar';
     className?: string;
@@ -8,9 +8,48 @@ interface AppContentProps {
 }
 
 export default function AppContent({ variant = 'sidebar', className, children }: AppContentProps) {
+    const { open } = useAppSidebar();
+    const isMobile = useMediaQuery('(max-width:899px)');
+
     if (variant === 'sidebar') {
-        return <SidebarInset className={className}>{children}</SidebarInset>;
+        const marginLeft = isMobile ? 0 : open ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH;
+
+        return (
+            <Box
+                component="main"
+                className={className}
+                sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minWidth: 0,
+                    minHeight: '100vh',
+                    ml: `${marginLeft}px`,
+                    transition: 'margin-left 0.2s ease',
+                }}
+            >
+                {children}
+            </Box>
+        );
     }
 
-    return <main className={cn('mx-auto flex h-full w-full max-w-7xl flex-1 flex-col gap-4 rounded-xl', className)}>{children}</main>;
+    return (
+        <Box
+            component="main"
+            className={className}
+            sx={{
+                mx: 'auto',
+                display: 'flex',
+                height: '100%',
+                width: '100%',
+                maxWidth: 1280,
+                flex: 1,
+                flexDirection: 'column',
+                gap: 2,
+                borderRadius: '0.75rem',
+            }}
+        >
+            {children}
+        </Box>
+    );
 }

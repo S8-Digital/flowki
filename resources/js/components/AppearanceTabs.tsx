@@ -1,6 +1,6 @@
+import Box from '@mui/material/Box';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useAppearance } from '@/hooks/useAppearance';
-import { cn } from '@/lib/utils';
 
 const tabs = [
     { value: 'light', Icon: Sun, label: 'Light' },
@@ -12,22 +12,36 @@ export default function AppearanceTabs() {
     const { appearance, updateAppearance } = useAppearance();
 
     return (
-        <div className="inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800">
+        <Box sx={{ display: 'inline-flex', gap: '4px', borderRadius: 2, bgcolor: 'var(--muted)', p: '4px' }}>
             {tabs.map(({ value, Icon, label }) => (
-                <button
+                <Box
                     key={value}
+                    component="button"
                     onClick={() => updateAppearance(value)}
-                    className={cn(
-                        'flex items-center rounded-md px-3.5 py-1.5 transition-colors',
-                        appearance === value
-                            ? 'bg-white shadow-xs dark:bg-neutral-700 dark:text-neutral-100'
-                            : 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60',
-                    )}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        borderRadius: 1.5,
+                        px: '14px',
+                        py: '6px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.15s, color 0.15s',
+                        bgcolor: appearance === value ? 'var(--background)' : 'transparent',
+                        color: appearance === value ? 'var(--foreground)' : 'var(--muted-foreground)',
+                        boxShadow: appearance === value ? 1 : 'none',
+                        '&:hover':
+                            appearance !== value
+                                ? { bgcolor: 'color-mix(in srgb, var(--muted-foreground) 15%, transparent)', color: 'var(--foreground)' }
+                                : undefined,
+                    }}
                 >
-                    <Icon className="-ml-1 h-4 w-4" />
-                    <span className="ml-1.5 text-sm">{label}</span>
-                </button>
+                    <Icon style={{ marginLeft: -4, width: 16, height: 16 }} />
+                    <Box component="span" sx={{ ml: '6px', fontSize: '0.875rem' }}>
+                        {label}
+                    </Box>
+                </Box>
             ))}
-        </div>
+        </Box>
     );
 }

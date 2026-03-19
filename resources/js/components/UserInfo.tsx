@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/hooks/useInitials';
@@ -15,15 +16,30 @@ export default function UserInfo({ user, showEmail = false, showAvatar = true, s
 
     return (
         <>
-            <Avatar className="h-8 w-8 overflow-hidden rounded-lg">
+            <Avatar style={{ width: 32, height: 32, overflow: 'hidden', borderRadius: 8 }}>
                 {hasAvatar && <AvatarImage src={user.avatar!} alt={user.name} />}
-                <AvatarFallback className="rounded-lg text-black dark:text-white">{getInitials(user.name)}</AvatarFallback>
+                <AvatarFallback style={{ borderRadius: 8 }}>{getInitials(user.name)}</AvatarFallback>
             </Avatar>
 
-            <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                {showEmail && <span className="truncate text-xs text-muted-foreground">{user.email}</span>}
-            </div>
+            <Box sx={{ display: 'grid', flex: 1, textAlign: 'left', fontSize: '0.875rem', lineHeight: 1.25 }}>
+                <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
+                    {user.name}
+                </Box>
+                {showEmail && (
+                    <Box
+                        component="span"
+                        sx={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            fontSize: '0.75rem',
+                            color: 'var(--muted-foreground)',
+                        }}
+                    >
+                        {user.email}
+                    </Box>
+                )}
+            </Box>
 
             {showAppearanceToggle && <AppearanceToggle />}
         </>

@@ -1,5 +1,7 @@
 import { usePage } from '@inertiajs/react';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import Box from '@mui/material/Box';
+import * as React from 'react';
+import { AppSidebarContext, SIDEBAR_COOKIE } from '@/components/AppSidebarContext';
 import type { AppPageProps } from '@/types';
 
 interface AppShellProps {
@@ -9,10 +11,21 @@ interface AppShellProps {
 
 export default function AppShell({ variant = 'sidebar', children }: AppShellProps) {
     const page = usePage<AppPageProps>();
+    const [open, setOpenState] = React.useState(page.props.sidebarOpen);
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    const setOpen = React.useCallback((value: boolean) => {
+        setOpenState(value);
+        document.cookie = `${SIDEBAR_COOKIE}=${value}; path=/; max-age=${60 * 60 * 24 * 7}`;
+    }, []);
 
     if (variant === 'header') {
-        return <div className="flex min-h-screen w-full flex-col">{children}</div>;
+        return <Box sx={{ display: 'flex', minHeight: '100vh', width: '100%', flexDirection: 'column' }}>{children}</Box>;
     }
 
-    return <SidebarProvider defaultOpen={page.props.sidebarOpen}>{children}</SidebarProvider>;
+    return (
+        <AppSidebarContext.Provider value={{ open, setOpen, mobileOpen, setMobileOpen }}>
+            <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'var(--background)' }}>{children}</Box>
+        </AppSidebarContext.Provider>
+    );
 }

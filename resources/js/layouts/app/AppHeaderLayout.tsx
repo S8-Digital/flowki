@@ -10,7 +10,7 @@ interface Props extends PropsWithChildren {
 
 export default function AppHeaderLayout({ children, breadcrumbs = [] }: Props) {
     return (
-        <AppShell className="flex-col">
+        <AppShell variant="header">
             <AppHeader breadcrumbs={breadcrumbs} />
             <AppContent>{children}</AppContent>
         </AppShell>

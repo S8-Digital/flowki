@@ -1,8 +1,6 @@
-import { cn } from '@/lib/utils';
-
 export default function AppLogoIcon({ className, ...props }: React.ComponentProps<'svg'>) {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 42" className={cn(className)} {...props}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 42" className={className} {...props}>
             <path
                 fill="currentColor"
                 fillRule="evenodd"

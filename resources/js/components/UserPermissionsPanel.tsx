@@ -1,3 +1,6 @@
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -51,31 +54,33 @@ const permissionLabels: Record<string, string> = {
 
 export default function UserPermissionsPanel({ permissionGroups, grantedPermissions, onChange }: Props) {
     return (
-        <div className="space-y-6">
+        <Stack spacing={3}>
             {permissionGroups.map((group, index) => (
-                <div key={group.group}>
-                    {index > 0 && <Separator className="mb-6" />}
-                    <h4 className="mb-3 text-sm font-semibold text-foreground">{groupLabels[group.group] ?? group.group}</h4>
-                    <div className="space-y-3">
+                <Box key={group.group}>
+                    {index > 0 && <Separator style={{ marginBottom: 24 }} />}
+                    <Typography variant="subtitle2" sx={{ mb: 1.5, color: 'var(--foreground)' }}>
+                        {groupLabels[group.group] ?? group.group}
+                    </Typography>
+                    <Stack spacing={1.5}>
                         {group.permissions.map((permission) => {
                             const isGranted = grantedPermissions.includes(permission.name);
 
                             return (
-                                <div key={permission.name} className="flex items-center gap-3">
+                                <Box key={permission.name} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                     <Checkbox
                                         id={`perm-${permission.name}`}
                                         checked={isGranted}
                                         onCheckedChange={(checked) => onChange(permission.name, !!checked)}
                                     />
-                                    <Label htmlFor={`perm-${permission.name}`} className="cursor-pointer text-sm font-normal">
+                                    <Label htmlFor={`perm-${permission.name}`} style={{ cursor: 'pointer', fontSize: '0.875rem', fontWeight: 400 }}>
                                         {permissionLabels[permission.name] ?? permission.name}
                                     </Label>
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
-                </div>
+                    </Stack>
+                </Box>
             ))}
-        </div>
+        </Stack>
     );
 }

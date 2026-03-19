@@ -1,3 +1,6 @@
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
 interface HeadingSmallProps {
     title: string;
     description?: string;
@@ -5,9 +8,15 @@ interface HeadingSmallProps {
 
 export default function HeadingSmall({ title, description }: HeadingSmallProps) {
     return (
-        <header>
-            <h3 className="mb-0.5 text-base font-medium">{title}</h3>
-            {description && <p className="text-sm text-muted-foreground">{description}</p>}
-        </header>
+        <Box component="header">
+            <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 0.5 }}>
+                {title}
+            </Typography>
+            {description && (
+                <Typography variant="body2" sx={{ color: 'var(--muted-foreground)' }}>
+                    {description}
+                </Typography>
+            )}
+        </Box>
     );
 }

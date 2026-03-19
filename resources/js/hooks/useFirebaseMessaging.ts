@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/react';
 import type { MessagePayload } from 'firebase/messaging';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { store, destroy } from '@/actions/App/Http/Controllers/FcmTokenController';
+import { destroy, store } from '@/actions/App/Http/Controllers/FcmTokenController';
 import { getFcmToken, onForegroundMessage, requestNotificationPermission } from '@/lib/firebase-messaging';
 
 interface UseFirebaseMessagingReturn {

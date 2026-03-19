@@ -74,7 +74,9 @@ export default function Password() {
                             <InputError message={errors.password_confirmation} />
                         </div>
                         <div className="flex items-center gap-4">
-                            <Button disabled={processing}>Save password</Button>
+                            <Button type="submit" disabled={processing}>
+                                Save password
+                            </Button>
                             {recentlySuccessful && <p className="text-sm text-neutral-600">Saved.</p>}
                         </div>
                     </form>

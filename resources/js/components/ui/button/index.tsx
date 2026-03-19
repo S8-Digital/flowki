@@ -1,25 +1,43 @@
-import { Slot } from '@/lib/slot';
-import { Button as MtButton } from '@material-tailwind/react';
+import MuiButton from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import * as React from 'react';
+import { Slot } from '@/lib/slot';
 import { cn } from '@/lib/utils';
 
-function mapVariant(variant?: string): { color: string; variant: string } {
+function mapVariant(variant?: string): 'text' | 'outlined' | 'contained' {
     switch (variant) {
-        case 'destructive': return { color: 'error', variant: 'solid' };
-        case 'outline': return { color: 'primary', variant: 'outline' };
-        case 'secondary': return { color: 'secondary', variant: 'solid' };
-        case 'ghost': return { color: 'primary', variant: 'ghost' };
-        case 'link': return { color: 'primary', variant: 'ghost' };
-        default: return { color: 'primary', variant: 'solid' };
+        case 'outline':
+            return 'outlined';
+        case 'ghost':
+        case 'link':
+            return 'text';
+        default:
+            return 'contained';
     }
 }
 
-function mapSize(size?: string): 'sm' | 'md' | 'lg' {
+function mapColor(variant?: string): 'primary' | 'secondary' | 'error' | 'inherit' {
+    switch (variant) {
+        case 'destructive':
+            return 'error';
+        case 'secondary':
+            return 'secondary';
+        case 'ghost':
+        case 'link':
+            return 'inherit';
+        default:
+            return 'primary';
+    }
+}
+
+function mapSize(size?: string): 'small' | 'medium' | 'large' {
     switch (size) {
-        case 'sm': return 'sm';
-        case 'lg': return 'lg';
-        case 'icon': return 'sm';
-        default: return 'md';
+        case 'sm':
+            return 'small';
+        case 'lg':
+            return 'large';
+        default:
+            return 'medium';
     }
 }
 
@@ -29,33 +47,46 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     asChild?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ className, variant, size, asChild = false, children, ...props }, ref) => {
-        if (asChild) {
-            return (
-                <Slot ref={ref} className={className} {...props}>
-                    {children}
-                </Slot>
-            );
-        }
-        const { color, variant: mtVariant } = mapVariant(variant);
-        const mtSize = mapSize(size);
-        const isIcon = size === 'icon';
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, asChild = false, children, ...props }, ref) => {
+    if (asChild) {
         return (
-            <MtButton
-                ref={ref as any}
-                color={color as any}
-                variant={mtVariant as any}
-                size={mtSize}
-                ripple={false}
-                className={cn('cursor-pointer', isIcon && 'p-1.5 aspect-square', className)}
+            <Slot ref={ref} className={className} {...props}>
+                {children}
+            </Slot>
+        );
+    }
+
+    const isIcon = size === 'icon';
+
+    if (isIcon) {
+        return (
+            <IconButton
+                ref={ref}
+                color={mapColor(variant)}
+                size="small"
+                className={cn(className)}
                 {...(props as any)}
             >
                 {children}
-            </MtButton>
+            </IconButton>
         );
-    },
-);
+    }
+
+    return (
+        <MuiButton
+            ref={ref}
+            variant={mapVariant(variant)}
+            color={mapColor(variant)}
+            size={mapSize(size)}
+            disableRipple
+            disableElevation
+            className={cn(className)}
+            {...(props as any)}
+        >
+            {children}
+        </MuiButton>
+    );
+});
 Button.displayName = 'Button';
 
 export { Button };

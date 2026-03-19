@@ -1,3 +1,5 @@
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { CheckCircle2, Circle, Clock, RefreshCw } from 'lucide-react';
 import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo } from '@/types';
 
@@ -37,43 +39,85 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
     const isEmpty = totalItems === 0;
 
     return (
-        <div className="flex max-w-[280px] min-w-[220px] flex-1 flex-col overflow-hidden rounded-xl border">
+        <Box
+            sx={{
+                display: 'flex',
+                maxWidth: 280,
+                minWidth: 220,
+                flex: 1,
+                flexDirection: 'column',
+                overflow: 'hidden',
+                borderRadius: 3,
+                border: '1px solid',
+                borderColor: 'var(--border)',
+            }}
+        >
             {/* Header */}
-            <div className="flex flex-col gap-1 p-3" style={{ backgroundColor: `${color}22`, borderBottom: `3px solid ${color}` }}>
-                <div className="flex items-center gap-2">
-                    <div
-                        className="flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+            <Box
+                sx={{ display: 'flex', flexDirection: 'column', gap: '4px', p: 1.5 }}
+                style={{ backgroundColor: `${color}22`, borderBottom: `3px solid ${color}` }}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            width: 32,
+                            height: 32,
+                            flexShrink: 0,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '50%',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            color: '#fff',
+                        }}
                         style={{ backgroundColor: color }}
                         aria-label={user.name}
                     >
                         {getInitials(user.name)}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold">{user.name}</p>
-                        <p className="text-xs text-muted-foreground">
+                    </Box>
+                    <Box sx={{ minWidth: 0, flex: 1 }}>
+                        <Typography
+                            sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.875rem', fontWeight: 600 }}
+                        >
+                            {user.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
                             {totalItems} item{totalItems !== 1 ? 's' : ''}
-                        </p>
-                    </div>
-                </div>
+                        </Typography>
+                    </Box>
+                </Box>
                 {totalItems > 0 && (
-                    <div className="mt-1">
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <Box sx={{ mt: 0.5 }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                fontSize: '0.75rem',
+                                color: 'var(--muted-foreground)',
+                            }}
+                        >
                             <span>{completedItems} done</span>
                             <span>{completionPct}%</span>
-                        </div>
-                        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                            <div
-                                className="h-full rounded-full transition-all duration-300"
+                        </Box>
+                        <Box sx={{ mt: 0.5, height: 6, width: '100%', overflow: 'hidden', borderRadius: '9999px', bgcolor: 'var(--muted)' }}>
+                            <Box
+                                sx={{ height: '100%', borderRadius: '9999px', transition: 'all 0.3s' }}
                                 style={{ width: `${completionPct}%`, backgroundColor: color }}
                             />
-                        </div>
-                    </div>
+                        </Box>
+                    </Box>
                 )}
-            </div>
+            </Box>
 
             {/* Items */}
-            <div className="flex-1 space-y-1 overflow-y-auto p-2">
-                {isEmpty && <p className="py-6 text-center text-xs text-muted-foreground">Nothing scheduled</p>}
+            <Box sx={{ flex: 1, overflowY: 'auto', p: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {isEmpty && (
+                    <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                        Nothing scheduled
+                    </Typography>
+                )}
 
                 {/* Timed events */}
                 {events.map((event) => (
@@ -81,18 +125,45 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                         key={`event-${event.id}`}
                         type="button"
                         onClick={() => onEventClick?.(event)}
-                        className="w-full rounded-lg p-2 text-left text-xs transition-opacity hover:opacity-80"
-                        style={{ backgroundColor: `${event.color ?? color}22`, borderLeft: `3px solid ${event.color ?? color}` }}
+                        style={{
+                            width: '100%',
+                            borderRadius: 8,
+                            padding: 8,
+                            textAlign: 'left',
+                            fontSize: '0.75rem',
+                            cursor: 'pointer',
+                            border: 'none',
+                            transition: 'opacity 0.15s',
+                            backgroundColor: `${event.color ?? color}22`,
+                            borderLeft: `3px solid ${event.color ?? color}`,
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
+                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                     >
-                        <div className="flex items-center gap-1">
-                            <Clock className="size-3 shrink-0" style={{ color: event.color ?? color }} />
-                            <span className="truncate font-medium">{event.title}</span>
-                        </div>
-                        <p className="mt-0.5 text-muted-foreground">
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Clock style={{ width: 12, height: 12, flexShrink: 0, color: event.color ?? color }} />
+                            <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
+                                {event.title}
+                            </Box>
+                        </Box>
+                        <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>
                             {formatTime(event.start_at)}
                             {event.end_at ? ` – ${formatTime(event.end_at)}` : ''}
-                        </p>
-                        {event.location && <p className="mt-0.5 truncate text-muted-foreground">{event.location}</p>}
+                        </Typography>
+                        {event.location && (
+                            <Typography
+                                sx={{
+                                    mt: 0.25,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    color: 'var(--muted-foreground)',
+                                    fontSize: '0.75rem',
+                                }}
+                            >
+                                {event.location}
+                            </Typography>
+                        )}
                     </button>
                 ))}
 
@@ -102,13 +173,27 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                         key={`allday-${event.id}`}
                         type="button"
                         onClick={() => onEventClick?.(event)}
-                        className="w-full rounded-lg p-2 text-left text-xs transition-opacity hover:opacity-80"
-                        style={{ backgroundColor: `${event.color ?? color}22`, borderLeft: `3px solid ${event.color ?? color}` }}
+                        style={{
+                            width: '100%',
+                            borderRadius: 8,
+                            padding: 8,
+                            textAlign: 'left',
+                            fontSize: '0.75rem',
+                            cursor: 'pointer',
+                            border: 'none',
+                            transition: 'opacity 0.15s',
+                            backgroundColor: `${event.color ?? color}22`,
+                            borderLeft: `3px solid ${event.color ?? color}`,
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
+                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                     >
-                        <div className="flex items-center gap-1">
-                            <span className="truncate font-medium">{event.title}</span>
-                        </div>
-                        <p className="mt-0.5 text-muted-foreground">All day</p>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
+                                {event.title}
+                            </Box>
+                        </Box>
+                        <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>All day</Typography>
                     </button>
                 ))}
 
@@ -118,24 +203,49 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                         key={`todo-${todo.id}`}
                         type="button"
                         onClick={() => onTodoClick?.(todo)}
-                        className="w-full rounded-lg p-2 text-left text-xs transition-opacity hover:opacity-80"
                         style={{
+                            width: '100%',
+                            borderRadius: 8,
+                            padding: 8,
+                            textAlign: 'left',
+                            fontSize: '0.75rem',
+                            cursor: 'pointer',
+                            border: 'none',
+                            transition: 'opacity 0.15s',
                             backgroundColor: todo.status === 'completed' ? '#9ca3af22' : '#f59e0b22',
                             borderLeft: `3px solid ${todo.status === 'completed' ? '#9ca3af' : '#f59e0b'}`,
                         }}
+                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
+                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                     >
-                        <div className="flex items-center gap-1">
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                             {todo.status === 'completed' ? (
-                                <CheckCircle2 className="size-3 shrink-0 text-muted-foreground" />
+                                <CheckCircle2 style={{ width: 12, height: 12, flexShrink: 0, color: 'var(--muted-foreground)' }} />
                             ) : (
-                                <Circle className="size-3 shrink-0 text-amber-500" />
+                                <Circle style={{ width: 12, height: 12, flexShrink: 0, color: '#f59e0b' }} />
                             )}
-                            <span className={`truncate font-medium ${todo.status === 'completed' ? 'text-muted-foreground line-through' : ''}`}>
+                            <Box
+                                component="span"
+                                className={todo.status === 'completed' ? 'line-through' : undefined}
+                                sx={{
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    fontWeight: 500,
+                                    ...(todo.status === 'completed' ? { color: 'var(--muted-foreground)' } : {}),
+                                }}
+                            >
                                 {todo.title}
-                            </span>
-                        </div>
-                        {todo.due_date && <p className="mt-0.5 text-muted-foreground">{formatTime(todo.due_date)}</p>}
-                        <p className="mt-0.5 text-muted-foreground capitalize">{todo.priority} priority</p>
+                            </Box>
+                        </Box>
+                        {todo.due_date && (
+                            <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>
+                                {formatTime(todo.due_date)}
+                            </Typography>
+                        )}
+                        <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem', textTransform: 'capitalize' }}>
+                            {todo.priority} priority
+                        </Typography>
                     </button>
                 ))}
 
@@ -145,18 +255,38 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                         key={`chore-${chore.id}`}
                         type="button"
                         onClick={() => onChoreClick?.(chore)}
-                        className="w-full rounded-lg p-2 text-left text-xs transition-opacity hover:opacity-80"
-                        style={{ backgroundColor: '#10b98122', borderLeft: '3px solid #10b981' }}
+                        style={{
+                            width: '100%',
+                            borderRadius: 8,
+                            padding: 8,
+                            textAlign: 'left',
+                            fontSize: '0.75rem',
+                            cursor: 'pointer',
+                            border: 'none',
+                            transition: 'opacity 0.15s',
+                            backgroundColor: '#10b98122',
+                            borderLeft: '3px solid #10b981',
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
+                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                     >
-                        <div className="flex items-center gap-1">
-                            <RefreshCw className="size-3 shrink-0 text-emerald-500" />
-                            <span className="truncate font-medium">{chore.title}</span>
-                        </div>
-                        {chore.next_due_date && <p className="mt-0.5 text-muted-foreground">{formatTime(chore.next_due_date)}</p>}
-                        <p className="mt-0.5 text-muted-foreground capitalize">{chore.frequency}</p>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <RefreshCw style={{ width: 12, height: 12, flexShrink: 0, color: '#10b981' }} />
+                            <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
+                                {chore.title}
+                            </Box>
+                        </Box>
+                        {chore.next_due_date && (
+                            <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>
+                                {formatTime(chore.next_due_date)}
+                            </Typography>
+                        )}
+                        <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem', textTransform: 'capitalize' }}>
+                            {chore.frequency}
+                        </Typography>
                     </button>
                 ))}
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 }

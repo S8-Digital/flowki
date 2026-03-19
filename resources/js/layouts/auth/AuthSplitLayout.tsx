@@ -1,4 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import type { PropsWithChildren } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { home } from '@/routes';
@@ -13,31 +16,72 @@ export default function AuthSplitLayout({ children, title, description }: Props)
     const { name, quote } = usePage<AppPageProps>().props;
 
     return (
-        <div className="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
-            <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-                <div className="absolute inset-0 bg-zinc-900" />
-                <Link href={home()} className="relative z-20 flex items-center text-lg font-medium">
-                    <AppLogoIcon className="mr-2 size-8 fill-current text-white" />
+        <Box
+            sx={{
+                position: 'relative',
+                display: 'grid',
+                height: '100dvh',
+                alignItems: 'center',
+                justifyContent: 'center',
+                px: { xs: 4, sm: 0 },
+                gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' },
+            }}
+        >
+            <Box
+                sx={{
+                    position: 'relative',
+                    display: { xs: 'none', lg: 'flex' },
+                    height: '100%',
+                    flexDirection: 'column',
+                    backgroundColor: 'var(--muted)',
+                    p: 5,
+                    color: '#fff',
+                    borderRight: '1px solid',
+                    borderColor: 'var(--border)',
+                }}
+            >
+                <Box sx={{ position: 'absolute', inset: 0, backgroundColor: 'rgb(24,24,27)' }} />
+                <Box
+                    component={Link}
+                    href={home()}
+                    sx={{
+                        position: 'relative',
+                        zIndex: 20,
+                        display: 'flex',
+                        alignItems: 'center',
+                        fontSize: '1.125rem',
+                        fontWeight: 500,
+                        textDecoration: 'none',
+                        color: '#fff',
+                    }}
+                >
+                    <AppLogoIcon fill="currentColor" style={{ width: 32, height: 32, marginRight: 8 }} />
                     {name}
-                </Link>
+                </Box>
                 {quote && (
-                    <div className="relative z-20 mt-auto">
-                        <blockquote className="space-y-2">
-                            <p className="text-lg">&ldquo;{quote.message}&rdquo;</p>
-                            <footer className="text-sm text-neutral-300">{quote.author}</footer>
-                        </blockquote>
-                    </div>
+                    <Box sx={{ position: 'relative', zIndex: 20, mt: 'auto' }}>
+                        <Stack spacing={1} component="blockquote" sx={{ m: 0 }}>
+                            <Typography sx={{ fontSize: '1.125rem' }}>&ldquo;{quote.message}&rdquo;</Typography>
+                            <Typography component="footer" sx={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)' }}>
+                                {quote.author}
+                            </Typography>
+                        </Stack>
+                    </Box>
                 )}
-            </div>
-            <div className="lg:p-8">
-                <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-                    <div className="flex flex-col space-y-2 text-center">
-                        {title && <h1 className="text-xl font-medium tracking-tight">{title}</h1>}
-                        {description && <p className="text-sm text-muted-foreground">{description}</p>}
-                    </div>
+            </Box>
+            <Box sx={{ p: { lg: 4 } }}>
+                <Stack direction="column" justifyContent="center" spacing={3} sx={{ mx: 'auto', width: '100%', maxWidth: 350 }}>
+                    <Stack direction="column" spacing={1} sx={{ textAlign: 'center' }}>
+                        {title && (
+                            <Typography variant="h6" sx={{ fontSize: '1.25rem', fontWeight: 500, letterSpacing: '-0.025em' }}>
+                                {title}
+                            </Typography>
+                        )}
+                        {description && <Typography sx={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>{description}</Typography>}
+                    </Stack>
                     {children}
-                </div>
-            </div>
-        </div>
+                </Stack>
+            </Box>
+        </Box>
     );
 }

@@ -1,4 +1,4 @@
-import { Button } from '@material-tailwind/react';
+import IconButton from '@mui/material/IconButton';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useAppearance } from '@/hooks/useAppearance';
 
@@ -15,18 +15,8 @@ export default function AppearanceToggle() {
     }
 
     return (
-        <Button
-            as="button"
-            variant="ghost"
-            size="sm"
-            color="secondary"
-            title={label}
-            aria-label={`Switch theme (current: ${label})`}
-            onClick={toggle}
-            className="flex size-8 cursor-pointer items-center justify-center p-1.5"
-            ripple={false}
-        >
-            <Icon className="size-4" />
-        </Button>
+        <IconButton title={label} aria-label={`Switch theme (current: ${label})`} onClick={toggle} size="small">
+            <Icon size={16} />
+        </IconButton>
     );
 }

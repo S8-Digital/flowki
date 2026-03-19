@@ -2,7 +2,7 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { CheckCircle2, Circle, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { destroy, store, update } from '@/actions/App/Http/Controllers/TodoController';
-import { getMemberColor, getInitials } from '@/components/Calendar/MemberColumn';
+import { getInitials, getMemberColor } from '@/components/Calendar/MemberColumn';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { DateTimeInput } from '@/components/ui/datetime-input';

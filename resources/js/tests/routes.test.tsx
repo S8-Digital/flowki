@@ -48,129 +48,6 @@ vi.mock('@/layouts/AppLayout', () => ({
     default: ({ children }: { children: React.ReactNode }) => <div data-testid="app-layout">{children}</div>,
 }));
 
-vi.mock('@material-tailwind/react', () => ({
-    Button: ({
-        children,
-        as: Tag = 'button',
-        href,
-        isFullWidth: _ifw,
-        color: _c,
-        variant: _v,
-        ripple: _ripple,
-        size: _size,
-        ...rest
-    }: {
-        children: React.ReactNode;
-        as?: string;
-        href?: string;
-        isFullWidth?: boolean;
-        color?: string;
-        variant?: string;
-        ripple?: boolean;
-        size?: string;
-        [k: string]: unknown;
-    }) => (
-        <Tag href={href} {...rest}>
-            {children}
-        </Tag>
-    ),
-    InputRoot: React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ ...props }, ref) => <input ref={ref} {...props} />),
-    Input: Object.assign(
-        React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ className: _cn, ...props }, ref) => <input ref={ref} {...props} />),
-        { Icon: () => null },
-    ),
-    CheckboxRoot: React.forwardRef<
-        HTMLButtonElement,
-        React.ComponentProps<'button'> & { onCheckedChange?: (checked: boolean) => void; ripple?: boolean }
-    >(({ children, onCheckedChange: _occh, ripple: _ripple, ...props }, ref) => (
-        <button ref={ref} role="checkbox" {...props}>
-            {children}
-        </button>
-    )),
-    CheckboxIndicator: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
-    // Compound Checkbox used directly in Calendar/Index.tsx
-    Checkbox: Object.assign(
-        React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ children, ...props }, ref) => (
-            <label className="inline-flex cursor-pointer items-center">
-                <input ref={ref} type="checkbox" {...props} />
-                {children}
-            </label>
-        )),
-        { Indicator: ({ children }: { children?: React.ReactNode }) => <span>{children}</span> },
-    ),
-    ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    Collapse: ({ children, open }: { children: React.ReactNode; open?: boolean }) => (open ? <div>{children}</div> : null),
-    Card: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    CardBody: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    CardHeader: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    CardFooter: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    TooltipRoot: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    // Dialog
-    DialogRoot: ({
-        children,
-        open: _open,
-        onOpenChange: _oc,
-    }: {
-        children: React.ReactNode;
-        open?: boolean;
-        onOpenChange?: (open: boolean) => void;
-    }) => <div>{children}</div>,
-    DialogTrigger: ({ children, as: As, ...rest }: { children: React.ReactNode; as?: React.ElementType; [k: string]: unknown }) => {
-        if (As && typeof As === 'function') {
-            return <As {...rest}>{children}</As>;
-        }
-
-        return <button {...rest}>{children}</button>;
-    },
-    DialogOverlay: () => null,
-    DialogContent: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    DialogDismissTrigger: ({ children, as: As, ...rest }: { children: React.ReactNode; as?: React.ElementType; [k: string]: unknown }) => {
-        if (As && typeof As === 'function') {
-            return <As {...rest}>{children}</As>;
-        }
-
-        return <button {...rest}>{children}</button>;
-    },
-    // Dropdown / Menu
-    MenuRoot: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    MenuTrigger: ({ children, as: _as, ...rest }: { children: React.ReactNode; as?: unknown; [k: string]: unknown }) => (
-        <span {...rest}>{children}</span>
-    ),
-    MenuContent: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    MenuItem: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    // Select
-    Select: ({
-        children,
-        value: _v,
-        onValueChange: _ovc,
-        ...props
-    }: {
-        children: React.ReactNode;
-        value?: string;
-        onValueChange?: (v: string) => void;
-        [k: string]: unknown;
-    }) => <div {...props}>{children}</div>,
-    SelectTrigger: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <button {...props}>{children}</button>,
-    SelectList: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    SelectOption: ({ children, value: _v, ...props }: { children: React.ReactNode; value?: string; [k: string]: unknown }) => (
-        <div role="option" {...props}>
-            {children}
-        </div>
-    ),
-    // Sheet (Drawer)
-    DrawerRoot: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    DrawerTrigger: ({ children, as: _as, ...rest }: { children: React.ReactNode; as?: unknown; [k: string]: unknown }) => (
-        <span {...rest}>{children}</span>
-    ),
-    DrawerOverlay: () => null,
-    DrawerPanel: ({ children, ...props }: { children: React.ReactNode; [k: string]: unknown }) => <div {...props}>{children}</div>,
-    DrawerDismissTrigger: ({ children, as: _as, ...rest }: { children: React.ReactNode; as?: unknown; [k: string]: unknown }) => (
-        <button {...rest}>{children}</button>
-    ),
-}));
-
 // Stub FullCalendar (heavy 3rd-party, irrelevant to rendering tests)
 vi.mock('@fullcalendar/react', () => ({
     default: () => <div data-testid="fullcalendar" />,
@@ -397,8 +274,8 @@ describe('Calendar page (/calendar)', () => {
 
     it('renders the view-switcher select', () => {
         render(<CalendarIndex events={[]} todos={[]} chores={[]} members={[baseUser]} />);
-        // The view switcher is now an MT Select rendered as a button trigger
-        expect(screen.getByRole('button', { name: /calendar view/i })).toBeInTheDocument();
+        // MUI Select renders the inner select element as role="combobox"
+        expect(screen.getByRole('combobox')).toBeInTheDocument();
     });
 
     it('renders the "New Event" button', () => {
@@ -457,10 +334,10 @@ describe('Schedule upload modal (/schedule – ScheduleUploadModal)', () => {
     });
 
     it('renders without errors when the modal is closed', () => {
-        // Our DialogRoot mock always renders children regardless of `open`.
-        // This test confirms the component tree doesn't throw when open=false.
+        // MUI Dialog does not render children when open=false, so just confirm no throw.
         render(<ScheduleUploadModal open={false} onOpenChange={vi.fn()} />);
-        expect(screen.getByRole('button', { name: /drop schedule file here/i })).toBeInTheDocument();
+        // The modal is closed; no content should be visible in the DOM
+        expect(screen.queryByRole('button', { name: /drop schedule file here/i })).not.toBeInTheDocument();
     });
 
     it('shows an error when the file is too large', async () => {

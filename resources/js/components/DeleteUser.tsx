@@ -1,4 +1,7 @@
 import { useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { useRef, useState } from 'react';
 import { destroy } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import HeadingSmall from '@/components/HeadingSmall';
@@ -39,20 +42,31 @@ export default function DeleteUser() {
     }
 
     return (
-        <div className="space-y-6">
+        <Stack spacing={3}>
             <HeadingSmall title="Delete account" description="Delete your account and all of its resources" />
-            <div className="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
-                <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
-                    <p className="font-medium">Warning</p>
-                    <p className="text-sm">Please proceed with caution, this cannot be undone.</p>
-                </div>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'color-mix(in srgb, var(--destructive) 30%, transparent)',
+                    bgcolor: 'color-mix(in srgb, var(--destructive) 10%, transparent)',
+                    p: 2,
+                }}
+            >
+                <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '2px', color: 'var(--destructive)' }}>
+                    <Typography sx={{ fontWeight: 500, color: 'inherit' }}>Warning</Typography>
+                    <Typography sx={{ fontSize: '0.875rem', color: 'inherit' }}>Please proceed with caution, this cannot be undone.</Typography>
+                </Box>
                 <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button variant="destructive">Delete account</Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <DialogHeader className="space-y-3">
+                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                            <DialogHeader style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                 <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
                                 <DialogDescription>
                                     Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your
@@ -60,8 +74,18 @@ export default function DeleteUser() {
                                 </DialogDescription>
                             </DialogHeader>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password" className="sr-only">
+                            <Box sx={{ display: 'grid', gap: 1 }}>
+                                <Label
+                                    htmlFor="password"
+                                    style={{
+                                        position: 'absolute',
+                                        width: 1,
+                                        height: 1,
+                                        overflow: 'hidden',
+                                        clip: 'rect(0,0,0,0)',
+                                        whiteSpace: 'nowrap',
+                                    }}
+                                >
                                     Password
                                 </Label>
                                 <Input
@@ -73,9 +97,9 @@ export default function DeleteUser() {
                                     placeholder="Password"
                                 />
                                 <InputError message={form.errors.password} />
-                            </div>
+                            </Box>
 
-                            <DialogFooter className="gap-2">
+                            <DialogFooter style={{ gap: 8 }}>
                                 <DialogClose asChild>
                                     <Button variant="secondary" type="button" onClick={handleCancel}>
                                         Cancel
@@ -88,7 +112,7 @@ export default function DeleteUser() {
                         </form>
                     </DialogContent>
                 </Dialog>
-            </div>
-        </div>
+            </Box>
+        </Stack>
     );
 }

@@ -1,33 +1,34 @@
-import { Card as MtCard, CardBody as MtCardBody, CardFooter as MtCardFooter, CardHeader as MtCardHeader } from '@material-tailwind/react';
+import MuiCard from '@mui/material/Card';
+import MuiCardContent from '@mui/material/CardContent';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <MtCard className={cn('bg-card text-card-foreground', className)} {...(props as any)} />;
+    return <MuiCard className={cn(className)} sx={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }} {...(props as any)} />;
 }
 
 function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <MtCardHeader className={cn('px-6 pt-6 pb-0', className)} {...(props as any)} />;
+    return <div className={cn(className)} style={{ padding: '24px 24px 0' }} {...props} />;
 }
 
 function CardBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <MtCardBody className={cn('px-6 py-4', className)} {...(props as any)} />;
+    return <MuiCardContent className={cn(className)} {...(props as any)} />;
 }
 
 function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <MtCardFooter className={cn('px-6 pb-6 pt-0', className)} {...(props as any)} />;
+    return <div className={cn(className)} style={{ padding: '0 24px 24px' }} {...props} />;
 }
 
 function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-    return <h3 className={cn('text-xl font-semibold leading-none tracking-tight', className)} {...props} />;
+    return <h3 className={cn(className)} style={{ fontSize: '1.25rem', fontWeight: 600, lineHeight: 1, letterSpacing: '-0.015em', margin: 0 }} {...props} />;
 }
 
 function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-    return <p className={cn('text-sm text-muted-foreground', className)} {...props} />;
+    return <p className={cn(className)} style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', margin: 0 }} {...props} />;
 }
 
 function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn('px-6 py-4', className)} {...props} />;
+    return <div className={cn(className)} style={{ padding: '24px' }} {...props} />;
 }
 
 export { Card, CardBody, CardContent, CardDescription, CardFooter, CardHeader, CardTitle };

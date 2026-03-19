@@ -1,5 +1,4 @@
 import * as icons from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface IconProps {
     name: string;
@@ -17,5 +16,5 @@ export default function Icon({ name, className, size = 16, strokeWidth = 2, colo
         return null;
     }
 
-    return <IconComponent className={cn('h-4 w-4', className)} size={size} strokeWidth={strokeWidth} color={color} />;
+    return <IconComponent className={className} size={size} strokeWidth={strokeWidth} color={color} />;
 }

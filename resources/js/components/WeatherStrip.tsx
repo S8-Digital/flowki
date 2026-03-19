@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import { useWeather } from '@/hooks/useWeather';
 
 function weatherIconUrl(icon: string): string {
@@ -16,11 +17,37 @@ export default function WeatherStrip() {
     }
 
     return (
-        <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm shadow-sm">
-            <img src={weatherIconUrl(data.current.icon)} alt={data.current.description} width={24} height={24} className="-my-1" />
-            <span className="font-semibold">{data.current.temp}°C</span>
-            <span className="text-muted-foreground capitalize">{data.current.description}</span>
-            <span className="ml-auto text-xs text-muted-foreground">{data.location}</span>
-        </div>
+        <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'var(--border)',
+                bgcolor: 'var(--card)',
+                px: 1.5,
+                py: 1,
+                fontSize: '0.875rem',
+                boxShadow: 1,
+            }}
+        >
+            <img
+                src={weatherIconUrl(data.current.icon)}
+                alt={data.current.description}
+                width={24}
+                height={24}
+                style={{ marginTop: -4, marginBottom: -4 }}
+            />
+            <Box component="span" sx={{ fontWeight: 600 }}>
+                {data.current.temp}°C
+            </Box>
+            <Box component="span" sx={{ color: 'var(--muted-foreground)', textTransform: 'capitalize' }}>
+                {data.current.description}
+            </Box>
+            <Box component="span" sx={{ ml: 'auto', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                {data.location}
+            </Box>
+        </Box>
     );
 }

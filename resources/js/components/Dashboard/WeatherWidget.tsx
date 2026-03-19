@@ -1,3 +1,6 @@
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 import { useWeather } from '@/hooks/useWeather';
 
 function weatherIconUrl(icon: string): string {
@@ -13,9 +16,9 @@ export default function WeatherWidget() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center py-8">
-                <div className="size-5 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
-            </div>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', py: 4 }}>
+                <CircularProgress size={20} />
+            </Box>
         );
     }
 
@@ -24,37 +27,73 @@ export default function WeatherWidget() {
     }
 
     return (
-        <div className="flex flex-col gap-4">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Current conditions */}
-            <div className="flex items-center gap-3">
-                <img src={weatherIconUrl(data.current.icon)} alt={data.current.description} width={64} height={64} className="-my-2 -ml-2" />
-                <div>
-                    <p className="text-3xl leading-none font-semibold">{data.current.temp}°C</p>
-                    <p className="mt-1 text-sm text-muted-foreground capitalize">{data.current.description}</p>
-                    <p className="text-xs text-muted-foreground">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img
+                    src={weatherIconUrl(data.current.icon)}
+                    alt={data.current.description}
+                    width={64}
+                    height={64}
+                    style={{ marginTop: -8, marginBottom: -8, marginLeft: -8 }}
+                />
+                <Box>
+                    <Typography sx={{ fontSize: '1.875rem', lineHeight: 1, fontWeight: 600 }}>{data.current.temp}°C</Typography>
+                    <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'var(--muted-foreground)', textTransform: 'capitalize' }}>
+                        {data.current.description}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
                         Feels {data.current.feels_like}°C · Humidity {data.current.humidity}% · Wind {data.current.wind_speed} m/s
-                    </p>
-                </div>
-            </div>
+                    </Typography>
+                </Box>
+            </Box>
 
             {/* Location */}
-            <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{data.location}</p>
+            <Typography
+                sx={{ fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.05em', color: 'var(--muted-foreground)', textTransform: 'uppercase' }}
+            >
+                {data.location}
+            </Typography>
 
             {/* 5-day forecast */}
             {data.forecast.length > 0 && (
-                <ul className="grid grid-cols-5 gap-1 border-t pt-3">
+                <Box
+                    component="ul"
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(5, 1fr)',
+                        gap: '4px',
+                        borderTop: '1px solid',
+                        borderColor: 'var(--border)',
+                        pt: 1.5,
+                        m: 0,
+                        pl: 0,
+                        listStyle: 'none',
+                    }}
+                >
                     {data.forecast.map((day) => (
-                        <li key={day.date} className="flex flex-col items-center gap-1 text-center">
-                            <span className="text-[10px] font-medium text-muted-foreground">{formatDay(day.date)}</span>
+                        <Box
+                            component="li"
+                            key={day.date}
+                            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', textAlign: 'center' }}
+                        >
+                            <Typography component="span" sx={{ fontSize: '0.625rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>
+                                {formatDay(day.date)}
+                            </Typography>
                             <img src={weatherIconUrl(day.icon)} alt={day.description} width={32} height={32} />
-                            <span className="text-xs">
-                                <span className="font-medium">{day.temp_max}°</span>
-                                <span className="text-muted-foreground"> / {day.temp_min}°</span>
-                            </span>
-                        </li>
+                            <Typography component="span" sx={{ fontSize: '0.75rem' }}>
+                                <Typography component="span" sx={{ fontWeight: 500 }}>
+                                    {day.temp_max}°
+                                </Typography>
+                                <Typography component="span" sx={{ color: 'var(--muted-foreground)' }}>
+                                    {' '}
+                                    / {day.temp_min}°
+                                </Typography>
+                            </Typography>
+                        </Box>
                     ))}
-                </ul>
+                </Box>
             )}
-        </div>
+        </Box>
     );
 }
