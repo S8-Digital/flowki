@@ -5,6 +5,7 @@ import PermissionController from './PermissionController'
 import NotificationPreferencesController from './NotificationPreferencesController'
 import MemberColorController from './MemberColorController'
 import MemberOrderController from './MemberOrderController'
+import MemberProfileController from './MemberProfileController'
 
 const Settings = {
     ProfileController: Object.assign(ProfileController, ProfileController),
@@ -14,6 +15,7 @@ const Settings = {
     NotificationPreferencesController: Object.assign(NotificationPreferencesController, NotificationPreferencesController),
     MemberColorController: Object.assign(MemberColorController, MemberColorController),
     MemberOrderController: Object.assign(MemberOrderController, MemberOrderController),
+    MemberProfileController: Object.assign(MemberProfileController, MemberProfileController),
 }
 
 export default Settings

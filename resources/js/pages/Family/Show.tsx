@@ -3,7 +3,7 @@ import { Baby, Copy, GripVertical, MapPin, Pencil, Settings, UserMinus, UserPlus
 import { useEffect, useRef, useState } from 'react';
 import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
 import { update as updateMemberOrder } from '@/actions/App/Http/Controllers/Settings/MemberOrderController';
-import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';
+import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -459,8 +459,8 @@ export default function FamilyShow({ family }: Props) {
                                             <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">{member.role}</span>
                                         )}
                                         {canManageMembers && (
-                                            <Button variant="ghost" size="icon" asChild title="Manage permissions">
-                                                <Link href={permissionsEdit({ user: member.id }).url}>
+                                            <Button variant="ghost" size="icon" asChild title="Manage settings">
+                                                <Link href={memberProfileEdit({ user: member.id }).url}>
                                                     <Settings className="size-4 text-muted-foreground" />
                                                 </Link>
                                             </Button>
