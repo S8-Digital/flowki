@@ -141,7 +141,7 @@ store.form = storeForm
 * @see app/Http/Controllers/RecipeController.php:40
 * @route '/recipes/{recipe}'
 */
-export const show = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -156,7 +156,7 @@ show.definition = {
 * @see app/Http/Controllers/RecipeController.php:40
 * @route '/recipes/{recipe}'
 */
-show.url = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { recipe: args }
     }
@@ -189,7 +189,7 @@ show.url = (args: { recipe: string | number | { id: string | number } } | [recip
 * @see app/Http/Controllers/RecipeController.php:40
 * @route '/recipes/{recipe}'
 */
-show.get = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -199,7 +199,7 @@ show.get = (args: { recipe: string | number | { id: string | number } } | [recip
 * @see app/Http/Controllers/RecipeController.php:40
 * @route '/recipes/{recipe}'
 */
-show.head = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -209,7 +209,7 @@ show.head = (args: { recipe: string | number | { id: string | number } } | [reci
 * @see app/Http/Controllers/RecipeController.php:40
 * @route '/recipes/{recipe}'
 */
-const showForm = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -219,7 +219,7 @@ const showForm = (args: { recipe: string | number | { id: string | number } } | 
 * @see app/Http/Controllers/RecipeController.php:40
 * @route '/recipes/{recipe}'
 */
-showForm.get = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -229,7 +229,7 @@ showForm.get = (args: { recipe: string | number | { id: string | number } } | [r
 * @see app/Http/Controllers/RecipeController.php:40
 * @route '/recipes/{recipe}'
 */
-showForm.head = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -246,7 +246,7 @@ show.form = showForm
 * @see app/Http/Controllers/RecipeController.php:75
 * @route '/recipes/{recipe}'
 */
-export const update = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -261,7 +261,7 @@ update.definition = {
 * @see app/Http/Controllers/RecipeController.php:75
 * @route '/recipes/{recipe}'
 */
-update.url = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { recipe: args }
     }
@@ -294,7 +294,7 @@ update.url = (args: { recipe: string | number | { id: string | number } } | [rec
 * @see app/Http/Controllers/RecipeController.php:75
 * @route '/recipes/{recipe}'
 */
-update.patch = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -304,7 +304,7 @@ update.patch = (args: { recipe: string | number | { id: string | number } } | [r
 * @see app/Http/Controllers/RecipeController.php:75
 * @route '/recipes/{recipe}'
 */
-const updateForm = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -319,7 +319,7 @@ const updateForm = (args: { recipe: string | number | { id: string | number } } 
 * @see app/Http/Controllers/RecipeController.php:75
 * @route '/recipes/{recipe}'
 */
-updateForm.patch = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -336,7 +336,7 @@ update.form = updateForm
 * @see app/Http/Controllers/RecipeController.php:99
 * @route '/recipes/{recipe}'
 */
-export const destroy = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -351,7 +351,7 @@ destroy.definition = {
 * @see app/Http/Controllers/RecipeController.php:99
 * @route '/recipes/{recipe}'
 */
-destroy.url = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { recipe: args }
     }
@@ -384,7 +384,7 @@ destroy.url = (args: { recipe: string | number | { id: string | number } } | [re
 * @see app/Http/Controllers/RecipeController.php:99
 * @route '/recipes/{recipe}'
 */
-destroy.delete = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -394,7 +394,7 @@ destroy.delete = (args: { recipe: string | number | { id: string | number } } | 
 * @see app/Http/Controllers/RecipeController.php:99
 * @route '/recipes/{recipe}'
 */
-const destroyForm = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -409,7 +409,7 @@ const destroyForm = (args: { recipe: string | number | { id: string | number } }
 * @see app/Http/Controllers/RecipeController.php:99
 * @route '/recipes/{recipe}'
 */
-destroyForm.delete = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { recipe: number | { id: number } } | [recipe: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

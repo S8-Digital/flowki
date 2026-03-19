@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\MemberProfileController::edit
 * @see app/Http/Controllers/Settings/MemberProfileController.php:16
@@ -104,6 +104,8 @@ editForm.head = (args: { user: number | { id: number } } | [user: number | { id:
 
 edit.form = editForm
 
-const MemberProfileController = { edit }
+const profile = {
+    edit: Object.assign(edit, edit),
+}
 
-export default MemberProfileController
+export default profile
