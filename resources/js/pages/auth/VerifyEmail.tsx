@@ -1,4 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
 import TextLink from '@/components/TextLink';
@@ -23,12 +25,12 @@ export default function VerifyEmail({ status }: Props) {
             <Head title="Email verification" />
 
             {status === 'verification-link-sent' && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
+                <Typography sx={{ mb: 2, textAlign: 'center', fontWeight: 500, color: 'success.main' }}>
                     A new verification link has been sent to the email address you provided during registration.
-                </div>
+                </Typography>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6 text-center">
+            <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
                 <Button disabled={processing} variant="secondary">
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     Resend verification email
@@ -37,7 +39,7 @@ export default function VerifyEmail({ status }: Props) {
                 <TextLink href={logout()} as="button" className="mx-auto block text-sm">
                     Log out
                 </TextLink>
-            </form>
+            </Box>
         </AuthLayout>
     );
 }

@@ -1,4 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/InputError';
@@ -33,11 +35,11 @@ export default function Login({ status, canResetPassword }: Props) {
         <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
             <Head title="Log in" />
 
-            {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
+            {status && <Typography sx={{ mb: 2, textAlign: 'center', fontWeight: 500, color: 'success.main' }}>{status}</Typography>}
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
+            <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ display: 'grid', gap: 3 }}>
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
@@ -51,17 +53,17 @@ export default function Login({ status, canResetPassword }: Props) {
                             placeholder="email@example.com"
                         />
                         <InputError message={errors.email} />
-                    </div>
+                    </Box>
 
-                    <div className="grid gap-2">
-                        <div className="flex items-center justify-between">
+                    <Box sx={{ display: 'grid', gap: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Label htmlFor="password">Password</Label>
                             {canResetPassword && (
                                 <TextLink href={request()} className="text-sm" tabIndex={5}>
                                     Forgot password?
                                 </TextLink>
                             )}
-                        </div>
+                        </Box>
                         <Input
                             id="password"
                             type="password"
@@ -73,9 +75,9 @@ export default function Login({ status, canResetPassword }: Props) {
                             placeholder="Password"
                         />
                         <InputError message={errors.password} />
-                    </div>
+                    </Box>
 
-                    <div className="flex items-center justify-between">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Label htmlFor="remember" className="flex items-center space-x-3">
                             <Checkbox
                                 id="remember"
@@ -86,23 +88,23 @@ export default function Login({ status, canResetPassword }: Props) {
                             />
                             <span>Remember me</span>
                         </Label>
-                    </div>
+                    </Box>
 
                     <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Log in
                     </Button>
-                </div>
+                </Box>
 
                 <SocialAuthButtons />
 
-                <div className="text-center text-sm text-muted-foreground">
+                <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
                     Don't have an account?{' '}
                     <TextLink href={register()} tabIndex={5}>
                         Sign up
                     </TextLink>
-                </div>
-            </form>
+                </Typography>
+            </Box>
         </AuthLayout>
     );
 }

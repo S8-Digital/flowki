@@ -1,4 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/ConfirmablePasswordController';
 import InputError from '@/components/InputError';
@@ -23,29 +25,28 @@ export default function ConfirmPassword() {
             <Head title="Confirm password" />
 
             <form onSubmit={handleSubmit}>
-                <div className="space-y-6">
-                    <div className="grid gap-2">
+                <Stack spacing={3}>
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
                             type="password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
-                            className="mt-1 block w-full"
                             required
                             autoComplete="current-password"
                             autoFocus
                         />
                         <InputError message={errors.password} />
-                    </div>
+                    </Box>
 
-                    <div className="flex items-center">
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Button className="w-full" disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             Confirm Password
                         </Button>
-                    </div>
-                </div>
+                    </Box>
+                </Stack>
             </form>
         </AuthLayout>
     );
