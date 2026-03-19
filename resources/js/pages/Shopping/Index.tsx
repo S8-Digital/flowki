@@ -1,7 +1,7 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { ExternalLink, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { destroy, show, store } from '@/actions/App/Http/Controllers/ShoppingListController';
 import InputError from '@/components/InputError';
@@ -102,7 +102,20 @@ export default function ShoppingIndex({ lists }: Props) {
                     ) : (
                         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                             {lists.map((list) => (
-                                <div key={list.id} className="flex flex-col justify-between rounded-xl border p-4">
+                                <div
+                                    key={list.id}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-label={`Open ${list.name} shopping list`}
+                                    className="flex cursor-pointer flex-col justify-between rounded-xl border p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                                    onClick={() => router.visit(show(list.id).url)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            router.visit(show(list.id).url);
+                                        }
+                                    }}
+                                >
                                     <div className="flex items-start justify-between">
                                         <div>
                                             <p className="font-medium">{list.name}</p>
@@ -112,11 +125,15 @@ export default function ShoppingIndex({ lists }: Props) {
                                         </div>
                                         <ShoppingCart className="size-5 text-muted-foreground" />
                                     </div>
-                                    <div className="mt-4 flex items-center justify-between">
-                                        <Link href={show(list.id).url} className="text-sm font-medium hover:underline">
-                                            Open <ExternalLink className="ml-1 inline size-3" />
-                                        </Link>
-                                        <Button variant="ghost" size="icon" onClick={() => deleteList(list)}>
+                                    <div className="mt-4 flex justify-end">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteList(list);
+                                            }}
+                                        >
                                             <Trash2 className="size-4 text-destructive" />
                                         </Button>
                                     </div>
