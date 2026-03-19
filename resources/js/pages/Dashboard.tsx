@@ -1,4 +1,7 @@
 import { Head, router } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { GripVertical, Plus, Settings2, X } from 'lucide-react';
 import { useState } from 'react';
 import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
@@ -166,35 +169,68 @@ export default function Dashboard({
         <>
             <Head title="Dashboard" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-4 p-4">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-semibold">Dashboard</h1>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            Dashboard
+                        </Typography>
                         <Button size="sm" onClick={() => setAddOpen(true)}>
                             <Plus className="mr-1 size-4" /> Add Widget
                         </Button>
-                    </div>
+                    </Box>
 
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', xl: 'repeat(3, 1fr)' } }}>
                         {localWidgets.map((widget) => (
-                            <div
+                            <Box
                                 key={widget.id}
-                                className={`rounded-xl border bg-card shadow-sm transition-shadow hover:shadow-md${draggingId === widget.id ? 'scale-[0.98] opacity-50' : ''}`}
+                                sx={{
+                                    borderRadius: 2,
+                                    border: 1,
+                                    borderColor: 'divider',
+                                    bgcolor: 'background.paper',
+                                    boxShadow: 1,
+                                    opacity: draggingId === widget.id ? 0.5 : 1,
+                                    transform: draggingId === widget.id ? 'scale(0.98)' : 'none',
+                                    transition: 'box-shadow 0.2s, opacity 0.2s, transform 0.2s',
+                                }}
                                 draggable
                                 onDragStart={() => onDragStart(widget)}
                                 onDragOver={(e) => onDragOver(e, widget)}
                                 onDrop={onDrop}
                             >
-                                <div className="flex items-center justify-between border-b px-4 py-2.5">
-                                    <div className="flex items-center gap-2">
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        borderBottom: 1,
+                                        borderColor: 'divider',
+                                        px: 2,
+                                        py: 1.25,
+                                    }}
+                                >
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <GripVertical className="size-4 cursor-grab text-muted-foreground/40 active:cursor-grabbing" />
-                                        <span className="text-sm font-medium">{widgetLabel(widget.type)}</span>
+                                        <Typography component="span" variant="body2" sx={{ fontWeight: 500 }}>
+                                            {widgetLabel(widget.type)}
+                                        </Typography>
                                         {(widget.settings?.category as string) && (
-                                            <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">
+                                            <Box
+                                                component="span"
+                                                sx={{
+                                                    borderRadius: '50px',
+                                                    bgcolor: 'secondary.main',
+                                                    px: 1,
+                                                    py: 0.25,
+                                                    fontSize: '0.75rem',
+                                                    textTransform: 'capitalize',
+                                                }}
+                                            >
                                                 {widget.settings.category as string}
-                                            </span>
+                                            </Box>
                                         )}
-                                    </div>
-                                    <div className="flex items-center gap-1">
+                                    </Box>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                         {hasSettings(widget.type) && (
                                             <Button variant="ghost" size="icon" className="size-7" onClick={() => openSettings(widget)}>
                                                 <Settings2 className="size-3.5 text-muted-foreground" />
@@ -203,9 +239,9 @@ export default function Dashboard({
                                         <Button variant="ghost" size="icon" className="size-7" onClick={() => removeWidget(widget)}>
                                             <X className="size-3.5 text-muted-foreground" />
                                         </Button>
-                                    </div>
-                                </div>
-                                <div className="p-4">
+                                    </Box>
+                                </Box>
+                                <Box sx={{ p: 2 }}>
                                     {widget.type === 'calendar_schedule' && <CalendarScheduleWidget events={calendarEvents} />}
                                     {widget.type === 'calendar_today' && <CalendarTodayWidget events={todayEvents()} />}
                                     {widget.type === 'todo_list' && (
@@ -219,20 +255,36 @@ export default function Dashboard({
                                         />
                                     )}
                                     {widget.type === 'weather' && <WeatherWidget />}
-                                </div>
-                            </div>
+                                </Box>
+                            </Box>
                         ))}
 
                         {localWidgets.length === 0 && (
-                            <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center">
-                                <p className="text-sm text-muted-foreground">No widgets yet.</p>
+                            <Box
+                                sx={{
+                                    gridColumn: '1 / -1',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: 2,
+                                    border: 1,
+                                    borderColor: 'divider',
+                                    borderStyle: 'dashed',
+                                    py: 10,
+                                    textAlign: 'center',
+                                }}
+                            >
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    No widgets yet.
+                                </Typography>
                                 <Button variant="outline" size="sm" className="mt-3" onClick={() => setAddOpen(true)}>
                                     <Plus className="mr-1 size-4" /> Add your first widget
                                 </Button>
-                            </div>
+                            </Box>
                         )}
-                    </div>
-                </div>
+                    </Box>
+                </Box>
 
                 {/* Add Widget Dialog */}
                 <Dialog open={addOpen} onOpenChange={setAddOpen}>
@@ -240,8 +292,8 @@ export default function Dashboard({
                         <DialogHeader>
                             <DialogTitle>Add Widget</DialogTitle>
                         </DialogHeader>
-                        <div className="space-y-4">
-                            <div className="grid gap-2">
+                        <Stack spacing={2}>
+                            <Box sx={{ display: 'grid', gap: 1 }}>
                                 <Label>Widget Type</Label>
                                 <Select value={newWidgetType} onValueChange={setNewWidgetType}>
                                     <SelectTrigger>
@@ -255,9 +307,9 @@ export default function Dashboard({
                                         ))}
                                     </SelectContent>
                                 </Select>
-                            </div>
+                            </Box>
                             {showListFilter && (
-                                <div className="grid gap-2">
+                                <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Shopping List</Label>
                                     <Select value={newWidgetListId} onValueChange={setNewWidgetListId}>
                                         <SelectTrigger>
@@ -271,10 +323,10 @@ export default function Dashboard({
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                </div>
+                                </Box>
                             )}
                             {showCategoryFilter && (
-                                <div className="grid gap-2">
+                                <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>
                                         Category Filter <span className="text-xs text-muted-foreground">(optional)</span>
                                     </Label>
@@ -291,12 +343,12 @@ export default function Dashboard({
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                </div>
+                                </Box>
                             )}
                             <Button className="w-full" disabled={!newWidgetType} onClick={addWidget}>
                                 Add Widget
                             </Button>
-                        </div>
+                        </Stack>
                     </DialogContent>
                 </Dialog>
 
@@ -307,9 +359,9 @@ export default function Dashboard({
                             <DialogTitle>Widget Settings</DialogTitle>
                         </DialogHeader>
                         {settingsWidget && (
-                            <div className="space-y-4">
+                            <Stack spacing={2}>
                                 {settingsWidget.type === 'shopping_list' && (
-                                    <div className="grid gap-2">
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Shopping List</Label>
                                         <Select value={settingsListId} onValueChange={setSettingsListId}>
                                             <SelectTrigger>
@@ -323,10 +375,10 @@ export default function Dashboard({
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                    </div>
+                                    </Box>
                                 )}
                                 {settingsWidget.type === 'todo_list' && (
-                                    <div className="grid gap-2">
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>
                                             Category Filter <span className="text-xs text-muted-foreground">(optional)</span>
                                         </Label>
@@ -343,12 +395,12 @@ export default function Dashboard({
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                    </div>
+                                    </Box>
                                 )}
                                 <Button className="w-full" onClick={saveSettings}>
                                     Save Settings
                                 </Button>
-                            </div>
+                            </Stack>
                         )}
                     </DialogContent>
                 </Dialog>

@@ -1,4 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { CalendarDays, CheckSquare, ChefHat, RotateCcw, ShoppingCart, Users } from 'lucide-react';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import { login, register } from '@/routes';
@@ -17,15 +20,26 @@ export default function Welcome() {
         <>
             <Head title="Family Organizer" />
 
-            <div className="flex min-h-screen flex-col bg-background text-foreground">
-                <header className="flex items-center justify-between border-b px-6 py-4">
-                    <div className="flex items-center gap-2 text-lg font-bold">
+            <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary' }}>
+                <Box
+                    component="header"
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        px: 3,
+                        py: 2,
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '1.125rem', fontWeight: 700 }}>
                         <Users className="size-5 text-primary" />
                         Family Organizer
-                    </div>
-                    <nav className="flex items-center gap-4">
+                    </Box>
+                    <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <AppearanceToggle />
-                        <div className="flex items-center gap-3">
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                             <Link href={login()} className="text-sm text-muted-foreground transition hover:text-foreground">
                                 Log in
                             </Link>
@@ -35,23 +49,39 @@ export default function Welcome() {
                             >
                                 Get Started
                             </Link>
-                        </div>
-                    </nav>
-                </header>
+                        </Box>
+                    </Box>
+                </Box>
 
-                <main className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-20 text-center">
-                    <div className="space-y-4">
-                        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                <Box
+                    component="main"
+                    sx={{
+                        display: 'flex',
+                        flex: 1,
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 4,
+                        px: 3,
+                        py: 10,
+                        textAlign: 'center',
+                    }}
+                >
+                    <Stack spacing={2}>
+                        <Typography
+                            variant="h3"
+                            sx={{ fontWeight: 700, letterSpacing: '-0.025em', fontSize: { xs: '2.25rem', sm: '3rem', lg: '3.75rem' } }}
+                        >
                             Organise your family,
                             <br className="hidden sm:block" />
                             together.
-                        </h1>
-                        <p className="mx-auto max-w-xl text-lg text-muted-foreground">
+                        </Typography>
+                        <Typography sx={{ mx: 'auto', maxWidth: 600, fontSize: '1.125rem', color: 'text.secondary' }}>
                             Shared todos, chores, calendar, shopping lists, and recipes — all in one place for the whole family.
-                        </p>
-                    </div>
+                        </Typography>
+                    </Stack>
 
-                    <div className="flex flex-wrap items-center justify-center gap-3">
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 1.5 }}>
                         <Link
                             href={register()}
                             className="rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
@@ -61,18 +91,34 @@ export default function Welcome() {
                         <Link href={login()} className="rounded-md border px-6 py-2.5 text-sm font-semibold transition hover:bg-accent">
                             Sign in
                         </Link>
-                    </div>
+                    </Box>
 
-                    <div className="mt-8 grid max-w-3xl grid-cols-2 gap-4 sm:grid-cols-3">
+                    <Box sx={{ mt: 4, display: 'grid', maxWidth: 840, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
                         {features.map((feature) => (
-                            <div key={feature.name} className="flex flex-col items-center gap-2 rounded-xl border bg-card p-4 text-sm">
+                            <Box
+                                key={feature.name}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                    borderRadius: 2,
+                                    border: 1,
+                                    borderColor: 'divider',
+                                    bgcolor: 'background.paper',
+                                    p: 2,
+                                    fontSize: '0.875rem',
+                                }}
+                            >
                                 <feature.icon className="size-6 text-primary" />
-                                <span className="font-medium">{feature.name}</span>
-                            </div>
+                                <Typography component="span" sx={{ fontWeight: 500 }}>
+                                    {feature.name}
+                                </Typography>
+                            </Box>
                         ))}
-                    </div>
-                </main>
-            </div>
+                    </Box>
+                </Box>
+            </Box>
         </>
     );
 }
