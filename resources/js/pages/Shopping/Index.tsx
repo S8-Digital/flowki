@@ -134,6 +134,13 @@ export default function ShoppingIndex({ lists }: Props) {
                                         p: 2,
                                         transition: 'all 0.2s',
                                         '&:hover': { transform: 'translateY(-2px)', boxShadow: 2 },
+                                        '&:focus-visible': {
+                                            outline: '2px solid',
+                                            outlineColor: 'primary.main',
+                                            outlineOffset: 2,
+                                            transform: 'translateY(-2px)',
+                                            boxShadow: 2,
+                                        },
                                     }}
                                     onClick={() => router.visit(show(list.id).url)}
                                     onKeyDown={(e) => {
