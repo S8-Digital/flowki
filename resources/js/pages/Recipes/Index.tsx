@@ -1,5 +1,5 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { ChefHat, Clock, ExternalLink, Plus, Star, Trash2 } from 'lucide-react';
+import { Head, router, useForm } from '@inertiajs/react';
+import { ChefHat, Clock, Plus, Star, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { destroy, show, store } from '@/actions/App/Http/Controllers/RecipeController';
 import InputError from '@/components/InputError';
@@ -178,7 +178,17 @@ export default function RecipesIndex({ recipes }: Props) {
                             {recipes.data.map((recipe) => (
                                 <div
                                     key={recipe.id}
-                                    className="group relative flex flex-col overflow-hidden rounded-xl border transition hover:shadow-md"
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-label={`View ${recipe.title} recipe`}
+                                    className="group relative flex cursor-pointer flex-col overflow-hidden rounded-xl border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                                    onClick={() => router.visit(show(recipe.id).url)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            router.visit(show(recipe.id).url);
+                                        }
+                                    }}
                                 >
                                     {recipe.photo_path ? (
                                         <div className="aspect-video w-full overflow-hidden">
@@ -206,11 +216,15 @@ export default function RecipesIndex({ recipes }: Props) {
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="mt-3 flex items-center justify-between">
-                                            <Link href={show(recipe.id).url} className="text-sm font-medium hover:underline">
-                                                View <ExternalLink className="ml-1 inline size-3" />
-                                            </Link>
-                                            <Button variant="ghost" size="icon" onClick={() => deleteRecipe(recipe)}>
+                                        <div className="mt-3 flex justify-end">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteRecipe(recipe);
+                                                }}
+                                            >
                                                 <Trash2 className="size-4 text-destructive" />
                                             </Button>
                                         </div>
