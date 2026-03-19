@@ -1,4 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Bell, Mail } from 'lucide-react';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
@@ -34,50 +37,74 @@ export default function NotificationSettings({ preferences }: Props) {
             <Head title="Notification Settings" />
             <AppLayout breadcrumbs={breadcrumbs}>
                 <SettingsLayout>
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <Stack component="form" onSubmit={handleSubmit} spacing={3}>
                         <HeadingSmall title="Notification preferences" description="Choose how you'd like to receive notifications." />
 
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between rounded-lg border p-4">
-                                <div className="flex items-center gap-3">
+                        <Stack spacing={2}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    borderRadius: '12px',
+                                    border: 1,
+                                    borderColor: 'divider',
+                                    p: 2,
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                     <Mail className="size-5 text-muted-foreground" />
-                                    <div>
+                                    <Box>
                                         <Label htmlFor="email-notifications" className="text-sm font-medium">
                                             Email notifications
                                         </Label>
-                                        <p className="text-xs text-muted-foreground">
+                                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
                                             Receive notifications via email when items are assigned or completed.
-                                        </p>
-                                    </div>
-                                </div>
+                                        </Typography>
+                                    </Box>
+                                </Box>
                                 <Switch id="email-notifications" checked={data.email} onCheckedChange={(checked) => setData('email', checked)} />
-                            </div>
+                            </Box>
                             <InputError message={errors.email} />
 
-                            <div className="flex items-center justify-between rounded-lg border p-4">
-                                <div className="flex items-center gap-3">
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    borderRadius: '12px',
+                                    border: 1,
+                                    borderColor: 'divider',
+                                    p: 2,
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                     <Bell className="size-5 text-muted-foreground" />
-                                    <div>
+                                    <Box>
                                         <Label htmlFor="push-notifications" className="text-sm font-medium">
                                             Push notifications
                                         </Label>
-                                        <p className="text-xs text-muted-foreground">
+                                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
                                             Receive push notifications on your devices when items are assigned or completed.
-                                        </p>
-                                    </div>
-                                </div>
+                                        </Typography>
+                                    </Box>
+                                </Box>
                                 <Switch id="push-notifications" checked={data.push} onCheckedChange={(checked) => setData('push', checked)} />
-                            </div>
+                            </Box>
                             <InputError message={errors.push} />
-                        </div>
+                        </Stack>
 
-                        <div className="flex items-center gap-4">
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Button type="submit" disabled={processing}>
                                 Save preferences
                             </Button>
-                            {recentlySuccessful && <p className="text-sm text-muted-foreground">Saved.</p>}
-                        </div>
-                    </form>
+                            {recentlySuccessful && (
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    Saved.
+                                </Typography>
+                            )}
+                        </Box>
+                    </Stack>
                 </SettingsLayout>
             </AppLayout>
         </>

@@ -1,4 +1,7 @@
 import { Head, router } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import HeadingSmall from '@/components/HeadingSmall';
@@ -80,11 +83,11 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
         setter: React.Dispatch<React.SetStateAction<Category[]>>;
     }) {
         return (
-            <div className="flex flex-col space-y-4">
+            <Stack spacing={2}>
                 <HeadingSmall title={title} description={description} />
-                <div className="space-y-2">
+                <Stack spacing={1}>
                     {categories.map((cat, i) => (
-                        <div key={i} className="flex items-center gap-2">
+                        <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Input
                                 value={cat.label}
                                 onChange={(e) => onLabelInput(setter, i, e.target.value, cat.value)}
@@ -100,13 +103,13 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
                             <Button variant="ghost" size="icon" onClick={() => removeCategory(setter, i)} title="Remove">
                                 <Trash2 className="size-4 text-destructive" />
                             </Button>
-                        </div>
+                        </Box>
                     ))}
-                </div>
+                </Stack>
                 <Button variant="outline" size="sm" className="w-fit" onClick={() => addCategory(setter)}>
                     <Plus className="mr-1 size-4" /> Add Category
                 </Button>
-            </div>
+            </Stack>
         );
     }
 
@@ -132,12 +135,16 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
                     categories={shoppingCategories}
                     setter={setShoppingCategories}
                 />
-                <div className="flex items-center gap-4">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Button onClick={save} disabled={saving}>
                         {saving ? 'Saving…' : 'Save Categories'}
                     </Button>
-                    {saved && <p className="text-sm text-neutral-600">Saved.</p>}
-                </div>
+                    {saved && (
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            Saved.
+                        </Typography>
+                    )}
+                </Box>
             </SettingsLayout>
         </AppLayout>
     );

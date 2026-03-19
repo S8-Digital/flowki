@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import Stack from '@mui/material/Stack';
 import AppearanceTabs from '@/components/AppearanceTabs';
 import HeadingSmall from '@/components/HeadingSmall';
 import AppLayout from '@/layouts/AppLayout';
@@ -13,10 +14,10 @@ export default function Appearance() {
         <AppLayout breadcrumbs={breadcrumbItems}>
             <Head title="Appearance settings" />
             <SettingsLayout>
-                <div className="space-y-6">
+                <Stack spacing={3}>
                     <HeadingSmall title="Appearance settings" description="Update your account's appearance settings" />
                     <AppearanceTabs />
-                </div>
+                </Stack>
             </SettingsLayout>
         </AppLayout>
     );
