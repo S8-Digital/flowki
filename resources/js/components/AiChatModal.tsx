@@ -221,23 +221,25 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
                                 {suggestions.map((suggestion) => (
-                                    <button
+                                    <Box
                                         key={suggestion}
-                                        style={{
-                                            borderRadius: 9999,
-                                            border: '1px solid var(--border)',
-                                            padding: '6px 12px',
+                                        component="button"
+                                        onClick={() => sendMessage(suggestion)}
+                                        sx={{
+                                            borderRadius: '9999px',
+                                            border: '1px solid',
+                                            borderColor: 'divider',
+                                            px: 1.5,
+                                            py: 0.75,
                                             fontSize: '0.875rem',
                                             cursor: 'pointer',
                                             background: 'none',
                                             transition: 'background-color 0.15s',
+                                            '&:hover': { bgcolor: 'action.hover' },
                                         }}
-                                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--accent)')}
-                                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                                        onClick={() => sendMessage(suggestion)}
                                     >
                                         {suggestion}
-                                    </button>
+                                    </Box>
                                 ))}
                             </Box>
                         </Box>

@@ -1,5 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import MuiButton from '@mui/material/Button';
+import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CalendarDays, CheckSquare, ChefHat, RotateCcw, ShoppingCart, Users } from 'lucide-react';
@@ -34,21 +36,24 @@ export default function Welcome() {
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '1.125rem', fontWeight: 700 }}>
-                        <Users className="size-5 text-primary" />
+                        <Users size={20} color="var(--mui-palette-primary-main)" />
                         Family Organizer
                     </Box>
                     <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <AppearanceToggle />
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                            <Link href={login()} className="text-sm text-muted-foreground transition hover:text-foreground">
+                            <MuiLink component={Link} href={login()} sx={{ fontSize: '0.875rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}>
                                 Log in
-                            </Link>
-                            <Link
+                            </MuiLink>
+                            <MuiButton
+                                component={Link}
                                 href={register()}
-                                className="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
+                                variant="contained"
+                                size="small"
+                                sx={{ textTransform: 'none', fontWeight: 500 }}
                             >
                                 Get Started
-                            </Link>
+                            </MuiButton>
                         </Box>
                     </Box>
                 </Box>
@@ -72,8 +77,7 @@ export default function Welcome() {
                             variant="h3"
                             sx={{ fontWeight: 700, letterSpacing: '-0.025em', fontSize: { xs: '2.25rem', sm: '3rem', lg: '3.75rem' } }}
                         >
-                            Organise your family,
-                            <br className="hidden sm:block" />
+                            Organise your family,{' '}
                             together.
                         </Typography>
                         <Typography sx={{ mx: 'auto', maxWidth: 600, fontSize: '1.125rem', color: 'text.secondary' }}>
@@ -82,15 +86,23 @@ export default function Welcome() {
                     </Stack>
 
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 1.5 }}>
-                        <Link
+                        <MuiButton
+                            component={Link}
                             href={register()}
-                            className="rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+                            variant="contained"
+                            sx={{ textTransform: 'none', fontWeight: 600, px: 3, py: 1.25 }}
                         >
                             Create your family
-                        </Link>
-                        <Link href={login()} className="rounded-md border px-6 py-2.5 text-sm font-semibold transition hover:bg-accent">
+                        </MuiButton>
+                        <MuiButton
+                            component={Link}
+                            href={login()}
+                            variant="outlined"
+                            color="inherit"
+                            sx={{ textTransform: 'none', fontWeight: 600, px: 3, py: 1.25 }}
+                        >
                             Sign in
-                        </Link>
+                        </MuiButton>
                     </Box>
 
                     <Box sx={{ mt: 4, display: 'grid', maxWidth: 840, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
@@ -110,7 +122,7 @@ export default function Welcome() {
                                     fontSize: '0.875rem',
                                 }}
                             >
-                                <feature.icon className="size-6 text-primary" />
+                                <feature.icon size={24} color="var(--mui-palette-primary-main)" />
                                 <Typography component="span" sx={{ fontWeight: 500 }}>
                                     {feature.name}
                                 </Typography>

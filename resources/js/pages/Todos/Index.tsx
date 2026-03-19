@@ -162,14 +162,14 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
                                 <Button size="sm">
-                                    <Plus className="mr-1 size-4" /> New Todo
+                                    <Plus size={16} style={{ marginRight: 4 }} /> New Todo
                                 </Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle>Create Todo</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={handleCreate} className="space-y-4">
+                                <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label htmlFor="title">Title</Label>
                                         <Input
@@ -269,7 +269,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Label htmlFor="create-reminder-enabled" className="cursor-pointer">
+                                            <Label htmlFor="create-reminder-enabled" style={{ cursor: 'pointer' }}>
                                                 Reminder
                                             </Label>
                                             <Switch
@@ -280,7 +280,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </Box>
                                         {createForm.data.reminder_enabled && (
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label className="text-xs text-muted-foreground">Send reminder</Label>
+                                                <Label sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>Send reminder</Label>
                                                 <Select
                                                     value={String(createForm.data.reminder_lead_time)}
                                                     onValueChange={(v) => createForm.setData('reminder_lead_time', Number(v))}
@@ -299,7 +299,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             </Box>
                                         )}
                                     </Box>
-                                    <Button type="submit" className="w-full" disabled={createForm.processing}>
+                                    <Button type="submit" sx={{ width: '100%' }} disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Todo'}
                                     </Button>
                                 </form>
@@ -342,7 +342,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                     aria-pressed={!hidden}
                                     title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
                                 >
-                                    {hidden ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
+                                    {hidden ? <EyeOff size={12} /> : <Eye size={12} />}
                                     {member.name}
                                 </Box>
                             );
@@ -375,7 +375,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                             aria-pressed={!hiddenMembers.has(UNASSIGNED_ID)}
                             title={hiddenMembers.has(UNASSIGNED_ID) ? 'Show Unassigned' : 'Hide Unassigned'}
                         >
-                            {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
+                            {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff size={12} /> : <Eye size={12} />}
                             Unassigned
                         </Box>
                     </Box>
@@ -505,9 +505,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     >
                                                         <Box sx={{ mt: 0.25, flexShrink: 0 }}>
                                                             {todo.status === 'completed' ? (
-                                                                <CheckCircle2 className="size-3.5 text-muted-foreground" />
+                                                                <CheckCircle2 size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
                                                             ) : (
-                                                                <Circle className="size-3.5 text-amber-500" />
+                                                                <Circle size={14} style={{ color: "#f59e0b" }} />
                                                             )}
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -558,8 +558,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                             </Box>
                                                         </Box>
                                                         <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                            <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(todo)}>
-                                                                <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(todo)}>
+                                                                <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path
                                                                         strokeLinecap="round"
                                                                         strokeLinejoin="round"
@@ -568,8 +568,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                                     />
                                                                 </svg>
                                                             </Button>
-                                                            <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteTodo(todo)}>
-                                                                <Trash2 className="size-3 text-destructive" />
+                                                            <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => deleteTodo(todo)}>
+                                                                <Trash2 size={12} style={{ color: "var(--mui-palette-error-main)" }} />
                                                             </Button>
                                                         </Box>
                                                     </Box>
@@ -644,9 +644,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             >
                                                 <Box sx={{ mt: 0.25, flexShrink: 0 }}>
                                                     {todo.status === 'completed' ? (
-                                                        <CheckCircle2 className="size-3.5 text-muted-foreground" />
+                                                        <CheckCircle2 size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
                                                     ) : (
-                                                        <Circle className="size-3.5 text-slate-400" />
+                                                        <Circle size={14} style={{ color: "#94a3b8" }} />
                                                     )}
                                                 </Box>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -696,8 +696,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     </Box>
                                                 </Box>
                                                 <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                    <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(todo)}>
-                                                        <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(todo)}>
+                                                        <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path
                                                                 strokeLinecap="round"
                                                                 strokeLinejoin="round"
@@ -706,8 +706,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                             />
                                                         </svg>
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteTodo(todo)}>
-                                                        <Trash2 className="size-3 text-destructive" />
+                                                    <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => deleteTodo(todo)}>
+                                                        <Trash2 size={12} style={{ color: "var(--mui-palette-error-main)" }} />
                                                     </Button>
                                                 </Box>
                                             </Box>
@@ -747,7 +747,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                             <DialogTitle>Edit Todo</DialogTitle>
                         </DialogHeader>
                         {editingTodo && (
-                            <form onSubmit={handleEdit} className="space-y-4">
+                            <form onSubmit={handleEdit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Title</Label>
                                     <Input value={editForm.data.title} onChange={(e) => editForm.setData('title', e.target.value)} required />
@@ -825,7 +825,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </SelectContent>
                                     </Select>
                                 </Box>
-                                <Button type="submit" className="w-full" disabled={editForm.processing}>
+                                <Button type="submit" sx={{ width: '100%' }} disabled={editForm.processing}>
                                     {editForm.processing ? 'Saving…' : 'Save Changes'}
                                 </Button>
                             </form>

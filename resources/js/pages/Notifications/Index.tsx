@@ -64,8 +64,8 @@ export default function NotificationsIndex({ notifications }: Props) {
                             Notifications
                         </Typography>
                         {hasUnread && (
-                            <Button variant="outline" size="sm" className="gap-2" onClick={markAllRead}>
-                                <CheckCheck className="size-4" />
+                            <Button variant="outline" size="sm" onClick={markAllRead} sx={{ display: 'flex', gap: 1 }}>
+                                <CheckCheck size={16} />
                                 Mark all read
                             </Button>
                         )}
@@ -73,13 +73,16 @@ export default function NotificationsIndex({ notifications }: Props) {
 
                     {notifications.data.length === 0 ? (
                         <Card>
-                            <CardContent className="py-12 text-center text-muted-foreground">You have no notifications.</CardContent>
+                            <CardContent sx={{ py: 6, textAlign: 'center', color: 'text.secondary' }}>You have no notifications.</CardContent>
                         </Card>
                     ) : (
                         <Stack spacing={1}>
                             {notifications.data.map((notification) => (
-                                <Card key={notification.id} className={!notification.read_at ? 'border-primary/30 bg-primary/5' : ''}>
-                                    <CardContent className="flex items-start justify-between gap-4 py-4">
+                                <Card
+                                    key={notification.id}
+                                    sx={!notification.read_at ? { borderColor: 'color-mix(in srgb, var(--mui-palette-primary-main) 30%, transparent)', bgcolor: 'color-mix(in srgb, var(--mui-palette-primary-main) 5%, transparent)' } : undefined}
+                                >
+                                    <CardContent sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 2, py: 2 }}>
                                         <Stack spacing={0.25}>
                                             <Typography
                                                 variant="body2"
@@ -99,21 +102,21 @@ export default function NotificationsIndex({ notifications }: Props) {
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="h-8 w-8"
+                                                    sx={{ width: 32, height: 32 }}
                                                     onClick={() => markRead(notification.id)}
                                                     aria-label="Mark as read"
                                                 >
-                                                    <CheckCheck className="size-4" />
+                                                    <CheckCheck size={16} />
                                                 </Button>
                                             )}
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                                sx={{ width: 32, height: 32, color: 'text.secondary', '&:hover': { color: 'error.main' } }}
                                                 onClick={() => deleteNotification(notification.id)}
                                                 aria-label="Delete notification"
                                             >
-                                                <Trash2 className="size-4" />
+                                                <Trash2 size={16} />
                                             </Button>
                                         </Box>
                                     </CardContent>

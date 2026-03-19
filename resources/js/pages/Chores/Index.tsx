@@ -167,14 +167,14 @@ export default function ChoresIndex({ chores, members }: Props) {
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
                                 <Button size="sm">
-                                    <Plus className="mr-1 size-4" /> New Chore
+                                    <Plus size={16} style={{ marginRight: 4 }} /> New Chore
                                 </Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle>Create Chore</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={handleCreate} className="space-y-4">
+                                <form onSubmit={handleCreate} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Title</Label>
                                         <Input
@@ -249,7 +249,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Label htmlFor="create-chore-reminder-enabled" className="cursor-pointer">
+                                            <Label htmlFor="create-chore-reminder-enabled" style={{ cursor: "pointer" }}>
                                                 Reminder
                                             </Label>
                                             <Switch
@@ -260,7 +260,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         </Box>
                                         {createForm.data.reminder_enabled && (
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label className="text-xs text-muted-foreground">Send reminder</Label>
+                                                <Label sx={{ fontSize: "0.75rem", color: "text.secondary" }}>Send reminder</Label>
                                                 <Select
                                                     value={String(createForm.data.reminder_lead_time)}
                                                     onValueChange={(v) => createForm.setData('reminder_lead_time', Number(v))}
@@ -279,7 +279,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             </Box>
                                         )}
                                     </Box>
-                                    <Button type="submit" className="w-full" disabled={createForm.processing}>
+                                    <Button type="submit" sx={{ width: "100%" }} disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Chore'}
                                     </Button>
                                 </form>
@@ -322,7 +322,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                     aria-pressed={!hidden}
                                     title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
                                 >
-                                    {hidden ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
+                                    {hidden ? <EyeOff size={12} /> : <Eye size={12} />}
                                     {member.name}
                                 </Box>
                             );
@@ -355,7 +355,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                             aria-pressed={!hiddenMembers.has(UNASSIGNED_ID)}
                             title={hiddenMembers.has(UNASSIGNED_ID) ? 'Show Unassigned' : 'Hide Unassigned'}
                         >
-                            {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
+                            {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff size={12} /> : <Eye size={12} />}
                             Unassigned
                         </Box>
                     </Box>
@@ -451,7 +451,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         }}
                                                     >
                                                         <Box sx={{ mt: 0.25, flexShrink: 0 }}>
-                                                            <RefreshCw className="size-3.5 text-emerald-500" />
+                                                            <RefreshCw size={14} style={{ color: "#10b981" }} />
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
                                                             <Typography
@@ -486,14 +486,14 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                             <Button
                                                                 variant="ghost"
                                                                 size="icon"
-                                                                className="size-6"
+                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
                                                                 onClick={() => markComplete(chore)}
                                                                 title="Mark complete"
                                                             >
-                                                                <CheckCircle className="size-5 text-green-500" />
+                                                                <CheckCircle size={20} style={{ color: "#22c55e" }} />
                                                             </Button>
-                                                            <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(chore)}>
-                                                                <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(chore)}>
+                                                                <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path
                                                                         strokeLinecap="round"
                                                                         strokeLinejoin="round"
@@ -502,8 +502,8 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                     />
                                                                 </svg>
                                                             </Button>
-                                                            <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteChore(chore)}>
-                                                                <Trash2 className="size-5 text-destructive" />
+                                                            <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => deleteChore(chore)}>
+                                                                <Trash2 size={20} style={{ color: "var(--mui-palette-error-main)" }} />
                                                             </Button>
                                                         </Box>
                                                     </Box>
@@ -571,7 +571,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 style={{ backgroundColor: '#94a3b815', border: '1px solid #94a3b8' }}
                                             >
                                                 <Box sx={{ mt: 0.25, flexShrink: 0 }}>
-                                                    <RefreshCw className="size-3.5 text-slate-400" />
+                                                    <RefreshCw size={14} style={{ color: "#94a3b8" }} />
                                                 </Box>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
                                                     <Typography
@@ -606,14 +606,14 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="size-6"
+                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
                                                         onClick={() => markComplete(chore)}
                                                         title="Mark complete"
                                                     >
-                                                        <CheckCircle className="size-3 text-green-500" />
+                                                        <CheckCircle size={12} style={{ color: "#22c55e" }} />
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(chore)}>
-                                                        <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(chore)}>
+                                                        <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path
                                                                 strokeLinecap="round"
                                                                 strokeLinejoin="round"
@@ -622,8 +622,8 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                             />
                                                         </svg>
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteChore(chore)}>
-                                                        <Trash2 className="size-3 text-destructive" />
+                                                    <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => deleteChore(chore)}>
+                                                        <Trash2 size={12} style={{ color: "var(--mui-palette-error-main)" }} />
                                                     </Button>
                                                 </Box>
                                             </Box>
@@ -663,7 +663,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                             <DialogTitle>Edit Chore</DialogTitle>
                         </DialogHeader>
                         {editingChore && (
-                            <form onSubmit={handleEdit} className="space-y-4">
+                            <form onSubmit={handleEdit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Title</Label>
                                     <Input value={editForm.data.title} onChange={(e) => editForm.setData('title', e.target.value)} required />
@@ -715,7 +715,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         ))}
                                     </Box>
                                 </Box>
-                                <Button type="submit" className="w-full" disabled={editForm.processing}>
+                                <Button type="submit" sx={{ width: "100%" }} disabled={editForm.processing}>
                                     {editForm.processing ? 'Saving…' : 'Save Changes'}
                                 </Button>
                             </form>

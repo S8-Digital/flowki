@@ -1,5 +1,7 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import { Link, usePage } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import MuiLink from '@mui/material/Link';
 import { BookOpen, Folder, LayoutGrid, Menu } from 'lucide-react';
 import AppLogo from '@/components/AppLogo';
 import AppLogoIcon from '@/components/AppLogoIcon';
@@ -50,101 +52,112 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
         return urlIsActive(url, page.url);
     }
 
-    function activeItemStyles(url: NonNullable<InertiaLinkProps['href']>) {
-        return isCurrentRoute(toUrl(url)) ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : '';
+    function activeItemSx(url: NonNullable<InertiaLinkProps['href']>) {
+        return isCurrentRoute(toUrl(url)) ? { color: 'text.primary', bgcolor: 'action.selected' } : {};
     }
 
     return (
-        <div>
-            <div className="border-b border-sidebar-border/80">
-                <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
+        <Box>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ mx: 'auto', display: 'flex', height: 64, alignItems: 'center', px: 2, maxWidth: { md: '7xl' } }}>
                     {/* Mobile Menu */}
-                    <div className="lg:hidden">
+                    <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button variant="ghost" size="icon" className="mr-2 h-9 w-9">
-                                    <Menu className="h-5 w-5" />
+                                <Button variant="ghost" size="icon" sx={{ mr: 1, width: 36, height: 36 }}>
+                                    <Menu size={20} />
                                 </Button>
                             </SheetTrigger>
-                            <SheetContent side="left" className="w-[300px] p-6">
-                                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                                <SheetHeader className="flex justify-start text-left">
-                                    <AppLogoIcon className="size-6 fill-current text-black dark:text-white" />
+                            <SheetContent side="left" sx={{ width: 300, p: 3 }}>
+                                <SheetTitle sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>Navigation Menu</SheetTitle>
+                                <SheetHeader sx={{ display: 'flex', justifyContent: 'flex-start', textAlign: 'left' }}>
+                                    <AppLogoIcon style={{ width: 24, height: 24 }} />
                                 </SheetHeader>
-                                <div className="flex h-full flex-1 flex-col justify-between space-y-4 py-6">
-                                    <nav className="-mx-3 space-y-1">
+                                <Box sx={{ display: 'flex', height: '100%', flex: 1, flexDirection: 'column', justifyContent: 'space-between', gap: 2, py: 3 }}>
+                                    <Box component="nav" sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mx: -1.5 }}>
                                         {mainNavItems.map((item) => (
-                                            <Link
+                                            <MuiLink
                                                 key={item.title}
+                                                component={Link}
                                                 href={item.href}
-                                                className={cn(
-                                                    'flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent',
-                                                    activeItemStyles(item.href),
-                                                )}
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 1.5,
+                                                    borderRadius: 1,
+                                                    px: 1.5,
+                                                    py: 1,
+                                                    fontSize: '0.875rem',
+                                                    fontWeight: 500,
+                                                    textDecoration: 'none',
+                                                    color: 'text.primary',
+                                                    '&:hover': { bgcolor: 'action.hover' },
+                                                    ...activeItemSx(item.href),
+                                                }}
                                             >
-                                                {item.icon && <item.icon className="h-5 w-5" />}
+                                                {item.icon && <item.icon size={20} />}
                                                 {item.title}
-                                            </Link>
+                                            </MuiLink>
                                         ))}
-                                    </nav>
-                                    <div className="flex flex-col space-y-4">
+                                    </Box>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                         {rightNavItems.map((item) => (
-                                            <a
+                                            <MuiLink
                                                 key={item.title}
                                                 href={toUrl(item.href)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center space-x-2 text-sm font-medium"
+                                                sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.875rem', fontWeight: 500, color: 'text.primary', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
                                             >
-                                                {item.icon && <item.icon className="h-5 w-5" />}
-                                                <span>{item.title}</span>
-                                            </a>
+                                                {item.icon && <item.icon size={20} />}
+                                                <Box component="span">{item.title}</Box>
+                                            </MuiLink>
                                         ))}
-                                    </div>
-                                </div>
+                                    </Box>
+                                </Box>
                             </SheetContent>
                         </Sheet>
-                    </div>
+                    </Box>
 
-                    <Link href={dashboard()} className="flex items-center gap-x-2">
+                    <MuiLink component={Link} href={dashboard()} sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none' }}>
                         <AppLogo />
-                    </Link>
+                    </MuiLink>
 
                     {/* Desktop Menu */}
-                    <div className="hidden h-full lg:flex lg:flex-1">
-                        <NavigationMenu className="ml-10 flex h-full items-stretch">
-                            <NavigationMenuList className="flex h-full items-stretch space-x-2">
+                    <Box sx={{ display: { xs: 'none', lg: 'flex' }, height: '100%', flex: 1 }}>
+                        <NavigationMenu sx={{ ml: 5, display: 'flex', height: '100%', alignItems: 'stretch' }}>
+                            <NavigationMenuList sx={{ display: 'flex', height: '100%', alignItems: 'stretch', gap: 1 }}>
                                 {mainNavItems.map((item, index) => (
-                                    <NavigationMenuItem key={index} className="relative flex h-full items-center">
+                                    <NavigationMenuItem key={index} sx={{ position: 'relative', display: 'flex', height: '100%', alignItems: 'center' }}>
                                         <Link
-                                            className={cn(navigationMenuTriggerStyle(), activeItemStyles(item.href), 'h-9 cursor-pointer px-3')}
+                                            className={cn(navigationMenuTriggerStyle(), 'h-9 cursor-pointer px-3')}
                                             href={item.href}
                                         >
-                                            {item.icon && <item.icon className="mr-2 h-4 w-4" />}
+                                            {item.icon && <item.icon size={16} style={{ marginRight: 8 }} />}
                                             {item.title}
                                         </Link>
                                         {isCurrentRoute(item.href) && (
-                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white" />
+                                            <Box sx={{ position: 'absolute', bottom: 0, left: 0, height: '2px', width: '100%', transform: 'translateY(1px)', bgcolor: 'text.primary' }} />
                                         )}
                                     </NavigationMenuItem>
                                 ))}
                             </NavigationMenuList>
                         </NavigationMenu>
-                    </div>
+                    </Box>
 
-                    <div className="ml-auto flex items-center space-x-2">
-                        <div className="relative flex items-center space-x-1">
+                    <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 0.5 }}>
                             <GlobalSearch />
 
-                            <div className="hidden space-x-1 lg:flex">
+                            <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 0.5 }}>
                                 {rightNavItems.map((item) => (
                                     <TooltipProvider key={item.title} delayDuration={0}>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
-                                                <Button variant="ghost" size="icon" asChild className="group h-9 w-9 cursor-pointer">
+                                                <Button variant="ghost" size="icon" asChild sx={{ width: 36, height: 36, cursor: 'pointer' }}>
                                                     <a href={toUrl(item.href)} target="_blank" rel="noopener noreferrer">
-                                                        <span className="sr-only">{item.title}</span>
-                                                        {item.icon && <item.icon className="size-5 opacity-80 group-hover:opacity-100" />}
+                                                        <Box component="span" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>{item.title}</Box>
+                                                        {item.icon && <item.icon size={20} style={{ opacity: 0.8 }} />}
                                                     </a>
                                                 </Button>
                                             </TooltipTrigger>
@@ -154,39 +167,40 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                         </Tooltip>
                                     </TooltipProvider>
                                 ))}
-                            </div>
-                        </div>
+                            </Box>
+                        </Box>
 
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
+                                    sx={{ position: 'relative', width: 40, borderRadius: '50%', p: 0.5 }}
+                                    aria-label="User menu"
                                 >
-                                    <Avatar className="size-8 overflow-hidden rounded-full">
+                                    <Avatar style={{ width: 32, height: 32, overflow: 'hidden', borderRadius: '50%' }}>
                                         {auth.user.avatar && <AvatarImage src={auth.user.avatar} alt={auth.user.name} />}
-                                        <AvatarFallback className="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white">
+                                        <AvatarFallback style={{ borderRadius: 8, fontWeight: 600 }}>
                                             {getInitials(auth.user?.name)}
                                         </AvatarFallback>
                                     </Avatar>
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56">
+                            <DropdownMenuContent align="end" style={{ width: 224 }}>
                                 <UserMenuContent user={auth.user} />
                             </DropdownMenuContent>
                         </DropdownMenu>
-                    </div>
-                </div>
-            </div>
+                    </Box>
+                </Box>
+            </Box>
 
             {breadcrumbs.length > 1 && (
-                <div className="flex w-full border-b border-sidebar-border/70">
-                    <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
+                <Box sx={{ display: 'flex', width: '100%', borderBottom: 1, borderColor: 'divider' }}>
+                    <Box sx={{ mx: 'auto', display: 'flex', height: 48, width: '100%', alignItems: 'center', justifyContent: 'flex-start', px: 2, color: 'text.secondary' }}>
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
-                    </div>
-                </div>
+                    </Box>
+                </Box>
             )}
-        </div>
+        </Box>
     );
 }

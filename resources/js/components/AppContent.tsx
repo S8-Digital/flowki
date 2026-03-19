@@ -1,11 +1,14 @@
+import type { SxProps, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+
 interface AppContentProps {
     variant?: 'header' | 'sidebar';
     className?: string;
+    sx?: SxProps<Theme>;
     children: React.ReactNode;
 }
 
-export default function AppContent({ variant = 'sidebar', className, children }: AppContentProps) {
+export default function AppContent({ variant = 'sidebar', className, sx, children }: AppContentProps) {
     if (variant === 'sidebar') {
         return (
             <Box
@@ -17,6 +20,7 @@ export default function AppContent({ variant = 'sidebar', className, children }:
                     flexDirection: 'column',
                     minWidth: 0,
                     minHeight: '100vh',
+                    ...sx,
                 }}
             >
                 {children}
@@ -38,6 +42,7 @@ export default function AppContent({ variant = 'sidebar', className, children }:
                 flexDirection: 'column',
                 gap: 2,
                 borderRadius: '0.75rem',
+                ...sx,
             }}
         >
             {children}

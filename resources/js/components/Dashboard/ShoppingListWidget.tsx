@@ -48,7 +48,6 @@ export default function ShoppingListWidget({ shoppingItems, listId }: ShoppingLi
                                 <Box
                                     component="li"
                                     key={item.id}
-                                    className="category-shopping-item"
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',

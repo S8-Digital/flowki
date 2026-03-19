@@ -14,7 +14,7 @@ export default function AppSidebarLayout({ children, breadcrumbs = [] }: Props) 
     return (
         <AppShell variant="sidebar">
             <AppSidebar />
-            <AppContent variant="sidebar" className="overflow-x-hidden">
+            <AppContent variant="sidebar" sx={{ overflowX: 'hidden' }}>
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 <NotificationPermissionBanner />
                 {children}

@@ -1,5 +1,8 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import MuiCheckbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChefHat, Clock, Heart, Star, Trash2, Users } from 'lucide-react';
@@ -75,7 +78,7 @@ export default function RecipesShow({ recipe }: Props) {
                                     bgcolor: 'action.hover',
                                 }}
                             >
-                                <ChefHat className="size-12 text-muted-foreground" />
+                                <ChefHat size={48} style={{ color: "var(--mui-palette-text-secondary)" }} />
                             </Box>
                         )}
                         <Box sx={{ p: 2.5 }}>
@@ -91,14 +94,14 @@ export default function RecipesShow({ recipe }: Props) {
                                     )}
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    {recipe.is_favorite && <Heart className="size-5 fill-red-500 text-red-500" />}
+                                    {recipe.is_favorite && <Heart size={20} style={{ fill: "#ef4444", color: "#ef4444" }} />}
                                     <Dialog open={editOpen} onOpenChange={setEditOpen}>
                                         <DialogTrigger asChild>
                                             <Button variant="outline" size="sm">
                                                 Edit
                                             </Button>
                                         </DialogTrigger>
-                                        <DialogContent className="max-h-[90vh] overflow-y-auto">
+                                        <DialogContent sx={{ maxHeight: "90vh", overflowY: "auto" }}>
                                             <DialogHeader>
                                                 <DialogTitle>Edit Recipe</DialogTitle>
                                             </DialogHeader>
@@ -132,12 +135,14 @@ export default function RecipesShow({ recipe }: Props) {
                                                 </Box>
                                                 <Box sx={{ display: 'grid', gap: 1 }}>
                                                     <Label>Instructions</Label>
-                                                    <textarea
+                                                    <TextField
                                                         value={data.instructions}
                                                         onChange={(e) => setData('instructions', e.target.value)}
+                                                        multiline
                                                         rows={5}
                                                         required
-                                                        className="w-full rounded-md border border-surface bg-transparent px-2.5 py-2 text-sm text-black shadow-sm ring ring-transparent transition-all duration-300 ease-in outline-none select-none placeholder:text-foreground/60 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white"
+                                                        size="small"
+                                                        fullWidth
                                                     />
                                                     <InputError message={errors.instructions} />
                                                 </Box>
@@ -152,42 +157,44 @@ export default function RecipesShow({ recipe }: Props) {
                                                             onChange={(e) => setData('rating', e.target.value)}
                                                         />
                                                     </Box>
-                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pt: 3 }}>
-                                                        <input
-                                                            id="is_favorite"
-                                                            type="checkbox"
-                                                            checked={data.is_favorite === '1'}
-                                                            onChange={(e) => setData('is_favorite', e.target.checked ? '1' : '')}
-                                                            className="rounded"
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <MuiCheckbox
+                                                                    checked={data.is_favorite === '1'}
+                                                                    onChange={(e) => setData('is_favorite', e.target.checked ? '1' : '')}
+                                                                    size="small"
+                                                                />
+                                                            }
+                                                            label="Favourite"
                                                         />
-                                                        <Label htmlFor="is_favorite">Favourite</Label>
                                                     </Box>
                                                 </Box>
-                                                <Button type="submit" className="w-full" disabled={processing}>
+                                                <Button type="submit" sx={{ width: "100%" }} disabled={processing}>
                                                     {processing ? 'Saving…' : 'Save Changes'}
                                                 </Button>
                                             </Stack>
                                         </DialogContent>
                                     </Dialog>
                                     <Button variant="ghost" size="icon" onClick={deleteRecipe}>
-                                        <Trash2 className="size-4 text-destructive" />
+                                        <Trash2 size={16} style={{ color: "var(--mui-palette-error-main)" }} />
                                     </Button>
                                 </Box>
                             </Box>
                             <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 2, fontSize: '0.875rem' }}>
                                 {recipe.servings && (
                                     <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                                        <Users className="size-4" /> {recipe.servings} servings
+                                        <Users size={16} /> {recipe.servings} servings
                                     </Box>
                                 )}
                                 {recipe.total_time_minutes > 0 && (
                                     <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                                        <Clock className="size-4" /> {recipe.total_time_minutes} min total
+                                        <Clock size={16} /> {recipe.total_time_minutes} min total
                                     </Box>
                                 )}
                                 {recipe.rating && (
                                     <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                                        <Star className="size-4 fill-yellow-400 text-yellow-400" /> {recipe.rating}/5
+                                        <Star size={16} style={{ fill: "#facc15", color: "#facc15" }} /> {recipe.rating}/5
                                     </Box>
                                 )}
                                 {recipe.category && (
@@ -243,7 +250,7 @@ export default function RecipesShow({ recipe }: Props) {
                                     No ingredients listed.
                                 </Typography>
                             )}
-                            <Link href={shoppingIndex().url} className="mt-4 block text-xs text-muted-foreground hover:underline">
+                            <Link href={shoppingIndex().url} style={{ display: "block", marginTop: 16, fontSize: "0.75rem", color: "var(--mui-palette-text-secondary)" }}>
                                 Add to shopping list →
                             </Link>
                         </Box>

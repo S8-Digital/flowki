@@ -1,6 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { ChefHat, Clock, Plus, Star, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -66,10 +67,10 @@ export default function RecipesIndex({ recipes }: Props) {
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
                                 <Button size="sm">
-                                    <Plus className="mr-1 size-4" /> New Recipe
+                                    <Plus size={16} style={{ marginRight: 4 }} /> New Recipe
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-h-[90vh] overflow-y-auto">
+                            <DialogContent sx={{ maxHeight: "90vh", overflowY: "auto" }}>
                                 <DialogHeader>
                                     <DialogTitle>Create Recipe</DialogTitle>
                                 </DialogHeader>
@@ -145,13 +146,15 @@ export default function RecipesIndex({ recipes }: Props) {
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Instructions</Label>
-                                        <textarea
+                                        <TextField
                                             value={data.instructions}
                                             onChange={(e) => setData('instructions', e.target.value)}
+                                            multiline
                                             rows={4}
                                             required
                                             placeholder="Step by step instructions…"
-                                            className="w-full rounded-md border border-surface bg-transparent px-2.5 py-2 text-sm text-black shadow-sm ring ring-transparent transition-all duration-300 ease-in outline-none select-none placeholder:text-foreground/60 hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white"
+                                            size="small"
+                                            fullWidth
                                         />
                                         <InputError message={errors.instructions} />
                                     </Box>
@@ -160,7 +163,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                         <Input type="file" accept="image/*" onChange={(e) => setData('photo', e.target.files?.[0] ?? null)} />
                                         <InputError message={errors.photo} />
                                     </Box>
-                                    <Button type="submit" className="w-full" disabled={processing}>
+                                    <Button type="submit" sx={{ width: "100%" }} disabled={processing}>
                                         {processing ? 'Creating…' : 'Create Recipe'}
                                     </Button>
                                 </Stack>
@@ -236,7 +239,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                                 bgcolor: 'action.hover',
                                             }}
                                         >
-                                            <ChefHat className="size-8 text-muted-foreground" />
+                                            <ChefHat size={32} style={{ color: "var(--mui-palette-text-secondary)" }} />
                                         </Box>
                                     )}
                                     <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', p: 2 }}>
@@ -269,12 +272,12 @@ export default function RecipesIndex({ recipes }: Props) {
                                         >
                                             {recipe.total_time_minutes > 0 && (
                                                 <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                    <Clock className="size-3" /> {recipe.total_time_minutes}m
+                                                    <Clock size={12} /> {recipe.total_time_minutes}m
                                                 </Box>
                                             )}
                                             {recipe.rating && (
                                                 <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                    <Star className="size-3 fill-yellow-400 text-yellow-400" /> {recipe.rating}/5
+                                                    <Star size={12} style={{ fill: "#facc15", color: "#facc15" }} /> {recipe.rating}/5
                                                 </Box>
                                             )}
                                         </Box>
@@ -287,7 +290,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                                     deleteRecipe(recipe);
                                                 }}
                                             >
-                                                <Trash2 className="size-4 text-destructive" />
+                                                <Trash2 size={16} style={{ color: "var(--mui-palette-error-main)" }} />
                                             </Button>
                                         </Box>
                                     </Box>
