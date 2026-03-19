@@ -1,4 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+
+import Typography from '@mui/material/Typography';
 import { CheckCircle2, Circle, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { destroy, store, update } from '@/actions/App/Http/Controllers/TodoController';
@@ -27,9 +30,6 @@ interface Props {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Todos', href: '/todos' }];
-function priorityColor(priority: string) {
-    return { low: 'text-green-600', medium: 'text-yellow-600', high: 'text-red-600' }[priority] ?? '';
-}
 
 function formatDateTime(value: string | null) {
     if (!value) {
@@ -153,10 +153,12 @@ export default function TodosIndex({ todos, members, categories }: Props) {
         <>
             <Head title="Todos" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-4 p-6">
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
                     {/* Header */}
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-semibold">Todos</h1>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            Todos
+                        </Typography>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
                                 <Button size="sm">
@@ -168,7 +170,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                     <DialogTitle>Create Todo</DialogTitle>
                                 </DialogHeader>
                                 <form onSubmit={handleCreate} className="space-y-4">
-                                    <div className="grid gap-2">
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label htmlFor="title">Title</Label>
                                         <Input
                                             id="title"
@@ -178,17 +180,17 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             required
                                         />
                                         <InputError message={createForm.errors.title} />
-                                    </div>
-                                    <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Description</Label>
                                         <Input
                                             value={createForm.data.description}
                                             onChange={(e) => createForm.setData('description', e.target.value)}
                                             placeholder="Optional details"
                                         />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Category</Label>
                                             <Select value={createForm.data.category} onValueChange={(v) => createForm.setData('category', v)}>
                                                 <SelectTrigger>
@@ -202,8 +204,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                        </div>
-                                        <div className="grid gap-2">
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Priority</Label>
                                             <Select value={createForm.data.priority} onValueChange={(v) => createForm.setData('priority', v)}>
                                                 <SelectTrigger>
@@ -215,10 +217,10 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     <SelectItem value="high">High</SelectItem>
                                                 </SelectContent>
                                             </Select>
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="grid gap-2">
+                                        </Box>
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Status</Label>
                                             <Select value={createForm.data.status} onValueChange={(v) => createForm.setData('status', v)}>
                                                 <SelectTrigger>
@@ -230,16 +232,16 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     <SelectItem value="completed">Completed</SelectItem>
                                                 </SelectContent>
                                             </Select>
-                                        </div>
-                                        <div className="grid gap-2">
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Due Date &amp; Time</Label>
                                             <DateTimeInput
                                                 value={createForm.data.due_date}
                                                 onChange={(e) => createForm.setData('due_date', e.target.value)}
                                             />
-                                        </div>
-                                    </div>
-                                    <div className="grid gap-2">
+                                        </Box>
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Assign To</Label>
                                         <Select value={createForm.data.assigned_to} onValueChange={(v) => createForm.setData('assigned_to', v)}>
                                             <SelectTrigger>
@@ -254,9 +256,19 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                    </div>
-                                    <div className="space-y-3 rounded-lg border p-3">
-                                        <div className="flex items-center justify-between">
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 1.5,
+                                            borderRadius: '12px',
+                                            border: 1,
+                                            borderColor: 'divider',
+                                            p: 1.5,
+                                        }}
+                                    >
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                             <Label htmlFor="create-reminder-enabled" className="cursor-pointer">
                                                 Reminder
                                             </Label>
@@ -265,9 +277,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 checked={createForm.data.reminder_enabled}
                                                 onCheckedChange={(v) => createForm.setData('reminder_enabled', v)}
                                             />
-                                        </div>
+                                        </Box>
                                         {createForm.data.reminder_enabled && (
-                                            <div className="grid gap-2">
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
                                                 <Label className="text-xs text-muted-foreground">Send reminder</Label>
                                                 <Select
                                                     value={String(createForm.data.reminder_lead_time)}
@@ -284,29 +296,44 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                         <SelectItem value="1440">1 day before</SelectItem>
                                                     </SelectContent>
                                                 </Select>
-                                            </div>
+                                            </Box>
                                         )}
-                                    </div>
+                                    </Box>
                                     <Button type="submit" className="w-full" disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Todo'}
                                     </Button>
                                 </form>
                             </DialogContent>
                         </Dialog>
-                    </div>
+                    </Box>
 
                     {/* Member toggles */}
-                    <div className="flex flex-wrap gap-1.5">
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
                         {members.map((member, idx) => {
                             const color = getMemberColor(member, idx);
                             const hidden = hiddenMembers.has(member.id);
 
                             return (
-                                <button
+                                <Box
+                                    component="button"
                                     key={member.id}
                                     type="button"
                                     onClick={() => toggleMember(member.id)}
-                                    className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-all ${hidden ? 'opacity-40' : ''}`}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 0.75,
+                                        borderRadius: '50px',
+                                        border: 1,
+                                        px: 1.25,
+                                        py: 0.5,
+                                        fontSize: '0.75rem',
+                                        fontWeight: 500,
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        opacity: hidden ? 0.4 : 1,
+                                        bgcolor: 'transparent',
+                                    }}
                                     style={{
                                         borderColor: color,
                                         color: hidden ? undefined : color,
@@ -317,14 +344,29 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                 >
                                     {hidden ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
                                     {member.name}
-                                </button>
+                                </Box>
                             );
                         })}
                         {/* Unassigned toggle */}
-                        <button
+                        <Box
+                            component="button"
                             type="button"
                             onClick={() => toggleMember(UNASSIGNED_ID)}
-                            className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-all ${hiddenMembers.has(UNASSIGNED_ID) ? 'opacity-40' : ''}`}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.75,
+                                borderRadius: '50px',
+                                border: 1,
+                                px: 1.25,
+                                py: 0.5,
+                                fontSize: '0.75rem',
+                                fontWeight: 500,
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                opacity: hiddenMembers.has(UNASSIGNED_ID) ? 0.4 : 1,
+                                bgcolor: 'transparent',
+                            }}
                             style={{
                                 borderColor: '#94a3b8',
                                 color: hiddenMembers.has(UNASSIGNED_ID) ? undefined : '#94a3b8',
@@ -335,23 +377,23 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                         >
                             {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
                             Unassigned
-                        </button>
-                    </div>
+                        </Box>
+                    </Box>
 
                     {/* Column view */}
                     {!todos || !columns ? (
-                        <div className="flex gap-3 overflow-x-auto pb-2">
+                        <Box sx={{ display: 'flex', gap: 1.5, overflowX: 'auto', pb: 1 }}>
                             {[...Array(3)].map((_, i) => (
-                                <div key={i} className="flex max-w-[320px] min-w-[240px] flex-1 flex-col gap-2">
+                                <Box key={i} sx={{ display: 'flex', maxWidth: 320, minWidth: 240, flex: 1, flexDirection: 'column', gap: 1 }}>
                                     <Skeleton className="h-20 w-full rounded-xl" />
                                     {[...Array(3)].map((_, j) => (
                                         <Skeleton key={j} className="h-14 w-full rounded-xl" />
                                     ))}
-                                </div>
+                                </Box>
                             ))}
-                        </div>
+                        </Box>
                     ) : (
-                        <div className="flex gap-3 overflow-x-auto pb-2">
+                        <Box sx={{ display: 'flex', gap: 1.5, overflowX: 'auto', pb: 1 }}>
                             {/* Member columns */}
                             {visibleAssigned.map(({ member, idx, todos: memberTodos, pending, done }) => {
                                 const color = getMemberColor(member, idx);
@@ -359,81 +401,163 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                 const completionPct = total > 0 ? Math.round((done / total) * 100) : 0;
 
                                 return (
-                                    <div
+                                    <Box
                                         key={member.id}
-                                        className="flex max-w-[320px] min-w-[240px] flex-1 flex-col overflow-hidden rounded-xl border"
+                                        sx={{
+                                            display: 'flex',
+                                            maxWidth: 320,
+                                            minWidth: 240,
+                                            flex: 1,
+                                            flexDirection: 'column',
+                                            overflow: 'hidden',
+                                            borderRadius: 3,
+                                            border: 1,
+                                            borderColor: 'divider',
+                                        }}
                                     >
                                         {/* Column header */}
-                                        <div
-                                            className="flex flex-col gap-1 p-3"
+                                        <Box
+                                            sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, p: 1.5 }}
                                             style={{ backgroundColor: `${color}22`, borderBottom: `3px solid ${color}` }}
                                         >
-                                            <div className="flex items-center gap-2">
-                                                <div
-                                                    className="flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        width: 32,
+                                                        height: 32,
+                                                        flexShrink: 0,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderRadius: '50%',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 700,
+                                                        color: 'white',
+                                                    }}
                                                     style={{ backgroundColor: color }}
                                                     aria-label={member.name}
                                                 >
                                                     {getInitials(member.name)}
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <p className="truncate text-sm font-semibold">{member.name}</p>
-                                                    <p className="text-xs text-muted-foreground">
+                                                </Box>
+                                                <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}
+                                                    >
+                                                        {member.name}
+                                                    </Typography>
+                                                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                                                         {pending} pending &middot; {done} done
-                                                    </p>
-                                                </div>
-                                            </div>
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
                                             {total > 0 && (
-                                                <div className="mt-1">
-                                                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                                <Box sx={{ mt: 0.5 }}>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            fontSize: '0.75rem',
+                                                            color: 'text.secondary',
+                                                        }}
+                                                    >
                                                         <span>{done} done</span>
                                                         <span>{completionPct}%</span>
-                                                    </div>
-                                                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                                                        <div
-                                                            className="h-full rounded-full transition-all duration-300"
+                                                    </Box>
+                                                    <Box
+                                                        sx={{
+                                                            mt: 0.5,
+                                                            height: 6,
+                                                            width: '100%',
+                                                            overflow: 'hidden',
+                                                            borderRadius: '50px',
+                                                            bgcolor: 'action.hover',
+                                                        }}
+                                                    >
+                                                        <Box
+                                                            sx={{ height: '100%', borderRadius: '50px', transition: 'all 0.3s' }}
                                                             style={{ width: `${completionPct}%`, backgroundColor: color }}
                                                         />
-                                                    </div>
-                                                </div>
+                                                    </Box>
+                                                </Box>
                                             )}
-                                        </div>
+                                        </Box>
 
                                         {/* Column items */}
-                                        <div className="flex-1 space-y-1.5 overflow-y-auto p-2">
+                                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
                                             {memberTodos.length === 0 ? (
-                                                <p className="py-6 text-center text-xs text-muted-foreground">No todos</p>
+                                                <Typography
+                                                    variant="caption"
+                                                    sx={{ py: 3, textAlign: 'center', color: 'text.secondary', display: 'block' }}
+                                                >
+                                                    No todos
+                                                </Typography>
                                             ) : (
                                                 memberTodos.map((todo) => (
-                                                    <div
+                                                    <Box
                                                         key={todo.id}
-                                                        className="flex items-start gap-2 rounded-lg p-2"
+                                                        sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, borderRadius: '8px', p: 1 }}
                                                         style={{
                                                             backgroundColor: todo.status === 'completed' ? '#9ca3af22' : `${color}15`,
                                                             borderLeft: `3px solid ${todo.status === 'completed' ? '#9ca3af' : color}`,
                                                         }}
                                                     >
-                                                        <div className="mt-0.5 shrink-0">
+                                                        <Box sx={{ mt: 0.25, flexShrink: 0 }}>
                                                             {todo.status === 'completed' ? (
                                                                 <CheckCircle2 className="size-3.5 text-muted-foreground" />
                                                             ) : (
                                                                 <Circle className="size-3.5 text-amber-500" />
                                                             )}
-                                                        </div>
-                                                        <div className="min-w-0 flex-1">
-                                                            <p
-                                                                className={`truncate text-xs font-medium ${todo.status === 'completed' ? 'text-muted-foreground line-through' : ''}`}
+                                                        </Box>
+                                                        <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                            <Typography
+                                                                variant="caption"
+                                                                sx={{
+                                                                    display: 'block',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    whiteSpace: 'nowrap',
+                                                                    fontWeight: 500,
+                                                                    ...(todo.status === 'completed'
+                                                                        ? { color: 'text.secondary', textDecoration: 'line-through' }
+                                                                        : {}),
+                                                                }}
                                                             >
                                                                 {todo.title}
-                                                            </p>
-                                                            <p className="mt-0.5 flex flex-wrap gap-1 text-xs text-muted-foreground">
-                                                                <span className={`font-medium capitalize ${priorityColor(todo.priority)}`}>
+                                                            </Typography>
+                                                            <Box
+                                                                sx={{
+                                                                    mt: 0.25,
+                                                                    display: 'flex',
+                                                                    flexWrap: 'wrap',
+                                                                    gap: 0.5,
+                                                                    fontSize: '0.75rem',
+                                                                    color: 'text.secondary',
+                                                                }}
+                                                            >
+                                                                <Typography
+                                                                    component="span"
+                                                                    variant="caption"
+                                                                    sx={{
+                                                                        fontWeight: 500,
+                                                                        textTransform: 'capitalize',
+                                                                        color:
+                                                                            (
+                                                                                {
+                                                                                    low: 'success.main',
+                                                                                    medium: 'warning.main',
+                                                                                    high: 'error.main',
+                                                                                } as Record<string, string>
+                                                                            )[todo.priority] ?? 'inherit',
+                                                                    }}
+                                                                >
                                                                     {todo.priority}
-                                                                </span>
+                                                                </Typography>
                                                                 {todo.due_date && <span>&middot; {formatDateTime(todo.due_date)}</span>}
-                                                            </p>
-                                                        </div>
-                                                        <div className="flex shrink-0 gap-0.5">
+                                                            </Box>
+                                                        </Box>
+                                                        <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
                                                             <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(todo)}>
                                                                 <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path
@@ -447,67 +571,131 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                             <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteTodo(todo)}>
                                                                 <Trash2 className="size-3 text-destructive" />
                                                             </Button>
-                                                        </div>
-                                                    </div>
+                                                        </Box>
+                                                    </Box>
                                                 ))
                                             )}
-                                        </div>
-                                    </div>
+                                        </Box>
+                                    </Box>
                                 );
                             })}
 
                             {/* Unassigned column */}
                             {unassignedVisible && columns.unassigned.length > 0 && (
-                                <div className="flex max-w-[320px] min-w-[240px] flex-1 flex-col overflow-hidden rounded-xl border">
-                                    <div
-                                        className="flex flex-col gap-1 p-3"
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        maxWidth: 320,
+                                        minWidth: 240,
+                                        flex: 1,
+                                        flexDirection: 'column',
+                                        overflow: 'hidden',
+                                        borderRadius: 3,
+                                        border: 1,
+                                        borderColor: 'divider',
+                                    }}
+                                >
+                                    <Box
+                                        sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, p: 1.5 }}
                                         style={{ backgroundColor: '#94a3b822', borderBottom: '3px solid #94a3b8' }}
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-400 text-xs font-bold text-white">
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    width: 32,
+                                                    height: 32,
+                                                    flexShrink: 0,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderRadius: '50%',
+                                                    bgcolor: '#94a3b8',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: 700,
+                                                    color: 'white',
+                                                }}
+                                            >
                                                 ?
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <p className="truncate text-sm font-semibold">Unassigned</p>
-                                                <p className="text-xs text-muted-foreground">
+                                            </Box>
+                                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}
+                                                >
+                                                    Unassigned
+                                                </Typography>
+                                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                                                     {columns.unassigned.filter((t) => t.status !== 'completed').length} pending &middot;{' '}
                                                     {columns.unassigned.filter((t) => t.status === 'completed').length} done
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
 
-                                    <div className="flex-1 space-y-1.5 overflow-y-auto p-2">
+                                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
                                         {columns.unassigned.map((todo) => (
-                                            <div
+                                            <Box
                                                 key={todo.id}
-                                                className="flex items-start gap-2 rounded-lg p-2"
+                                                sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, borderRadius: '8px', p: 1 }}
                                                 style={{
                                                     backgroundColor: todo.status === 'completed' ? '#9ca3af22' : '#94a3b815',
                                                     borderLeft: `3px solid ${todo.status === 'completed' ? '#9ca3af' : '#94a3b8'}`,
                                                 }}
                                             >
-                                                <div className="mt-0.5 shrink-0">
+                                                <Box sx={{ mt: 0.25, flexShrink: 0 }}>
                                                     {todo.status === 'completed' ? (
                                                         <CheckCircle2 className="size-3.5 text-muted-foreground" />
                                                     ) : (
                                                         <Circle className="size-3.5 text-slate-400" />
                                                     )}
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <p
-                                                        className={`truncate text-xs font-medium ${todo.status === 'completed' ? 'text-muted-foreground line-through' : ''}`}
+                                                </Box>
+                                                <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                    <Typography
+                                                        variant="caption"
+                                                        sx={{
+                                                            display: 'block',
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis',
+                                                            whiteSpace: 'nowrap',
+                                                            fontWeight: 500,
+                                                            ...(todo.status === 'completed'
+                                                                ? { color: 'text.secondary', textDecoration: 'line-through' }
+                                                                : {}),
+                                                        }}
                                                     >
                                                         {todo.title}
-                                                    </p>
-                                                    <p className="mt-0.5 flex flex-wrap gap-1 text-xs text-muted-foreground">
-                                                        <span className={`font-medium capitalize ${priorityColor(todo.priority)}`}>
+                                                    </Typography>
+                                                    <Box
+                                                        sx={{
+                                                            mt: 0.25,
+                                                            display: 'flex',
+                                                            flexWrap: 'wrap',
+                                                            gap: 0.5,
+                                                            fontSize: '0.75rem',
+                                                            color: 'text.secondary',
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            component="span"
+                                                            variant="caption"
+                                                            sx={{
+                                                                fontWeight: 500,
+                                                                textTransform: 'capitalize',
+                                                                color:
+                                                                    (
+                                                                        { low: 'success.main', medium: 'warning.main', high: 'error.main' } as Record<
+                                                                            string,
+                                                                            string
+                                                                        >
+                                                                    )[todo.priority] ?? 'inherit',
+                                                            }}
+                                                        >
                                                             {todo.priority}
-                                                        </span>
+                                                        </Typography>
                                                         {todo.due_date && <span>&middot; {formatDateTime(todo.due_date)}</span>}
-                                                    </p>
-                                                </div>
-                                                <div className="flex shrink-0 gap-0.5">
+                                                    </Box>
+                                                </Box>
+                                                <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
                                                     <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(todo)}>
                                                         <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path
@@ -521,24 +709,36 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteTodo(todo)}>
                                                         <Trash2 className="size-3 text-destructive" />
                                                     </Button>
-                                                </div>
-                                            </div>
+                                                </Box>
+                                            </Box>
                                         ))}
-                                    </div>
-                                </div>
+                                    </Box>
+                                </Box>
                             )}
 
                             {/* All hidden state */}
                             {visibleAssigned.length === 0 && (!unassignedVisible || columns.unassigned.length === 0) && (
-                                <div className="w-full rounded-xl border py-16 text-center text-sm text-muted-foreground">
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        borderRadius: 3,
+                                        border: 1,
+                                        borderColor: 'divider',
+                                        borderStyle: 'dashed',
+                                        py: 8,
+                                        textAlign: 'center',
+                                        fontSize: '0.875rem',
+                                        color: 'text.secondary',
+                                    }}
+                                >
                                     {todos.length === 0
                                         ? 'No todos yet. Create your first one!'
                                         : 'No members visible. Toggle members above to show their todos.'}
-                                </div>
+                                </Box>
                             )}
-                        </div>
+                        </Box>
                     )}
-                </div>
+                </Box>
 
                 {/* Edit dialog */}
                 <Dialog open={editOpen} onOpenChange={setEditOpen}>
@@ -548,17 +748,17 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                         </DialogHeader>
                         {editingTodo && (
                             <form onSubmit={handleEdit} className="space-y-4">
-                                <div className="grid gap-2">
+                                <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Title</Label>
                                     <Input value={editForm.data.title} onChange={(e) => editForm.setData('title', e.target.value)} required />
                                     <InputError message={editForm.errors.title} />
-                                </div>
-                                <div className="grid gap-2">
+                                </Box>
+                                <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Description</Label>
                                     <Input value={editForm.data.description} onChange={(e) => editForm.setData('description', e.target.value)} />
-                                </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="grid gap-2">
+                                </Box>
+                                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Category</Label>
                                         <Select value={editForm.data.category} onValueChange={(v) => editForm.setData('category', v)}>
                                             <SelectTrigger>
@@ -572,8 +772,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                    </div>
-                                    <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Priority</Label>
                                         <Select value={editForm.data.priority} onValueChange={(v) => editForm.setData('priority', v)}>
                                             <SelectTrigger>
@@ -585,10 +785,10 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 <SelectItem value="high">High</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="grid gap-2">
+                                    </Box>
+                                </Box>
+                                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Status</Label>
                                         <Select value={editForm.data.status} onValueChange={(v) => editForm.setData('status', v)}>
                                             <SelectTrigger>
@@ -600,16 +800,16 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 <SelectItem value="completed">Completed</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                    </div>
-                                    <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Due Date &amp; Time</Label>
                                         <DateTimeInput
                                             value={editForm.data.due_date}
                                             onChange={(e) => editForm.setData('due_date', e.target.value)}
                                         />
-                                    </div>
-                                </div>
-                                <div className="grid gap-2">
+                                    </Box>
+                                </Box>
+                                <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Assign To</Label>
                                     <Select value={editForm.data.assigned_to} onValueChange={(v) => editForm.setData('assigned_to', v)}>
                                         <SelectTrigger>
@@ -624,7 +824,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                </div>
+                                </Box>
                                 <Button type="submit" className="w-full" disabled={editForm.processing}>
                                     {editForm.processing ? 'Saving…' : 'Save Changes'}
                                 </Button>

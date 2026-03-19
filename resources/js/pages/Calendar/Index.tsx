@@ -6,8 +6,11 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+
+import Typography from '@mui/material/Typography';
 import { CalendarDays, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
@@ -330,11 +333,11 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         <>
             <Head title="Calendar" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-4 p-4">
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
                     <WeatherStrip />
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-semibold">Calendar</h1>
-                        <div className="flex items-center gap-2">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography sx={{ fontSize: '1.25rem', fontWeight: 600 }}>Calendar</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Select value={calendarView} onValueChange={(v) => switchView(v as CalendarViewType)}>
                                 <SelectTrigger aria-label="Calendar view">
                                     <SelectValue placeholder="View" />
@@ -359,8 +362,8 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             >
                                 <Plus className="mr-1 size-4" /> New Event
                             </Button>
-                        </div>
-                    </div>
+                        </Box>
+                    </Box>
 
                     {calendarView === 'family' ? (
                         <FamilyScheduleView
@@ -398,7 +401,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             />
                         </div>
                     )}
-                </div>
+                </Box>
 
                 {/* Create Event */}
                 <Dialog open={createOpen} onOpenChange={setCreateOpen}>
