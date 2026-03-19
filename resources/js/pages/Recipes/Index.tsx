@@ -277,7 +277,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                             )}
                                             {recipe.rating && (
                                                 <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                    <Star size={12} style={{ fill: "#facc15", color: "#facc15" }} /> {recipe.rating}/5
+                                                    <Star size={12} style={{ fill: "var(--mui-palette-warning-light)", color: "var(--mui-palette-warning-light)" }} /> {recipe.rating}/5
                                                 </Box>
                                             )}
                                         </Box>

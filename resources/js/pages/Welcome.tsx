@@ -77,8 +77,7 @@ export default function Welcome() {
                             variant="h3"
                             sx={{ fontWeight: 700, letterSpacing: '-0.025em', fontSize: { xs: '2.25rem', sm: '3rem', lg: '3.75rem' } }}
                         >
-                            Organise your family,{' '}
-                            together.
+                            Organise your family, together.
                         </Typography>
                         <Typography sx={{ mx: 'auto', maxWidth: 600, fontSize: '1.125rem', color: 'text.secondary' }}>
                             Shared todos, chores, calendar, shopping lists, and recipes — all in one place for the whole family.

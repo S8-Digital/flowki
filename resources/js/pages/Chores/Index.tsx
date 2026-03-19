@@ -451,7 +451,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         }}
                                                     >
                                                         <Box sx={{ mt: 0.25, flexShrink: 0 }}>
-                                                            <RefreshCw size={14} style={{ color: "#10b981" }} />
+                                                            <RefreshCw size={14} style={{ color: "var(--mui-palette-success-main)" }} />
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
                                                             <Typography
@@ -490,7 +490,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                 onClick={() => markComplete(chore)}
                                                                 title="Mark complete"
                                                             >
-                                                                <CheckCircle size={20} style={{ color: "#22c55e" }} />
+                                                                <CheckCircle size={20} style={{ color: "var(--mui-palette-success-main)" }} />
                                                             </Button>
                                                             <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(chore)}>
                                                                 <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -571,7 +571,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 style={{ backgroundColor: '#94a3b815', border: '1px solid #94a3b8' }}
                                             >
                                                 <Box sx={{ mt: 0.25, flexShrink: 0 }}>
-                                                    <RefreshCw size={14} style={{ color: "#94a3b8" }} />
+                                                    <RefreshCw size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
                                                 </Box>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
                                                     <Typography
@@ -610,7 +610,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         onClick={() => markComplete(chore)}
                                                         title="Mark complete"
                                                     >
-                                                        <CheckCircle size={12} style={{ color: "#22c55e" }} />
+                                                        <CheckCircle size={12} style={{ color: "var(--mui-palette-success-main)" }} />
                                                     </Button>
                                                     <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(chore)}>
                                                         <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -94,7 +94,7 @@ export default function RecipesShow({ recipe }: Props) {
                                     )}
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    {recipe.is_favorite && <Heart size={20} style={{ fill: "#ef4444", color: "#ef4444" }} />}
+                                    {recipe.is_favorite && <Heart size={20} style={{ fill: "var(--mui-palette-error-main)", color: "var(--mui-palette-error-main)" }} />}
                                     <Dialog open={editOpen} onOpenChange={setEditOpen}>
                                         <DialogTrigger asChild>
                                             <Button variant="outline" size="sm">
@@ -194,7 +194,7 @@ export default function RecipesShow({ recipe }: Props) {
                                 )}
                                 {recipe.rating && (
                                     <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                                        <Star size={16} style={{ fill: "#facc15", color: "#facc15" }} /> {recipe.rating}/5
+                                        <Star size={16} style={{ fill: "var(--mui-palette-warning-light)", color: "var(--mui-palette-warning-light)" }} /> {recipe.rating}/5
                                     </Box>
                                 )}
                                 {recipe.category && (

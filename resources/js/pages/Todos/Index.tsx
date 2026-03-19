@@ -507,7 +507,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                             {todo.status === 'completed' ? (
                                                                 <CheckCircle2 size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
                                                             ) : (
-                                                                <Circle size={14} style={{ color: "#f59e0b" }} />
+                                                                <Circle size={14} style={{ color: "var(--mui-palette-warning-main)" }} />
                                                             )}
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -646,7 +646,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     {todo.status === 'completed' ? (
                                                         <CheckCircle2 size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
                                                     ) : (
-                                                        <Circle size={14} style={{ color: "#94a3b8" }} />
+                                                        <Circle size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
                                                     )}
                                                 </Box>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>

@@ -48,6 +48,8 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<AppPageProps>();
     const auth = page.props.auth;
 
+    const srOnly = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' } as const;
+
     function isCurrentRoute(url: NonNullable<InertiaLinkProps['href']>) {
         return urlIsActive(url, page.url);
     }
@@ -69,7 +71,7 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="left" sx={{ width: 300, p: 3 }}>
-                                <SheetTitle sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>Navigation Menu</SheetTitle>
+                                <SheetTitle sx={srOnly}>Navigation Menu</SheetTitle>
                                 <SheetHeader sx={{ display: 'flex', justifyContent: 'flex-start', textAlign: 'left' }}>
                                     <AppLogoIcon style={{ width: 24, height: 24 }} />
                                 </SheetHeader>
@@ -156,7 +158,7 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             <TooltipTrigger asChild>
                                                 <Button variant="ghost" size="icon" asChild sx={{ width: 36, height: 36, cursor: 'pointer' }}>
                                                     <a href={toUrl(item.href)} target="_blank" rel="noopener noreferrer">
-                                                        <Box component="span" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>{item.title}</Box>
+                                                        <Box component="span" sx={srOnly}>{item.title}</Box>
                                                         {item.icon && <item.icon size={20} style={{ opacity: 0.8 }} />}
                                                     </a>
                                                 </Button>
