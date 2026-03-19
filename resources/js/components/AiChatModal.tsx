@@ -168,7 +168,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                         padding: '12px 16px',
                     }}
                 >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -187,7 +187,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                 </DialogHeader>
 
                 {/* Messages */}
-                <Box ref={messagesContainerRef} sx={{ flex: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <Box ref={messagesContainerRef} sx={{ flex: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {messages.length === 0 ? (
                         <Box
                             sx={{
@@ -196,7 +196,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                gap: '24px',
+                                gap: 3,
                                 textAlign: 'center',
                             }}
                         >
@@ -215,11 +215,11 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                             </Box>
                             <Box>
                                 <Typography sx={{ fontSize: '1.125rem', fontWeight: 600 }}>How can I help?</Typography>
-                                <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                                <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'text.secondary' }}>
                                     Ask me to create todos, schedule events, add chores, or manage your shopping list.
                                 </Typography>
                             </Box>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
                                 {suggestions.map((suggestion) => (
                                     <Box
                                         key={suggestion}
@@ -245,7 +245,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                         </Box>
                     ) : (
                         messages.map((msg, i) => (
-                            <Box key={i} sx={{ display: 'flex', gap: '12px', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                            <Box key={i} sx={{ display: 'flex', gap: 1.5, justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                 {msg.role === 'assistant' && (
                                     <Box
                                         sx={{
@@ -278,11 +278,11 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                                     {msg.isStreaming && !msg.content ? (
                                         <Box
                                             component="span"
-                                            sx={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--muted-foreground)' }}
+                                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}
                                         >
-                                            <span style={{ animation: 'bounce 1s infinite' }}>●</span>
-                                            <span style={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>●</span>
-                                            <span style={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>●</span>
+                                            <Box component="span" sx={{ animation: 'bounce 1s infinite' }}>●</Box>
+                                            <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>●</Box>
+                                            <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>●</Box>
                                         </Box>
                                     ) : (
                                         <Box component="span" sx={{ whiteSpace: 'pre-wrap' }}>
@@ -314,7 +314,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
 
                 {/* Input */}
                 <Box sx={{ borderTop: '1px solid', borderColor: 'var(--border)', p: 1.5 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
                         <Box sx={{ flex: 1 }}>
                             <Input
                                 value={input}
@@ -329,7 +329,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                             <Send style={{ width: 16, height: 16 }} />
                         </Button>
                     </Box>
-                    <Typography sx={{ mt: 0.75, textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                    <Typography sx={{ mt: 0.75, textAlign: 'center', fontSize: '0.75rem', color: 'text.secondary' }}>
                         AI can make mistakes. Verify important information.
                     </Typography>
                 </Box>

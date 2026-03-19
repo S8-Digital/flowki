@@ -1,23 +1,10 @@
+import Box from '@mui/material/Box';
 import MuiTooltip from '@mui/material/Tooltip';
 import * as React from 'react';
 import { Slot } from '@/lib/slot';
 
 function TooltipProvider({ children }: { children?: React.ReactNode; delayDuration?: number }) {
     return <>{children}</>;
-}
-
-function extractTooltipContent(children: React.ReactNode): React.ReactNode {
-    let content: React.ReactNode = null;
-    let trigger: React.ReactNode = null;
-    React.Children.forEach(children, (child) => {
-        if (!React.isValidElement(child)) return;
-        if ((child.type as any).displayName === 'TooltipContent') {
-            content = (child.props as any).children ?? null;
-        } else {
-            trigger = child;
-        }
-    });
-    return { content, trigger } as any;
 }
 
 function Tooltip({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) {
@@ -36,7 +23,7 @@ function Tooltip({ children, ...props }: { children?: React.ReactNode; [key: str
 
     return (
         <MuiTooltip title={tooltipTitle} {...props}>
-            <span style={{ display: 'contents' }}>{triggerNode}</span>
+            <Box component="span" sx={{ display: 'contents' }}>{triggerNode}</Box>
         </MuiTooltip>
     );
 }
@@ -45,7 +32,7 @@ function TooltipTrigger({ asChild, children, ...props }: { asChild?: boolean; ch
     if (asChild) {
         return <Slot {...props}>{children}</Slot>;
     }
-    return <span {...props}>{children}</span>;
+    return <Box component="span" {...(props as any)}>{children}</Box>;
 }
 
 function TooltipContent({

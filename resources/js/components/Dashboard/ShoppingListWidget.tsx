@@ -36,7 +36,7 @@ export default function ShoppingListWidget({ shoppingItems, listId }: ShoppingLi
     const list = resolvedList();
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {list ? (
                 <>
                     <Typography sx={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>{list.name}</Typography>
@@ -51,7 +51,7 @@ export default function ShoppingListWidget({ shoppingItems, listId }: ShoppingLi
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '8px',
+                                        gap: 1,
                                         overflow: 'hidden',
                                         borderRadius: 1,
                                         px: 1,

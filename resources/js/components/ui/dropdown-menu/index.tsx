@@ -1,5 +1,8 @@
+import Box from '@mui/material/Box';
+import MuiDivider from '@mui/material/Divider';
 import MuiMenu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { Slot } from '@/lib/slot';
 import { cn } from '@/lib/utils';
@@ -18,9 +21,9 @@ function DropdownMenu({ children, ...props }: { children?: React.ReactNode; [key
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     return (
         <DropdownMenuContext.Provider value={{ anchorEl, setAnchorEl }}>
-            <div style={{ position: 'relative', display: 'inline-block' }} {...props}>
+            <Box sx={{ position: 'relative', display: 'inline-block' }} {...(props as any)}>
                 {children}
-            </div>
+            </Box>
         </DropdownMenuContext.Provider>
     );
 }
@@ -49,9 +52,9 @@ function DropdownMenuTrigger({
         );
     }
     return (
-        <button type="button" onClick={handleClick} {...props}>
+        <Box component="button" type="button" onClick={handleClick as any} {...(props as any)}>
             {children}
-        </button>
+        </Box>
     );
 }
 
@@ -99,24 +102,32 @@ function DropdownMenuItem({
 
 function DropdownMenuLabel({ className, inset, ...props }: React.HTMLAttributes<HTMLDivElement> & { inset?: boolean }) {
     return (
-        <div
+        <Box
             className={cn(inset && 'pl-8', className)}
-            style={{ padding: '6px 8px', fontSize: '0.875rem', fontWeight: 600 }}
-            {...props}
+            sx={{ py: 0.75, px: 1, fontSize: '0.875rem', fontWeight: 600 }}
+            {...(props as any)}
         />
     );
 }
 
 function DropdownMenuSeparator({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} style={{ margin: '4px 0', height: 1, backgroundColor: 'var(--border)' }} {...props} />;
+    return <MuiDivider className={cn(className)} sx={{ my: 0.5 }} {...(props as any)} />;
 }
 
 function DropdownMenuGroup({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div {...props}>{children}</div>;
+    return <Box {...(props as any)}>{children}</Box>;
 }
 
 function DropdownMenuShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
-    return <span className={cn(className)} style={{ marginLeft: 'auto', fontSize: '0.75rem', letterSpacing: '0.1em', opacity: 0.6 }} {...props} />;
+    return (
+        <Typography
+            component="span"
+            variant="caption"
+            className={cn(className)}
+            sx={{ ml: 'auto', letterSpacing: '0.1em', opacity: 0.6 }}
+            {...(props as any)}
+        />
+    );
 }
 
 function DropdownMenuSub({ children }: { children?: React.ReactNode }) {
@@ -130,20 +141,41 @@ function DropdownMenuSubTrigger({
     ...props
 }: React.HTMLAttributes<HTMLDivElement> & { inset?: boolean }) {
     return (
-        <div
-            className={cn('flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm', inset && 'pl-8', className)}
-            {...props}
+        <Box
+            className={cn(inset && 'pl-8', className)}
+            sx={{
+                display: 'flex',
+                cursor: 'default',
+                userSelect: 'none',
+                alignItems: 'center',
+                borderRadius: 1,
+                px: 1,
+                py: 0.5,
+                fontSize: '0.875rem',
+            }}
+            {...(props as any)}
         >
             {children}
-        </div>
+        </Box>
     );
 }
 
 function DropdownMenuSubContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <div
-            className={cn('z-50 min-w-32 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg', className)}
-            {...props}
+        <Box
+            className={cn(className)}
+            sx={{
+                zIndex: 50,
+                minWidth: 128,
+                overflow: 'hidden',
+                borderRadius: 2,
+                border: 1,
+                borderColor: 'divider',
+                bgcolor: 'background.paper',
+                p: 0.5,
+                boxShadow: 4,
+            }}
+            {...(props as any)}
         />
     );
 }

@@ -27,22 +27,21 @@ export default function WeatherWidget() {
     }
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* Current conditions */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <img
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box
+                    component="img"
                     src={weatherIconUrl(data.current.icon)}
                     alt={data.current.description}
-                    width={64}
-                    height={64}
-                    style={{ marginTop: -8, marginBottom: -8, marginLeft: -8 }}
+                    sx={{ width: 64, height: 64, mt: -1, mb: -1, ml: -1 }}
                 />
                 <Box>
                     <Typography sx={{ fontSize: '1.875rem', lineHeight: 1, fontWeight: 600 }}>{data.current.temp}°C</Typography>
-                    <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'var(--muted-foreground)', textTransform: 'capitalize' }}>
+                    <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'text.secondary', textTransform: 'capitalize' }}>
                         {data.current.description}
                     </Typography>
-                    <Typography sx={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
                         Feels {data.current.feels_like}°C · Humidity {data.current.humidity}% · Wind {data.current.wind_speed} m/s
                     </Typography>
                 </Box>
@@ -50,7 +49,7 @@ export default function WeatherWidget() {
 
             {/* Location */}
             <Typography
-                sx={{ fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.05em', color: 'var(--muted-foreground)', textTransform: 'uppercase' }}
+                sx={{ fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.05em', color: 'text.secondary', textTransform: 'uppercase' }}
             >
                 {data.location}
             </Typography>
@@ -62,9 +61,9 @@ export default function WeatherWidget() {
                     sx={{
                         display: 'grid',
                         gridTemplateColumns: 'repeat(5, 1fr)',
-                        gap: '4px',
+                        gap: 0.5,
                         borderTop: '1px solid',
-                        borderColor: 'var(--border)',
+                        borderColor: 'divider',
                         pt: 1.5,
                         m: 0,
                         pl: 0,
@@ -75,17 +74,17 @@ export default function WeatherWidget() {
                         <Box
                             component="li"
                             key={day.date}
-                            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', textAlign: 'center' }}
+                            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, textAlign: 'center' }}
                         >
-                            <Typography component="span" sx={{ fontSize: '0.625rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>
+                            <Typography component="span" sx={{ fontSize: '0.625rem', fontWeight: 500, color: 'text.secondary' }}>
                                 {formatDay(day.date)}
                             </Typography>
-                            <img src={weatherIconUrl(day.icon)} alt={day.description} width={32} height={32} />
+                            <Box component="img" src={weatherIconUrl(day.icon)} alt={day.description} sx={{ width: 32, height: 32 }} />
                             <Typography component="span" sx={{ fontSize: '0.75rem' }}>
                                 <Typography component="span" sx={{ fontWeight: 500 }}>
                                     {day.temp_max}°
                                 </Typography>
-                                <Typography component="span" sx={{ color: 'var(--muted-foreground)' }}>
+                                <Typography component="span" sx={{ color: 'text.secondary' }}>
                                     {' '}
                                     / {day.temp_min}°
                                 </Typography>

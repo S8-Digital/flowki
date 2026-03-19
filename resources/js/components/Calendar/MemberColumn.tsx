@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import { CheckCircle2, Circle, Clock, RefreshCw } from 'lucide-react';
 import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo } from '@/types';
@@ -33,6 +34,18 @@ function formatTime(value: string): string {
     return new Date(value).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
 }
 
+/** Shared sx styles for clickable item cards inside a member column */
+const itemCardSx = {
+    width: '100%',
+    borderRadius: 2,
+    p: 1,
+    textAlign: 'left',
+    fontSize: '0.75rem',
+    cursor: 'pointer',
+    transition: 'opacity 0.15s',
+    '&:hover': { opacity: 0.8 },
+} as const;
+
 export default function MemberColumn({ column, onEventClick, onTodoClick, onChoreClick }: Props) {
     const { user, events, allDayEvents, todos, chores, totalItems, completedItems, completionPct, colorIndex } = column;
     const color = getMemberColor(user, colorIndex);
@@ -48,16 +61,16 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                 flexDirection: 'column',
                 overflow: 'hidden',
                 borderRadius: 3,
-                border: '1px solid',
-                borderColor: 'var(--border)',
+                border: 1,
+                borderColor: 'divider',
             }}
         >
             {/* Header */}
             <Box
-                sx={{ display: 'flex', flexDirection: 'column', gap: '4px', p: 1.5 }}
+                sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, p: 1.5 }}
                 style={{ backgroundColor: `${color}22`, borderBottom: `3px solid ${color}` }}
             >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Box
                         sx={{
                             display: 'flex',
@@ -66,7 +79,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                             flexShrink: 0,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            borderRadius: '--var(--radius-xl)',
+                            borderRadius: '50%',
                             fontSize: '0.75rem',
                             fontWeight: 700,
                             color: '#fff',
@@ -82,7 +95,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                         >
                             {user.name}
                         </Typography>
-                        <Typography sx={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                        <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
                             {totalItems} item{totalItems !== 1 ? 's' : ''}
                         </Typography>
                     </Box>
@@ -95,13 +108,13 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
                                 fontSize: '0.75rem',
-                                color: 'var(--muted-foreground)',
+                                color: 'text.secondary',
                             }}
                         >
-                            <span>{completedItems} done</span>
-                            <span>{completionPct}%</span>
+                            <Box component="span">{completedItems} done</Box>
+                            <Box component="span">{completionPct}%</Box>
                         </Box>
-                        <Box sx={{ mt: 0.5, height: 6, width: '100%', overflow: 'hidden', borderRadius: '9999px', bgcolor: 'var(--muted)' }}>
+                        <Box sx={{ mt: 0.5, height: 6, width: '100%', overflow: 'hidden', borderRadius: '9999px', bgcolor: 'action.selected' }}>
                             <Box
                                 sx={{ height: '100%', borderRadius: '9999px', transition: 'all 0.3s' }}
                                 style={{ width: `${completionPct}%`, backgroundColor: color }}
@@ -112,41 +125,31 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
             </Box>
 
             {/* Items */}
-            <Box sx={{ flex: 1, overflowY: 'auto', p: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <Box sx={{ flex: 1, overflowY: 'auto', p: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                 {isEmpty && (
-                    <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                    <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.75rem', color: 'text.secondary' }}>
                         Nothing scheduled
                     </Typography>
                 )}
 
                 {/* Timed events */}
                 {events.map((event) => (
-                    <button
+                    <ButtonBase
                         key={`event-${event.id}`}
-                        type="button"
                         onClick={() => onEventClick?.(event)}
-                        style={{
-                            width: '100%',
-                            borderRadius: 8,
-                            padding: 8,
-                            textAlign: 'left',
-                            fontSize: '0.75rem',
-                            cursor: 'pointer',
-                            border: 'none',
-                            transition: 'opacity 0.15s',
+                        sx={{
+                            ...itemCardSx,
                             backgroundColor: `${event.color ?? color}22`,
                             borderLeft: `3px solid ${event.color ?? color}`,
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                     >
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                             <Clock style={{ width: 12, height: 12, flexShrink: 0, color: event.color ?? color }} />
                             <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
                                 {event.title}
                             </Box>
                         </Box>
-                        <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>
+                        <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>
                             {formatTime(event.start_at)}
                             {event.end_at ? ` – ${formatTime(event.end_at)}` : ''}
                         </Typography>
@@ -157,134 +160,103 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap',
-                                    color: 'var(--muted-foreground)',
+                                    color: 'text.secondary',
                                     fontSize: '0.75rem',
                                 }}
                             >
                                 {event.location}
                             </Typography>
                         )}
-                    </button>
+                    </ButtonBase>
                 ))}
 
                 {/* All-day events */}
                 {allDayEvents.map((event) => (
-                    <button
+                    <ButtonBase
                         key={`allday-${event.id}`}
-                        type="button"
                         onClick={() => onEventClick?.(event)}
-                        style={{
-                            width: '100%',
-                            borderRadius: 8,
-                            padding: 8,
-                            textAlign: 'left',
-                            fontSize: '0.75rem',
-                            cursor: 'pointer',
-                            border: 'none',
-                            transition: 'opacity 0.15s',
+                        sx={{
+                            ...itemCardSx,
                             backgroundColor: `${event.color ?? color}22`,
                             borderLeft: `3px solid ${event.color ?? color}`,
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                     >
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
-                                {event.title}
-                            </Box>
+                        <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
+                            {event.title}
                         </Box>
-                        <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>All day</Typography>
-                    </button>
+                        <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>All day</Typography>
+                    </ButtonBase>
                 ))}
 
                 {/* Todos */}
                 {todos.map((todo) => (
-                    <button
+                    <ButtonBase
                         key={`todo-${todo.id}`}
-                        type="button"
                         onClick={() => onTodoClick?.(todo)}
-                        style={{
-                            width: '100%',
-                            borderRadius: 8,
-                            padding: 8,
-                            textAlign: 'left',
-                            fontSize: '0.75rem',
-                            cursor: 'pointer',
-                            border: 'none',
-                            transition: 'opacity 0.15s',
-                            backgroundColor: todo.status === 'completed' ? '#9ca3af22' : '#f59e0b22',
-                            borderLeft: `3px solid ${todo.status === 'completed' ? '#9ca3af' : '#f59e0b'}`,
+                        sx={{
+                            ...itemCardSx,
+                            backgroundColor: todo.status === 'completed' ? 'action.disabledBackground' : 'var(--mui-palette-warning-main)22',
+                            borderLeft: `3px solid ${todo.status === 'completed' ? 'var(--mui-palette-action-disabled)' : 'var(--mui-palette-warning-main)'}`,
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                     >
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                             {todo.status === 'completed' ? (
-                                <CheckCircle2 style={{ width: 12, height: 12, flexShrink: 0, color: 'var(--muted-foreground)' }} />
+                                <CheckCircle2 style={{ width: 12, height: 12, flexShrink: 0, color: 'var(--mui-palette-text-secondary)' }} />
                             ) : (
-                                <Circle style={{ width: 12, height: 12, flexShrink: 0, color: '#f59e0b' }} />
+                                <Circle style={{ width: 12, height: 12, flexShrink: 0, color: 'var(--mui-palette-warning-main)' }} />
                             )}
                             <Box
                                 component="span"
-                                className={todo.status === 'completed' ? 'line-through' : undefined}
                                 sx={{
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap',
                                     fontWeight: 500,
-                                    ...(todo.status === 'completed' ? { color: 'var(--muted-foreground)' } : {}),
+                                    ...(todo.status === 'completed'
+                                        ? { color: 'text.secondary', textDecoration: 'line-through' }
+                                        : {}),
                                 }}
                             >
                                 {todo.title}
                             </Box>
                         </Box>
                         {todo.due_date && (
-                            <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>
+                            <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>
                                 {formatTime(todo.due_date)}
                             </Typography>
                         )}
-                        <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem', textTransform: 'capitalize' }}>
+                        <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'capitalize' }}>
                             {todo.priority} priority
                         </Typography>
-                    </button>
+                    </ButtonBase>
                 ))}
 
                 {/* Chores */}
                 {chores.map((chore) => (
-                    <button
+                    <ButtonBase
                         key={`chore-${chore.id}`}
-                        type="button"
                         onClick={() => onChoreClick?.(chore)}
-                        style={{
-                            width: '100%',
-                            borderRadius: 8,
-                            padding: 8,
-                            textAlign: 'left',
-                            fontSize: '0.75rem',
-                            cursor: 'pointer',
-                            border: 'none',
-                            transition: 'opacity 0.15s',
-                            backgroundColor: '#10b98122',
-                            borderLeft: '3px solid #10b981',
+                        sx={{
+                            ...itemCardSx,
+                            backgroundColor: 'var(--mui-palette-success-main)22',
+                            borderLeft: '3px solid var(--mui-palette-success-main)',
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                     >
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <RefreshCw style={{ width: 12, height: 12, flexShrink: 0, color: '#10b981' }} />
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <RefreshCw style={{ width: 12, height: 12, flexShrink: 0, color: 'var(--mui-palette-success-main)' }} />
                             <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
                                 {chore.title}
                             </Box>
                         </Box>
                         {chore.next_due_date && (
-                            <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>
+                            <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>
                                 {formatTime(chore.next_due_date)}
                             </Typography>
                         )}
-                        <Typography sx={{ mt: 0.25, color: 'var(--muted-foreground)', fontSize: '0.75rem', textTransform: 'capitalize' }}>
+                        <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'capitalize' }}>
                             {chore.frequency}
                         </Typography>
-                    </button>
+                    </ButtonBase>
                 ))}
             </Box>
         </Box>

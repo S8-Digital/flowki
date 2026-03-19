@@ -3,16 +3,28 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ className, type, ...props }, ref) => {
-    if (type === 'file' || type === 'date' || type === 'datetime-local' || type === 'color') {
+    if (type === 'file') {
+        // File inputs require a native element for the browser's file picker UI.
+        // MUI OutlinedInput does not expose the native file picker affordance.
         return (
             <input
                 ref={ref}
-                type={type}
-                className={cn(
-                    'w-full rounded-md border border-[var(--border)] bg-transparent px-2.5 py-2 text-sm shadow-sm outline-none transition-all hover:border-[var(--primary)] focus:border-[var(--primary)] disabled:pointer-events-none disabled:opacity-50',
-                    type === 'file' && 'cursor-pointer file:cursor-pointer file:border-0 file:bg-transparent file:text-sm file:font-medium',
-                    className,
-                )}
+                type="file"
+                className={cn(className)}
+                style={{
+                    width: '100%',
+                    cursor: 'pointer',
+                    borderRadius: 6,
+                    border: '1px solid',
+                    borderColor: 'var(--border)',
+                    backgroundColor: 'transparent',
+                    padding: '8px 10px',
+                    fontSize: '0.875rem',
+                    outline: 'none',
+                    transition: 'border-color 0.2s',
+                    opacity: (props as any).disabled ? 0.5 : 1,
+                    pointerEvents: (props as any).disabled ? 'none' : undefined,
+                }}
                 {...props}
             />
         );

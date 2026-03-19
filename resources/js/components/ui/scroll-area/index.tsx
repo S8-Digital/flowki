@@ -1,11 +1,11 @@
+import Box from '@mui/material/Box';
 import * as React from 'react';
-import { cn } from '@/lib/utils';
 
 const ScrollArea = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ className, children, ...props }, ref) => (
-        <div ref={ref} className={cn('relative overflow-auto', className)} {...props}>
+        <Box ref={ref} className={className} sx={{ position: 'relative', overflow: 'auto' }} {...(props as any)}>
             {children}
-        </div>
+        </Box>
     ),
 );
 ScrollArea.displayName = 'ScrollArea';

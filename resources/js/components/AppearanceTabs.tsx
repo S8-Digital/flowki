@@ -12,7 +12,7 @@ export default function AppearanceTabs() {
     const { appearance, updateAppearance } = useAppearance();
 
     return (
-        <Box sx={{ display: 'inline-flex', gap: '4px', borderRadius: 2, bgcolor: 'var(--muted)', p: '4px' }}>
+        <Box sx={{ display: 'inline-flex', gap: 0.5, borderRadius: 2, bgcolor: 'var(--muted)', p: '4px' }}>
             {tabs.map(({ value, Icon, label }) => (
                 <Box
                     key={value}

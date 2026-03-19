@@ -1,5 +1,7 @@
+import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
 import { Slot } from '@/lib/slot';
@@ -60,9 +62,9 @@ function SheetTrigger({
         );
     }
     return (
-        <button type="button" onClick={handleClick} {...props}>
+        <Box component="button" type="button" onClick={handleClick} {...(props as any)}>
             {children}
-        </button>
+        </Box>
     );
 }
 
@@ -90,14 +92,14 @@ function SheetClose({
         );
     }
     return (
-        <button type="button" onClick={handleClick} {...props}>
+        <Box component="button" type="button" onClick={handleClick} {...(props as any)}>
             {children}
-        </button>
+        </Box>
     );
 }
 
 function SheetOverlay({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} {...props} />;
+    return <Box className={cn(className)} {...(props as any)} />;
 }
 
 const ANCHOR_MAP: Record<string, 'left' | 'right' | 'top' | 'bottom'> = {
@@ -121,44 +123,77 @@ function SheetContent({
             onClose={() => ctx?.setOpen(false)}
             {...(props as any)}
         >
-            <div
+            <Box
                 className={cn(className)}
-                style={{ padding: 24, position: 'relative', minWidth: 300, backgroundColor: 'var(--background)', color: 'var(--foreground)' }}
+                sx={{
+                    p: 3,
+                    position: 'relative',
+                    minWidth: 300,
+                    bgcolor: 'background.default',
+                    color: 'text.primary',
+                }}
             >
                 {children}
                 <IconButton
                     size="small"
                     onClick={() => ctx?.setOpen(false)}
-                    sx={{ position: 'absolute', top: 8, right: 8, opacity: 0.7, '&:hover': { opacity: 1 } }}
+                    sx={{ position: 'absolute', top: 1, right: 1, opacity: 0.7, '&:hover': { opacity: 1 } }}
                 >
                     <XIcon size={16} />
-                    <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>Close</span>
+                    <Box
+                        component="span"
+                        sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}
+                    >
+                        Close
+                    </Box>
                 </IconButton>
-            </div>
+            </Box>
         </MuiDrawer>
     );
 }
 
 function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} style={{ display: 'flex', flexDirection: 'column', gap: 6, textAlign: 'left', marginBottom: 16 }} {...props} />;
+    return (
+        <Box
+            className={cn(className)}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, textAlign: 'left', mb: 2 }}
+            {...(props as any)}
+        />
+    );
 }
 
 function SheetFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <div
+        <Box
             className={cn(className)}
-            style={{ display: 'flex', flexDirection: 'column-reverse', gap: 8, marginTop: 16 }}
-            {...props}
+            sx={{ display: 'flex', flexDirection: 'column-reverse', gap: 1, mt: 2 }}
+            {...(props as any)}
         />
     );
 }
 
 function SheetTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-    return <h2 className={cn(className)} style={{ fontSize: '1.125rem', fontWeight: 600, margin: 0 }} {...props} />;
+    return (
+        <Typography
+            variant="h6"
+            component="h2"
+            className={cn(className)}
+            sx={{ m: 0 }}
+            {...(props as any)}
+        />
+    );
 }
 
 function SheetDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-    return <p className={cn(className)} style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', margin: 0 }} {...props} />;
+    return (
+        <Typography
+            variant="body2"
+            component="p"
+            className={cn(className)}
+            sx={{ color: 'text.secondary', m: 0 }}
+            {...(props as any)}
+        />
+    );
 }
 
 export { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetOverlay, SheetTitle, SheetTrigger };

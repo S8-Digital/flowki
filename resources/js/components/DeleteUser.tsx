@@ -56,7 +56,7 @@ export default function DeleteUser() {
                     p: 2,
                 }}
             >
-                <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '2px', color: 'var(--destructive)' }}>
+                <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 0.25, color: 'error.main' }}>
                     <Typography sx={{ fontWeight: 500, color: 'inherit' }}>Warning</Typography>
                     <Typography sx={{ fontSize: '0.875rem', color: 'inherit' }}>Please proceed with caution, this cannot be undone.</Typography>
                 </Box>
@@ -65,7 +65,7 @@ export default function DeleteUser() {
                         <Button variant="destructive">Delete account</Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                             <DialogHeader style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                 <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
                                 <DialogDescription>
@@ -109,7 +109,7 @@ export default function DeleteUser() {
                                     Delete account
                                 </Button>
                             </DialogFooter>
-                        </form>
+                        </Box>
                     </DialogContent>
                 </Dialog>
             </Box>

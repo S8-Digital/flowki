@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import { CalendarDays, FileText, Upload, X } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -168,19 +169,19 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogContent style={{ maxHeight: '90vh', overflowY: 'auto', maxWidth: '32rem' }}>
+            <DialogContent sx={{ maxHeight: '90vh', overflowY: 'auto', maxWidth: '32rem' }}>
                 <DialogHeader>
                     <DialogTitle>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <CalendarDays style={{ width: 20, height: 20, color: 'var(--primary)' }} />
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <CalendarDays size={20} style={{ color: 'var(--mui-palette-primary-main)' }} />
                             Import Schedule
                         </Box>
                     </DialogTitle>
                 </DialogHeader>
 
                 {step === 'upload' && (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        <Typography sx={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
                             Upload your schedule file to auto-populate your calendar. Accepted formats: plain text (.txt, .csv), images (.jpg, .png),
                             and PDFs. Works great with work rosters, shift schedules, and timetables.
                         </Typography>
@@ -221,25 +222,26 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                             onDrop={handleDrop}
                             aria-label="Drop schedule file here or click to browse"
                         >
-                            <Upload style={{ marginBottom: 12, width: 40, height: 40, color: 'var(--muted-foreground)' }} />
+                            <Upload size={40} style={{ marginBottom: 12, color: 'var(--mui-palette-text-secondary)' }} />
                             <Typography sx={{ fontSize: '0.875rem', fontWeight: 500 }}>Drop your schedule file here</Typography>
-                            <Typography sx={{ mt: 0.5, fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>or click to browse</Typography>
-                            <Typography sx={{ mt: 1.5, fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                            <Typography sx={{ mt: 0.5, fontSize: '0.75rem', color: 'text.secondary' }}>or click to browse</Typography>
+                            <Typography sx={{ mt: 1.5, fontSize: '0.75rem', color: 'text.secondary' }}>
                                 {ACCEPTED_TYPES.replace(/\./g, '').toUpperCase().replace(/,/g, ', ')} · max {MAX_SIZE_MB} MB
                             </Typography>
                         </Box>
 
-                        <input
+                        <Box
+                            component="input"
                             ref={fileInputRef}
                             type="file"
                             accept={ACCEPTED_TYPES}
-                            style={{ display: 'none' }}
-                            onChange={handleFileInput}
+                            sx={{ display: 'none' }}
+                            onChange={handleFileInput as any}
                             aria-hidden="true"
                         />
 
                         {isLoading && (
-                            <Typography sx={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                            <Typography sx={{ textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>
                                 Parsing your schedule…
                             </Typography>
                         )}
@@ -263,19 +265,19 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                 )}
 
                 {step === 'preview' && (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Typography sx={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                            <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
                                 {items.length} shift{items.length !== 1 ? 's' : ''} found. Remove any you don't want to import, then click{' '}
                                 <strong>Import</strong>.
                             </Typography>
-                            <Button variant="ghost" size="sm" onClick={() => setStep('upload')} style={{ fontSize: '0.75rem' }}>
+                            <Button variant="ghost" size="sm" onClick={() => setStep('upload')} sx={{ fontSize: '0.75rem' }}>
                                 ← Re-upload
                             </Button>
                         </Box>
 
                         {items.length === 0 ? (
-                            <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+                            <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>
                                 All shifts removed. Re-upload a file or close.
                             </Typography>
                         ) : (
@@ -288,7 +290,7 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                     border: '1px solid',
                                     borderColor: 'var(--border)',
                                     borderRadius: 2,
-                                    '& > li + li': { borderTop: '1px solid', borderColor: 'var(--border)' },
+                                    '& > li + li': { borderTop: 1, borderColor: 'divider' },
                                 }}
                             >
                                 {items.map((item) => (
@@ -299,7 +301,7 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                             display: 'flex',
                                             alignItems: 'flex-start',
                                             justifyContent: 'space-between',
-                                            gap: '12px',
+                                            gap: 1.5,
                                             px: 1.5,
                                             py: 1.25,
                                         }}
@@ -321,9 +323,9 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                                     mt: 0.25,
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    gap: '4px',
+                                                    gap: 0.5,
                                                     fontSize: '0.75rem',
-                                                    color: 'var(--muted-foreground)',
+                                                    color: 'text.secondary',
                                                 }}
                                             >
                                                 <FileText style={{ width: 12, height: 12, flexShrink: 0 }} />
@@ -335,8 +337,8 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                                             ml: 0.5,
                                                             borderRadius: 0.5,
                                                             bgcolor: 'var(--muted)',
-                                                            px: '4px',
-                                                            py: '2px',
+                                                            px: 0.5,
+                                                            py: 0.25,
                                                             fontSize: '0.625rem',
                                                         }}
                                                     >
@@ -345,37 +347,26 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                                 )}
                                             </Box>
                                         </Box>
-                                        <button
-                                            type="button"
+                                        <ButtonBase
                                             onClick={() => removeItem(item._key)}
-                                            style={{
-                                                marginTop: 2,
-                                                flexShrink: 0,
-                                                borderRadius: 4,
-                                                padding: 4,
-                                                color: 'var(--muted-foreground)',
-                                                border: 'none',
-                                                cursor: 'pointer',
-                                                background: 'none',
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'rgba(var(--destructive-rgb), 0.1)';
-                                                e.currentTarget.style.color = 'var(--destructive)';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'transparent';
-                                                e.currentTarget.style.color = 'var(--muted-foreground)';
-                                            }}
                                             aria-label={`Remove ${item.title}`}
+                                            sx={{
+                                                mt: 0.25,
+                                                flexShrink: 0,
+                                                borderRadius: 1,
+                                                p: 0.5,
+                                                color: 'text.secondary',
+                                                '&:hover': { bgcolor: 'error.light', color: 'error.main' },
+                                            }}
                                         >
                                             <X style={{ width: 14, height: 14 }} />
-                                        </button>
+                                        </ButtonBase>
                                     </Box>
                                 ))}
                             </Box>
                         )}
 
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', pt: 0.5 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, pt: 0.5 }}>
                             <Button variant="outline" onClick={() => handleOpenChange(false)}>
                                 Cancel
                             </Button>

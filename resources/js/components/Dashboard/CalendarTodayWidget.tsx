@@ -32,7 +32,7 @@ function safeColor(color: string | null, fallback: string): string {
 
 export default function CalendarTodayWidget({ events }: CalendarTodayWidgetProps) {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Typography sx={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>{today}</Typography>
             {events.length === 0 ? (
                 <Box sx={{ py: 4, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Nothing scheduled for today.</Box>
@@ -45,7 +45,7 @@ export default function CalendarTodayWidget({ events }: CalendarTodayWidgetProps
                             <Box
                                 component="li"
                                 key={event.id}
-                                sx={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', borderRadius: 2, p: 1.5 }}
+                                sx={{ display: 'flex', alignItems: 'center', gap: 1.5, overflow: 'hidden', borderRadius: 2, p: 1.5 }}
                                 style={{ border: `2px solid ${color}`, backgroundColor: `${color}18` }}
                             >
                                 <Box sx={{ minWidth: 0, flex: 1 }}>
