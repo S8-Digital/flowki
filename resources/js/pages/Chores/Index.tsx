@@ -392,10 +392,10 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                 onClick={() => markComplete(chore)}
                                                                 title="Mark complete"
                                                             >
-                                                                <CheckCircle className="size-3 text-green-500" />
+                                                                <CheckCircle className="size-5 text-green-500" />
                                                             </Button>
                                                             <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(chore)}>
-                                                                <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path
                                                                         strokeLinecap="round"
                                                                         strokeLinejoin="round"
@@ -405,7 +405,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                 </svg>
                                                             </Button>
                                                             <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteChore(chore)}>
-                                                                <Trash2 className="size-3 text-destructive" />
+                                                                <Trash2 className="size-5 text-destructive" />
                                                             </Button>
                                                         </div>
                                                     </div>
