@@ -371,7 +371,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         className="flex items-start gap-2 rounded-lg p-2"
                                                         style={{
                                                             backgroundColor: `${color}15`,
-                                                            borderLeft: `3px solid ${color}`,
+                                                            border: `1px solid ${color}`,
                                                         }}
                                                     >
                                                         <div className="mt-0.5 shrink-0">
@@ -439,7 +439,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             <div
                                                 key={chore.id}
                                                 className="flex items-start gap-2 rounded-lg p-2"
-                                                style={{ backgroundColor: '#94a3b815', borderLeft: '3px solid #94a3b8' }}
+                                                style={{ backgroundColor: '#94a3b815', border: '1px solid #94a3b8' }}
                                             >
                                                 <div className="mt-0.5 shrink-0">
                                                     <RefreshCw className="size-3.5 text-slate-400" />
