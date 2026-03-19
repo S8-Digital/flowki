@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
 import CalendarScheduleWidget from '@/components/Dashboard/CalendarScheduleWidget';
 import CalendarTodayWidget from '@/components/Dashboard/CalendarTodayWidget';
 import ShoppingListWidget from '@/components/Dashboard/ShoppingListWidget';
 import TodoListWidget from '@/components/Dashboard/TodoListWidget';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 // ---------------------------------------------------------------------------
 // CalendarTodayWidget

@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import WeatherWidget from '@/components/Dashboard/WeatherWidget';
 import WeatherStrip from '@/components/WeatherStrip';
 import { useWeather } from '@/hooks/useWeather';
 import type { WeatherData } from '@/types';
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the useWeather hook – vi.mock is hoisted by Vitest so this runs before imports.
 vi.mock('@/hooks/useWeather', () => ({

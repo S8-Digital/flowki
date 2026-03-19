@@ -1,4 +1,3 @@
-import { Head, Link, useForm } from '@inertiajs/react';
 import { join, store } from '@/actions/App/Http/Controllers/FamilyController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem } from '@/types';
+import { Head, Link, useForm } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Create Family', href: '/family/create' }];
 

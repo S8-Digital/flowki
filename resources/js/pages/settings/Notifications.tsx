@@ -1,5 +1,3 @@
-import { Head, useForm } from '@inertiajs/react';
-import { Bell, Mail } from 'lucide-react';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -8,6 +6,8 @@ import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
 import type { BreadcrumbItem } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
+import { Bell, Mail } from 'lucide-react';
 
 interface Props {
     preferences: {

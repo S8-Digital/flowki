@@ -1,6 +1,6 @@
+import type { RouteDefinition } from '@/wayfinder';
 import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
-import type { RouteDefinition } from '@/wayfinder';
 
 export interface Auth {
     user: User;

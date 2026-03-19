@@ -1,6 +1,3 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { ChefHat, Clock, Heart, Star, Trash2, Users } from 'lucide-react';
-import { useState } from 'react';
 import { destroy, update } from '@/actions/App/Http/Controllers/RecipeController';
 import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
 import InputError from '@/components/InputError';
@@ -10,6 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, Recipe } from '@/types';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { ChefHat, Clock, Heart, Star, Trash2, Users } from 'lucide-react';
+import { useState } from 'react';
 
 interface Props {
     recipe: Recipe;

@@ -1,6 +1,3 @@
-import { Head, router } from '@inertiajs/react';
-import { GripVertical, Plus, Settings2, X } from 'lucide-react';
-import { useState } from 'react';
 import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
 import CalendarScheduleWidget from '@/components/Dashboard/CalendarScheduleWidget';
 import CalendarTodayWidget from '@/components/Dashboard/CalendarTodayWidget';
@@ -14,6 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/AppLayout';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem, CalendarEvent, DashboardShoppingListData, DashboardWidget, DashboardWidgetType, Todo } from '@/types';
+import { Head, router } from '@inertiajs/react';
+import { GripVertical, Plus, Settings2, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface Props {
     widgets: DashboardWidget[];

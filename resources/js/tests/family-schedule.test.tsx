@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
 import { buildColumns } from '@/components/Calendar/FamilyScheduleView';
 import MemberColumn, { getInitials, getMemberColor, MEMBER_COLORS } from '@/components/Calendar/MemberColumn';
 import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo, User } from '@/types';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
 const baseUser: User = {
     id: 1,

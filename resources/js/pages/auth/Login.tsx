@@ -1,5 +1,3 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/InputError';
 import SocialAuthButtons from '@/components/SocialAuthButtons';
@@ -11,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
 
 interface Props {
     status?: string;

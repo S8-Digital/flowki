@@ -1,5 +1,5 @@
+import type { MessagePayload, Messaging } from 'firebase/messaging';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import type { Messaging, MessagePayload } from 'firebase/messaging';
 import { getFirebaseApp } from './firebase';
 
 let messaging: Messaging | null = null;

@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('InputError', () => {
     it('renders nothing when message is empty', () => {

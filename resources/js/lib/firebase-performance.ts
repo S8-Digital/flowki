@@ -1,5 +1,5 @@
-import { getPerformance } from 'firebase/performance';
 import type { FirebasePerformance } from 'firebase/performance';
+import { getPerformance } from 'firebase/performance';
 import { getFirebaseApp } from './firebase';
 
 let performance: FirebasePerformance | null = null;

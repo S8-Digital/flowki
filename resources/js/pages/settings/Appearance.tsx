@@ -1,10 +1,10 @@
-import { Head } from '@inertiajs/react';
 import AppearanceTabs from '@/components/AppearanceTabs';
 import HeadingSmall from '@/components/HeadingSmall';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
 import { appearance } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbItems: BreadcrumbItem[] = [{ title: 'Appearance settings', href: appearance() }];
 

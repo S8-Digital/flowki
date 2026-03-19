@@ -1,11 +1,11 @@
-import { Head } from '@inertiajs/react';
-import { Bot, Send, Sparkles, Trash2, User } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
 import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
+import { Bot, Send, Sparkles, Trash2, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Message {
     role: 'user' | 'assistant';
