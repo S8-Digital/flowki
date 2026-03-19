@@ -1,11 +1,11 @@
+import { Link, router } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import { LogOut, Settings } from 'lucide-react';
 import { DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import UserInfo from '@/components/UserInfo';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
-import { Link, router } from '@inertiajs/react';
-import Box from '@mui/material/Box';
-import { LogOut, Settings } from 'lucide-react';
 
 interface UserMenuContentProps {
     user: User;

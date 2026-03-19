@@ -1,6 +1,6 @@
-import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, useAppSidebar } from '@/components/AppSidebarContext';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, useAppSidebar } from '@/components/AppSidebarContext';
 interface AppContentProps {
     variant?: 'header' | 'sidebar';
     className?: string;

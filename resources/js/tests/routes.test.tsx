@@ -5,14 +5,14 @@
  *   /schedule       – ScheduleUploadModal (upload step & preview step)
  */
 
-import ScheduleUploadModal from '@/components/Calendar/ScheduleUploadModal';
-import CalendarIndex from '@/pages/Calendar/Index';
-import ChoresIndex from '@/pages/Chores/Index';
 import { useForm } from '@inertiajs/react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import ScheduleUploadModal from '@/components/Calendar/ScheduleUploadModal';
+import CalendarIndex from '@/pages/Calendar/Index';
+import ChoresIndex from '@/pages/Chores/Index';
 import { makeUseFormReturn } from './__mocks__/inertia';
 
 // ---------------------------------------------------------------------------

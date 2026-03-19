@@ -1,9 +1,9 @@
+import { Head, router } from '@inertiajs/react';
+import { CheckCheck, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
 import type { AppNotification, BreadcrumbItem, PaginatedResource } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { CheckCheck, Trash2 } from 'lucide-react';
 
 interface Props {
     notifications: PaginatedResource<AppNotification>;

@@ -1,10 +1,10 @@
-import FamilyCreate from '@/pages/Family/Create';
-import FamilyJoin from '@/pages/Family/Join';
 import { useForm } from '@inertiajs/react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import FamilyCreate from '@/pages/Family/Create';
+import FamilyJoin from '@/pages/Family/Join';
 import { makeUseFormReturn } from './__mocks__/inertia';
 
 // ---------------------------------------------------------------------------

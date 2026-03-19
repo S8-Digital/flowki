@@ -1,7 +1,7 @@
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 import { Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
 interface BreadcrumbsProps {
     breadcrumbs: BreadcrumbItemType[];

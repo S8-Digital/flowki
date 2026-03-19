@@ -1,6 +1,6 @@
-import { useAppearance } from '@/hooks/useAppearance';
 import IconButton from '@mui/material/IconButton';
 import { Monitor, Moon, Sun } from 'lucide-react';
+import { useAppearance } from '@/hooks/useAppearance';
 
 export default function AppearanceToggle() {
     const { appearance, updateAppearance } = useAppearance();

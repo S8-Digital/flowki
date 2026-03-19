@@ -1,3 +1,8 @@
+import { useForm } from '@inertiajs/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AcceptInvite from '@/pages/auth/AcceptInvite';
 import ConfirmPassword from '@/pages/auth/ConfirmPassword';
 import ForgotPassword from '@/pages/auth/ForgotPassword';
@@ -5,11 +10,6 @@ import Login from '@/pages/auth/Login';
 import Register from '@/pages/auth/Register';
 import ResetPassword from '@/pages/auth/ResetPassword';
 import VerifyEmail from '@/pages/auth/VerifyEmail';
-import { useForm } from '@inertiajs/react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import * as React from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { makeUseFormReturn } from './__mocks__/inertia';
 
 // ---------------------------------------------------------------------------

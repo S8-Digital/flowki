@@ -1,11 +1,11 @@
-import AppLogoIcon from '@/components/AppLogoIcon';
-import { home } from '@/routes';
-import type { AppPageProps } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { PropsWithChildren } from 'react';
+import AppLogoIcon from '@/components/AppLogoIcon';
+import { home } from '@/routes';
+import type { AppPageProps } from '@/types';
 
 interface Props extends PropsWithChildren {
     title?: string;

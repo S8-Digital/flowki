@@ -1,7 +1,7 @@
-import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo } from '@/types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { CheckCircle2, Circle, Clock, RefreshCw } from 'lucide-react';
+import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo } from '@/types';
 
 interface Props {
     column: FamilyScheduleColumn;

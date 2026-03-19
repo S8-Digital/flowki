@@ -1,3 +1,6 @@
+import { Head, router, useForm } from '@inertiajs/react';
+import { CheckCircle2, Circle, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { destroy, store, update } from '@/actions/App/Http/Controllers/TodoController';
 import { getInitials, getMemberColor } from '@/components/Calendar/MemberColumn';
 import InputError from '@/components/InputError';
@@ -11,9 +14,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, Todo, User } from '@/types';
-import { Head, router, useForm } from '@inertiajs/react';
-import { CheckCircle2, Circle, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
 
 interface Category {
     value: string;

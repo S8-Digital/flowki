@@ -1,6 +1,6 @@
-import { useAppearance } from '@/hooks/useAppearance';
 import Box from '@mui/material/Box';
 import { Monitor, Moon, Sun } from 'lucide-react';
+import { useAppearance } from '@/hooks/useAppearance';
 
 const tabs = [
     { value: 'light', Icon: Sun, label: 'Light' },

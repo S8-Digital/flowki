@@ -1,10 +1,10 @@
-import AppLogoIcon from '@/components/AppLogoIcon';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { home } from '@/routes';
 import { Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import type { PropsWithChildren } from 'react';
+import AppLogoIcon from '@/components/AppLogoIcon';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { home } from '@/routes';
 
 interface Props extends PropsWithChildren {
     title?: string;

@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
-import { useFirebaseMessaging } from '@/hooks/useFirebaseMessaging';
 import Box from '@mui/material/Box';
 import { Bell, X } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useFirebaseMessaging } from '@/hooks/useFirebaseMessaging';
 
 export default function NotificationPermissionBanner() {
     const { notificationPermission, isRegistering, requestPermissionAndRegister } = useFirebaseMessaging();

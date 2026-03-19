@@ -1,6 +1,6 @@
+import { useEffect, useState } from 'react';
 import { index } from '@/actions/App/Http/Controllers/WeatherController';
 import type { WeatherData } from '@/types';
-import { useEffect, useState } from 'react';
 
 interface UseWeatherResult {
     data: WeatherData | null;

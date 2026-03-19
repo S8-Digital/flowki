@@ -1,14 +1,14 @@
+import { Link } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import { Search, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
 import { show as recipeShow } from '@/actions/App/Http/Controllers/RecipeController';
 import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Link } from '@inertiajs/react';
-import Box from '@mui/material/Box';
-import { Search, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
 
 interface SearchResults {
     todos: Array<{ id: number; title: string }>;

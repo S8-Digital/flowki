@@ -1,3 +1,5 @@
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { CalendarCheck, CalendarX, CheckCircle2, Link2, Link2Off } from 'lucide-react';
 import { update } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/DeleteUser';
 import HeadingSmall from '@/components/HeadingSmall';
@@ -10,8 +12,6 @@ import SettingsLayout from '@/layouts/settings/Layout';
 import { link, unlink } from '@/routes/social';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { CalendarCheck, CalendarX, CheckCircle2, Link2, Link2Off } from 'lucide-react';
 
 interface Props {
     mustVerifyEmail: boolean;

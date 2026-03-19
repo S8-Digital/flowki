@@ -1,11 +1,11 @@
-import AssistantIndex from '@/pages/Assistant/Index';
-import RecipesIndex from '@/pages/Recipes/Index';
-import ShoppingIndex from '@/pages/Shopping/Index';
-import TodosIndex from '@/pages/Todos/Index';
 import { useForm } from '@inertiajs/react';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import AssistantIndex from '@/pages/Assistant/Index';
+import RecipesIndex from '@/pages/Recipes/Index';
+import ShoppingIndex from '@/pages/Shopping/Index';
+import TodosIndex from '@/pages/Todos/Index';
 import { makeUseFormReturn } from './__mocks__/inertia';
 
 // ---------------------------------------------------------------------------

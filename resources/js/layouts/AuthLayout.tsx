@@ -1,5 +1,5 @@
-import AuthSimpleLayout from '@/layouts/auth/AuthSimpleLayout';
 import type { PropsWithChildren } from 'react';
+import AuthSimpleLayout from '@/layouts/auth/AuthSimpleLayout';
 
 interface Props extends PropsWithChildren {
     title?: string;

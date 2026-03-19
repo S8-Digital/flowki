@@ -1,8 +1,8 @@
+import Box from '@mui/material/Box';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/hooks/useInitials';
 import type { User } from '@/types';
-import Box from '@mui/material/Box';
 
 interface UserInfoProps {
     user: User;

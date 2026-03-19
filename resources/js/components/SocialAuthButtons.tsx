@@ -1,5 +1,5 @@
-import { redirect } from '@/routes/social';
 import MuiButton from '@mui/material/Button';
+import { redirect } from '@/routes/social';
 
 interface SocialAuthButtonsProps {
     label?: string;

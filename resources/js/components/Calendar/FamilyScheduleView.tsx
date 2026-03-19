@@ -1,10 +1,10 @@
-import MemberColumn, { getMemberColor } from '@/components/Calendar/MemberColumn';
-import { Button } from '@/components/ui/button';
-import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo, User } from '@/types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import MemberColumn, { getMemberColor } from '@/components/Calendar/MemberColumn';
+import { Button } from '@/components/ui/button';
+import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo, User } from '@/types';
 
 interface Props {
     members: User[];

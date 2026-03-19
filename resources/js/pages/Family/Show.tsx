@@ -1,3 +1,6 @@
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { Baby, Copy, GripVertical, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
 import { update as updateMemberOrder } from '@/actions/App/Http/Controllers/Settings/MemberOrderController';
 import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';
@@ -9,9 +12,6 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
 import type { AppPageProps, BreadcrumbItem, Family, User } from '@/types';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { Baby, Copy, GripVertical, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
 
 interface Props {
     family: Family;

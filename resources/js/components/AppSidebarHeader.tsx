@@ -1,12 +1,12 @@
-import { useAppSidebar } from '@/components/AppSidebarContext';
-import Breadcrumbs from '@/components/Breadcrumbs';
-import NotificationBell from '@/components/NotificationBell';
-import type { BreadcrumbItem } from '@/types';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { useAppSidebar } from '@/components/AppSidebarContext';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import NotificationBell from '@/components/NotificationBell';
+import type { BreadcrumbItem } from '@/types';
 
 interface AppSidebarHeaderProps {
     breadcrumbs?: BreadcrumbItem[];

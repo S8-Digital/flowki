@@ -1,6 +1,6 @@
-import type { User } from '@/types';
 import type { InertiaLinkProps } from '@inertiajs/react';
 import { clsx } from 'clsx';
+import type { User } from '@/types';
 
 export function cn(...inputs: (string | undefined | null | false | 0)[]) {
     return clsx(inputs);

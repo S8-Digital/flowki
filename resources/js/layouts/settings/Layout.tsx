@@ -1,13 +1,13 @@
+import { Link } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import type { PropsWithChildren } from 'react';
 import Heading from '@/components/Heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { toUrl, urlIsActive } from '@/lib/utils';
 import { appearance } from '@/routes';
 import type { NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import type { PropsWithChildren } from 'react';
 
 const sidebarNavItems: NavItem[] = [
     { title: 'Profile', href: '/settings/profile' },

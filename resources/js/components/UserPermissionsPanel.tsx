@@ -1,10 +1,10 @@
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import type { PermissionGroup } from '@/types';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 
 interface Props {
     permissionGroups: PermissionGroup[];

@@ -1,3 +1,5 @@
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
 import InputError from '@/components/InputError';
 import TextLink from '@/components/TextLink';
@@ -6,8 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout';
 import { login } from '@/routes';
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
 
 interface Props {
     status?: string;

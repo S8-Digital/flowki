@@ -1,3 +1,4 @@
+import { Head, useForm } from '@inertiajs/react';
 import { update } from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
@@ -7,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
 import type { BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
 
 const breadcrumbItems: BreadcrumbItem[] = [{ title: 'Password settings', href: '/settings/password' }];
 

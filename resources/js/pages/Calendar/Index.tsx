@@ -1,3 +1,15 @@
+import type { DateSelectArg, DatesSetArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import type { EventResizeDoneArg } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list';
+import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { Head, router, useForm } from '@inertiajs/react';
+import MuiCheckbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { CalendarDays, Plus, Trash2 } from 'lucide-react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
 import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
@@ -14,18 +26,6 @@ import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
 import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
-import type { DateSelectArg, DatesSetArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import type { EventResizeDoneArg } from '@fullcalendar/interaction';
-import interactionPlugin from '@fullcalendar/interaction';
-import listPlugin from '@fullcalendar/list';
-import FullCalendar from '@fullcalendar/react';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import { Head, router, useForm } from '@inertiajs/react';
-import MuiCheckbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { CalendarDays, Plus, Trash2 } from 'lucide-react';
-import { useCallback, useMemo, useRef, useState } from 'react';
 
 interface Props {
     events: CalendarEvent[];

@@ -1,3 +1,8 @@
+import { Head, router, useForm } from '@inertiajs/react';
+import MuiCheckbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { CheckCircle, Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { complete, destroy, store, update } from '@/actions/App/Http/Controllers/ChoreController';
 import { getInitials, getMemberColor } from '@/components/Calendar/MemberColumn';
 import InputError from '@/components/InputError';
@@ -11,11 +16,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, Chore, User } from '@/types';
-import { Head, router, useForm } from '@inertiajs/react';
-import MuiCheckbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { CheckCircle, Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
 
 interface Props {
     chores: Chore[] | null;

@@ -1,12 +1,12 @@
+import { Link, router, usePage } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import { Bell, CheckCheck, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { onForegroundMessage } from '@/lib/firebase-messaging';
 import type { AppNotification, AppPageProps } from '@/types';
-import { Link, router, usePage } from '@inertiajs/react';
-import Box from '@mui/material/Box';
-import { Bell, CheckCheck, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
 function notificationMessage(notification: AppNotification): string {
     const d = notification.data;

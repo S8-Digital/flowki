@@ -1,3 +1,5 @@
+import { Head, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import { update as colorUpdate } from '@/actions/App/Http/Controllers/Settings/MemberColorController';
 import { edit as permissionEdit, update as permissionUpdate } from '@/actions/App/Http/Controllers/Settings/PermissionController';
 import HeadingSmall from '@/components/HeadingSmall';
@@ -8,8 +10,6 @@ import UserPermissionsPanel from '@/components/UserPermissionsPanel';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
 import type { BreadcrumbItem, PermissionGroup } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { useState } from 'react';
 
 interface Member {
     id: number;

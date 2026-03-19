@@ -1,11 +1,11 @@
-import Appearance from '@/pages/settings/Appearance';
-import NotificationSettings from '@/pages/settings/Notifications';
-import Password from '@/pages/settings/Password';
 import { useForm } from '@inertiajs/react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import Appearance from '@/pages/settings/Appearance';
+import NotificationSettings from '@/pages/settings/Notifications';
+import Password from '@/pages/settings/Password';
 import { makeUseFormReturn } from './__mocks__/inertia';
 
 // ---------------------------------------------------------------------------
