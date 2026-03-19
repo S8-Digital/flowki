@@ -249,7 +249,7 @@ export default function RecipesShow({ recipe }: Props) {
                         </Box>
                         <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 2, gridColumn: { lg: 'span 2' } }}>
                             <Typography sx={{ mb: 1.5, fontWeight: 600 }}>Instructions</Typography>
-                            <Box sx={{ fontSize: '0.875rem', whiteSpace: 'pre-wrap' }}>{recipe.instructions}</Box>
+                            <Box sx={{ fontSize: '0.875rem', whiteSpace: 'pre-line' }}>{recipe.instructions}</Box>
                         </Box>
                     </Box>
                 </Box>
