@@ -1,4 +1,7 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Baby, Copy, GripVertical, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
@@ -189,26 +192,32 @@ export default function FamilyShow({ family }: Props) {
         <>
             <Head title="Family" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-6 p-6">
-                    <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                            <div>
-                                <h1 className="text-2xl font-bold">{family.name}</h1>
-                                <p className="text-sm text-muted-foreground">{family.members?.length ?? 0} members</p>
-                            </div>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                            <Box>
+                                <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                                    {family.name}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    {family.members?.length ?? 0} members
+                                </Typography>
+                            </Box>
                             <Dialog open={editNameOpen} onOpenChange={setEditNameOpen}>
                                 <DialogTrigger asChild>
                                     <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
                                         <Pencil className="size-3.5" />
-                                        <span className="text-xs">Edit name</span>
+                                        <Typography component="span" sx={{ fontSize: '0.75rem' }}>
+                                            Edit name
+                                        </Typography>
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
                                         <DialogTitle>Edit Family Name</DialogTitle>
                                     </DialogHeader>
-                                    <form onSubmit={handleEditName} className="space-y-4">
-                                        <div className="grid gap-2">
+                                    <Stack component="form" onSubmit={handleEditName} spacing={2}>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label htmlFor="name">Family Name</Label>
                                             <Input
                                                 id="name"
@@ -218,50 +227,87 @@ export default function FamilyShow({ family }: Props) {
                                                 placeholder="e.g. The Smith Family"
                                             />
                                             <InputError message={editNameForm.errors.name} />
-                                        </div>
+                                        </Box>
                                         <Button type="submit" className="w-full" disabled={editNameForm.processing}>
                                             {editNameForm.processing ? 'Saving…' : 'Save Name'}
                                         </Button>
-                                    </form>
+                                    </Stack>
                                 </DialogContent>
                             </Dialog>
-                        </div>
+                        </Box>
 
-                        <div className="flex items-center gap-2 rounded-lg border px-3 py-2">
-                            <span className="text-xs text-muted-foreground">Invite code:</span>
-                            <span className="font-mono text-sm tracking-widest">{family.invite_code}</span>
-                            <button onClick={copyInviteCode} className="text-muted-foreground transition hover:text-foreground">
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                                borderRadius: '12px',
+                                border: 1,
+                                borderColor: 'divider',
+                                px: 1.5,
+                                py: 1,
+                            }}
+                        >
+                            <Typography component="span" variant="caption" sx={{ color: 'text.secondary' }}>
+                                Invite code:
+                            </Typography>
+                            <Box component="span" sx={{ fontFamily: 'monospace', fontSize: '0.875rem', letterSpacing: '0.2em' }}>
+                                {family.invite_code}
+                            </Box>
+                            <Box
+                                component="button"
+                                onClick={copyInviteCode}
+                                sx={{
+                                    color: 'text.secondary',
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    p: 0,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    transition: 'color 0.2s',
+                                    '&:hover': { color: 'text.primary' },
+                                }}
+                            >
                                 <Copy className="size-4" />
-                            </button>
-                            {copied && <span className="text-xs text-green-500">Copied!</span>}
-                        </div>
-                    </div>
+                            </Box>
+                            {copied && (
+                                <Typography component="span" variant="caption" sx={{ color: 'success.main' }}>
+                                    Copied!
+                                </Typography>
+                            )}
+                        </Box>
+                    </Box>
 
                     {/* Location section */}
-                    <div className="rounded-xl border p-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
+                    <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <MapPin className="size-4 text-muted-foreground" />
-                                <span className="text-sm font-medium">Location</span>
-                            </div>
+                                <Typography component="span" sx={{ fontSize: '0.875rem', fontWeight: 500 }}>
+                                    Location
+                                </Typography>
+                            </Box>
                             {canManageFamily && (
                                 <Dialog open={editLocationOpen} onOpenChange={setEditLocationOpen}>
                                     <DialogTrigger asChild>
                                         <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
                                             <Pencil className="size-3.5" />
-                                            <span className="text-xs">Edit</span>
+                                            <Typography component="span" sx={{ fontSize: '0.75rem' }}>
+                                                Edit
+                                            </Typography>
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
                                             <DialogTitle>Set Family Location</DialogTitle>
                                         </DialogHeader>
-                                        <form onSubmit={handleEditLocation} className="space-y-4">
-                                            <p className="text-sm text-muted-foreground">
+                                        <Stack component="form" onSubmit={handleEditLocation} spacing={2}>
+                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                                 Used to show local weather on the dashboard and calendar. Enter a city name, or provide coordinates
                                                 for more accuracy.
-                                            </p>
-                                            <div className="grid gap-2">
+                                            </Typography>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
                                                 <Label htmlFor="location_name">City / Location Name</Label>
                                                 <Input
                                                     id="location_name"
@@ -270,11 +316,14 @@ export default function FamilyShow({ family }: Props) {
                                                     placeholder="e.g. London, Paris, New York"
                                                 />
                                                 <InputError message={editLocationForm.errors.location_name} />
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <div className="grid gap-2">
+                                            </Box>
+                                            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                                <Box sx={{ display: 'grid', gap: 1 }}>
                                                     <Label htmlFor="latitude">
-                                                        Latitude <span className="text-xs text-muted-foreground">(optional)</span>
+                                                        Latitude{' '}
+                                                        <Typography component="span" variant="caption" sx={{ color: 'text.secondary' }}>
+                                                            (optional)
+                                                        </Typography>
                                                     </Label>
                                                     <Input
                                                         id="latitude"
@@ -285,10 +334,13 @@ export default function FamilyShow({ family }: Props) {
                                                         placeholder="51.5074"
                                                     />
                                                     <InputError message={editLocationForm.errors.latitude} />
-                                                </div>
-                                                <div className="grid gap-2">
+                                                </Box>
+                                                <Box sx={{ display: 'grid', gap: 1 }}>
                                                     <Label htmlFor="longitude">
-                                                        Longitude <span className="text-xs text-muted-foreground">(optional)</span>
+                                                        Longitude{' '}
+                                                        <Typography component="span" variant="caption" sx={{ color: 'text.secondary' }}>
+                                                            (optional)
+                                                        </Typography>
                                                     </Label>
                                                     <Input
                                                         id="longitude"
@@ -299,41 +351,53 @@ export default function FamilyShow({ family }: Props) {
                                                         placeholder="-0.1278"
                                                     />
                                                     <InputError message={editLocationForm.errors.longitude} />
-                                                </div>
-                                            </div>
+                                                </Box>
+                                            </Box>
                                             <Button type="submit" className="w-full" disabled={editLocationForm.processing}>
                                                 {editLocationForm.processing ? 'Saving…' : 'Save Location'}
                                             </Button>
-                                        </form>
+                                        </Stack>
                                     </DialogContent>
                                 </Dialog>
                             )}
-                        </div>
+                        </Box>
                         {family.location_name ? (
-                            <p className="mt-2 text-sm text-muted-foreground">
+                            <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
                                 {family.location_name}
                                 {family.latitude !== null && family.longitude !== null && (
-                                    <span className="ml-2 text-xs opacity-60">
+                                    <Box component="span" sx={{ ml: 1, fontSize: '0.75rem', opacity: 0.6 }}>
                                         ({family.latitude}, {family.longitude})
-                                    </span>
+                                    </Box>
                                 )}
-                            </p>
+                            </Typography>
                         ) : (
-                            <p className="mt-2 text-sm text-muted-foreground">No location set.</p>
+                            <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+                                No location set.
+                            </Typography>
                         )}
-                    </div>
+                    </Box>
 
-                    <div className="rounded-xl border">
-                        <div className="flex items-center justify-between border-b px-4 py-3">
-                            <div className="flex items-center gap-2">
-                                <h2 className="font-semibold">Members</h2>
+                    <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider' }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                borderBottom: 1,
+                                borderColor: 'divider',
+                                px: 2,
+                                py: 1.5,
+                            }}
+                        >
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Typography sx={{ fontWeight: 600 }}>Members</Typography>
                                 {canManageMembers && memberOrder.length > 1 && (
-                                    <span role="status" aria-live="polite" className="text-xs text-muted-foreground">
+                                    <Typography component="span" variant="caption" sx={{ color: 'text.secondary' }} role="status" aria-live="polite">
                                         {orderSaving ? 'Saving…' : orderSaved ? 'Order saved' : ''}
-                                    </span>
+                                    </Typography>
                                 )}
-                            </div>
-                            <div className="flex items-center gap-2">
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Dialog open={addChildOpen} onOpenChange={setAddChildOpen}>
                                     <DialogTrigger asChild>
                                         <Button size="sm" variant="outline">
@@ -344,11 +408,11 @@ export default function FamilyShow({ family }: Props) {
                                         <DialogHeader>
                                             <DialogTitle>Add Child</DialogTitle>
                                         </DialogHeader>
-                                        <p className="text-sm text-muted-foreground">
+                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                             Children are added directly and don't need to log in. They can be assigned todos and chores.
-                                        </p>
-                                        <form onSubmit={handleAddChild} className="space-y-4">
-                                            <div className="grid gap-2">
+                                        </Typography>
+                                        <Stack component="form" onSubmit={handleAddChild} spacing={2}>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
                                                 <Label htmlFor="child-name">Child's Name</Label>
                                                 <Input
                                                     id="child-name"
@@ -358,11 +422,11 @@ export default function FamilyShow({ family }: Props) {
                                                     required
                                                 />
                                                 <InputError message={addChildForm.errors.name} />
-                                            </div>
+                                            </Box>
                                             <Button type="submit" className="w-full" disabled={addChildForm.processing}>
                                                 {addChildForm.processing ? 'Adding…' : 'Add Child'}
                                             </Button>
-                                        </form>
+                                        </Stack>
                                     </DialogContent>
                                 </Dialog>
 
@@ -376,11 +440,11 @@ export default function FamilyShow({ family }: Props) {
                                         <DialogHeader>
                                             <DialogTitle>Invite Family Member</DialogTitle>
                                         </DialogHeader>
-                                        <form onSubmit={handleInvite} className="space-y-4">
-                                            <p className="text-sm text-muted-foreground">
+                                        <Stack component="form" onSubmit={handleInvite} spacing={2}>
+                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                                 An invitation email will be sent with a link to set up their account and join your family.
-                                            </p>
-                                            <div className="grid gap-2">
+                                            </Typography>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
                                                 <Label htmlFor="invite-email">Email Address</Label>
                                                 <Input
                                                     id="invite-email"
@@ -391,8 +455,8 @@ export default function FamilyShow({ family }: Props) {
                                                     required
                                                 />
                                                 <InputError message={inviteForm.errors.email} />
-                                            </div>
-                                            <div className="grid gap-2">
+                                            </Box>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
                                                 <Label htmlFor="invite-role">Role</Label>
                                                 <Select value={inviteForm.data.role} onValueChange={(v) => inviteForm.setData('role', v)}>
                                                     <SelectTrigger>
@@ -404,20 +468,30 @@ export default function FamilyShow({ family }: Props) {
                                                     </SelectContent>
                                                 </Select>
                                                 <InputError message={inviteForm.errors.role} />
-                                            </div>
+                                            </Box>
                                             <Button type="submit" className="w-full" disabled={inviteForm.processing}>
                                                 {inviteForm.processing ? 'Sending Invite…' : 'Send Invitation'}
                                             </Button>
-                                        </form>
+                                        </Stack>
                                     </DialogContent>
                                 </Dialog>
-                            </div>
-                        </div>
-                        <ul className="divide-y">
+                            </Box>
+                        </Box>
+                        <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0, '& > li + li': { borderTop: 1, borderColor: 'divider' } }}>
                             {memberOrder.map((member) => (
-                                <li
+                                <Box
+                                    component="li"
                                     key={member.id}
-                                    className={`flex items-center gap-3 px-4 py-3 transition-colors ${draggingId === member.id ? 'opacity-40' : ''} ${dragOverId === member.id && draggingId !== member.id ? 'bg-muted/50' : ''}`}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 1.5,
+                                        px: 2,
+                                        py: 1.5,
+                                        transition: 'background-color 0.2s',
+                                        opacity: draggingId === member.id ? 0.4 : 1,
+                                        bgcolor: dragOverId === member.id && draggingId !== member.id ? 'action.hover' : 'transparent',
+                                    }}
                                     draggable={canManageMembers && memberOrder.length > 1}
                                     onDragStart={() => onDragStart(member.id)}
                                     onDragOver={(e) => onDragOver(e, member.id)}
@@ -427,23 +501,45 @@ export default function FamilyShow({ family }: Props) {
                                     {canManageMembers && memberOrder.length > 1 && (
                                         <GripVertical className="size-4 shrink-0 cursor-grab text-muted-foreground" aria-hidden="true" />
                                     )}
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2">
-                                            <p className="font-medium">{member.name || member.email}</p>
+                                    <Box sx={{ flex: 1 }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Typography sx={{ fontWeight: 500 }}>{member.name || member.email}</Typography>
                                             {member.is_pending && (
-                                                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                                                <Box
+                                                    component="span"
+                                                    sx={{
+                                                        borderRadius: '50px',
+                                                        bgcolor: 'warning.light',
+                                                        px: 1,
+                                                        py: 0.25,
+                                                        fontSize: '0.75rem',
+                                                        color: 'warning.dark',
+                                                    }}
+                                                >
                                                     Pending
-                                                </span>
+                                                </Box>
                                             )}
                                             {member.is_child && (
-                                                <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                                <Box
+                                                    component="span"
+                                                    sx={{
+                                                        borderRadius: '50px',
+                                                        bgcolor: 'info.light',
+                                                        px: 1,
+                                                        py: 0.25,
+                                                        fontSize: '0.75rem',
+                                                        color: 'info.dark',
+                                                    }}
+                                                >
                                                     Child
-                                                </span>
+                                                </Box>
                                             )}
-                                        </div>
-                                        <p className="text-sm text-muted-foreground">{member.email ?? 'No email'}</p>
-                                    </div>
-                                    <div className="flex items-center gap-3">
+                                        </Box>
+                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                            {member.email ?? 'No email'}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                         {member.id !== currentUserId && !member.is_child ? (
                                             <Select value={member.role} onValueChange={(v) => changeRole(member.id, v)}>
                                                 <SelectTrigger className="h-6 rounded-full border border-input bg-transparent px-2 py-0.5 text-xs capitalize">
@@ -456,7 +552,19 @@ export default function FamilyShow({ family }: Props) {
                                                 </SelectContent>
                                             </Select>
                                         ) : (
-                                            <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">{member.role}</span>
+                                            <Box
+                                                component="span"
+                                                sx={{
+                                                    borderRadius: '50px',
+                                                    bgcolor: 'secondary.main',
+                                                    px: 1,
+                                                    py: 0.25,
+                                                    fontSize: '0.75rem',
+                                                    textTransform: 'capitalize',
+                                                }}
+                                            >
+                                                {member.role}
+                                            </Box>
                                         )}
                                         {canManageMembers && (
                                             <Button variant="ghost" size="icon" asChild title="Manage settings">
@@ -470,12 +578,12 @@ export default function FamilyShow({ family }: Props) {
                                                 <UserMinus className="size-4 text-destructive" />
                                             </Button>
                                         )}
-                                    </div>
-                                </li>
+                                    </Box>
+                                </Box>
                             ))}
-                        </ul>
-                    </div>
-                </div>
+                        </Box>
+                    </Box>
+                </Box>
             </AppLayout>
         </>
     );
