@@ -371,7 +371,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         className="flex items-start gap-2 rounded-lg p-2"
                                                         style={{
                                                             backgroundColor: `${color}15`,
-                                                            borderLeft: `3px solid ${color}`,
+                                                            border: `1px solid ${color}`,
                                                         }}
                                                     >
                                                         <div className="mt-0.5 shrink-0">
@@ -392,10 +392,10 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                 onClick={() => markComplete(chore)}
                                                                 title="Mark complete"
                                                             >
-                                                                <CheckCircle className="size-3 text-green-500" />
+                                                                <CheckCircle className="size-5 text-green-500" />
                                                             </Button>
                                                             <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(chore)}>
-                                                                <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path
                                                                         strokeLinecap="round"
                                                                         strokeLinejoin="round"
@@ -405,7 +405,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                 </svg>
                                                             </Button>
                                                             <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteChore(chore)}>
-                                                                <Trash2 className="size-3 text-destructive" />
+                                                                <Trash2 className="size-5 text-destructive" />
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -439,7 +439,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             <div
                                                 key={chore.id}
                                                 className="flex items-start gap-2 rounded-lg p-2"
-                                                style={{ backgroundColor: '#94a3b815', borderLeft: '3px solid #94a3b8' }}
+                                                style={{ backgroundColor: '#94a3b815', border: '1px solid #94a3b8' }}
                                             >
                                                 <div className="mt-0.5 shrink-0">
                                                     <RefreshCw className="size-3.5 text-slate-400" />

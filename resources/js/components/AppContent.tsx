@@ -1,6 +1,4 @@
 import Box from '@mui/material/Box';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, useAppSidebar } from '@/components/AppSidebarContext';
 interface AppContentProps {
     variant?: 'header' | 'sidebar';
     className?: string;
@@ -8,12 +6,7 @@ interface AppContentProps {
 }
 
 export default function AppContent({ variant = 'sidebar', className, children }: AppContentProps) {
-    const { open } = useAppSidebar();
-    const isMobile = useMediaQuery('(max-width:899px)');
-
     if (variant === 'sidebar') {
-        const marginLeft = isMobile ? 0 : open ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH;
-
         return (
             <Box
                 component="main"
@@ -24,8 +17,6 @@ export default function AppContent({ variant = 'sidebar', className, children }:
                     flexDirection: 'column',
                     minWidth: 0,
                     minHeight: '100vh',
-                    ml: `${marginLeft}px`,
-                    transition: 'margin-left 0.2s ease',
                 }}
             >
                 {children}

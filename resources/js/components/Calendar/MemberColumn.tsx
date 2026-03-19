@@ -66,7 +66,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                             flexShrink: 0,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            borderRadius: '50%',
+                            borderRadius: '--var(--radius-xl)',
                             fontSize: '0.75rem',
                             fontWeight: 700,
                             color: '#fff',

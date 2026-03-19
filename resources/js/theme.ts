@@ -63,6 +63,9 @@ const theme = createTheme({
                     WebkitFontSmoothing: 'antialiased',
                     MozOsxFontSmoothing: 'grayscale',
                 },
+                a: {
+                    textDecoration: 'none',
+                },
                 '::-webkit-scrollbar': {
                     width: 6,
                     height: 6,
