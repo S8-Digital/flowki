@@ -4,6 +4,7 @@ use App\Http\Controllers\GoogleCalendarController;
 use App\Http\Controllers\Settings\CategoriesController;
 use App\Http\Controllers\Settings\MemberColorController;
 use App\Http\Controllers\Settings\MemberOrderController;
+use App\Http\Controllers\Settings\MemberProfileController;
 use App\Http\Controllers\Settings\NotificationPreferencesController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\PermissionController;
@@ -34,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::get('auth/google/calendar', [GoogleCalendarController::class, 'redirect'])->name('google.calendar.redirect');
     Route::get('auth/google/calendar/callback', [GoogleCalendarController::class, 'callback'])->name('google.calendar.callback');
     Route::delete('auth/google/calendar', [GoogleCalendarController::class, 'disconnect'])->name('google.calendar.disconnect');
+
+    Route::get('settings/members/{user}', [MemberProfileController::class, 'edit'])->name('settings.members.profile.edit');
 
     Route::get('settings/members/{user}/permissions', [PermissionController::class, 'edit'])->name('settings.permissions.edit');
     Route::put('settings/members/{user}/permissions', [PermissionController::class, 'update'])->name('settings.permissions.update');
