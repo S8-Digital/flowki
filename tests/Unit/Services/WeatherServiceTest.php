@@ -12,25 +12,56 @@ class WeatherServiceTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @return array<string, mixed> */
+    private function currentPayload(): array
+    {
+        return [
+            'weatherCondition' => [
+                'iconBaseUri' => 'https://maps.gstatic.com/weather/v1/rain',
+                'description' => ['text' => 'Light rain'],
+                'type' => 'RAIN',
+            ],
+            'temperature' => ['degrees' => 15.3, 'unit' => 'CELSIUS'],
+            'feelsLikeTemperature' => ['degrees' => 13.1, 'unit' => 'CELSIUS'],
+            'relativeHumidity' => 72,
+            'wind' => [
+                'speed' => ['value' => 14.5, 'unit' => 'KILOMETERS_PER_HOUR'],
+                'direction' => ['degrees' => 270],
+            ],
+        ];
+    }
+
+    /** @return array<string, mixed> */
     private function forecastPayload(): array
     {
         return [
-            'currentConditions' => [
-                'weatherCondition' => [
-                    'iconBaseUri' => 'https://maps.gstatic.com/weather/v1/rain',
-                    'description' => ['text' => 'Light rain'],
-                    'type' => 'RAIN',
-                ],
-                'temperature' => ['degrees' => 15.3, 'unit' => 'CELSIUS'],
-                'feelsLikeTemperature' => ['degrees' => 13.1, 'unit' => 'CELSIUS'],
-                'relativeHumidity' => 72,
-                'wind' => [
-                    'speed' => ['value' => 14.5, 'unit' => 'KILOMETERS_PER_HOUR'],
-                    'direction' => ['degrees' => 270],
-                ],
-                'uvIndex' => 1,
-            ],
             'forecastDays' => [
+                // Days 0 and 1 are dropped by array_slice($days, 2)
+                [
+                    'interval' => ['startTime' => '2026-03-15T05:00:00Z', 'duration' => '86400s'],
+                    'daytimeForecast' => [
+                        'weatherCondition' => [
+                            'iconBaseUri' => 'https://maps.gstatic.com/weather/v1/sunny',
+                            'description' => ['text' => 'Sunny'],
+                            'type' => 'CLEAR',
+                        ],
+                    ],
+                    'maxTemperature' => ['degrees' => 20.0, 'unit' => 'CELSIUS'],
+                    'minTemperature' => ['degrees' => 12.0, 'unit' => 'CELSIUS'],
+                ],
+                [
+                    'interval' => ['startTime' => '2026-03-16T05:00:00Z', 'duration' => '86400s'],
+                    'daytimeForecast' => [
+                        'weatherCondition' => [
+                            'iconBaseUri' => 'https://maps.gstatic.com/weather/v1/sunny',
+                            'description' => ['text' => 'Sunny'],
+                            'type' => 'CLEAR',
+                        ],
+                    ],
+                    'maxTemperature' => ['degrees' => 20.0, 'unit' => 'CELSIUS'],
+                    'minTemperature' => ['degrees' => 12.0, 'unit' => 'CELSIUS'],
+                ],
+                // Days 2+ are returned
                 [
                     'interval' => ['startTime' => '2026-03-17T05:00:00Z', 'duration' => '86400s'],
                     'daytimeForecast' => [
@@ -59,8 +90,18 @@ class WeatherServiceTest extends TestCase
         ];
     }
 
+    private function fakeBothEndpoints(): void
+    {
+        Http::fake([
+            '*currentConditions*' => Http::response($this->currentPayload(), 200),
+            '*forecast*' => Http::response($this->forecastPayload(), 200),
+        ]);
+    }
+
     public function test_returns_null_when_api_key_is_empty(): void
     {
+        config(['services.google.weather_key' => '']);
+
         $service = new WeatherService('');
 
         $this->assertNull($service->getWeather('London', 51.5074, -0.1278));
@@ -89,9 +130,7 @@ class WeatherServiceTest extends TestCase
 
     public function test_returns_weather_data_on_success(): void
     {
-        Http::fake([
-            'weather.googleapis.com/*' => Http::response($this->forecastPayload(), 200),
-        ]);
+        $this->fakeBothEndpoints();
 
         $service = new WeatherService('fake-key');
         Cache::flush();
@@ -110,9 +149,7 @@ class WeatherServiceTest extends TestCase
 
     public function test_parses_forecast_days_correctly(): void
     {
-        Http::fake([
-            'weather.googleapis.com/*' => Http::response($this->forecastPayload(), 200),
-        ]);
+        $this->fakeBothEndpoints();
 
         $service = new WeatherService('fake-key');
         Cache::flush();
@@ -130,17 +167,13 @@ class WeatherServiceTest extends TestCase
 
     public function test_caches_result_and_serves_from_cache(): void
     {
-        Http::fake([
-            'weather.googleapis.com/*' => Http::response($this->forecastPayload(), 200),
-        ]);
+        $this->fakeBothEndpoints();
 
         $service = new WeatherService('fake-key');
         Cache::flush();
 
-        // First call hits the HTTP API
         $first = $service->getWeather('London', 51.5074, -0.1278);
 
-        // Second call should be served from cache (returning same data even with failing HTTP)
         Http::fake([
             '*' => Http::response([], 500),
         ]);
@@ -152,9 +185,7 @@ class WeatherServiceTest extends TestCase
 
     public function test_uses_lat_lon_params_in_request(): void
     {
-        Http::fake([
-            'weather.googleapis.com/*' => Http::response($this->forecastPayload(), 200),
-        ]);
+        $this->fakeBothEndpoints();
 
         $service = new WeatherService('fake-key');
         Cache::flush();
