@@ -33,7 +33,7 @@ class MemberOrderControllerTest extends TestCase
         $this->assertEquals([$member->id, $admin->id], $family->getMemberOrder());
     }
 
-    public function test_member_order_must_be_required(): void
+    public function test_member_order_must_be_present(): void
     {
         $user = User::factory()->withFamily()->create();
 
@@ -71,7 +71,7 @@ class MemberOrderControllerTest extends TestCase
     {
         $user = User::factory()->withFamily()->create();
 
-        // member_order is required, an empty array still passes the required rule
+        // An empty member_order array is valid — it means no custom ordering preference
         $this->actingAs($user)
             ->patch(route('settings.members.order.update'), [
                 'member_order' => [],
