@@ -5,7 +5,6 @@ namespace Tests\Feature\Settings;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
-use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 use Tests\TestCase;
 
 class TwoFactorAuthenticationTest extends TestCase
@@ -32,12 +31,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
         app(EnableTwoFactorAuthentication::class)($user);
 
-        $provider = app(TwoFactorAuthenticationProvider::class);
-        $secret = decrypt($user->fresh()->two_factor_secret);
-        $code = $provider->generateSecretKey(); // We use a real TOTP code to verify
-
-        // Since we can't easily generate a valid TOTP code in tests, we validate
-        // the endpoint rejects an invalid code with a validation error.
+        // Submitting an invalid code must fail with a validation error.
         $response = $this
             ->actingAs($user)
             ->put(route('two-factor.confirm'), [
