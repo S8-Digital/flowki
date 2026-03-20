@@ -52,7 +52,7 @@ const theme = createTheme({
         fontWeightBold: 700,
     },
     shape: {
-        borderRadius: 14, // 0.875rem
+        borderRadius: 8, // 0.875rem
     },
     spacing: 8,
     components: {
@@ -91,6 +91,26 @@ const theme = createTheme({
                 root: {
                     textTransform: 'none',
                     fontWeight: 500,
+                },
+                // Outlined variant hover
+                outlined: {
+                    '&:hover': {
+                        backgroundColor: 'hsl(207, 55%, 44%)',
+                        color: '#ffffff',
+                        borderColor: 'hsl(207, 55%, 44%)',
+                    },
+                },
+                // Text variant hover
+                text: {
+                    '&:hover': {
+                        backgroundColor: 'hsl(207, 55%, 93%)', // light blue tint
+                    },
+                },
+                // Contained is fine by default but you can darken it explicitly
+                contained: {
+                    '&:hover': {
+                        backgroundColor: 'hsl(207, 55%, 33%)', // primary.dark
+                    },
                 },
             },
         },

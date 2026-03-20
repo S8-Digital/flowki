@@ -78,7 +78,7 @@ export default function AppSidebar() {
                 height: '100%',
                 bgcolor: 'var(--sidebar)',
                 color: 'var(--sidebar-foreground)',
-                overflow: 'hidden',
+                boxShadow: 2,
             }}
         >
             {/* Header / Logo */}
@@ -86,10 +86,9 @@ export default function AppSidebar() {
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    height: 64,
+                    height: 63,
                     px: open || isMobile ? 2 : 1,
                     flexShrink: 0,
-                    overflow: 'hidden',
                     justifyContent: open || isMobile ? 'flex-start' : 'center',
                 }}
             >
@@ -126,8 +125,6 @@ export default function AppSidebar() {
                     )}
                 </Box>
             </Box>
-
-            <Divider sx={{ borderColor: 'var(--sidebar-border)' }} />
 
             {/* Navigation */}
             <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', py: 1 }}>
@@ -345,9 +342,9 @@ export default function AppSidebar() {
                     '& .MuiDrawer-paper': {
                         width: open ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH,
                         transition: 'width 0.2s ease',
-                        overflowX: 'hidden',
                         boxSizing: 'border-box',
                         border: 'none',
+                        overflow: 'visible',
                         borderRight: '1px solid var(--sidebar-border)',
                     },
                 }}

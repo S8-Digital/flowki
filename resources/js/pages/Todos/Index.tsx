@@ -222,7 +222,6 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                     </Box>
                                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label>Status</Label>
                                             <Select value={createForm.data.status} onValueChange={(v) => createForm.setData('status', v)}>
                                                 <SelectTrigger>
                                                     <SelectValue />
@@ -235,10 +234,12 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             </Select>
                                         </Box>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label>Due Date &amp; Time</Label>
                                             <DateTimeInput
                                                 value={createForm.data.due_date}
                                                 onChange={(value) => createForm.setData('due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
+                                                slotProps={{
+                                                    textField: { size: 'small', label: 'Due Date & Time', InputLabelProps: { shrink: true } },
+                                                }}
                                             />
                                         </Box>
                                     </Box>

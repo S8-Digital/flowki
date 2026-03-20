@@ -3,10 +3,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useWeather } from '@/hooks/useWeather';
 
-function weatherIconUrl(icon: string): string {
-    return `https://openweathermap.org/img/wn/${icon}@2x.png`;
-}
-
 function formatDay(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 }
@@ -30,19 +26,21 @@ export default function WeatherWidget() {
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* Current conditions */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Box
-                    component="img"
-                    src={weatherIconUrl(data.current.icon)}
-                    alt={data.current.description}
-                    sx={{ width: 64, height: 64, mt: -1, mb: -1, ml: -1 }}
-                />
+                {data.current.icon_url && (
+                    <Box
+                        component="img"
+                        src={data.current.icon_url}
+                        alt={data.current.description}
+                        sx={{ width: 64, height: 64, mt: -1, mb: -1, ml: -1 }}
+                    />
+                )}
                 <Box>
                     <Typography sx={{ fontSize: '1.875rem', lineHeight: 1, fontWeight: 600 }}>{data.current.temp}°C</Typography>
                     <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'text.secondary', textTransform: 'capitalize' }}>
                         {data.current.description}
                     </Typography>
                     <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
-                        Feels {data.current.feels_like}°C · Humidity {data.current.humidity}% · Wind {data.current.wind_speed} m/s
+                        Feels {data.current.feels_like}°C · Humidity {data.current.humidity}% · Wind {data.current.wind_speed} km/h
                     </Typography>
                 </Box>
             </Box>
@@ -52,13 +50,13 @@ export default function WeatherWidget() {
                 {data.location}
             </Typography>
 
-            {/* 5-day forecast */}
+            {/* 7-day forecast */}
             {data.forecast.length > 0 && (
                 <Box
                     component="ul"
                     sx={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(5, 1fr)',
+                        gridTemplateColumns: `repeat(${Math.min(data.forecast.length, 7)}, 1fr)`,
                         gap: 0.5,
                         borderTop: '1px solid',
                         borderColor: 'divider',
@@ -68,7 +66,7 @@ export default function WeatherWidget() {
                         listStyle: 'none',
                     }}
                 >
-                    {data.forecast.map((day) => (
+                    {data.forecast.slice(0, 7).map((day) => (
                         <Box
                             component="li"
                             key={day.date}
@@ -77,7 +75,7 @@ export default function WeatherWidget() {
                             <Typography component="span" sx={{ fontSize: '0.625rem', fontWeight: 500, color: 'text.secondary' }}>
                                 {formatDay(day.date)}
                             </Typography>
-                            <Box component="img" src={weatherIconUrl(day.icon)} alt={day.description} sx={{ width: 32, height: 32 }} />
+                            {day.icon_url && <Box component="img" src={day.icon_url} alt={day.description} sx={{ width: 32, height: 32 }} />}
                             <Typography component="span" sx={{ fontSize: '0.75rem' }}>
                                 <Typography component="span" sx={{ fontWeight: 500 }}>
                                     {day.temp_max}°

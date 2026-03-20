@@ -1,5 +1,6 @@
 import type { FirebaseApp } from 'firebase/app';
 import { initializeApp } from 'firebase/app';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -16,6 +17,11 @@ let firebaseApp: FirebaseApp | null = null;
 export function getFirebaseApp(): FirebaseApp {
     if (!firebaseApp) {
         firebaseApp = initializeApp(firebaseConfig);
+
+        initializeAppCheck(firebaseApp, {
+            provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_FIREBASE_RECAPTCHA_SITE_KEY),
+            isTokenAutoRefreshEnabled: true,
+        });
     }
 
     return firebaseApp;

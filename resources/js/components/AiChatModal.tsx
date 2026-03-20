@@ -156,9 +156,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent
-                style={{ display: 'flex', height: '80vh', maxHeight: 700, flexDirection: 'column', gap: 0, padding: 0, maxWidth: '42rem' }}
-            >
+            <DialogContent style={{ display: 'flex', height: '80vh', flexDirection: 'column', gap: 0, padding: 0 }}>
                 <DialogHeader
                     style={{
                         flexDirection: 'row',

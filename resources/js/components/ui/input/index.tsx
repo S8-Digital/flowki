@@ -1,4 +1,4 @@
-import OutlinedInput from '@mui/material/OutlinedInput';
+import OutlinedInput from '@mui/material/Input';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 

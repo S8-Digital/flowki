@@ -147,7 +147,7 @@
     --sidebar-accent-foreground: hsl(207 55% 30%);
     --sidebar-border: hsl(214 13% 91%);
     --sidebar-ring: hsl(207 55% 44%);
-    --sidebar: hsl(210 20% 98%);
+    --sidebar: hsl(0 0% 100%);
 
     /* ---- Flowki category color tokens (light) — vivid outlines + soft pastels ---- */
     --category-events-bg: hsl(207 72% 94%);
@@ -224,7 +224,7 @@
     --sidebar-accent-foreground: hsl(207 55% 72%);
     --sidebar-border: hsl(40 5% 18%);
     --sidebar-ring: hsl(207 55% 58%);
-    --sidebar: hsl(40 6% 8%);
+    --sidebar: hsl(40 3% 4%);
 
     /* ---- Flowki category color tokens (dark) ---- */
     --category-events-bg: hsl(207 38% 18%);

@@ -46,22 +46,28 @@ export default function FamilyShow({ family }: Props) {
     const inviteForm = useForm({ email: '', role: 'member' });
     const addChildForm = useForm({ name: '' });
 
+    const editNameFormRef = useRef(editNameForm);
+    editNameFormRef.current = editNameForm;
+
+    const editLocationFormRef = useRef(editLocationForm);
+    editLocationFormRef.current = editLocationForm;
+
     useEffect(() => {
         if (editNameOpen) {
-            editNameForm.setData('name', family.name);
+            editNameFormRef.current.setData('name', family.name);
         }
-    }, [editNameForm, editNameOpen, family.name]);
+    }, [editNameOpen, family.name]);
 
     useEffect(() => {
         if (editLocationOpen) {
-            editLocationForm.setData({
+            editLocationFormRef.current.setData({
                 name: family.name,
                 location_name: family.location_name ?? '',
                 latitude: family.latitude !== null ? String(family.latitude) : '',
                 longitude: family.longitude !== null ? String(family.longitude) : '',
             });
         }
-    }, [editLocationForm, editLocationOpen, family]);
+    }, [editLocationOpen, family]);
 
     function copyInviteCode() {
         navigator.clipboard.writeText(family.invite_code);
@@ -130,13 +136,16 @@ export default function FamilyShow({ family }: Props) {
     const [orderSaved, setOrderSaved] = useState(false);
     const [draggingId, setDraggingId] = useState<number | null>(null);
     const [dragOverId, setDragOverId] = useState<number | null>(null);
-    const isFirstRender = useRef(true);
+
+    // Tracks the last order that was committed to the server so we can skip
+    // saving when nothing has actually changed (also fixes Strict Mode double-fire).
+    const lastSavedOrderIds = useRef<number[]>(initialOrder.map((m) => m.id));
 
     // Auto-save member order whenever it changes (debounced)
     useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
+        const currentIds = memberOrder.map((m) => m.id);
 
+        if (currentIds.join(',') === lastSavedOrderIds.current.join(',')) {
             return;
         }
 
@@ -144,9 +153,10 @@ export default function FamilyShow({ family }: Props) {
             setOrderSaving(true);
             router.patch(
                 updateMemberOrder().url,
-                { member_order: memberOrder.map((m) => m.id) },
+                { member_order: currentIds },
                 {
                     onSuccess: () => {
+                        lastSavedOrderIds.current = currentIds;
                         setOrderSaved(true);
                         setTimeout(() => setOrderSaved(false), 2000);
                     },

@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
@@ -114,7 +115,7 @@ function SheetContent({
     children,
     side = 'right',
     ...props
-}: React.HTMLAttributes<HTMLDivElement> & { side?: string }) {
+}: React.HTMLAttributes<HTMLDivElement> & { side?: string; sx?: SxProps<Theme> }) {
     const ctx = React.useContext(SheetContext);
     return (
         <MuiDrawer
@@ -152,7 +153,7 @@ function SheetContent({
     );
 }
 
-function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
     return (
         <Box
             className={cn(className)}
@@ -172,7 +173,7 @@ function SheetFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
     );
 }
 
-function SheetTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+function SheetTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement> & { sx?: SxProps<Theme> }) {
     return (
         <Typography
             variant="h6"

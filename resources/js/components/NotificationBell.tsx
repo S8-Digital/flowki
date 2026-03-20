@@ -2,6 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import { Bell, CheckCheck, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { recent, markRead } from '@/actions/App/Http/Controllers/NotificationController';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -88,7 +89,7 @@ export default function NotificationBell() {
 
         setLoading(true);
 
-        fetch('/notifications/recent', {
+        fetch(recent().url, {
             headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
         })
             .then((res) => res.json())
@@ -108,9 +109,9 @@ export default function NotificationBell() {
         }
     }
 
-    function markRead(id: string) {
+    function markAsRead(id: string) {
         router.post(
-            `/notifications/${id}/read`,
+            markRead(id).url,
             {},
             {
                 preserveScroll: true,
@@ -245,7 +246,7 @@ export default function NotificationBell() {
                                             variant="ghost"
                                             size="icon"
                                             style={{ width: 24, height: 24 }}
-                                            onClick={() => markRead(n.id)}
+                                            onClick={() => markAsRead(n.id)}
                                             aria-label="Mark as read"
                                         >
                                             <CheckCheck style={{ width: 12, height: 12 }} />

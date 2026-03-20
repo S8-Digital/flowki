@@ -1,11 +1,12 @@
 import MuiCard from '@mui/material/Card';
 import MuiCardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
+import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
     return <MuiCard className={cn(className)} sx={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }} {...(props as any)} />;
 }
 
@@ -45,7 +46,7 @@ function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParag
     );
 }
 
-function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
     return <Box className={cn(className)} sx={{ p: 3 }} {...(props as any)} />;
 }
 

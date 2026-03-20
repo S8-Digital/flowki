@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 import 'dayjs/locale/en-au';
 import type { ComponentProps } from 'react';
+import { locale } from '@/lib/locale';
 
 type DateTimeInputProps =
     | ({ type: 'date'; value?: string | Dayjs | null } & Omit<ComponentProps<typeof DatePicker>, 'value'>)
@@ -15,7 +16,7 @@ function DateTimeInput({ value, ...props }: DateTimeInputProps) {
     const dayjsValue = typeof value === 'string' ? (value ? dayjs(value) : null) : (value ?? null);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={navigator.language.toLowerCase()}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
             {type === 'date' ? (
                 <DatePicker value={dayjsValue} {...(props as ComponentProps<typeof DatePicker>)} />
             ) : type === 'time' ? (
