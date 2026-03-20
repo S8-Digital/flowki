@@ -25,7 +25,7 @@ function mapColor(variant?: string): 'primary' | 'secondary' | 'error' | 'inheri
             return 'secondary';
         case 'ghost':
         case 'link':
-            return 'inherit';
+            return 'primary';
         default:
             return 'primary';
     }

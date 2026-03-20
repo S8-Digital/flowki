@@ -39,6 +39,7 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_AUTH_REDIRECT_URI'),
         'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
+        'weather_key' => env('GOOGLE_WEATHER_API_KEY'),
     ],
 
     'apple' => [
@@ -58,9 +59,5 @@ return [
         'app_id' => env('VITE_FIREBASE_APP_ID'),
         'measurement_id' => env('VITE_FIREBASE_MEASUREMENT_ID'),
         'vapid_key' => env('VITE_FIREBASE_VAPID_KEY'),
-    ],
-
-    'openweathermap' => [
-        'key' => env('OPENWEATHERMAP_API_KEY'),
     ],
 ];

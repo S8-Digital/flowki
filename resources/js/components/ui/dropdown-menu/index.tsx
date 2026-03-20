@@ -10,6 +10,8 @@ import { cn } from '@/lib/utils';
 interface DropdownMenuContextValue {
     anchorEl: HTMLElement | null;
     setAnchorEl: (el: HTMLElement | null) => void;
+    controlledOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 const DropdownMenuContext = React.createContext<DropdownMenuContextValue>({
@@ -17,10 +19,21 @@ const DropdownMenuContext = React.createContext<DropdownMenuContextValue>({
     setAnchorEl: () => {},
 });
 
-function DropdownMenu({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) {
+function DropdownMenu({
+    children,
+    open,
+    onOpenChange,
+    ...props
+}: {
+    children?: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    [key: string]: any;
+}) {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+
     return (
-        <DropdownMenuContext.Provider value={{ anchorEl, setAnchorEl }}>
+        <DropdownMenuContext.Provider value={{ anchorEl, setAnchorEl, controlledOpen: open, onOpenChange }}>
             <Box sx={{ position: 'relative', display: 'inline-block' }} {...(props as any)}>
                 {children}
             </Box>
@@ -39,10 +52,11 @@ function DropdownMenuTrigger({
     children?: React.ReactNode;
     [key: string]: any;
 }) {
-    const { setAnchorEl } = React.useContext(DropdownMenuContext);
+    const { setAnchorEl, onOpenChange } = React.useContext(DropdownMenuContext);
     const handleClick = (e: React.MouseEvent<HTMLElement>) => {
         onClick?.(e as any);
         setAnchorEl(e.currentTarget);
+        onOpenChange?.(true);
     };
     if (asChild) {
         return (
@@ -65,12 +79,19 @@ function DropdownMenuContent({
     children,
     ...props
 }: React.HTMLAttributes<HTMLDivElement> & { align?: string; sideOffset?: number; side?: string }) {
-    const { anchorEl, setAnchorEl } = React.useContext(DropdownMenuContext);
+    const { anchorEl, setAnchorEl, controlledOpen, onOpenChange } = React.useContext(DropdownMenuContext);
+    const isOpen = controlledOpen !== undefined ? controlledOpen : Boolean(anchorEl);
+
+    function handleClose() {
+        setAnchorEl(null);
+        onOpenChange?.(false);
+    }
+
     return (
         <MuiMenu
             anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
+            open={isOpen}
+            onClose={handleClose}
             className={cn(className)}
             slotProps={{ paper: { elevation: 2, sx: { minWidth: 192, borderRadius: 2 } } }}
             {...(props as any)}
@@ -88,10 +109,11 @@ function DropdownMenuItem({
     onClick,
     ...props
 }: React.HTMLAttributes<HTMLDivElement> & { asChild?: boolean; inset?: boolean }) {
-    const { setAnchorEl } = React.useContext(DropdownMenuContext);
+    const { setAnchorEl, onOpenChange } = React.useContext(DropdownMenuContext);
     const handleClick = (e: React.MouseEvent<HTMLLIElement>) => {
         (onClick as any)?.(e);
         setAnchorEl(null);
+        onOpenChange?.(false);
     };
     return (
         <MenuItem onClick={handleClick} className={cn(inset && 'pl-8', className)} {...(props as any)}>

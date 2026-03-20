@@ -1,10 +1,11 @@
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
 import MuiLink from '@mui/material/Link';
+import type { SxProps, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-function NavigationMenu({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) {
+function NavigationMenu({ className, children, ...props }: React.HTMLAttributes<HTMLElement> & { sx?: SxProps<Theme> }) {
     return (
         <Box
             component="nav"
@@ -17,7 +18,7 @@ function NavigationMenu({ className, children, ...props }: React.HTMLAttributes<
     );
 }
 
-function NavigationMenuList({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) {
+function NavigationMenuList({ className, ...props }: React.HTMLAttributes<HTMLUListElement> & { sx?: SxProps<Theme> }) {
     return (
         <Box
             component="ul"
@@ -28,7 +29,7 @@ function NavigationMenuList({ className, ...props }: React.HTMLAttributes<HTMLUL
     );
 }
 
-function NavigationMenuItem({ className, ...props }: React.HTMLAttributes<HTMLLIElement>) {
+function NavigationMenuItem({ className, ...props }: React.HTMLAttributes<HTMLLIElement> & { sx?: SxProps<Theme> }) {
     return <Box component="li" className={cn(className)} sx={{ position: 'relative' }} {...(props as any)} />;
 }
 

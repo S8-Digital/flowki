@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
 import { update as updateMemberOrder } from '@/actions/App/Http/Controllers/Settings/MemberOrderController';
 import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
+import GoogleAddressAutocomplete from '@/components/GoogleAddressAutocomplete';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -45,22 +46,28 @@ export default function FamilyShow({ family }: Props) {
     const inviteForm = useForm({ email: '', role: 'member' });
     const addChildForm = useForm({ name: '' });
 
+    const editNameFormRef = useRef(editNameForm);
+    editNameFormRef.current = editNameForm;
+
+    const editLocationFormRef = useRef(editLocationForm);
+    editLocationFormRef.current = editLocationForm;
+
     useEffect(() => {
         if (editNameOpen) {
-            editNameForm.setData('name', family.name);
+            editNameFormRef.current.setData('name', family.name);
         }
-    }, [editNameForm, editNameOpen, family.name]);
+    }, [editNameOpen, family.name]);
 
     useEffect(() => {
         if (editLocationOpen) {
-            editLocationForm.setData({
+            editLocationFormRef.current.setData({
                 name: family.name,
                 location_name: family.location_name ?? '',
                 latitude: family.latitude !== null ? String(family.latitude) : '',
                 longitude: family.longitude !== null ? String(family.longitude) : '',
             });
         }
-    }, [editLocationForm, editLocationOpen, family]);
+    }, [editLocationOpen, family]);
 
     function copyInviteCode() {
         navigator.clipboard.writeText(family.invite_code);
@@ -129,13 +136,16 @@ export default function FamilyShow({ family }: Props) {
     const [orderSaved, setOrderSaved] = useState(false);
     const [draggingId, setDraggingId] = useState<number | null>(null);
     const [dragOverId, setDragOverId] = useState<number | null>(null);
-    const isFirstRender = useRef(true);
+
+    // Tracks the last order that was committed to the server so we can skip
+    // saving when nothing has actually changed (also fixes Strict Mode double-fire).
+    const lastSavedOrderIds = useRef<number[]>(initialOrder.map((m) => m.id));
 
     // Auto-save member order whenever it changes (debounced)
     useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
+        const currentIds = memberOrder.map((m) => m.id);
 
+        if (currentIds.join(',') === lastSavedOrderIds.current.join(',')) {
             return;
         }
 
@@ -143,9 +153,10 @@ export default function FamilyShow({ family }: Props) {
             setOrderSaving(true);
             router.patch(
                 updateMemberOrder().url,
-                { member_order: memberOrder.map((m) => m.id) },
+                { member_order: currentIds },
                 {
                     onSuccess: () => {
+                        lastSavedOrderIds.current = currentIds;
                         setOrderSaved(true);
                         setTimeout(() => setOrderSaved(false), 2000);
                     },
@@ -314,15 +325,23 @@ export default function FamilyShow({ family }: Props) {
                                         </DialogHeader>
                                         <Stack component="form" onSubmit={handleEditLocation} spacing={2}>
                                             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                                Used to show local weather on the dashboard and calendar. Enter a city name, or provide coordinates
-                                                for more accuracy.
+                                                Used to show local weather on the dashboard and calendar. Start typing an address to search, or enter
+                                                a city name and optional coordinates manually.
                                             </Typography>
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label htmlFor="location_name">City / Location Name</Label>
-                                                <Input
+                                                <Label htmlFor="location_name">Address / Location Name</Label>
+                                                <GoogleAddressAutocomplete
                                                     id="location_name"
                                                     value={editLocationForm.data.location_name}
-                                                    onChange={(e) => editLocationForm.setData('location_name', e.target.value)}
+                                                    onChange={(value) => editLocationForm.setData('location_name', value)}
+                                                    onPlaceSelected={(place) => {
+                                                        editLocationForm.setData({
+                                                            ...editLocationForm.data,
+                                                            location_name: place.address,
+                                                            latitude: String(place.latitude),
+                                                            longitude: String(place.longitude),
+                                                        });
+                                                    }}
                                                     placeholder="e.g. London, Paris, New York"
                                                 />
                                                 <InputError message={editLocationForm.errors.location_name} />
@@ -363,6 +382,11 @@ export default function FamilyShow({ family }: Props) {
                                                     <InputError message={editLocationForm.errors.longitude} />
                                                 </Box>
                                             </Box>
+                                            {editLocationForm.data.latitude && editLocationForm.data.longitude && (
+                                                <Typography variant="caption" sx={{ color: 'success.main' }}>
+                                                    ✓ Coordinates set ({editLocationForm.data.latitude}, {editLocationForm.data.longitude})
+                                                </Typography>
+                                            )}
                                             <Button type="submit" sx={{ width: '100%' }} disabled={editLocationForm.processing}>
                                                 {editLocationForm.processing ? 'Saving…' : 'Save Location'}
                                             </Button>

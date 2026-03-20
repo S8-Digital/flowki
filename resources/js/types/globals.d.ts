@@ -4,6 +4,7 @@ import type { AppPageProps } from '@/types/index';
 declare module 'vite/client' {
     interface ImportMetaEnv {
         readonly VITE_APP_NAME: string;
+        readonly VITE_GOOGLE_MAPS_API_KEY: string | undefined;
         [key: string]: string | boolean | undefined;
     }
 

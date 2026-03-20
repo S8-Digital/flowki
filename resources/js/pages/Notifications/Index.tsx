@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CheckCheck, Trash2 } from 'lucide-react';
+import { destroy, markAllRead, markRead } from '@/actions/App/Http/Controllers/NotificationController';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
@@ -40,16 +41,16 @@ function formatDateTime(dateStr: string): string {
 }
 
 export default function NotificationsIndex({ notifications }: Props) {
-    function markRead(id: string) {
-        router.post(`/notifications/${id}/read`, {}, { preserveScroll: true });
+    function markAsRead(id: string) {
+        router.post(markRead(id).url, {}, { preserveScroll: true });
     }
 
-    function markAllRead() {
-        router.post('/notifications/read-all', {}, { preserveScroll: true });
+    function markAllAsRead() {
+        router.post(markAllRead().url, {}, { preserveScroll: true });
     }
 
     function deleteNotification(id: string) {
-        router.delete(`/notifications/${id}`, { preserveScroll: true });
+        router.delete(destroy(id).url, { preserveScroll: true });
     }
 
     const hasUnread = notifications.data.some((n) => !n.read_at);
@@ -64,7 +65,7 @@ export default function NotificationsIndex({ notifications }: Props) {
                             Notifications
                         </Typography>
                         {hasUnread && (
-                            <Button variant="outline" size="sm" onClick={markAllRead} sx={{ display: 'flex', gap: 1 }}>
+                            <Button variant="outline" size="sm" onClick={markAllAsRead} sx={{ display: 'flex', gap: 1 }}>
                                 <CheckCheck size={16} />
                                 Mark all read
                             </Button>
@@ -110,7 +111,7 @@ export default function NotificationsIndex({ notifications }: Props) {
                                                     variant="ghost"
                                                     size="icon"
                                                     sx={{ width: 32, height: 32 }}
-                                                    onClick={() => markRead(notification.id)}
+                                                    onClick={() => markAsRead(notification.id)}
                                                     aria-label="Mark as read"
                                                 >
                                                     <CheckCheck size={16} />

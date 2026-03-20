@@ -59,7 +59,7 @@ export interface User {
     name: string;
     email: string | null;
     family_id: number | null;
-    family?: { id: number; name: string; invite_code: string } | null;
+    family?: Family | null;
     role?: string;
     is_pending?: boolean;
     is_child?: boolean;
@@ -225,7 +225,7 @@ export interface WeatherCondition {
     temp: number;
     feels_like: number;
     description: string;
-    icon: string;
+    icon_url: string;
     humidity: number;
     wind_speed: number;
 }
@@ -235,7 +235,7 @@ export interface ForecastDay {
     temp_min: number;
     temp_max: number;
     description: string;
-    icon: string;
+    icon_url: string;
 }
 
 export interface WeatherData {
