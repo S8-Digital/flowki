@@ -28,7 +28,6 @@ import { Button } from '@/components/ui/button';
 import { DateTimeInput } from '@/components/ui/datetime-input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
@@ -415,8 +414,8 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                         </DialogHeader>
                         <Box component="form" onSubmit={handleCreate} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label>Title</Label>
                                 <Input
+                                    label="Title"
                                     value={createForm.data.title}
                                     onChange={(e) => createForm.setData('title', e.target.value)}
                                     placeholder="Event name"
@@ -425,16 +424,16 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 <InputError message={createForm.errors.title} />
                             </Box>
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label>Description</Label>
                                 <Input
+                                    label="Description"
                                     value={createForm.data.description}
                                     onChange={(e) => createForm.setData('description', e.target.value)}
                                     placeholder="Optional"
                                 />
                             </Box>
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label>Location</Label>
                                 <Input
+                                    label="Location"
                                     value={createForm.data.location}
                                     onChange={(e) => createForm.setData('location', e.target.value)}
                                     placeholder="Optional"
@@ -442,8 +441,8 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             </Box>
                             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Start</Label>
                                     <DateTimeInput
+                                        label="Start"
                                         value={createForm.data.start_at ? dayjs(createForm.data.start_at) : null}
                                         onChange={(value) => createForm.setData('start_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         slotProps={{ textField: { required: true } }}
@@ -451,8 +450,8 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     <InputError message={createForm.errors.start_at} />
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>End</Label>
                                     <DateTimeInput
+                                        label="End"
                                         value={createForm.data.end_at ? dayjs(createForm.data.end_at) : null}
                                         onChange={(value) => createForm.setData('end_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                     />
@@ -460,8 +459,11 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             </Box>
                             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Recurrence</Label>
-                                    <Select value={createForm.data.recurrence} onValueChange={(v) => createForm.setData('recurrence', v)}>
+                                    <Select
+                                        label="Recurrence"
+                                        value={createForm.data.recurrence}
+                                        onValueChange={(v) => createForm.setData('recurrence', v)}
+                                    >
                                         <SelectTrigger>
                                             <SelectValue placeholder="None" />
                                         </SelectTrigger>
@@ -474,12 +476,16 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </Select>
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Colour</Label>
+                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                        Colour
+                                    </Typography>
                                     <Input type="color" value={createForm.data.color} onChange={(e) => createForm.setData('color', e.target.value)} />
                                 </Box>
                             </Box>
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label>Attendees</Label>
+                                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                    Attendees
+                                </Typography>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                     {members.map((m) => (
                                         <FormControlLabel
@@ -519,8 +525,8 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                         {selectedEvent && (
                             <Box component="form" onSubmit={handleEditEvent} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Title</Label>
                                     <Input
+                                        label="Title"
                                         value={editEventForm.data.title}
                                         onChange={(e) => editEventForm.setData('title', e.target.value)}
                                         required
@@ -528,28 +534,31 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     <InputError message={editEventForm.errors.title} />
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Description</Label>
                                     <Input
+                                        label="Description"
                                         value={editEventForm.data.description}
                                         onChange={(e) => editEventForm.setData('description', e.target.value)}
                                     />
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Location</Label>
-                                    <Input value={editEventForm.data.location} onChange={(e) => editEventForm.setData('location', e.target.value)} />
+                                    <Input
+                                        label="Location"
+                                        value={editEventForm.data.location}
+                                        onChange={(e) => editEventForm.setData('location', e.target.value)}
+                                    />
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Start</Label>
                                         <DateTimeInput
+                                            label="Start"
                                             value={editEventForm.data.start_at ? dayjs(editEventForm.data.start_at) : null}
                                             onChange={(value) => editEventForm.setData('start_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                             slotProps={{ textField: { required: true } }}
                                         />
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>End</Label>
                                         <DateTimeInput
+                                            label="End"
                                             value={editEventForm.data.end_at ? dayjs(editEventForm.data.end_at) : null}
                                             onChange={(value) => editEventForm.setData('end_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         />
@@ -557,8 +566,11 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Recurrence</Label>
-                                        <Select value={editEventForm.data.recurrence} onValueChange={(v) => editEventForm.setData('recurrence', v)}>
+                                        <Select
+                                            label="Recurrence"
+                                            value={editEventForm.data.recurrence}
+                                            onValueChange={(v) => editEventForm.setData('recurrence', v)}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="None" />
                                             </SelectTrigger>
@@ -571,7 +583,9 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                         </Select>
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Colour</Label>
+                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                            Colour
+                                        </Typography>
                                         <Input
                                             type="color"
                                             value={editEventForm.data.color}
@@ -580,7 +594,9 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Attendees</Label>
+                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                        Attendees
+                                    </Typography>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                         {members.map((m) => (
                                             <FormControlLabel
@@ -626,14 +642,21 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                         {selectedTodo && (
                             <Box component="form" onSubmit={handleEditTodo} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Title</Label>
-                                    <Input value={editTodoForm.data.title} onChange={(e) => editTodoForm.setData('title', e.target.value)} required />
+                                    <Input
+                                        label="Title"
+                                        value={editTodoForm.data.title}
+                                        onChange={(e) => editTodoForm.setData('title', e.target.value)}
+                                        required
+                                    />
                                     <InputError message={editTodoForm.errors.title} />
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Status</Label>
-                                        <Select value={editTodoForm.data.status} onValueChange={(v) => editTodoForm.setData('status', v)}>
+                                        <Select
+                                            label="Status"
+                                            value={editTodoForm.data.status}
+                                            onValueChange={(v) => editTodoForm.setData('status', v)}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Status" />
                                             </SelectTrigger>
@@ -645,8 +668,11 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                         </Select>
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Priority</Label>
-                                        <Select value={editTodoForm.data.priority} onValueChange={(v) => editTodoForm.setData('priority', v)}>
+                                        <Select
+                                            label="Priority"
+                                            value={editTodoForm.data.priority}
+                                            onValueChange={(v) => editTodoForm.setData('priority', v)}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Priority" />
                                             </SelectTrigger>
@@ -660,23 +686,26 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Category</Label>
                                         <Input
+                                            label="Category"
                                             value={editTodoForm.data.category}
                                             onChange={(e) => editTodoForm.setData('category', e.target.value)}
                                         />
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Due Date &amp; Time</Label>
                                         <DateTimeInput
+                                            label="Due Date & Time"
                                             value={editTodoForm.data.due_date ? dayjs(editTodoForm.data.due_date) : null}
                                             onChange={(value) => editTodoForm.setData('due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         />
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Assign To</Label>
-                                    <Select value={editTodoForm.data.assigned_to} onValueChange={(v) => editTodoForm.setData('assigned_to', v)}>
+                                    <Select
+                                        label="Assign To"
+                                        value={editTodoForm.data.assigned_to}
+                                        onValueChange={(v) => editTodoForm.setData('assigned_to', v)}
+                                    >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Unassigned" />
                                         </SelectTrigger>
@@ -707,8 +736,8 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                         {selectedChore && (
                             <Box component="form" onSubmit={handleEditChore} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Title</Label>
                                     <Input
+                                        label="Title"
                                         value={editChoreForm.data.title}
                                         onChange={(e) => editChoreForm.setData('title', e.target.value)}
                                         required
@@ -717,8 +746,11 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Frequency</Label>
-                                        <Select value={editChoreForm.data.frequency} onValueChange={(v) => editChoreForm.setData('frequency', v)}>
+                                        <Select
+                                            label="Frequency"
+                                            value={editChoreForm.data.frequency}
+                                            onValueChange={(v) => editChoreForm.setData('frequency', v)}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Frequency" />
                                             </SelectTrigger>
@@ -732,8 +764,8 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                         </Select>
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Next Due</Label>
                                         <DateTimeInput
+                                            label="Next Due"
                                             type="date"
                                             value={editChoreForm.data.next_due_date ? dayjs(editChoreForm.data.next_due_date) : null}
                                             onChange={(value) => editChoreForm.setData('next_due_date', value?.format('YYYY-MM-DD') ?? '')}
@@ -741,7 +773,9 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Assign To</Label>
+                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                        Assign To
+                                    </Typography>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                         {members.map((m) => (
                                             <FormControlLabel

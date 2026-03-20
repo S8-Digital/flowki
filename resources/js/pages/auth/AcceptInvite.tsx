@@ -5,7 +5,6 @@ import { store } from '@/actions/App/Http/Controllers/AcceptInviteController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout';
 
 interface Props {
@@ -34,14 +33,13 @@ export default function AcceptInvite({ token, email, familyName, role }: Props) 
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Box sx={{ display: 'grid', gap: 3 }}>
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="email">Email address</Label>
-                        <Input id="email" type="email" value={email} disabled />
+                        <Input id="email" type="email" label="Email address" value={email} disabled />
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="name">Your name</Label>
                         <Input
                             id="name"
+                            label="Your name"
                             type="text"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
@@ -55,9 +53,9 @@ export default function AcceptInvite({ token, email, familyName, role }: Props) 
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
+                            label="Password"
                             type="password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
@@ -70,9 +68,9 @@ export default function AcceptInvite({ token, email, familyName, role }: Props) 
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="password_confirmation">Confirm password</Label>
                         <Input
                             id="password_confirmation"
+                            label="Confirm password"
                             type="password"
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}

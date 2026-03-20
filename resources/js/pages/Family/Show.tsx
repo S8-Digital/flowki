@@ -13,7 +13,6 @@ import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
 import type { AppPageProps, BreadcrumbItem, Family, User } from '@/types';
@@ -234,9 +233,9 @@ export default function FamilyShow({ family }: Props) {
                                     </DialogHeader>
                                     <Stack component="form" onSubmit={handleEditName} spacing={2}>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label htmlFor="name">Family Name</Label>
                                             <Input
                                                 id="name"
+                                                label="Family Name"
                                                 value={editNameForm.data.name}
                                                 onChange={(e) => editNameForm.setData('name', e.target.value)}
                                                 required
@@ -329,7 +328,9 @@ export default function FamilyShow({ family }: Props) {
                                                 a city name and optional coordinates manually.
                                             </Typography>
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label htmlFor="location_name">Address / Location Name</Label>
+                                                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                    Address / Location Name
+                                                </Typography>
                                                 <GoogleAddressAutocomplete
                                                     id="location_name"
                                                     value={editLocationForm.data.location_name}
@@ -348,14 +349,9 @@ export default function FamilyShow({ family }: Props) {
                                             </Box>
                                             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                                    <Label htmlFor="latitude">
-                                                        Latitude{' '}
-                                                        <Typography component="span" variant="caption" sx={{ color: 'text.secondary' }}>
-                                                            (optional)
-                                                        </Typography>
-                                                    </Label>
                                                     <Input
                                                         id="latitude"
+                                                        label="Latitude (optional)"
                                                         type="number"
                                                         step="any"
                                                         value={editLocationForm.data.latitude}
@@ -365,14 +361,9 @@ export default function FamilyShow({ family }: Props) {
                                                     <InputError message={editLocationForm.errors.latitude} />
                                                 </Box>
                                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                                    <Label htmlFor="longitude">
-                                                        Longitude{' '}
-                                                        <Typography component="span" variant="caption" sx={{ color: 'text.secondary' }}>
-                                                            (optional)
-                                                        </Typography>
-                                                    </Label>
                                                     <Input
                                                         id="longitude"
+                                                        label="Longitude (optional)"
                                                         type="number"
                                                         step="any"
                                                         value={editLocationForm.data.longitude}
@@ -447,9 +438,9 @@ export default function FamilyShow({ family }: Props) {
                                         </Typography>
                                         <Stack component="form" onSubmit={handleAddChild} spacing={2}>
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label htmlFor="child-name">Child's Name</Label>
                                                 <Input
                                                     id="child-name"
+                                                    label="Child's Name"
                                                     value={addChildForm.data.name}
                                                     onChange={(e) => addChildForm.setData('name', e.target.value)}
                                                     placeholder="e.g. Emma"
@@ -479,9 +470,9 @@ export default function FamilyShow({ family }: Props) {
                                                 An invitation email will be sent with a link to set up their account and join your family.
                                             </Typography>
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label htmlFor="invite-email">Email Address</Label>
                                                 <Input
                                                     id="invite-email"
+                                                    label="Email Address"
                                                     type="email"
                                                     value={inviteForm.data.email}
                                                     onChange={(e) => inviteForm.setData('email', e.target.value)}
@@ -491,8 +482,11 @@ export default function FamilyShow({ family }: Props) {
                                                 <InputError message={inviteForm.errors.email} />
                                             </Box>
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label htmlFor="invite-role">Role</Label>
-                                                <Select value={inviteForm.data.role} onValueChange={(v) => inviteForm.setData('role', v)}>
+                                                <Select
+                                                    label="Role"
+                                                    value={inviteForm.data.role}
+                                                    onValueChange={(v) => inviteForm.setData('role', v)}
+                                                >
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select role" />
                                                     </SelectTrigger>

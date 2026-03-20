@@ -9,7 +9,6 @@ import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
 import { link, unlink } from '@/routes/social';
@@ -92,9 +91,9 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                     <HeadingSmall title="Profile information" description="Update your name and email address" />
                     <Stack component="form" onSubmit={handleSubmit} spacing={3}>
                         <Box sx={{ display: 'grid', gap: 1 }}>
-                            <Label htmlFor="name">Name</Label>
                             <Input
                                 id="name"
+                                label="Name"
                                 value={data.name}
                                 onChange={(e) => setData('name', e.target.value)}
                                 required
@@ -104,10 +103,10 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                             <InputError className="mt-2" message={errors.name} />
                         </Box>
                         <Box sx={{ display: 'grid', gap: 1 }}>
-                            <Label htmlFor="email">Email address</Label>
                             <Input
                                 id="email"
                                 type="email"
+                                label="Email address"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
                                 required
@@ -117,7 +116,9 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                             <InputError className="mt-2" message={errors.email} />
                         </Box>
                         <Box sx={{ display: 'grid', gap: 1 }}>
-                            <Label htmlFor="profile_color">Profile Colour</Label>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                Profile Colour
+                            </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                 <Box
                                     component="input"

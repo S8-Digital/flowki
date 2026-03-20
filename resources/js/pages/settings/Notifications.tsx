@@ -1,12 +1,12 @@
 import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Bell, Mail } from 'lucide-react';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
@@ -41,56 +41,66 @@ export default function NotificationSettings({ preferences }: Props) {
                         <HeadingSmall title="Notification preferences" description="Choose how you'd like to receive notifications." />
 
                         <Stack spacing={2}>
-                            <Box
+                            <FormControlLabel
+                                labelPlacement="start"
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
                                     justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    mx: 0,
                                     borderRadius: '12px',
                                     border: 1,
                                     borderColor: 'divider',
                                     p: 2,
                                 }}
-                            >
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                    <Mail className="size-5 text-muted-foreground" />
-                                    <Box>
-                                        <Label htmlFor="email-notifications" className="text-sm font-medium">
-                                            Email notifications
-                                        </Label>
-                                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
-                                            Receive notifications via email when items are assigned or completed.
-                                        </Typography>
+                                control={
+                                    <Switch id="email-notifications" checked={data.email} onCheckedChange={(checked) => setData('email', checked)} />
+                                }
+                                label={
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                        <Mail className="size-5 text-muted-foreground" />
+                                        <Box>
+                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                Email notifications
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                                Receive notifications via email when items are assigned or completed.
+                                            </Typography>
+                                        </Box>
                                     </Box>
-                                </Box>
-                                <Switch id="email-notifications" checked={data.email} onCheckedChange={(checked) => setData('email', checked)} />
-                            </Box>
+                                }
+                            />
                             <InputError message={errors.email} />
 
-                            <Box
+                            <FormControlLabel
+                                labelPlacement="start"
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
                                     justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    mx: 0,
                                     borderRadius: '12px',
                                     border: 1,
                                     borderColor: 'divider',
                                     p: 2,
                                 }}
-                            >
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                    <Bell className="size-5 text-muted-foreground" />
-                                    <Box>
-                                        <Label htmlFor="push-notifications" className="text-sm font-medium">
-                                            Push notifications
-                                        </Label>
-                                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
-                                            Receive push notifications on your devices when items are assigned or completed.
-                                        </Typography>
+                                control={
+                                    <Switch id="push-notifications" checked={data.push} onCheckedChange={(checked) => setData('push', checked)} />
+                                }
+                                label={
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                        <Bell className="size-5 text-muted-foreground" />
+                                        <Box>
+                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                Push notifications
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                                Receive push notifications on your devices when items are assigned or completed.
+                                            </Typography>
+                                        </Box>
                                     </Box>
-                                </Box>
-                                <Switch id="push-notifications" checked={data.push} onCheckedChange={(checked) => setData('push', checked)} />
-                            </Box>
+                                }
+                            />
                             <InputError message={errors.push} />
                         </Stack>
 

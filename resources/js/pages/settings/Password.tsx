@@ -7,7 +7,6 @@ import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
 import type { BreadcrumbItem } from '@/types';
@@ -38,10 +37,10 @@ export default function Password() {
                     <HeadingSmall title="Update password" description="Ensure your account is using a long, random password to stay secure" />
                     <Stack component="form" onSubmit={handleSubmit} spacing={3}>
                         <Box sx={{ display: 'grid', gap: 1 }}>
-                            <Label htmlFor="current_password">Current password</Label>
                             <Input
                                 id="current_password"
                                 type="password"
+                                label="Current password"
                                 value={data.current_password}
                                 onChange={(e) => setData('current_password', e.target.value)}
                                 autoComplete="current-password"
@@ -50,10 +49,10 @@ export default function Password() {
                             <InputError message={errors.current_password} />
                         </Box>
                         <Box sx={{ display: 'grid', gap: 1 }}>
-                            <Label htmlFor="password">New password</Label>
                             <Input
                                 id="password"
                                 type="password"
+                                label="New password"
                                 value={data.password}
                                 onChange={(e) => setData('password', e.target.value)}
                                 autoComplete="new-password"
@@ -62,10 +61,10 @@ export default function Password() {
                             <InputError message={errors.password} />
                         </Box>
                         <Box sx={{ display: 'grid', gap: 1 }}>
-                            <Label htmlFor="password_confirmation">Confirm password</Label>
                             <Input
                                 id="password_confirmation"
                                 type="password"
+                                label="Confirm password"
                                 value={data.password_confirmation}
                                 onChange={(e) => setData('password_confirmation', e.target.value)}
                                 autoComplete="new-password"

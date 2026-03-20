@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import MuiDivider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import MuiSelect, { type SelectChangeEvent } from '@mui/material/Select';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -62,13 +63,17 @@ function Select({
     value,
     onValueChange,
     children,
+    label,
     ...props
 }: {
     value?: string;
     onValueChange?: (value: string) => void;
     children?: React.ReactNode;
+    label?: string;
     [key: string]: any;
 }) {
+    const id = React.useId();
+    const labelId = label ? `select-label-${id}` : undefined;
     const items = collectSelectItems(children);
     const placeholder = extractPlaceholder(children);
     const triggerProps = extractTriggerProps(children);
@@ -78,12 +83,18 @@ function Select({
 
     return (
         <FormControl size="small" fullWidth>
+            {label && <InputLabel id={labelId}>{label}</InputLabel>}
             <MuiSelect
                 value={value ?? ''}
                 onChange={(e: SelectChangeEvent) => onValueChange?.(e.target.value)}
-                displayEmpty
+                displayEmpty={!label}
+                labelId={labelId}
+                label={label}
                 renderValue={(val) => {
-                    if (!val) return <Box component="span" sx={{ color: 'text.secondary' }}>{placeholder}</Box>;
+                    if (!val) {
+                        if (label) return undefined;
+                        return <Box component="span" sx={{ color: 'text.secondary' }}>{placeholder}</Box>;
+                    }
                     const matched = items.find((item) => item.props.value === val);
                     return matched ? matched.props.children : String(val);
                 }}

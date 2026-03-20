@@ -6,7 +6,6 @@ import { create, joinStore } from '@/actions/App/Http/Controllers/FamilyControll
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -36,9 +35,9 @@ export default function FamilyJoin() {
                         </Box>
                         <Stack component="form" onSubmit={handleSubmit} spacing={2}>
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label htmlFor="invite_code">Invite Code</Label>
                                 <Input
                                     id="invite_code"
+                                    label="Invite Code"
                                     value={data.invite_code}
                                     onChange={(e) => setData('invite_code', e.target.value.toUpperCase())}
                                     placeholder="e.g. ABCD1234"

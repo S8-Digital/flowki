@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import type { PermissionGroup } from '@/types';
 
@@ -66,16 +66,18 @@ export default function UserPermissionsPanel({ permissionGroups, grantedPermissi
                             const isGranted = grantedPermissions.includes(permission.name);
 
                             return (
-                                <Box key={permission.name} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                    <Checkbox
-                                        id={`perm-${permission.name}`}
-                                        checked={isGranted}
-                                        onCheckedChange={(checked) => onChange(permission.name, !!checked)}
-                                    />
-                                    <Label htmlFor={`perm-${permission.name}`} style={{ cursor: 'pointer', fontSize: '0.875rem', fontWeight: 400 }}>
-                                        {permissionLabels[permission.name] ?? permission.name}
-                                    </Label>
-                                </Box>
+                                <FormControlLabel
+                                    key={permission.name}
+                                    control={
+                                        <Checkbox
+                                            id={`perm-${permission.name}`}
+                                            checked={isGranted}
+                                            onCheckedChange={(checked) => onChange(permission.name, !!checked)}
+                                        />
+                                    }
+                                    label={permissionLabels[permission.name] ?? permission.name}
+                                    slotProps={{ typography: { variant: 'body2' } }}
+                                />
                             );
                         })}
                     </Stack>
