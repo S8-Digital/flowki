@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
@@ -6,6 +6,7 @@ import { store } from '@/actions/App/Http/Controllers/Auth/EmailVerificationNoti
 import TextLink from '@/components/TextLink';
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/AuthLayout';
+import { toUrl } from '@/lib/utils';
 import { logout } from '@/routes';
 
 interface Props {
@@ -36,7 +37,7 @@ export default function VerifyEmail({ status }: Props) {
                     Resend verification email
                 </Button>
 
-                <TextLink href={logout()} as="button" className="mx-auto block text-sm">
+                <TextLink as="button" onClick={() => router.post(toUrl(logout()))} className="mx-auto block text-sm">
                     Log out
                 </TextLink>
             </Box>

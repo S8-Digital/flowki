@@ -62,7 +62,7 @@ export default function AppSidebar() {
     function handleLogout() {
         handleUserMenuClose();
         router.flushAll();
-        router.visit(toUrl(logout()));
+        router.post(toUrl(logout()));
     }
 
     function handleSettings() {
