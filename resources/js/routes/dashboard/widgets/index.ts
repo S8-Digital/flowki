@@ -60,7 +60,7 @@ store.form = storeForm
 * @see app/Http/Controllers/DashboardController.php:76
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-export const update = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -75,7 +75,7 @@ update.definition = {
 * @see app/Http/Controllers/DashboardController.php:76
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-update.url = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update.url = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { dashboardWidget: args }
     }
@@ -108,7 +108,7 @@ update.url = (args: { dashboardWidget: number | { id: number } } | [dashboardWid
 * @see app/Http/Controllers/DashboardController.php:76
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-update.patch = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -118,7 +118,7 @@ update.patch = (args: { dashboardWidget: number | { id: number } } | [dashboardW
 * @see app/Http/Controllers/DashboardController.php:76
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-const updateForm = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -133,7 +133,7 @@ const updateForm = (args: { dashboardWidget: number | { id: number } } | [dashbo
 * @see app/Http/Controllers/DashboardController.php:76
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-updateForm.patch = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -206,7 +206,7 @@ reorder.form = reorderForm
 * @see app/Http/Controllers/DashboardController.php:105
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-export const destroy = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -221,7 +221,7 @@ destroy.definition = {
 * @see app/Http/Controllers/DashboardController.php:105
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-destroy.url = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { dashboardWidget: args }
     }
@@ -254,7 +254,7 @@ destroy.url = (args: { dashboardWidget: number | { id: number } } | [dashboardWi
 * @see app/Http/Controllers/DashboardController.php:105
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-destroy.delete = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -264,7 +264,7 @@ destroy.delete = (args: { dashboardWidget: number | { id: number } } | [dashboar
 * @see app/Http/Controllers/DashboardController.php:105
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-const destroyForm = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -279,7 +279,7 @@ const destroyForm = (args: { dashboardWidget: number | { id: number } } | [dashb
 * @see app/Http/Controllers/DashboardController.php:105
 * @route '/dashboard/widgets/{dashboardWidget}'
 */
-destroyForm.delete = (args: { dashboardWidget: number | { id: number } } | [dashboardWidget: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { dashboardWidget: string | number | { id: string | number } } | [dashboardWidget: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
