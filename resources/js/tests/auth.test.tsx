@@ -1,4 +1,4 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -244,6 +244,7 @@ describe('ResetPassword page', () => {
 describe('VerifyEmail page', () => {
     beforeEach(() => {
         mockForm({});
+        vi.mocked(router.post).mockClear();
     });
 
     it('renders the resend button', () => {
@@ -254,6 +255,14 @@ describe('VerifyEmail page', () => {
     it('shows confirmation message when status is verification-link-sent', () => {
         render(<VerifyEmail status="verification-link-sent" />);
         expect(screen.getByText(/new verification link has been sent/i)).toBeInTheDocument();
+    });
+
+    it('calls router.post to /logout when the log out button is clicked', async () => {
+        const user = userEvent.setup();
+        render(<VerifyEmail />);
+        const logoutBtn = screen.getByRole('button', { name: /log out/i });
+        await user.click(logoutBtn);
+        expect(router.post).toHaveBeenCalledWith('/logout');
     });
 });
 

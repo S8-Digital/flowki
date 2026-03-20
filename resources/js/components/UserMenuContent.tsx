@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import { LogOut, Settings } from 'lucide-react';
 import { DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import UserInfo from '@/components/UserInfo';
+import { toUrl } from '@/lib/utils';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
@@ -14,6 +15,7 @@ interface UserMenuContentProps {
 export default function UserMenuContent({ user }: UserMenuContentProps) {
     function handleLogout() {
         router.flushAll();
+        router.post(toUrl(logout()));
     }
 
     return (
@@ -31,11 +33,9 @@ export default function UserMenuContent({ user }: UserMenuContentProps) {
                 </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild style={{ cursor: 'pointer' }}>
-                <Link style={{ display: 'flex', alignItems: 'center' }} href={logout()} onClick={handleLogout} as="a">
-                    <LogOut style={{ marginRight: 16, width: 16, height: 16 }} />
-                    Log out
-                </Link>
+            <DropdownMenuItem style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={handleLogout}>
+                <LogOut style={{ marginRight: 16, width: 16, height: 16 }} />
+                Log out
             </DropdownMenuItem>
         </>
     );
