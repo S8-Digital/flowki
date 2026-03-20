@@ -1,4 +1,6 @@
 import { Head } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { Bot, Send, Sparkles, Trash2, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { chat } from '@/actions/App/Http/Controllers/AiController';
@@ -179,63 +181,132 @@ export default function AssistantIndex() {
         <>
             <Head title="AI Assistant" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex h-[calc(100vh-10rem)] flex-col">
-                    <div ref={containerRef} className="flex-1 space-y-4 overflow-y-auto p-4">
+                <Box sx={{ display: 'flex', height: 'calc(100vh - 10rem)', flexDirection: 'column' }}>
+                    <Box ref={containerRef} sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto', p: 2 }}>
                         {messages.length === 0 ? (
-                            <div className="flex h-full flex-col items-center justify-center gap-6 text-center">
-                                <div className="flex size-16 items-center justify-center rounded-full bg-primary/10">
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    height: '100%',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: 3,
+                                    textAlign: 'center',
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        width: 64,
+                                        height: 64,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: '50%',
+                                        bgcolor: 'primary.light',
+                                    }}
+                                >
                                     <Sparkles className="size-8 text-primary" />
-                                </div>
-                                <div>
-                                    <h2 className="text-xl font-semibold">Family Assistant</h2>
-                                    <p className="mt-1 text-sm text-muted-foreground">
+                                </Box>
+                                <Box>
+                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                        Family Assistant
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ mt: 0.5, color: 'text.secondary' }}>
                                         Ask me to create todos, schedule events, manage chores, import recipes, or manage your shopping list.
-                                    </p>
-                                </div>
-                                <div className="flex flex-wrap justify-center gap-2">
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
                                     {suggestions.map((s) => (
-                                        <button
+                                        <Box
                                             key={s}
+                                            component="button"
                                             onClick={() => sendMessage(s)}
-                                            className="rounded-full border px-3 py-1.5 text-sm transition hover:bg-accent"
+                                            sx={{
+                                                borderRadius: '50px',
+                                                border: 1,
+                                                borderColor: 'divider',
+                                                px: 1.5,
+                                                py: 0.75,
+                                                fontSize: '0.875rem',
+                                                cursor: 'pointer',
+                                                bgcolor: 'background.default',
+                                                '&:hover': { bgcolor: 'action.hover' },
+                                                transition: 'background-color 0.2s',
+                                            }}
                                         >
                                             {s}
-                                        </button>
+                                        </Box>
                                     ))}
-                                </div>
-                            </div>
+                                </Box>
+                            </Box>
                         ) : (
                             messages.map((msg, i) => (
-                                <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <Box key={i} sx={{ display: 'flex', gap: 1.5, justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                     {msg.role === 'assistant' && (
-                                        <div className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                                        <Box
+                                            sx={{
+                                                mt: 0.5,
+                                                display: 'flex',
+                                                width: 32,
+                                                height: 32,
+                                                flexShrink: 0,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                borderRadius: '50%',
+                                                bgcolor: 'primary.light',
+                                            }}
+                                        >
                                             <Bot className="size-4 text-primary" />
-                                        </div>
+                                        </Box>
                                     )}
-                                    <div
-                                        className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === 'user' ? 'rounded-br-sm bg-primary text-primary-foreground' : 'rounded-bl-sm bg-muted'}`}
+                                    <Box
+                                        sx={{
+                                            maxWidth: '80%',
+                                            borderRadius: 3,
+                                            ...(msg.role === 'user'
+                                                ? { borderBottomRightRadius: 4, bgcolor: 'primary.main', color: 'primary.contrastText' }
+                                                : { borderBottomLeftRadius: 4, bgcolor: 'action.hover' }),
+                                            px: 2,
+                                            py: 1.25,
+                                            fontSize: '0.875rem',
+                                        }}
                                     >
                                         {msg.isStreaming && !msg.content ? (
-                                            <span className="flex items-center gap-1 text-muted-foreground">
+                                            <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
                                                 <span className="animate-bounce">●</span>
                                                 <span className="animate-bounce [animation-delay:100ms]">●</span>
                                                 <span className="animate-bounce [animation-delay:200ms]">●</span>
-                                            </span>
+                                            </Box>
                                         ) : (
-                                            <span className="whitespace-pre-wrap">{msg.content}</span>
+                                            <Box component="span" sx={{ whiteSpace: 'pre-wrap' }}>
+                                                {msg.content}
+                                            </Box>
                                         )}
-                                    </div>
+                                    </Box>
                                     {msg.role === 'user' && (
-                                        <div className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary">
+                                        <Box
+                                            sx={{
+                                                mt: 0.5,
+                                                display: 'flex',
+                                                width: 32,
+                                                height: 32,
+                                                flexShrink: 0,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                borderRadius: '50%',
+                                                bgcolor: 'secondary.main',
+                                            }}
+                                        >
                                             <User className="size-4" />
-                                        </div>
+                                        </Box>
                                     )}
-                                </div>
+                                </Box>
                             ))
                         )}
-                    </div>
-                    <div className="border-t p-4">
-                        <div className="flex items-end gap-2">
+                    </Box>
+                    <Box sx={{ borderTop: 1, borderColor: 'divider', p: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
                             <Input
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
@@ -259,10 +330,12 @@ export default function AssistantIndex() {
                                     <Trash2 className="size-4" />
                                 </Button>
                             )}
-                        </div>
-                        <p className="mt-1.5 text-center text-xs text-muted-foreground">AI can make mistakes. Verify important information.</p>
-                    </div>
-                </div>
+                        </Box>
+                        <Typography variant="caption" sx={{ mt: 0.75, textAlign: 'center', color: 'text.secondary', display: 'block' }}>
+                            AI can make mistakes. Verify important information.
+                        </Typography>
+                    </Box>
+                </Box>
             </AppLayout>
         </>
     );

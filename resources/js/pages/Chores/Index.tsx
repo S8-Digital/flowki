@@ -1,6 +1,10 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { Fab } from '@mui/material';
+import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+
+import Typography from '@mui/material/Typography';
 import { CheckCircle, Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { complete, destroy, store, update } from '@/actions/App/Http/Controllers/ChoreController';
@@ -155,22 +159,24 @@ export default function ChoresIndex({ chores, members }: Props) {
         <>
             <Head title="Chores" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-4 p-6">
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
                     {/* Header */}
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-semibold">Chores</h1>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            Chores
+                        </Typography>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button size="sm">
-                                    <Plus className="mr-1 size-4" /> New Chore
-                                </Button>
+                                <Fab color="primary" size="small" aria-label="New Chore">
+                                    <Plus className="size-4" />
+                                </Fab>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle>Create Chore</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={handleCreate} className="space-y-4">
-                                    <div className="grid gap-2">
+                                <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Title</Label>
                                         <Input
                                             value={createForm.data.title}
@@ -179,17 +185,17 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             required
                                         />
                                         <InputError message={createForm.errors.title} />
-                                    </div>
-                                    <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Description</Label>
                                         <Input
                                             value={createForm.data.description}
                                             onChange={(e) => createForm.setData('description', e.target.value)}
                                             placeholder="Optional"
                                         />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Frequency</Label>
                                             <Select value={createForm.data.frequency} onValueChange={(v) => createForm.setData('frequency', v)}>
                                                 <SelectTrigger>
@@ -203,18 +209,18 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                        </div>
-                                        <div className="grid gap-2">
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
                                             <Label>Next Due</Label>
                                             <DateTimeInput
                                                 value={createForm.data.next_due_date}
-                                                onChange={(e) => createForm.setData('next_due_date', e.target.value)}
+                                                onChange={(value) => createForm.setData('next_due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                             />
-                                        </div>
-                                    </div>
-                                    <div className="grid gap-2">
+                                        </Box>
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Assign To</Label>
-                                        <div className="flex flex-col gap-1">
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                             {members.map((m) => (
                                                 <FormControlLabel
                                                     key={m.id}
@@ -230,11 +236,21 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                     label={m.name}
                                                 />
                                             ))}
-                                        </div>
-                                    </div>
-                                    <div className="space-y-3 rounded-lg border p-3">
-                                        <div className="flex items-center justify-between">
-                                            <Label htmlFor="create-chore-reminder-enabled" className="cursor-pointer">
+                                        </Box>
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 1.5,
+                                            borderRadius: '12px',
+                                            border: 1,
+                                            borderColor: 'divider',
+                                            p: 1.5,
+                                        }}
+                                    >
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <Label htmlFor="create-chore-reminder-enabled" style={{ cursor: 'pointer' }}>
                                                 Reminder
                                             </Label>
                                             <Switch
@@ -242,10 +258,10 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 checked={createForm.data.reminder_enabled}
                                                 onCheckedChange={(v) => createForm.setData('reminder_enabled', v)}
                                             />
-                                        </div>
+                                        </Box>
                                         {createForm.data.reminder_enabled && (
-                                            <div className="grid gap-2">
-                                                <Label className="text-xs text-muted-foreground">Send reminder</Label>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
+                                                <Label sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>Send reminder</Label>
                                                 <Select
                                                     value={String(createForm.data.reminder_lead_time)}
                                                     onValueChange={(v) => createForm.setData('reminder_lead_time', Number(v))}
@@ -261,29 +277,44 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         <SelectItem value="1440">1 day before</SelectItem>
                                                     </SelectContent>
                                                 </Select>
-                                            </div>
+                                            </Box>
                                         )}
-                                    </div>
-                                    <Button type="submit" className="w-full" disabled={createForm.processing}>
-                                        {createForm.processing ? 'Creating\u2026' : 'Create Chore'}
+                                    </Box>
+                                    <Button type="submit" sx={{ width: '100%' }} disabled={createForm.processing}>
+                                        {createForm.processing ? 'Creating…' : 'Create Chore'}
                                     </Button>
                                 </form>
                             </DialogContent>
                         </Dialog>
-                    </div>
+                    </Box>
 
                     {/* Member toggles */}
-                    <div className="flex flex-wrap gap-1.5">
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
                         {members.map((member, idx) => {
                             const color = getMemberColor(member, idx);
                             const hidden = hiddenMembers.has(member.id);
 
                             return (
-                                <button
+                                <Box
+                                    component="button"
                                     key={member.id}
                                     type="button"
                                     onClick={() => toggleMember(member.id)}
-                                    className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-all ${hidden ? 'opacity-40' : ''}`}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 0.75,
+                                        borderRadius: '50px',
+                                        border: 1,
+                                        px: 1.25,
+                                        py: 0.5,
+                                        fontSize: '0.75rem',
+                                        fontWeight: 500,
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        opacity: hidden ? 0.4 : 1,
+                                        bgcolor: 'transparent',
+                                    }}
                                     style={{
                                         borderColor: color,
                                         color: hidden ? undefined : color,
@@ -292,16 +323,31 @@ export default function ChoresIndex({ chores, members }: Props) {
                                     aria-pressed={!hidden}
                                     title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
                                 >
-                                    {hidden ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
+                                    {hidden ? <EyeOff size={12} /> : <Eye size={12} />}
                                     {member.name}
-                                </button>
+                                </Box>
                             );
                         })}
                         {/* Unassigned toggle */}
-                        <button
+                        <Box
+                            component="button"
                             type="button"
                             onClick={() => toggleMember(UNASSIGNED_ID)}
-                            className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-all ${hiddenMembers.has(UNASSIGNED_ID) ? 'opacity-40' : ''}`}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.75,
+                                borderRadius: '50px',
+                                border: 1,
+                                px: 1.25,
+                                py: 0.5,
+                                fontSize: '0.75rem',
+                                fontWeight: 500,
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                opacity: hiddenMembers.has(UNASSIGNED_ID) ? 0.4 : 1,
+                                bgcolor: 'transparent',
+                            }}
                             style={{
                                 borderColor: '#94a3b8',
                                 color: hiddenMembers.has(UNASSIGNED_ID) ? undefined : '#94a3b8',
@@ -310,92 +356,150 @@ export default function ChoresIndex({ chores, members }: Props) {
                             aria-pressed={!hiddenMembers.has(UNASSIGNED_ID)}
                             title={hiddenMembers.has(UNASSIGNED_ID) ? 'Show Unassigned' : 'Hide Unassigned'}
                         >
-                            {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
+                            {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff size={12} /> : <Eye size={12} />}
                             Unassigned
-                        </button>
-                    </div>
+                        </Box>
+                    </Box>
 
                     {/* Column view */}
                     {!chores || !columns ? (
-                        <div className="flex gap-3 overflow-x-auto pb-2">
+                        <Box sx={{ display: 'flex', gap: 1.5, overflowX: 'auto', pb: 1 }}>
                             {[...Array(3)].map((_, i) => (
-                                <div key={i} className="flex max-w-[320px] min-w-[240px] flex-1 flex-col gap-2">
+                                <Box key={i} sx={{ display: 'flex', maxWidth: 320, minWidth: 240, flex: 1, flexDirection: 'column', gap: 1 }}>
                                     <Skeleton className="h-20 w-full rounded-xl" />
                                     {[...Array(3)].map((_, j) => (
                                         <Skeleton key={j} className="h-14 w-full rounded-xl" />
                                     ))}
-                                </div>
+                                </Box>
                             ))}
-                        </div>
+                        </Box>
                     ) : (
-                        <div className="flex gap-3 overflow-x-auto pb-2">
+                        <Box sx={{ display: 'flex', gap: 1.5, overflowX: 'auto', pb: 1 }}>
                             {/* Member columns */}
                             {visibleAssigned.map(({ member, idx, chores: memberChores, pending }) => {
                                 const color = getMemberColor(member, idx);
 
                                 return (
-                                    <div
+                                    <Box
                                         key={member.id}
-                                        className="flex max-w-[320px] min-w-[240px] flex-1 flex-col overflow-hidden rounded-xl border"
+                                        sx={{
+                                            display: 'flex',
+                                            maxWidth: 320,
+                                            minWidth: 240,
+                                            flex: 1,
+                                            flexDirection: 'column',
+                                            overflow: 'hidden',
+                                            borderRadius: 3,
+                                            border: 1,
+                                            borderColor: 'divider',
+                                        }}
                                     >
                                         {/* Column header */}
-                                        <div
-                                            className="flex flex-col gap-1 p-3"
+                                        <Box
+                                            sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, p: 1.5 }}
                                             style={{ backgroundColor: `${color}22`, borderBottom: `3px solid ${color}` }}
                                         >
-                                            <div className="flex items-center gap-2">
-                                                <div
-                                                    className="flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        width: 32,
+                                                        height: 32,
+                                                        flexShrink: 0,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderRadius: '50%',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 700,
+                                                        color: 'white',
+                                                    }}
                                                     style={{ backgroundColor: color }}
                                                     aria-label={member.name}
                                                 >
                                                     {getInitials(member.name)}
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <p className="truncate text-sm font-semibold">{member.name}</p>
-                                                    <p className="text-xs text-muted-foreground">
+                                                </Box>
+                                                <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}
+                                                    >
+                                                        {member.name}
+                                                    </Typography>
+                                                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                                                         {pending} chore{pending !== 1 ? 's' : ''}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </Box>
 
                                         {/* Column items */}
-                                        <div className="flex-1 space-y-1.5 overflow-y-auto p-2">
+                                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
                                             {memberChores.length === 0 ? (
-                                                <p className="py-6 text-center text-xs text-muted-foreground">No chores</p>
+                                                <Typography
+                                                    variant="caption"
+                                                    sx={{ py: 3, textAlign: 'center', color: 'text.secondary', display: 'block' }}
+                                                >
+                                                    No chores
+                                                </Typography>
                                             ) : (
                                                 memberChores.map((chore) => (
-                                                    <div
+                                                    <Box
                                                         key={chore.id}
-                                                        className="flex items-start gap-2 rounded-lg p-2"
+                                                        sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, borderRadius: '8px', p: 1 }}
                                                         style={{
                                                             backgroundColor: `${color}15`,
                                                             border: `1px solid ${color}`,
                                                         }}
                                                     >
-                                                        <div className="mt-0.5 shrink-0">
-                                                            <RefreshCw className="size-3.5 text-emerald-500" />
-                                                        </div>
-                                                        <div className="min-w-0 flex-1">
-                                                            <p className="truncate text-xs font-medium">{chore.title}</p>
-                                                            <p className="mt-0.5 flex flex-wrap gap-1 text-xs text-muted-foreground">
-                                                                <span className="capitalize">{chore.frequency}</span>
+                                                        <Box sx={{ mt: 0.25, flexShrink: 0 }}>
+                                                            <RefreshCw size={14} style={{ color: 'var(--mui-palette-success-main)' }} />
+                                                        </Box>
+                                                        <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                            <Typography
+                                                                variant="caption"
+                                                                sx={{
+                                                                    display: 'block',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    whiteSpace: 'nowrap',
+                                                                    fontWeight: 500,
+                                                                }}
+                                                            >
+                                                                {chore.title}
+                                                            </Typography>
+                                                            <Box
+                                                                sx={{
+                                                                    mt: 0.25,
+                                                                    display: 'flex',
+                                                                    flexWrap: 'wrap',
+                                                                    gap: 0.5,
+                                                                    fontSize: '0.75rem',
+                                                                    color: 'text.secondary',
+                                                                }}
+                                                            >
+                                                                <Box component="span" sx={{ textTransform: 'capitalize' }}>
+                                                                    {chore.frequency}
+                                                                </Box>
                                                                 {chore.next_due_date && <span>&middot; {formatDateTime(chore.next_due_date)}</span>}
-                                                            </p>
-                                                        </div>
-                                                        <div className="flex shrink-0 gap-0.5">
+                                                            </Box>
+                                                        </Box>
+                                                        <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
                                                             <Button
                                                                 variant="ghost"
                                                                 size="icon"
-                                                                className="size-6"
+                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
                                                                 onClick={() => markComplete(chore)}
                                                                 title="Mark complete"
                                                             >
-                                                                <CheckCircle className="size-5 text-green-500" />
+                                                                <CheckCircle size={20} style={{ color: 'var(--mui-palette-success-main)' }} />
                                                             </Button>
-                                                            <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(chore)}>
-                                                                <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                                onClick={() => openEdit(chore)}
+                                                            >
+                                                                <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path
                                                                         strokeLinecap="round"
                                                                         strokeLinejoin="round"
@@ -404,65 +508,128 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                     />
                                                                 </svg>
                                                             </Button>
-                                                            <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteChore(chore)}>
-                                                                <Trash2 className="size-5 text-destructive" />
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                                onClick={() => deleteChore(chore)}
+                                                            >
+                                                                <Trash2 size={20} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                             </Button>
-                                                        </div>
-                                                    </div>
+                                                        </Box>
+                                                    </Box>
                                                 ))
                                             )}
-                                        </div>
-                                    </div>
+                                        </Box>
+                                    </Box>
                                 );
                             })}
                             {/* Unassigned column */}
                             {unassignedVisible && columns.unassigned.length > 0 && (
-                                <div className="flex max-w-[320px] min-w-[240px] flex-1 flex-col overflow-hidden rounded-xl border">
-                                    <div
-                                        className="flex flex-col gap-1 p-3"
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        maxWidth: 320,
+                                        minWidth: 240,
+                                        flex: 1,
+                                        flexDirection: 'column',
+                                        overflow: 'hidden',
+                                        borderRadius: 3,
+                                        border: 1,
+                                        borderColor: 'divider',
+                                    }}
+                                >
+                                    <Box
+                                        sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, p: 1.5 }}
                                         style={{ backgroundColor: '#94a3b822', borderBottom: '3px solid #94a3b8' }}
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-400 text-xs font-bold text-white">
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    width: 32,
+                                                    height: 32,
+                                                    flexShrink: 0,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderRadius: '50%',
+                                                    bgcolor: '#94a3b8',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: 700,
+                                                    color: 'white',
+                                                }}
+                                            >
                                                 ?
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <p className="truncate text-sm font-semibold">Unassigned</p>
-                                                <p className="text-xs text-muted-foreground">
+                                            </Box>
+                                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}
+                                                >
+                                                    Unassigned
+                                                </Typography>
+                                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                                                     {columns.unassigned.length} chore{columns.unassigned.length !== 1 ? 's' : ''}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex-1 space-y-1.5 overflow-y-auto p-2">
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
                                         {columns.unassigned.map((chore) => (
-                                            <div
+                                            <Box
                                                 key={chore.id}
-                                                className="flex items-start gap-2 rounded-lg p-2"
+                                                sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, borderRadius: '8px', p: 1 }}
                                                 style={{ backgroundColor: '#94a3b815', border: '1px solid #94a3b8' }}
                                             >
-                                                <div className="mt-0.5 shrink-0">
-                                                    <RefreshCw className="size-3.5 text-slate-400" />
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <p className="truncate text-xs font-medium">{chore.title}</p>
-                                                    <p className="mt-0.5 flex flex-wrap gap-1 text-xs text-muted-foreground">
-                                                        <span className="capitalize">{chore.frequency}</span>
+                                                <Box sx={{ mt: 0.25, flexShrink: 0 }}>
+                                                    <RefreshCw size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
+                                                </Box>
+                                                <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                    <Typography
+                                                        variant="caption"
+                                                        sx={{
+                                                            display: 'block',
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis',
+                                                            whiteSpace: 'nowrap',
+                                                            fontWeight: 500,
+                                                        }}
+                                                    >
+                                                        {chore.title}
+                                                    </Typography>
+                                                    <Box
+                                                        sx={{
+                                                            mt: 0.25,
+                                                            display: 'flex',
+                                                            flexWrap: 'wrap',
+                                                            gap: 0.5,
+                                                            fontSize: '0.75rem',
+                                                            color: 'text.secondary',
+                                                        }}
+                                                    >
+                                                        <Box component="span" sx={{ textTransform: 'capitalize' }}>
+                                                            {chore.frequency}
+                                                        </Box>
                                                         {chore.next_due_date && <span>&middot; {formatDateTime(chore.next_due_date)}</span>}
-                                                    </p>
-                                                </div>
-                                                <div className="flex shrink-0 gap-0.5">
+                                                    </Box>
+                                                </Box>
+                                                <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="size-6"
+                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
                                                         onClick={() => markComplete(chore)}
                                                         title="Mark complete"
                                                     >
-                                                        <CheckCircle className="size-3 text-green-500" />
+                                                        <CheckCircle size={12} style={{ color: 'var(--mui-palette-success-main)' }} />
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" className="size-6" onClick={() => openEdit(chore)}>
-                                                        <svg className="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                        onClick={() => openEdit(chore)}
+                                                    >
+                                                        <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path
                                                                 strokeLinecap="round"
                                                                 strokeLinejoin="round"
@@ -471,27 +638,44 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                             />
                                                         </svg>
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" className="size-6" onClick={() => deleteChore(chore)}>
-                                                        <Trash2 className="size-3 text-destructive" />
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                        onClick={() => deleteChore(chore)}
+                                                    >
+                                                        <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                     </Button>
-                                                </div>
-                                            </div>
+                                                </Box>
+                                            </Box>
                                         ))}
-                                    </div>
-                                </div>
+                                    </Box>
+                                </Box>
                             )}
 
                             {/* All hidden state */}
                             {visibleAssigned.length === 0 && (!unassignedVisible || columns.unassigned.length === 0) && (
-                                <div className="w-full rounded-xl border py-16 text-center text-sm text-muted-foreground">
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        borderRadius: 3,
+                                        border: 1,
+                                        borderColor: 'divider',
+                                        borderStyle: 'dashed',
+                                        py: 8,
+                                        textAlign: 'center',
+                                        fontSize: '0.875rem',
+                                        color: 'text.secondary',
+                                    }}
+                                >
                                     {chores.length === 0
                                         ? 'No chores yet. Add your first one!'
                                         : 'No members visible. Toggle members above to show their chores.'}
-                                </div>
+                                </Box>
                             )}
-                        </div>
+                        </Box>
                     )}
-                </div>
+                </Box>
 
                 {/* Edit dialog */}
                 <Dialog open={editOpen} onOpenChange={setEditOpen}>
@@ -500,18 +684,18 @@ export default function ChoresIndex({ chores, members }: Props) {
                             <DialogTitle>Edit Chore</DialogTitle>
                         </DialogHeader>
                         {editingChore && (
-                            <form onSubmit={handleEdit} className="space-y-4">
-                                <div className="grid gap-2">
+                            <form onSubmit={handleEdit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Title</Label>
                                     <Input value={editForm.data.title} onChange={(e) => editForm.setData('title', e.target.value)} required />
                                     <InputError message={editForm.errors.title} />
-                                </div>
-                                <div className="grid gap-2">
+                                </Box>
+                                <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Description</Label>
                                     <Input value={editForm.data.description} onChange={(e) => editForm.setData('description', e.target.value)} />
-                                </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="grid gap-2">
+                                </Box>
+                                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Frequency</Label>
                                         <Select value={editForm.data.frequency} onValueChange={(v) => editForm.setData('frequency', v)}>
                                             <SelectTrigger>
@@ -525,18 +709,18 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                    </div>
-                                    <div className="grid gap-2">
+                                    </Box>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Next Due</Label>
                                         <DateTimeInput
                                             value={editForm.data.next_due_date}
-                                            onChange={(e) => editForm.setData('next_due_date', e.target.value)}
+                                            onChange={(value) => editForm.setData('next_due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         />
-                                    </div>
-                                </div>
-                                <div className="grid gap-2">
+                                    </Box>
+                                </Box>
+                                <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Assign To</Label>
-                                    <div className="flex flex-col gap-1">
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                         {members.map((m) => (
                                             <FormControlLabel
                                                 key={m.id}
@@ -550,10 +734,10 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 label={m.name}
                                             />
                                         ))}
-                                    </div>
-                                </div>
-                                <Button type="submit" className="w-full" disabled={editForm.processing}>
-                                    {editForm.processing ? 'Saving\u2026' : 'Save Changes'}
+                                    </Box>
+                                </Box>
+                                <Button type="submit" sx={{ width: '100%' }} disabled={editForm.processing}>
+                                    {editForm.processing ? 'Saving…' : 'Save Changes'}
                                 </Button>
                             </form>
                         )}

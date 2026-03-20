@@ -1,6 +1,10 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { Fab } from '@mui/material';
+import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { destroy, show, store } from '@/actions/App/Http/Controllers/ShoppingListController';
@@ -45,21 +49,23 @@ export default function ShoppingIndex({ lists }: Props) {
         <>
             <Head title="Shopping Lists" />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-4 p-6">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-semibold">Shopping Lists</h1>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            Shopping Lists
+                        </Typography>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button size="sm">
-                                    <Plus className="mr-1 size-4" /> New List
-                                </Button>
+                                <Fab color="primary" size="small" aria-label="New List">
+                                    <Plus className="size-4" />
+                                </Fab>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle>Create Shopping List</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={handleCreate} className="space-y-4">
-                                    <div className="grid gap-2">
+                                <Stack component="form" onSubmit={handleCreate} spacing={2}>
+                                    <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label htmlFor="name">List Name</Label>
                                         <Input
                                             id="name"
@@ -69,7 +75,7 @@ export default function ShoppingIndex({ lists }: Props) {
                                             required
                                         />
                                         <InputError message={errors.name} />
-                                    </div>
+                                    </Box>
                                     <FormControlLabel
                                         control={
                                             <MuiCheckbox
@@ -84,30 +90,59 @@ export default function ShoppingIndex({ lists }: Props) {
                                     <Button type="submit" className="w-full" disabled={processing}>
                                         {processing ? 'Creating…' : 'Create List'}
                                     </Button>
-                                </form>
+                                </Stack>
                             </DialogContent>
                         </Dialog>
-                    </div>
+                    </Box>
 
                     {!lists ? (
-                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        <Box sx={{ display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' } }}>
                             {[...Array(6)].map((_, i) => (
                                 <Skeleton key={i} className="h-24 rounded-xl" />
                             ))}
-                        </div>
+                        </Box>
                     ) : lists.length === 0 ? (
-                        <div className="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">
+                        <Box
+                            sx={{
+                                borderRadius: 2,
+                                border: 1,
+                                borderColor: 'divider',
+                                borderStyle: 'dashed',
+                                py: 8,
+                                textAlign: 'center',
+                                fontSize: '0.875rem',
+                                color: 'text.secondary',
+                            }}
+                        >
                             No shopping lists yet. Create one!
-                        </div>
+                        </Box>
                     ) : (
-                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        <Box sx={{ display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' } }}>
                             {lists.map((list) => (
-                                <div
+                                <Box
                                     key={list.id}
                                     role="button"
                                     tabIndex={0}
                                     aria-label={`Open ${list.name} shopping list`}
-                                    className="flex cursor-pointer flex-col justify-between rounded-xl border p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                                    sx={{
+                                        display: 'flex',
+                                        cursor: 'pointer',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        borderRadius: 2,
+                                        border: 1,
+                                        borderColor: 'divider',
+                                        p: 2,
+                                        transition: 'all 0.2s',
+                                        '&:hover': { transform: 'translateY(-2px)', boxShadow: 2 },
+                                        '&:focus-visible': {
+                                            outline: '2px solid',
+                                            outlineColor: 'primary.main',
+                                            outlineOffset: 2,
+                                            transform: 'translateY(-2px)',
+                                            boxShadow: 2,
+                                        },
+                                    }}
                                     onClick={() => router.visit(show(list.id).url)}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' || e.key === ' ') {
@@ -116,16 +151,16 @@ export default function ShoppingIndex({ lists }: Props) {
                                         }
                                     }}
                                 >
-                                    <div className="flex items-start justify-between">
-                                        <div>
-                                            <p className="font-medium">{list.name}</p>
-                                            <p className="text-xs text-muted-foreground">
+                                    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                                        <Box>
+                                            <Typography sx={{ fontWeight: 500 }}>{list.name}</Typography>
+                                            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
                                                 {list.items_count ?? 0} items{list.is_shared && ' · Shared'}
-                                            </p>
-                                        </div>
+                                            </Typography>
+                                        </Box>
                                         <ShoppingCart className="size-5 text-muted-foreground" />
-                                    </div>
-                                    <div className="mt-4 flex justify-end">
+                                    </Box>
+                                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                                         <Button
                                             variant="ghost"
                                             size="icon"
@@ -136,12 +171,12 @@ export default function ShoppingIndex({ lists }: Props) {
                                         >
                                             <Trash2 className="size-4 text-destructive" />
                                         </Button>
-                                    </div>
-                                </div>
+                                    </Box>
+                                </Box>
                             ))}
-                        </div>
+                        </Box>
                     )}
-                </div>
+                </Box>
             </AppLayout>
         </>
     );

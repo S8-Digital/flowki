@@ -1,4 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { update } from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
@@ -31,56 +34,57 @@ export default function Password() {
         <AppLayout breadcrumbs={breadcrumbItems}>
             <Head title="Password settings" />
             <SettingsLayout>
-                <div className="space-y-6">
+                <Stack spacing={3}>
                     <HeadingSmall title="Update password" description="Ensure your account is using a long, random password to stay secure" />
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid gap-2">
+                    <Stack component="form" onSubmit={handleSubmit} spacing={3}>
+                        <Box sx={{ display: 'grid', gap: 1 }}>
                             <Label htmlFor="current_password">Current password</Label>
                             <Input
                                 id="current_password"
                                 type="password"
                                 value={data.current_password}
                                 onChange={(e) => setData('current_password', e.target.value)}
-                                className="mt-1 block w-full"
                                 autoComplete="current-password"
                                 placeholder="Current password"
                             />
                             <InputError message={errors.current_password} />
-                        </div>
-                        <div className="grid gap-2">
+                        </Box>
+                        <Box sx={{ display: 'grid', gap: 1 }}>
                             <Label htmlFor="password">New password</Label>
                             <Input
                                 id="password"
                                 type="password"
                                 value={data.password}
                                 onChange={(e) => setData('password', e.target.value)}
-                                className="mt-1 block w-full"
                                 autoComplete="new-password"
                                 placeholder="New password"
                             />
                             <InputError message={errors.password} />
-                        </div>
-                        <div className="grid gap-2">
+                        </Box>
+                        <Box sx={{ display: 'grid', gap: 1 }}>
                             <Label htmlFor="password_confirmation">Confirm password</Label>
                             <Input
                                 id="password_confirmation"
                                 type="password"
                                 value={data.password_confirmation}
                                 onChange={(e) => setData('password_confirmation', e.target.value)}
-                                className="mt-1 block w-full"
                                 autoComplete="new-password"
                                 placeholder="Confirm password"
                             />
                             <InputError message={errors.password_confirmation} />
-                        </div>
-                        <div className="flex items-center gap-4">
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Button type="submit" disabled={processing}>
                                 Save password
                             </Button>
-                            {recentlySuccessful && <p className="text-sm text-neutral-600">Saved.</p>}
-                        </div>
-                    </form>
-                </div>
+                            {recentlySuccessful && (
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    Saved.
+                                </Typography>
+                            )}
+                        </Box>
+                    </Stack>
+                </Stack>
             </SettingsLayout>
         </AppLayout>
     );

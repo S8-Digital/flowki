@@ -1,4 +1,6 @@
+import Box from '@mui/material/Box';
 import MuiButton from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { redirect } from '@/routes/social';
 
 interface SocialAuthButtonsProps {
@@ -7,13 +9,15 @@ interface SocialAuthButtonsProps {
 
 export default function SocialAuthButtons({ label = 'Or continue with' }: SocialAuthButtonsProps) {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ height: 1, flex: 1, backgroundColor: 'var(--border)' }} />
-                <span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>{label}</span>
-                <div style={{ height: 1, flex: 1, backgroundColor: 'var(--border)' }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{ height: 1, flex: 1, bgcolor: 'divider' }} />
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    {label}
+                </Typography>
+                <Box sx={{ height: 1, flex: 1, bgcolor: 'divider' }} />
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <MuiButton
                     component="a"
                     href={redirect('google').url}
@@ -59,7 +63,7 @@ export default function SocialAuthButtons({ label = 'Or continue with' }: Social
                 >
                     Continue with Apple
                 </MuiButton>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 }

@@ -22,7 +22,7 @@ function priorityColor(priority: string): string {
 
 export default function TodoListWidget({ todos }: TodoListWidgetProps) {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {todos.length === 0 ? (
                 <Box sx={{ py: 4, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No todos due today.</Box>
             ) : (
@@ -31,19 +31,20 @@ export default function TodoListWidget({ todos }: TodoListWidgetProps) {
                         <Box
                             component="li"
                             key={todo.id}
-                            className="category-todos-item"
-                            sx={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', borderRadius: 2, p: 1.5 }}
+                            sx={{ display: 'flex', alignItems: 'center', gap: 1.5, overflow: 'hidden', borderRadius: 2, p: 1.5 }}
                         >
                             <Box sx={{ width: 8, height: 8, flexShrink: 0, borderRadius: '50%', bgcolor: priorityColor(todo.priority) }} />
                             <Box sx={{ minWidth: 0, flex: 1 }}>
                                 <Typography
-                                    className={todo.status === 'completed' ? 'line-through opacity-50' : undefined}
+                                    className={todo.status === 'completed' ? 'line-through' : undefined}
                                     sx={{
                                         overflow: 'hidden',
                                         textOverflow: 'ellipsis',
                                         whiteSpace: 'nowrap',
                                         fontSize: '0.875rem',
                                         fontWeight: 500,
+                                        textDecoration: todo.status === 'completed' ? 'line-through' : 'none',
+                                        opacity: todo.status === 'completed' ? 0.5 : 1,
                                     }}
                                 >
                                     {todo.title}

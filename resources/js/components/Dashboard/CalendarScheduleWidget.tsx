@@ -34,7 +34,7 @@ function safeColor(color: string | null, fallback: string): string {
 
 export default function CalendarScheduleWidget({ events }: CalendarScheduleWidgetProps) {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {events.length === 0 ? (
                 <Box sx={{ py: 4, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
                     No upcoming events in the next 14 days.
@@ -48,7 +48,7 @@ export default function CalendarScheduleWidget({ events }: CalendarScheduleWidge
                             <Box
                                 component="li"
                                 key={event.id}
-                                sx={{ display: 'flex', alignItems: 'flex-start', gap: '12px', overflow: 'hidden', borderRadius: 2, p: 1.5 }}
+                                sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, overflow: 'hidden', borderRadius: 2, p: 1.5 }}
                                 style={{ border: `2px solid ${color}`, backgroundColor: `${color}18` }}
                             >
                                 <Box sx={{ minWidth: 0, flex: 1 }}>

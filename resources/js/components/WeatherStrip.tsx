@@ -24,28 +24,27 @@ export default function WeatherStrip() {
                 gap: 1,
                 borderRadius: 2,
                 border: '1px solid',
-                borderColor: 'var(--border)',
-                bgcolor: 'var(--card)',
+                borderColor: 'divider',
+                bgcolor: 'background.paper',
                 px: 1.5,
                 py: 1,
                 fontSize: '0.875rem',
                 boxShadow: 1,
             }}
         >
-            <img
+            <Box
+                component="img"
                 src={weatherIconUrl(data.current.icon)}
                 alt={data.current.description}
-                width={24}
-                height={24}
-                style={{ marginTop: -4, marginBottom: -4 }}
+                sx={{ width: 24, height: 24, mt: -0.5, mb: -0.5 }}
             />
             <Box component="span" sx={{ fontWeight: 600 }}>
                 {data.current.temp}°C
             </Box>
-            <Box component="span" sx={{ color: 'var(--muted-foreground)', textTransform: 'capitalize' }}>
+            <Box component="span" sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
                 {data.current.description}
             </Box>
-            <Box component="span" sx={{ ml: 'auto', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+            <Box component="span" sx={{ ml: 'auto', fontSize: '0.75rem', color: 'text.secondary' }}>
                 {data.location}
             </Box>
         </Box>

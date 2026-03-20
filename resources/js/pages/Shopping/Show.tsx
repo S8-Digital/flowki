@@ -1,5 +1,8 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { Fab } from '@mui/material';
+import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
 import { Plus, Trash2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { destroy as destroyItem, store as storeItem, toggle } from '@/actions/App/Http/Controllers/ShoppingItemController';
@@ -42,75 +45,149 @@ export default function ShoppingShow({ list }: Props) {
         <>
             <Head title={list.name} />
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-col gap-6 p-6">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-semibold">{list.name}</h1>
-                        {list.is_shared && <span className="rounded-full bg-secondary px-2 py-0.5 text-xs">Shared</span>}
-                    </div>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {list.name}
+                        </Typography>
+                        {list.is_shared && (
+                            <Box component="span" sx={{ borderRadius: '50px', bgcolor: 'secondary.main', px: 1, py: 0.25, fontSize: '0.75rem' }}>
+                                Shared
+                            </Box>
+                        )}
+                    </Box>
 
-                    <form onSubmit={handleAddItem} className="flex gap-2">
-                        <div className="w-80 flex-1">
+                    <Box component="form" onSubmit={handleAddItem} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
                             <Input value={data.name} onChange={(e) => setData('name', e.target.value)} placeholder="Add item…" required />
                             <InputError message={errors.name} />
-                        </div>
-                        <Input value={data.quantity} onChange={(e) => setData('quantity', e.target.value)} placeholder="Qty" className="w-20" />
-                        <Select value={data.category} onValueChange={(v) => setData('category', v)}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="groceries">Groceries</SelectItem>
-                                <SelectItem value="household">Household</SelectItem>
-                                <SelectItem value="personal_care">Personal Care</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <Button type="submit" size="sm" disabled={processing}>
-                            <Plus className="size-4" />
-                        </Button>
-                    </form>
+                        </Box>
+                        <Box sx={{ width: 56, flexShrink: 0 }}>
+                            <Input value={data.quantity} onChange={(e) => setData('quantity', e.target.value)} placeholder="Qty" />
+                        </Box>
+                        <Box sx={{ width: 140, flexShrink: 0 }}>
+                            <Select value={data.category} onValueChange={(v) => setData('category', v)}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="groceries">Groceries</SelectItem>
+                                    <SelectItem value="household">Household</SelectItem>
+                                    <SelectItem value="personal_care">Personal Care</SelectItem>
+                                    <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </Box>
+                        <Box>
+                            <Fab type="submit" color="primary" size="small" disabled={processing}>
+                                <Plus className="size-4" />
+                            </Fab>
+                        </Box>
+                    </Box>
 
                     {unchecked.length > 0 && (
-                        <ul className="divide-y rounded-xl border">
+                        <Box component="ul" sx={{ borderRadius: 2, border: 1, borderColor: 'divider', listStyle: 'none', m: 0, p: 0 }}>
                             {unchecked.map((item) => (
-                                <li key={item.id} className="flex items-center gap-3 px-4 py-2">
+                                <Box
+                                    component="li"
+                                    key={item.id}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 1.5,
+                                        px: 2,
+                                        py: 1,
+                                        borderBottom: 1,
+                                        borderColor: 'divider',
+                                        '&:last-child': { borderBottom: 0 },
+                                    }}
+                                >
                                     <MuiCheckbox checked={item.is_checked} onChange={() => toggleItem(item)} size="small" />
-                                    <div className="flex-1">
-                                        <span className="font-medium">{item.name}</span>
-                                        {item.quantity && <span className="ml-2 text-sm text-muted-foreground">{item.quantity}</span>}
-                                    </div>
-                                    <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">{item.category}</span>
+                                    <Box sx={{ flex: 1 }}>
+                                        <Typography component="span" sx={{ fontWeight: 500 }}>
+                                            {item.name}
+                                        </Typography>
+                                        {item.quantity && (
+                                            <Typography component="span" variant="body2" sx={{ ml: 1, color: 'text.secondary' }}>
+                                                {item.quantity}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                    <Box
+                                        component="span"
+                                        sx={{
+                                            borderRadius: '50px',
+                                            bgcolor: 'secondary.main',
+                                            px: 1,
+                                            py: 0.25,
+                                            fontSize: '0.75rem',
+                                            textTransform: 'capitalize',
+                                        }}
+                                    >
+                                        {item.category}
+                                    </Box>
                                     <Button variant="ghost" size="icon" onClick={() => deleteItem(item)}>
                                         <Trash2 className="size-3.5 text-destructive" />
                                     </Button>
-                                </li>
+                                </Box>
                             ))}
-                        </ul>
+                        </Box>
                     )}
 
                     {checked.length > 0 && (
-                        <div>
-                            <p className="mb-2 text-sm font-medium text-muted-foreground">Checked off ({checked.length})</p>
-                            <ul className="divide-y rounded-xl border opacity-60">
+                        <Box>
+                            <Typography variant="body2" sx={{ mb: 1, fontWeight: 500, color: 'text.secondary' }}>
+                                Checked off ({checked.length})
+                            </Typography>
+                            <Box
+                                component="ul"
+                                sx={{ borderRadius: 2, border: 1, borderColor: 'divider', opacity: 0.6, listStyle: 'none', m: 0, p: 0 }}
+                            >
                                 {checked.map((item) => (
-                                    <li key={item.id} className="flex items-center gap-3 px-4 py-2">
+                                    <Box
+                                        component="li"
+                                        key={item.id}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1.5,
+                                            px: 2,
+                                            py: 1,
+                                            borderBottom: 1,
+                                            borderColor: 'divider',
+                                            '&:last-child': { borderBottom: 0 },
+                                        }}
+                                    >
                                         <MuiCheckbox checked={item.is_checked} onChange={() => toggleItem(item)} size="small" />
-                                        <span className="flex-1 text-muted-foreground line-through">{item.name}</span>
+                                        <Typography component="span" sx={{ flex: 1, color: 'text.secondary', textDecoration: 'line-through' }}>
+                                            {item.name}
+                                        </Typography>
                                         <Button variant="ghost" size="icon" onClick={() => deleteItem(item)}>
                                             <Trash2 className="size-3.5 text-destructive" />
                                         </Button>
-                                    </li>
+                                    </Box>
                                 ))}
-                            </ul>
-                        </div>
+                            </Box>
+                        </Box>
                     )}
 
                     {!unchecked.length && !checked.length && (
-                        <div className="rounded-xl border border-dashed py-16 text-center text-sm text-muted-foreground">
+                        <Box
+                            sx={{
+                                borderRadius: 2,
+                                border: 1,
+                                borderColor: 'divider',
+                                borderStyle: 'dashed',
+                                py: 8,
+                                textAlign: 'center',
+                                fontSize: '0.875rem',
+                                color: 'text.secondary',
+                            }}
+                        >
                             List is empty. Add your first item above!
-                        </div>
+                        </Box>
                     )}
-                </div>
+                </Box>
             </AppLayout>
         </>
     );

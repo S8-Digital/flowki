@@ -1,4 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 import { edit as permissionEdit, update as permissionUpdate } from '@/actions/App/Http/Controllers/Settings/PermissionController';
@@ -59,27 +62,31 @@ export default function MemberPermissions({ member }: Props) {
         <AppLayout breadcrumbs={breadcrumbItems}>
             <Head title={`${member.name} Permissions`} />
             <MemberSettingsLayout member={member}>
-                <div className="space-y-6">
+                <Stack spacing={3}>
                     <HeadingSmall
                         title={`Permissions for ${member.name}`}
                         description={`Manage individual permissions for ${member.name}${member.role ? ` (${member.role})` : ''}. These override their role's default permissions.`}
                     />
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <Stack component="form" onSubmit={handleSubmit} spacing={3}>
                         <UserPermissionsPanel
                             permissionGroups={member.permissionGroups}
                             grantedPermissions={grantedPermissions}
                             onChange={handlePermissionChange}
                         />
 
-                        <div className="flex items-center gap-4">
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Button type="submit" disabled={saving}>
                                 {saving ? 'Saving…' : 'Save permissions'}
                             </Button>
-                            {saved && <p className="text-sm text-muted-foreground">Permissions saved.</p>}
-                        </div>
-                    </form>
-                </div>
+                            {saved && (
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    Permissions saved.
+                                </Typography>
+                            )}
+                        </Box>
+                    </Stack>
+                </Stack>
             </MemberSettingsLayout>
         </AppLayout>
     );

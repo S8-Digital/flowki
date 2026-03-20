@@ -1,6 +1,10 @@
+import Box from '@mui/material/Box';
+import MuiDivider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import MuiSelect, { type SelectChangeEvent } from '@mui/material/Select';
+import type { SxProps, Theme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -78,9 +82,11 @@ function Select({
                 value={value ?? ''}
                 onChange={(e: SelectChangeEvent) => onValueChange?.(e.target.value)}
                 displayEmpty
-                renderValue={(val) =>
-                    val ? String(val) : <span style={{ color: 'var(--muted-foreground)' }}>{placeholder}</span>
-                }
+                renderValue={(val) => {
+                    if (!val) return <Box component="span" sx={{ color: 'text.secondary' }}>{placeholder}</Box>;
+                    const matched = items.find((item) => item.props.value === val);
+                    return matched ? matched.props.children : String(val);
+                }}
                 inputProps={ariaLabel ? { 'aria-label': ariaLabel } : undefined}
                 {...otherTriggerProps}
                 {...(props as any)}
@@ -95,7 +101,7 @@ function Select({
     );
 }
 
-function SelectTrigger({ className: _className, children: _children, ...props }: React.HTMLAttributes<HTMLButtonElement>) {
+function SelectTrigger({ className: _className, children: _children, ...props }: React.HTMLAttributes<HTMLButtonElement> & { sx?: SxProps<Theme> }) {
     // Rendering handled by Select component; this is kept for API compatibility
     return null;
 }
@@ -120,17 +126,18 @@ function SelectGroup({ children }: { children?: React.ReactNode }) {
 
 function SelectLabel({ className, children }: { className?: string; children?: React.ReactNode }) {
     return (
-        <div
+        <Typography
+            variant="caption"
             className={cn(className)}
-            style={{ padding: '4px 8px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--muted-foreground)' }}
+            sx={{ display: 'block', py: 0.5, px: 1, fontWeight: 600, color: 'text.secondary' }}
         >
             {children}
-        </div>
+        </Typography>
     );
 }
 
 function SelectSeparator({ className }: { className?: string }) {
-    return <div className={cn(className)} style={{ margin: '4px 0', height: 1, backgroundColor: 'var(--border)' }} />;
+    return <MuiDivider className={cn(className)} sx={{ my: 0.5 }} />;
 }
 
 SelectItem.displayName = 'SelectItem';

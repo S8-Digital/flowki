@@ -1,4 +1,5 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/AcceptInviteController';
 import InputError from '@/components/InputError';
@@ -30,14 +31,14 @@ export default function AcceptInvite({ token, email, familyName, role }: Props) 
         <AuthLayout title={`Join ${familyName}`} description={`You've been invited as a ${role}. Set up your account to get started.`}>
             <Head title="Accept Invitation" />
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
+            <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ display: 'grid', gap: 3 }}>
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="email">Email address</Label>
-                        <Input id="email" type="email" value={email} disabled className="bg-muted" />
-                    </div>
+                        <Input id="email" type="email" value={email} disabled />
+                    </Box>
 
-                    <div className="grid gap-2">
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="name">Your name</Label>
                         <Input
                             id="name"
@@ -51,9 +52,9 @@ export default function AcceptInvite({ token, email, familyName, role }: Props) 
                             placeholder="Full name"
                         />
                         <InputError message={errors.name} />
-                    </div>
+                    </Box>
 
-                    <div className="grid gap-2">
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
@@ -66,9 +67,9 @@ export default function AcceptInvite({ token, email, familyName, role }: Props) 
                             placeholder="Choose a password"
                         />
                         <InputError message={errors.password} />
-                    </div>
+                    </Box>
 
-                    <div className="grid gap-2">
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="password_confirmation">Confirm password</Label>
                         <Input
                             id="password_confirmation"
@@ -81,14 +82,14 @@ export default function AcceptInvite({ token, email, familyName, role }: Props) 
                             placeholder="Confirm password"
                         />
                         <InputError message={errors.password_confirmation} />
-                    </div>
+                    </Box>
 
                     <Button type="submit" className="mt-2 w-full" tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Accept & Join {familyName}
                     </Button>
-                </div>
-            </form>
+                </Box>
+            </Box>
         </AuthLayout>
     );
 }

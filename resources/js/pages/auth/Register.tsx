@@ -1,4 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import InputError from '@/components/InputError';
@@ -27,9 +29,9 @@ export default function Register() {
         <AuthLayout title="Create an account" description="Enter your details below to create your account">
             <Head title="Register" />
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
+            <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ display: 'grid', gap: 3 }}>
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="name">Name</Label>
                         <Input
                             id="name"
@@ -43,9 +45,9 @@ export default function Register() {
                             placeholder="Full name"
                         />
                         <InputError message={errors.name} />
-                    </div>
+                    </Box>
 
-                    <div className="grid gap-2">
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
@@ -58,9 +60,9 @@ export default function Register() {
                             placeholder="email@example.com"
                         />
                         <InputError message={errors.email} />
-                    </div>
+                    </Box>
 
-                    <div className="grid gap-2">
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
@@ -73,9 +75,9 @@ export default function Register() {
                             placeholder="Password"
                         />
                         <InputError message={errors.password} />
-                    </div>
+                    </Box>
 
-                    <div className="grid gap-2">
+                    <Box sx={{ display: 'grid', gap: 1 }}>
                         <Label htmlFor="password_confirmation">Confirm password</Label>
                         <Input
                             id="password_confirmation"
@@ -88,23 +90,23 @@ export default function Register() {
                             placeholder="Confirm password"
                         />
                         <InputError message={errors.password_confirmation} />
-                    </div>
+                    </Box>
 
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Create account
                     </Button>
-                </div>
+                </Box>
 
                 <SocialAuthButtons label="Or sign up with" />
 
-                <div className="text-center text-sm text-muted-foreground">
+                <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
                     Already have an account?{' '}
                     <TextLink href={login()} className="underline underline-offset-4" tabIndex={6}>
                         Log in
                     </TextLink>
-                </div>
-            </form>
+                </Typography>
+            </Box>
         </AuthLayout>
     );
 }

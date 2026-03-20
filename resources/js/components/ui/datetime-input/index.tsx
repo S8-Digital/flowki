@@ -1,20 +1,31 @@
-import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { DatePicker, DateTimePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import 'dayjs/locale/en-au';
+import type { ComponentProps } from 'react';
 
-function DateTimeInput({ className, ...props }: React.ComponentProps<'input'>) {
+type DateTimeInputProps =
+    | ({ type: 'date'; value?: string | Dayjs | null } & Omit<ComponentProps<typeof DatePicker>, 'value'>)
+    | ({ type?: 'datetime'; value?: string | Dayjs | null } & Omit<ComponentProps<typeof DateTimePicker>, 'value'>)
+    | ({ type: 'time'; value?: string | Dayjs | null } & Omit<ComponentProps<typeof TimePicker>, 'value'>);
+
+function DateTimeInput({ value, ...props }: DateTimeInputProps) {
+    const type = props.type ?? 'datetime';
+    const dayjsValue = typeof value === 'string' ? (value ? dayjs(value) : null) : (value ?? null);
+
     return (
-        <input
-            type="datetime-local"
-            data-slot="datetime-input"
-            className={cn(
-                // Mimics MT's outlined input appearance without using Input
-                // (MT's Input coerces unsupported types like datetime-local back to text)
-                'w-full select-none rounded-md border border-surface bg-transparent px-2.5 py-2 text-sm text-black shadow-sm ring ring-transparent outline-none transition-all duration-300 ease-in [color-scheme:light] hover:border-primary hover:ring-primary/10 focus:border-primary focus:ring-primary/10 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:[color-scheme:dark]',
-                className,
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={navigator.language.toLowerCase()}>
+            {type === 'date' ? (
+                <DatePicker value={dayjsValue} {...(props as ComponentProps<typeof DatePicker>)} />
+            ) : type === 'time' ? (
+                <TimePicker value={dayjsValue} {...(props as ComponentProps<typeof TimePicker>)} />
+            ) : (
+                <DateTimePicker value={dayjsValue} {...(props as ComponentProps<typeof DateTimePicker>)} />
             )}
-            {...props}
-        />
+        </LocalizationProvider>
     );
 }
 
 export { DateTimeInput };
+export type { DateTimeInputProps };

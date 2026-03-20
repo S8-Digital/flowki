@@ -1,5 +1,7 @@
 import MuiCard from '@mui/material/Card';
 import MuiCardContent from '@mui/material/CardContent';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -8,7 +10,7 @@ function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
 }
 
 function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} style={{ padding: '24px 24px 0' }} {...props} />;
+    return <Box className={cn(className)} sx={{ px: 3, pt: 3, pb: 0 }} {...(props as any)} />;
 }
 
 function CardBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -16,19 +18,35 @@ function CardBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
 }
 
 function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} style={{ padding: '0 24px 24px' }} {...props} />;
+    return <Box className={cn(className)} sx={{ px: 3, pb: 3, pt: 0 }} {...(props as any)} />;
 }
 
 function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-    return <h3 className={cn(className)} style={{ fontSize: '1.25rem', fontWeight: 600, lineHeight: 1, letterSpacing: '-0.015em', margin: 0 }} {...props} />;
+    return (
+        <Typography
+            variant="h6"
+            component="h3"
+            className={cn(className)}
+            sx={{ m: 0 }}
+            {...(props as any)}
+        />
+    );
 }
 
 function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-    return <p className={cn(className)} style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', margin: 0 }} {...props} />;
+    return (
+        <Typography
+            variant="body2"
+            component="p"
+            className={cn(className)}
+            sx={{ color: 'text.secondary', m: 0 }}
+            {...(props as any)}
+        />
+    );
 }
 
 function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} style={{ padding: '24px' }} {...props} />;
+    return <Box className={cn(className)} sx={{ p: 3 }} {...(props as any)} />;
 }
 
 export { Card, CardBody, CardContent, CardDescription, CardFooter, CardHeader, CardTitle };

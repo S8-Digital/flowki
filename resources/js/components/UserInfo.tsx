@@ -33,7 +33,7 @@ export default function UserInfo({ user, showEmail = false, showAvatar = true, s
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
                             fontSize: '0.75rem',
-                            color: 'var(--muted-foreground)',
+                            color: 'text.secondary',
                         }}
                     >
                         {user.email}

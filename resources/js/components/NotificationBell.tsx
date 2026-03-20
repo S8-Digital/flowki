@@ -185,7 +185,7 @@ export default function NotificationBell() {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         borderBottom: '1px solid',
-                        borderColor: 'var(--border)',
+                        borderColor: 'divider',
                         px: 2,
                         py: 1.5,
                     }}
@@ -202,11 +202,11 @@ export default function NotificationBell() {
                 </Box>
 
                 {loading ? (
-                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Loading…</Box>
+                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>Loading…</Box>
                 ) : loaded && notifications.length === 0 ? (
-                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No notifications</Box>
+                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>No notifications</Box>
                 ) : !loaded && unreadCount === 0 ? (
-                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No notifications</Box>
+                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>No notifications</Box>
                 ) : (
                     <ScrollArea style={{ maxHeight: 288 }}>
                         {notifications.map((n) => (
@@ -216,13 +216,13 @@ export default function NotificationBell() {
                                     display: 'flex',
                                     alignItems: 'flex-start',
                                     gap: 1.5,
-                                    '&:not(:last-child)': { borderBottom: '1px solid', borderColor: 'var(--border)' },
+                                    '&:not(:last-child)': { borderBottom: '1px solid', borderColor: 'divider' },
                                     px: 2,
                                     py: 1.5,
                                     bgcolor: !n.read_at ? 'color-mix(in srgb, var(--primary) 5%, transparent)' : 'transparent',
                                 }}
                             >
-                                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.25 }}>
                                     <Box
                                         component="p"
                                         sx={{
@@ -230,16 +230,16 @@ export default function NotificationBell() {
                                             fontSize: '0.875rem',
                                             lineHeight: 1.4,
                                             fontWeight: !n.read_at ? 500 : 400,
-                                            color: !n.read_at ? 'var(--foreground)' : 'var(--muted-foreground)',
+                                            color: !n.read_at ? 'text.primary' : 'text.secondary',
                                         }}
                                     >
                                         {notificationMessage(n)}
                                     </Box>
-                                    <Box component="p" sx={{ m: 0, fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                                    <Box component="p" sx={{ m: 0, fontSize: '0.75rem', color: 'text.secondary' }}>
                                         {formatRelativeTime(n.created_at)}
                                     </Box>
                                 </Box>
-                                <Box sx={{ display: 'flex', flexShrink: 0, gap: '4px' }}>
+                                <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.5 }}>
                                     {!n.read_at && (
                                         <Button
                                             variant="ghost"
@@ -254,7 +254,7 @@ export default function NotificationBell() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        style={{ width: 24, height: 24, color: 'var(--muted-foreground)' }}
+                                        sx={{ width: 24, height: 24, color: 'text.secondary' }}
                                         onClick={() => deleteNotification(n.id)}
                                         aria-label="Delete notification"
                                     >
@@ -266,7 +266,7 @@ export default function NotificationBell() {
                     </ScrollArea>
                 )}
 
-                <Box sx={{ borderTop: '1px solid', borderColor: 'var(--border)', px: 2, py: 1 }}>
+                <Box sx={{ borderTop: '1px solid', borderColor: 'divider', px: 2, py: 1 }}>
                     <Link
                         href="/notifications"
                         style={{ display: 'block', textAlign: 'center', fontSize: '0.75rem', color: 'var(--primary)', textDecoration: 'none' }}

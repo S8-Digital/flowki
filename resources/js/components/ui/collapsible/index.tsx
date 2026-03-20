@@ -1,3 +1,5 @@
+import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
 import MuiCollapse from '@mui/material/Collapse';
 import * as React from 'react';
 
@@ -29,7 +31,7 @@ function Collapsible({
     };
     return (
         <CollapsibleContext.Provider value={{ open, setOpen }}>
-            <div {...props}>{children}</div>
+            <Box {...(props as any)}>{children}</Box>
         </CollapsibleContext.Provider>
     );
 }
@@ -44,9 +46,9 @@ function CollapsibleTrigger({ asChild, children, ...props }: { asChild?: boolean
         });
     }
     return (
-        <button onClick={handleClick} {...props}>
+        <ButtonBase onClick={handleClick} sx={{ display: 'block', textAlign: 'left', width: '100%' }} {...(props as any)}>
             {children}
-        </button>
+        </ButtonBase>
     );
 }
 

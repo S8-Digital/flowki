@@ -1,6 +1,10 @@
 import { Head, router } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { update } from '@/actions/App/Http/Controllers/Settings/CategoriesController';
 import HeadingSmall from '@/components/HeadingSmall';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +13,7 @@ import SettingsLayout from '@/layouts/settings/Layout';
 import type { BreadcrumbItem } from '@/types';
 
 interface Category {
+    [key: string]: string;
     value: string;
     label: string;
 }
@@ -56,7 +61,7 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
     function save() {
         setSaving(true);
         router.post(
-            '/settings/categories',
+            update().url,
             { todo_categories: todoCategories, recipe_categories: recipeCategories, shopping_categories: shoppingCategories },
             {
                 onSuccess: () => {
@@ -80,33 +85,38 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
         setter: React.Dispatch<React.SetStateAction<Category[]>>;
     }) {
         return (
-            <div className="flex flex-col space-y-4">
+            <Stack spacing={2}>
                 <HeadingSmall title={title} description={description} />
-                <div className="space-y-2">
+                <Stack spacing={1}>
                     {categories.map((cat, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                            <Input
-                                value={cat.label}
-                                onChange={(e) => onLabelInput(setter, i, e.target.value, cat.value)}
-                                placeholder="Label (e.g. Household)"
-                                className="flex-1"
-                            />
-                            <Input
-                                value={cat.value}
-                                onChange={(e) => onValueChange(setter, i, e.target.value)}
-                                placeholder="Value (e.g. household)"
-                                className="w-40 font-mono text-xs"
-                            />
-                            <Button variant="ghost" size="icon" onClick={() => removeCategory(setter, i)} title="Remove">
-                                <Trash2 className="size-4 text-destructive" />
-                            </Button>
-                        </div>
+                        <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                <Input
+                                    value={cat.label}
+                                    onChange={(e) => onLabelInput(setter, i, e.target.value, cat.value)}
+                                    placeholder="Label (e.g. Household)"
+                                />
+                            </Box>
+                            <Box sx={{ width: 144, flexShrink: 0 }}>
+                                <Input
+                                    value={cat.value}
+                                    onChange={(e) => onValueChange(setter, i, e.target.value)}
+                                    placeholder="Value (slug)"
+                                    className="font-mono text-xs"
+                                />
+                            </Box>
+                            <Box sx={{ flexShrink: 0 }}>
+                                <Button variant="ghost" size="icon" onClick={() => removeCategory(setter, i)} title="Remove">
+                                    <Trash2 className="size-4 text-destructive" />
+                                </Button>
+                            </Box>
+                        </Box>
                     ))}
-                </div>
+                </Stack>
                 <Button variant="outline" size="sm" className="w-fit" onClick={() => addCategory(setter)}>
                     <Plus className="mr-1 size-4" /> Add Category
                 </Button>
-            </div>
+            </Stack>
         );
     }
 
@@ -132,12 +142,16 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
                     categories={shoppingCategories}
                     setter={setShoppingCategories}
                 />
-                <div className="flex items-center gap-4">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Button onClick={save} disabled={saving}>
                         {saving ? 'Saving…' : 'Save Categories'}
                     </Button>
-                    {saved && <p className="text-sm text-neutral-600">Saved.</p>}
-                </div>
+                    {saved && (
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            Saved.
+                        </Typography>
+                    )}
+                </Box>
             </SettingsLayout>
         </AppLayout>
     );

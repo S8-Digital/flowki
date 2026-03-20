@@ -1,7 +1,10 @@
+import Box from '@mui/material/Box';
 import MuiDialog from '@mui/material/Dialog';
 import MuiDialogContent from '@mui/material/DialogContent';
 import MuiDialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import type { SxProps, Theme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
 import { Slot } from '@/lib/slot';
@@ -62,9 +65,9 @@ function DialogTrigger({
         );
     }
     return (
-        <button type="button" onClick={handleClick} {...props}>
+        <Box component="button" type="button" onClick={handleClick} {...(props as any)}>
             {children}
-        </button>
+        </Box>
     );
 }
 
@@ -96,17 +99,17 @@ function DialogClose({
         );
     }
     return (
-        <button type="button" onClick={handleClick} {...props}>
+        <Box component="button" type="button" onClick={handleClick} {...(props as any)}>
             {children}
-        </button>
+        </Box>
     );
 }
 
 function DialogOverlay({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} {...props} />;
+    return <Box className={cn(className)} {...(props as any)} />;
 }
 
-function DialogContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function DialogContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
     const ctx = React.useContext(DialogContext);
     return (
         <MuiDialog open={ctx?.open ?? false} onClose={() => ctx?.setOpen(false)} maxWidth="sm" fullWidth {...(props as any)}>
@@ -115,10 +118,15 @@ function DialogContent({ className, children, ...props }: React.HTMLAttributes<H
                 <IconButton
                     size="small"
                     onClick={() => ctx?.setOpen(false)}
-                    sx={{ position: 'absolute', top: 8, right: 8, opacity: 0.7, '&:hover': { opacity: 1 } }}
+                    sx={{ position: 'absolute', top: 5, right: 5, opacity: 0.7, '&:hover': { opacity: 1 } }}
                 >
                     <XIcon size={16} />
-                    <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>Close</span>
+                    <Box
+                        component="span"
+                        sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}
+                    >
+                        Close
+                    </Box>
                 </IconButton>
             </MuiDialogContent>
         </MuiDialog>
@@ -126,11 +134,23 @@ function DialogContent({ className, children, ...props }: React.HTMLAttributes<H
 }
 
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} style={{ display: 'flex', flexDirection: 'column', gap: 8, textAlign: 'left', marginBottom: 16 }} {...props} />;
+    return (
+        <Box
+            className={cn(className)}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: 'left', mb: 2 }}
+            {...(props as any)}
+        />
+    );
 }
 
 function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={cn(className)} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: 8, marginTop: 16 }} {...props} />;
+    return (
+        <Box
+            className={cn(className)}
+            sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: 1, mt: 2 }}
+            {...(props as any)}
+        />
+    );
 }
 
 function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
@@ -138,7 +158,15 @@ function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingEl
 }
 
 function DialogDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-    return <p className={cn(className)} style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', margin: 0 }} {...props} />;
+    return (
+        <Typography
+            variant="body2"
+            component="p"
+            className={cn(className)}
+            sx={{ color: 'text.secondary', m: 0 }}
+            {...(props as any)}
+        />
+    );
 }
 
 export {

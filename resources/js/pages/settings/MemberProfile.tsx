@@ -1,4 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { update as colorUpdate } from '@/actions/App/Http/Controllers/Settings/MemberColorController';
 import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 import HeadingSmall from '@/components/HeadingSmall';
@@ -46,54 +49,77 @@ export default function MemberProfile({ member }: Props) {
         <AppLayout breadcrumbs={breadcrumbItems}>
             <Head title={`${member.name} Profile`} />
             <MemberSettingsLayout member={member}>
-                <div className="space-y-6">
+                <Stack spacing={3}>
                     <HeadingSmall
                         title={`Profile for ${member.name}`}
                         description={`Manage profile settings for ${member.name}${member.role ? ` (${member.role})` : ''}.`}
                     />
 
                     {/* Profile Colour */}
-                    <div className="space-y-4 rounded-lg border p-4">
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, borderRadius: '12px', border: 1, borderColor: 'divider', p: 2 }}>
                         <HeadingSmall
                             title="Profile Colour"
                             description={`Set a personal colour for ${member.name} that identifies their items across the app.`}
                         />
-                        <form onSubmit={handleColorSubmit} className="space-y-4">
-                            <div className="grid gap-2">
+                        <Stack component="form" onSubmit={handleColorSubmit} spacing={2}>
+                            <Box sx={{ display: 'grid', gap: 1 }}>
                                 <Label htmlFor={`color-${member.id}`}>Colour</Label>
-                                <div className="flex items-center gap-3">
-                                    <input
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                    <Box
+                                        component="input"
                                         id={`color-${member.id}`}
                                         type="color"
-                                        className="h-9 w-14 cursor-pointer rounded-md border bg-background p-1"
+                                        sx={{
+                                            height: 36,
+                                            width: 56,
+                                            cursor: 'pointer',
+                                            borderRadius: 1,
+                                            border: 1,
+                                            borderColor: 'divider',
+                                            bgcolor: 'background.default',
+                                            p: 0.5,
+                                        }}
                                         value={colorData.profile_color ?? '#6366f1'}
                                         onChange={(e) => setColorData('profile_color', e.target.value)}
                                         aria-label={`Pick colour for ${member.name}`}
                                     />
-                                    <span className="text-sm text-muted-foreground">
+                                    <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
                                         {colorData.profile_color ? colorData.profile_color : 'No colour set'}
-                                    </span>
+                                    </Typography>
                                     {colorData.profile_color && (
-                                        <button
+                                        <Box
+                                            component="button"
                                             type="button"
-                                            className="text-xs text-muted-foreground underline"
                                             onClick={() => setColorData('profile_color', null)}
+                                            sx={{
+                                                fontSize: '0.75rem',
+                                                color: 'text.secondary',
+                                                textDecoration: 'underline',
+                                                background: 'none',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                p: 0,
+                                            }}
                                         >
                                             Clear
-                                        </button>
+                                        </Box>
                                     )}
-                                </div>
+                                </Box>
                                 <InputError message={colorErrors.profile_color} />
-                            </div>
-                            <div className="flex items-center gap-4">
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                 <Button type="submit" disabled={colorProcessing}>
                                     {colorProcessing ? 'Saving…' : 'Save colour'}
                                 </Button>
-                                {colorRecentlySuccessful && <p className="text-sm text-muted-foreground">Colour saved.</p>}
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                                {colorRecentlySuccessful && (
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                        Colour saved.
+                                    </Typography>
+                                )}
+                            </Box>
+                        </Stack>
+                    </Box>
+                </Stack>
             </MemberSettingsLayout>
         </AppLayout>
     );
