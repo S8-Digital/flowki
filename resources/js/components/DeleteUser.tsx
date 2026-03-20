@@ -81,7 +81,6 @@ export default function DeleteUser() {
                                     label="Password"
                                     value={form.data.password}
                                     onChange={(e) => form.setData('password', e.target.value)}
-                                    placeholder="Password"
                                 />
                                 <InputError message={form.errors.password} />
                             </Box>
