@@ -169,6 +169,37 @@ The `deploy.yml` workflow will:
 
 ---
 
+### Mail Configuration
+
+Flowki supports multiple mail drivers. By default, local development uses
+[Mailpit](https://github.com/axllent/mailpit) (SMTP on port 1025) so you can
+preview emails without sending them.
+
+#### Switching to Mailgun
+
+1. Add your Mailgun credentials to your environment (or GCP Secret Manager in
+   production):
+
+   ```env
+   MAIL_MAILER=mailgun
+   MAILGUN_DOMAIN=mg.yourdomain.com
+   MAILGUN_SECRET=key-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   # Use api.eu.mailgun.net for EU-hosted domains
+   MAILGUN_ENDPOINT=api.mailgun.net
+   ```
+
+2. The `MAIL_FROM_ADDRESS` and `MAIL_FROM_NAME` variables still control the
+   sender identity — ensure the address belongs to a domain verified in your
+   Mailgun account.
+
+3. No additional Laravel packages are required; Mailgun support is built into
+   the `symfony/mailgun-mailer` package that ships with Laravel.
+
+> **Tip:** To use the EU Mailgun region, set
+> `MAILGUN_ENDPOINT=api.eu.mailgun.net`.
+
+---
+
 ### Architecture Notes
 
 - **Cloud SQL** is connected via Unix socket (`/cloudsql/PROJECT:REGION:INSTANCE`)
