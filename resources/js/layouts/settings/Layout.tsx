@@ -12,7 +12,7 @@ import type { NavItem } from '@/types';
 
 const sidebarNavItems: NavItem[] = [
     { title: 'Profile', href: '/settings/profile' },
-    { title: 'Password', href: '/settings/password' },
+    { title: 'Security', href: '/settings/security' },
     { title: 'Appearance', href: appearance() },
     { title: 'Categories', href: '/settings/categories' },
     { title: 'Notifications', href: '/settings/notifications' },

@@ -18,10 +18,12 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
+
         return Inertia::render('settings/Profile', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
-            'hasGoogleCalendarConnected' => $request->user()->hasGoogleCalendarConnected(),
+            'hasGoogleCalendarConnected' => $user->hasGoogleCalendarConnected(),
         ]);
     }
 

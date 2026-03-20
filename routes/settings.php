@@ -9,6 +9,7 @@ use App\Http\Controllers\Settings\NotificationPreferencesController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\PermissionController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\TwoFactorController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,9 +20,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('settings/password', [PasswordController::class, 'edit'])->name('password.edit');
+    Route::get('settings/security', [PasswordController::class, 'edit'])->name('password.edit');
 
-    Route::put('settings/password', [PasswordController::class, 'update'])
+    Route::put('settings/security', [PasswordController::class, 'update'])
         ->middleware('throttle:6,1')
         ->name('password.update');
 
@@ -47,4 +48,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('settings/members/{user}/color', [MemberColorController::class, 'update'])->name('settings.members.color.update');
 
     Route::patch('settings/members/order', [MemberOrderController::class, 'update'])->name('settings.members.order.update');
+
+    // Two-factor authentication management
+    Route::post('user/two-factor-authentication', [TwoFactorController::class, 'store'])->name('two-factor.enable');
+    Route::put('user/confirmed-two-factor-authentication', [TwoFactorController::class, 'update'])->name('two-factor.confirm');
+    Route::delete('user/two-factor-authentication', [TwoFactorController::class, 'destroy'])->name('two-factor.disable');
+    Route::get('user/two-factor-qr-code', [TwoFactorController::class, 'show'])->name('two-factor.qr-code');
+    Route::get('user/two-factor-recovery-codes', [TwoFactorController::class, 'recoveryCodes'])->name('two-factor.recovery-codes');
+    Route::post('user/two-factor-recovery-codes', [TwoFactorController::class, 'regenerateRecoveryCodes'])->name('two-factor.recovery-codes.regenerate');
 });

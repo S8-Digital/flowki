@@ -1,9 +1,89 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
-import confirmD7e05f from './confirm'
+/**
+* @see \Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController::confirmation
+* @see vendor/laravel/fortify/src/Http/Controllers/ConfirmedPasswordStatusController.php:17
+* @route '/user/confirmed-password-status'
+*/
+export const confirmation = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: confirmation.url(options),
+    method: 'get',
+})
+
+confirmation.definition = {
+    methods: ["get","head"],
+    url: '/user/confirmed-password-status',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController::confirmation
+* @see vendor/laravel/fortify/src/Http/Controllers/ConfirmedPasswordStatusController.php:17
+* @route '/user/confirmed-password-status'
+*/
+confirmation.url = (options?: RouteQueryOptions) => {
+    return confirmation.definition.url + queryParams(options)
+}
+
+/**
+* @see \Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController::confirmation
+* @see vendor/laravel/fortify/src/Http/Controllers/ConfirmedPasswordStatusController.php:17
+* @route '/user/confirmed-password-status'
+*/
+confirmation.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: confirmation.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController::confirmation
+* @see vendor/laravel/fortify/src/Http/Controllers/ConfirmedPasswordStatusController.php:17
+* @route '/user/confirmed-password-status'
+*/
+confirmation.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: confirmation.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController::confirmation
+* @see vendor/laravel/fortify/src/Http/Controllers/ConfirmedPasswordStatusController.php:17
+* @route '/user/confirmed-password-status'
+*/
+const confirmationForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: confirmation.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController::confirmation
+* @see vendor/laravel/fortify/src/Http/Controllers/ConfirmedPasswordStatusController.php:17
+* @route '/user/confirmed-password-status'
+*/
+confirmationForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: confirmation.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Fortify\Http\Controllers\ConfirmedPasswordStatusController::confirmation
+* @see vendor/laravel/fortify/src/Http/Controllers/ConfirmedPasswordStatusController.php:17
+* @route '/user/confirmed-password-status'
+*/
+confirmationForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: confirmation.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+confirmation.form = confirmationForm
+
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::edit
 * @see app/Http/Controllers/Settings/PasswordController.php:18
-* @route '/settings/password'
+* @route '/settings/security'
 */
 export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(options),
@@ -12,13 +92,13 @@ export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 edit.definition = {
     methods: ["get","head"],
-    url: '/settings/password',
+    url: '/settings/security',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::edit
 * @see app/Http/Controllers/Settings/PasswordController.php:18
-* @route '/settings/password'
+* @route '/settings/security'
 */
 edit.url = (options?: RouteQueryOptions) => {
     return edit.definition.url + queryParams(options)
@@ -27,7 +107,7 @@ edit.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::edit
 * @see app/Http/Controllers/Settings/PasswordController.php:18
-* @route '/settings/password'
+* @route '/settings/security'
 */
 edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(options),
@@ -37,7 +117,7 @@ edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::edit
 * @see app/Http/Controllers/Settings/PasswordController.php:18
-* @route '/settings/password'
+* @route '/settings/security'
 */
 edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(options),
@@ -47,7 +127,7 @@ edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::edit
 * @see app/Http/Controllers/Settings/PasswordController.php:18
-* @route '/settings/password'
+* @route '/settings/security'
 */
 const editForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(options),
@@ -57,7 +137,7 @@ const editForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::edit
 * @see app/Http/Controllers/Settings/PasswordController.php:18
-* @route '/settings/password'
+* @route '/settings/security'
 */
 editForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(options),
@@ -67,7 +147,7 @@ editForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::edit
 * @see app/Http/Controllers/Settings/PasswordController.php:18
-* @route '/settings/password'
+* @route '/settings/security'
 */
 editForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url({
@@ -83,8 +163,8 @@ edit.form = editForm
 
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::update
-* @see app/Http/Controllers/Settings/PasswordController.php:26
-* @route '/settings/password'
+* @see app/Http/Controllers/Settings/PasswordController.php:32
+* @route '/settings/security'
 */
 export const update = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(options),
@@ -93,13 +173,13 @@ export const update = (options?: RouteQueryOptions): RouteDefinition<'put'> => (
 
 update.definition = {
     methods: ["put"],
-    url: '/settings/password',
+    url: '/settings/security',
 } satisfies RouteDefinition<["put"]>
 
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::update
-* @see app/Http/Controllers/Settings/PasswordController.php:26
-* @route '/settings/password'
+* @see app/Http/Controllers/Settings/PasswordController.php:32
+* @route '/settings/security'
 */
 update.url = (options?: RouteQueryOptions) => {
     return update.definition.url + queryParams(options)
@@ -107,8 +187,8 @@ update.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::update
-* @see app/Http/Controllers/Settings/PasswordController.php:26
-* @route '/settings/password'
+* @see app/Http/Controllers/Settings/PasswordController.php:32
+* @route '/settings/security'
 */
 update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(options),
@@ -117,8 +197,8 @@ update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::update
-* @see app/Http/Controllers/Settings/PasswordController.php:26
-* @route '/settings/password'
+* @see app/Http/Controllers/Settings/PasswordController.php:32
+* @route '/settings/security'
 */
 const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url({
@@ -132,8 +212,8 @@ const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =>
 
 /**
 * @see \App\Http\Controllers\Settings\PasswordController::update
-* @see app/Http/Controllers/Settings/PasswordController.php:26
-* @route '/settings/password'
+* @see app/Http/Controllers/Settings/PasswordController.php:32
+* @route '/settings/security'
 */
 updateForm.put = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url({
@@ -521,13 +601,14 @@ confirmForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 confirm.form = confirmForm
 
 const password = {
+    confirmation: Object.assign(confirmation, confirmation),
+    confirm: Object.assign(confirm, confirm),
     edit: Object.assign(edit, edit),
     update: Object.assign(update, update),
     request: Object.assign(request, request),
     email: Object.assign(email, email),
     reset: Object.assign(reset, reset),
     store: Object.assign(store, store),
-    confirm: Object.assign(confirm, confirmD7e05f),
 }
 
 export default password

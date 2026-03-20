@@ -9,6 +9,7 @@ import ForgotPassword from '@/pages/auth/ForgotPassword';
 import Login from '@/pages/auth/Login';
 import Register from '@/pages/auth/Register';
 import ResetPassword from '@/pages/auth/ResetPassword';
+import TwoFactorChallenge from '@/pages/auth/TwoFactorChallenge';
 import VerifyEmail from '@/pages/auth/VerifyEmail';
 import { makeUseFormReturn } from './__mocks__/inertia';
 
@@ -302,5 +303,34 @@ describe('AcceptInvite page', () => {
         render(<AcceptInvite token="tok123" email="user@example.com" familyName="The Smiths" role="member" />);
         expect(screen.getByLabelText(/your name/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/^password\b/i)).toBeInTheDocument();
+    });
+});
+
+describe('TwoFactorChallenge page', () => {
+    beforeEach(() => {
+        mockForm({ data: { code: '', recovery_code: '' }, errors: {} });
+    });
+
+    it('renders the authentication code input by default', () => {
+        render(<TwoFactorChallenge />);
+        expect(screen.getByLabelText(/authentication code/i)).toBeInTheDocument();
+    });
+
+    it('renders the Log in button', () => {
+        render(<TwoFactorChallenge />);
+        expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument();
+    });
+
+    it('renders the "Use a recovery code instead" toggle', () => {
+        render(<TwoFactorChallenge />);
+        expect(screen.getByText(/use a recovery code instead/i)).toBeInTheDocument();
+    });
+
+    it('switches to recovery code input when toggled', async () => {
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
+        render(<TwoFactorChallenge />);
+        await user.click(screen.getByText(/use a recovery code instead/i));
+        expect(screen.getByLabelText(/recovery code/i)).toBeInTheDocument();
+        expect(screen.getByText(/use an authentication code instead/i)).toBeInTheDocument();
     });
 });
