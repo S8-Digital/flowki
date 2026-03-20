@@ -75,7 +75,17 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 <SheetHeader sx={{ display: 'flex', justifyContent: 'flex-start', textAlign: 'left' }}>
                                     <AppLogoIcon style={{ width: 24, height: 24 }} />
                                 </SheetHeader>
-                                <Box sx={{ display: 'flex', height: '100%', flex: 1, flexDirection: 'column', justifyContent: 'space-between', gap: 2, py: 3 }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        height: '100%',
+                                        flex: 1,
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        gap: 2,
+                                        py: 3,
+                                    }}
+                                >
                                     <Box component="nav" sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mx: -1.5 }}>
                                         {mainNavItems.map((item) => (
                                             <MuiLink
@@ -109,7 +119,16 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                 href={toUrl(item.href)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.875rem', fontWeight: 500, color: 'text.primary', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 1,
+                                                    fontSize: '0.875rem',
+                                                    fontWeight: 500,
+                                                    color: 'text.primary',
+                                                    textDecoration: 'none',
+                                                    '&:hover': { textDecoration: 'underline' },
+                                                }}
                                             >
                                                 {item.icon && <item.icon size={20} />}
                                                 <Box component="span">{item.title}</Box>
@@ -130,16 +149,26 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         <NavigationMenu sx={{ ml: 5, display: 'flex', height: '100%', alignItems: 'stretch' }}>
                             <NavigationMenuList sx={{ display: 'flex', height: '100%', alignItems: 'stretch', gap: 1 }}>
                                 {mainNavItems.map((item, index) => (
-                                    <NavigationMenuItem key={index} sx={{ position: 'relative', display: 'flex', height: '100%', alignItems: 'center' }}>
-                                        <Link
-                                            className={cn(navigationMenuTriggerStyle(), 'h-9 cursor-pointer px-3')}
-                                            href={item.href}
-                                        >
+                                    <NavigationMenuItem
+                                        key={index}
+                                        sx={{ position: 'relative', display: 'flex', height: '100%', alignItems: 'center' }}
+                                    >
+                                        <Link className={cn(navigationMenuTriggerStyle(), 'h-9 cursor-pointer px-3')} href={item.href}>
                                             {item.icon && <item.icon size={16} style={{ marginRight: 8 }} />}
                                             {item.title}
                                         </Link>
                                         {isCurrentRoute(item.href) && (
-                                            <Box sx={{ position: 'absolute', bottom: 0, left: 0, height: '2px', width: '100%', transform: 'translateY(1px)', bgcolor: 'text.primary' }} />
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    left: 0,
+                                                    height: '2px',
+                                                    width: '100%',
+                                                    transform: 'translateY(1px)',
+                                                    bgcolor: 'text.primary',
+                                                }}
+                                            />
                                         )}
                                     </NavigationMenuItem>
                                 ))}
@@ -158,7 +187,9 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             <TooltipTrigger asChild>
                                                 <Button variant="ghost" size="icon" asChild sx={{ width: 36, height: 36, cursor: 'pointer' }}>
                                                     <a href={toUrl(item.href)} target="_blank" rel="noopener noreferrer">
-                                                        <Box component="span" sx={srOnly}>{item.title}</Box>
+                                                        <Box component="span" sx={srOnly}>
+                                                            {item.title}
+                                                        </Box>
                                                         {item.icon && <item.icon size={20} style={{ opacity: 0.8 }} />}
                                                     </a>
                                                 </Button>
@@ -182,9 +213,7 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 >
                                     <Avatar style={{ width: 32, height: 32, overflow: 'hidden', borderRadius: '50%' }}>
                                         {auth.user.avatar && <AvatarImage src={auth.user.avatar} alt={auth.user.name} />}
-                                        <AvatarFallback style={{ borderRadius: 8, fontWeight: 600 }}>
-                                            {getInitials(auth.user?.name)}
-                                        </AvatarFallback>
+                                        <AvatarFallback style={{ borderRadius: 8, fontWeight: 600 }}>{getInitials(auth.user?.name)}</AvatarFallback>
                                     </Avatar>
                                 </Button>
                             </DropdownMenuTrigger>
@@ -198,7 +227,18 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
             {breadcrumbs.length > 1 && (
                 <Box sx={{ display: 'flex', width: '100%', borderBottom: 1, borderColor: 'divider' }}>
-                    <Box sx={{ mx: 'auto', display: 'flex', height: 48, width: '100%', alignItems: 'center', justifyContent: 'flex-start', px: 2, color: 'text.secondary' }}>
+                    <Box
+                        sx={{
+                            mx: 'auto',
+                            display: 'flex',
+                            height: 48,
+                            width: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'flex-start',
+                            px: 2,
+                            color: 'text.secondary',
+                        }}
+                    >
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
                     </Box>
                 </Box>

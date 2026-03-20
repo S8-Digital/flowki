@@ -1,5 +1,6 @@
 import MuiButton from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import type { SxProps, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Slot } from '@/lib/slot';
 import { cn } from '@/lib/utils';
@@ -45,6 +46,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
     size?: 'default' | 'sm' | 'lg' | 'icon';
     asChild?: boolean;
+    sx?: SxProps<Theme>;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, asChild = false, children, ...props }, ref) => {
@@ -78,8 +80,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, va
             variant={mapVariant(variant)}
             color={mapColor(variant)}
             size={mapSize(size)}
-            disableRipple
-            disableElevation
             className={cn(className)}
             {...(props as any)}
         >

@@ -1,20 +1,31 @@
-import OutlinedInput from '@mui/material/OutlinedInput';
-import * as React from 'react';
+import { DatePicker, DateTimePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import 'dayjs/locale/en-au';
+import type { ComponentProps } from 'react';
 
-/**
- * A datetime-local input backed by MUI OutlinedInput.
- * The underlying native input preserves full datetime-local browser UI.
- */
-function DateTimeInput({ className, ...props }: React.ComponentProps<'input'>) {
+type DateTimeInputProps =
+    | ({ type: 'date'; value?: string | Dayjs | null } & Omit<ComponentProps<typeof DatePicker>, 'value'>)
+    | ({ type?: 'datetime'; value?: string | Dayjs | null } & Omit<ComponentProps<typeof DateTimePicker>, 'value'>)
+    | ({ type: 'time'; value?: string | Dayjs | null } & Omit<ComponentProps<typeof TimePicker>, 'value'>);
+
+function DateTimeInput({ value, ...props }: DateTimeInputProps) {
+    const type = props.type ?? 'datetime';
+    const dayjsValue = typeof value === 'string' ? (value ? dayjs(value) : null) : (value ?? null);
+
     return (
-        <OutlinedInput
-            type="datetime-local"
-            size="small"
-            fullWidth
-            inputProps={{ className, ...props }}
-            sx={{ colorScheme: 'light', '& input::-webkit-calendar-picker-indicator': { cursor: 'pointer' } }}
-        />
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={navigator.language.toLowerCase()}>
+            {type === 'date' ? (
+                <DatePicker value={dayjsValue} {...(props as ComponentProps<typeof DatePicker>)} />
+            ) : type === 'time' ? (
+                <TimePicker value={dayjsValue} {...(props as ComponentProps<typeof TimePicker>)} />
+            ) : (
+                <DateTimePicker value={dayjsValue} {...(props as ComponentProps<typeof DateTimePicker>)} />
+            )}
+        </LocalizationProvider>
     );
 }
 
 export { DateTimeInput };
+export type { DateTimeInputProps };

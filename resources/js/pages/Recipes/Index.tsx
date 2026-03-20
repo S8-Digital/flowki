@@ -70,7 +70,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                     <Plus size={16} style={{ marginRight: 4 }} /> New Recipe
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent sx={{ maxHeight: "90vh", overflowY: "auto" }}>
+                            <DialogContent sx={{ maxHeight: '90vh', overflowY: 'auto' }}>
                                 <DialogHeader>
                                     <DialogTitle>Create Recipe</DialogTitle>
                                 </DialogHeader>
@@ -163,7 +163,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                         <Input type="file" accept="image/*" onChange={(e) => setData('photo', e.target.files?.[0] ?? null)} />
                                         <InputError message={errors.photo} />
                                     </Box>
-                                    <Button type="submit" sx={{ width: "100%" }} disabled={processing}>
+                                    <Button type="submit" sx={{ width: '100%' }} disabled={processing}>
                                         {processing ? 'Creating…' : 'Create Recipe'}
                                     </Button>
                                 </Stack>
@@ -239,7 +239,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                                 bgcolor: 'action.hover',
                                             }}
                                         >
-                                            <ChefHat size={32} style={{ color: "var(--mui-palette-text-secondary)" }} />
+                                            <ChefHat size={32} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                         </Box>
                                     )}
                                     <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', p: 2 }}>
@@ -277,7 +277,14 @@ export default function RecipesIndex({ recipes }: Props) {
                                             )}
                                             {recipe.rating && (
                                                 <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                    <Star size={12} style={{ fill: "var(--mui-palette-warning-light)", color: "var(--mui-palette-warning-light)" }} /> {recipe.rating}/5
+                                                    <Star
+                                                        size={12}
+                                                        style={{
+                                                            fill: 'var(--mui-palette-warning-light)',
+                                                            color: 'var(--mui-palette-warning-light)',
+                                                        }}
+                                                    />{' '}
+                                                    {recipe.rating}/5
                                                 </Box>
                                             )}
                                         </Box>
@@ -290,7 +297,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                                     deleteRecipe(recipe);
                                                 }}
                                             >
-                                                <Trash2 size={16} style={{ color: "var(--mui-palette-error-main)" }} />
+                                                <Trash2 size={16} style={{ color: 'var(--mui-palette-error-main)' }} />
                                             </Button>
                                         </Box>
                                     </Box>

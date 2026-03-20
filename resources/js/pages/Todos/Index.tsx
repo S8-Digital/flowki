@@ -1,4 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { Fab } from '@mui/material';
 import Box from '@mui/material/Box';
 
 import Typography from '@mui/material/Typography';
@@ -161,9 +162,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                         </Typography>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button size="sm">
-                                    <Plus size={16} style={{ marginRight: 4 }} /> New Todo
-                                </Button>
+                                <Fab color="primary" size="small" aria-label="New Todo">
+                                    <Plus className="size-4" />
+                                </Fab>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
@@ -237,7 +238,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             <Label>Due Date &amp; Time</Label>
                                             <DateTimeInput
                                                 value={createForm.data.due_date}
-                                                onChange={(e) => createForm.setData('due_date', e.target.value)}
+                                                onChange={(value) => createForm.setData('due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                             />
                                         </Box>
                                     </Box>
@@ -505,9 +506,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     >
                                                         <Box sx={{ mt: 0.25, flexShrink: 0 }}>
                                                             {todo.status === 'completed' ? (
-                                                                <CheckCircle2 size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
+                                                                <CheckCircle2 size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                                             ) : (
-                                                                <Circle size={14} style={{ color: "var(--mui-palette-warning-main)" }} />
+                                                                <Circle size={14} style={{ color: 'var(--mui-palette-warning-main)' }} />
                                                             )}
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -558,7 +559,12 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                             </Box>
                                                         </Box>
                                                         <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                            <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(todo)}>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                                onClick={() => openEdit(todo)}
+                                                            >
                                                                 <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path
                                                                         strokeLinecap="round"
@@ -568,8 +574,13 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                                     />
                                                                 </svg>
                                                             </Button>
-                                                            <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => deleteTodo(todo)}>
-                                                                <Trash2 size={12} style={{ color: "var(--mui-palette-error-main)" }} />
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                                onClick={() => deleteTodo(todo)}
+                                                            >
+                                                                <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                             </Button>
                                                         </Box>
                                                     </Box>
@@ -644,9 +655,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             >
                                                 <Box sx={{ mt: 0.25, flexShrink: 0 }}>
                                                     {todo.status === 'completed' ? (
-                                                        <CheckCircle2 size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
+                                                        <CheckCircle2 size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                                     ) : (
-                                                        <Circle size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
+                                                        <Circle size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                                     )}
                                                 </Box>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -696,7 +707,12 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     </Box>
                                                 </Box>
                                                 <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                    <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(todo)}>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                        onClick={() => openEdit(todo)}
+                                                    >
                                                         <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path
                                                                 strokeLinecap="round"
@@ -706,8 +722,13 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                             />
                                                         </svg>
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => deleteTodo(todo)}>
-                                                        <Trash2 size={12} style={{ color: "var(--mui-palette-error-main)" }} />
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                        onClick={() => deleteTodo(todo)}
+                                                    >
+                                                        <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                     </Button>
                                                 </Box>
                                             </Box>
@@ -805,7 +826,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         <Label>Due Date &amp; Time</Label>
                                         <DateTimeInput
                                             value={editForm.data.due_date}
-                                            onChange={(e) => editForm.setData('due_date', e.target.value)}
+                                            onChange={(value) => editForm.setData('due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         />
                                     </Box>
                                 </Box>

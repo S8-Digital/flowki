@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { update } from '@/actions/App/Http/Controllers/Settings/CategoriesController';
 import HeadingSmall from '@/components/HeadingSmall';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +13,7 @@ import SettingsLayout from '@/layouts/settings/Layout';
 import type { BreadcrumbItem } from '@/types';
 
 interface Category {
+    [key: string]: string;
     value: string;
     label: string;
 }
@@ -59,7 +61,7 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
     function save() {
         setSaving(true);
         router.post(
-            '/settings/categories',
+            update().url,
             { todo_categories: todoCategories, recipe_categories: recipeCategories, shopping_categories: shoppingCategories },
             {
                 onSuccess: () => {
@@ -88,21 +90,26 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
                 <Stack spacing={1}>
                     {categories.map((cat, i) => (
                         <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Input
-                                value={cat.label}
-                                onChange={(e) => onLabelInput(setter, i, e.target.value, cat.value)}
-                                placeholder="Label (e.g. Household)"
-                                className="flex-1"
-                            />
-                            <Input
-                                value={cat.value}
-                                onChange={(e) => onValueChange(setter, i, e.target.value)}
-                                placeholder="Value (e.g. household)"
-                                className="w-40 font-mono text-xs"
-                            />
-                            <Button variant="ghost" size="icon" onClick={() => removeCategory(setter, i)} title="Remove">
-                                <Trash2 className="size-4 text-destructive" />
-                            </Button>
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                <Input
+                                    value={cat.label}
+                                    onChange={(e) => onLabelInput(setter, i, e.target.value, cat.value)}
+                                    placeholder="Label (e.g. Household)"
+                                />
+                            </Box>
+                            <Box sx={{ width: 144, flexShrink: 0 }}>
+                                <Input
+                                    value={cat.value}
+                                    onChange={(e) => onValueChange(setter, i, e.target.value)}
+                                    placeholder="Value (slug)"
+                                    className="font-mono text-xs"
+                                />
+                            </Box>
+                            <Box sx={{ flexShrink: 0 }}>
+                                <Button variant="ghost" size="icon" onClick={() => removeCategory(setter, i)} title="Remove">
+                                    <Trash2 className="size-4 text-destructive" />
+                                </Button>
+                            </Box>
                         </Box>
                     ))}
                 </Stack>

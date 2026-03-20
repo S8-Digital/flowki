@@ -127,9 +127,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
             {/* Items */}
             <Box sx={{ flex: 1, overflowY: 'auto', p: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                 {isEmpty && (
-                    <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.75rem', color: 'text.secondary' }}>
-                        Nothing scheduled
-                    </Typography>
+                    <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.75rem', color: 'text.secondary' }}>Nothing scheduled</Typography>
                 )}
 
                 {/* Timed events */}
@@ -207,23 +205,20 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                             )}
                             <Box
                                 component="span"
+                                className={todo.status === 'completed' ? 'line-through' : undefined}
                                 sx={{
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap',
                                     fontWeight: 500,
-                                    ...(todo.status === 'completed'
-                                        ? { color: 'text.secondary', textDecoration: 'line-through' }
-                                        : {}),
+                                    ...(todo.status === 'completed' ? { color: 'text.secondary', textDecoration: 'line-through' } : {}),
                                 }}
                             >
                                 {todo.title}
                             </Box>
                         </Box>
                         {todo.due_date && (
-                            <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>
-                                {formatTime(todo.due_date)}
-                            </Typography>
+                            <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>{formatTime(todo.due_date)}</Typography>
                         )}
                         <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'capitalize' }}>
                             {todo.priority} priority
@@ -249,9 +244,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                             </Box>
                         </Box>
                         {chore.next_due_date && (
-                            <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>
-                                {formatTime(chore.next_due_date)}
-                            </Typography>
+                            <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>{formatTime(chore.next_due_date)}</Typography>
                         )}
                         <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'capitalize' }}>
                             {chore.frequency}

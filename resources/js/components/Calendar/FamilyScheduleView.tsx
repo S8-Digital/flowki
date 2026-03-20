@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Typography from '@mui/material/Typography';
+import dayjs from 'dayjs';
 import { ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import MemberColumn, { getMemberColor } from '@/components/Calendar/MemberColumn';
 import { Button } from '@/components/ui/button';
+import { DateTimeInput } from '@/components/ui/datetime-input';
 import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo, User } from '@/types';
 
 interface Props {
@@ -18,30 +18,6 @@ interface Props {
     onEventClick?: (event: CalendarEvent) => void;
     onTodoClick?: (todo: Todo) => void;
     onChoreClick?: (chore: Chore) => void;
-}
-
-function dateLabel(dateStr: string): string {
-    const d = new Date(dateStr + 'T00:00:00');
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-
-    if (d.getTime() === today.getTime()) {
-        return 'Today – ' + d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-    }
-
-    if (d.getTime() === tomorrow.getTime()) {
-        return 'Tomorrow – ' + d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-    }
-
-    if (d.getTime() === yesterday.getTime()) {
-        return 'Yesterday – ' + d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-    }
-
-    return d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 }
 
 function shiftDate(dateStr: string, days: number): string {
@@ -137,16 +113,13 @@ export default function FamilyScheduleView({
                     </Button>
                 </Box>
 
-                <OutlinedInput
+                <DateTimeInput
                     type="date"
-                    value={selectedDate}
-                    onChange={(e) => onDateChange(e.target.value)}
-                    size="small"
-                    inputProps={{ 'aria-label': 'Select date' }}
-                    sx={{ fontSize: '0.875rem' }}
+                    label="Selected Date"
+                    value={dayjs(selectedDate)}
+                    onChange={(value) => onDateChange(value?.format('YYYY-MM-DD') ?? '')}
+                    slotProps={{ textField: { size: 'small', inputProps: { 'aria-label': 'Select date' }, color: 'primary' } }}
                 />
-
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 500, color: 'text.secondary' }}>{dateLabel(selectedDate)}</Typography>
 
                 {/* Member toggles */}
                 <Box sx={{ ml: 'auto', display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

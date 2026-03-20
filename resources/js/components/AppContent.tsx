@@ -1,5 +1,5 @@
-import type { SxProps, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface AppContentProps {
     variant?: 'header' | 'sidebar';

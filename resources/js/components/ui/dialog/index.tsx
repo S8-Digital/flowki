@@ -3,6 +3,7 @@ import MuiDialog from '@mui/material/Dialog';
 import MuiDialogContent from '@mui/material/DialogContent';
 import MuiDialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
@@ -108,7 +109,7 @@ function DialogOverlay({ className, ...props }: React.HTMLAttributes<HTMLDivElem
     return <Box className={cn(className)} {...(props as any)} />;
 }
 
-function DialogContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function DialogContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
     const ctx = React.useContext(DialogContext);
     return (
         <MuiDialog open={ctx?.open ?? false} onClose={() => ctx?.setOpen(false)} maxWidth="sm" fullWidth {...(props as any)}>
@@ -117,7 +118,7 @@ function DialogContent({ className, children, ...props }: React.HTMLAttributes<H
                 <IconButton
                     size="small"
                     onClick={() => ctx?.setOpen(false)}
-                    sx={{ position: 'absolute', top: 1, right: 1, opacity: 0.7, '&:hover': { opacity: 1 } }}
+                    sx={{ position: 'absolute', top: 5, right: 5, opacity: 0.7, '&:hover': { opacity: 1 } }}
                 >
                     <XIcon size={16} />
                     <Box

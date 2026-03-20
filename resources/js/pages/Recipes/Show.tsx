@@ -2,8 +2,8 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { ChefHat, Clock, Heart, Star, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
@@ -78,7 +78,7 @@ export default function RecipesShow({ recipe }: Props) {
                                     bgcolor: 'action.hover',
                                 }}
                             >
-                                <ChefHat size={48} style={{ color: "var(--mui-palette-text-secondary)" }} />
+                                <ChefHat size={48} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                             </Box>
                         )}
                         <Box sx={{ p: 2.5 }}>
@@ -94,14 +94,16 @@ export default function RecipesShow({ recipe }: Props) {
                                     )}
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    {recipe.is_favorite && <Heart size={20} style={{ fill: "var(--mui-palette-error-main)", color: "var(--mui-palette-error-main)" }} />}
+                                    {recipe.is_favorite && (
+                                        <Heart size={20} style={{ fill: 'var(--mui-palette-error-main)', color: 'var(--mui-palette-error-main)' }} />
+                                    )}
                                     <Dialog open={editOpen} onOpenChange={setEditOpen}>
                                         <DialogTrigger asChild>
                                             <Button variant="outline" size="sm">
                                                 Edit
                                             </Button>
                                         </DialogTrigger>
-                                        <DialogContent sx={{ maxHeight: "90vh", overflowY: "auto" }}>
+                                        <DialogContent sx={{ maxHeight: '90vh', overflowY: 'auto' }}>
                                             <DialogHeader>
                                                 <DialogTitle>Edit Recipe</DialogTitle>
                                             </DialogHeader>
@@ -170,14 +172,14 @@ export default function RecipesShow({ recipe }: Props) {
                                                         />
                                                     </Box>
                                                 </Box>
-                                                <Button type="submit" sx={{ width: "100%" }} disabled={processing}>
+                                                <Button type="submit" sx={{ width: '100%' }} disabled={processing}>
                                                     {processing ? 'Saving…' : 'Save Changes'}
                                                 </Button>
                                             </Stack>
                                         </DialogContent>
                                     </Dialog>
                                     <Button variant="ghost" size="icon" onClick={deleteRecipe}>
-                                        <Trash2 size={16} style={{ color: "var(--mui-palette-error-main)" }} />
+                                        <Trash2 size={16} style={{ color: 'var(--mui-palette-error-main)' }} />
                                     </Button>
                                 </Box>
                             </Box>
@@ -194,7 +196,11 @@ export default function RecipesShow({ recipe }: Props) {
                                 )}
                                 {recipe.rating && (
                                     <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                                        <Star size={16} style={{ fill: "var(--mui-palette-warning-light)", color: "var(--mui-palette-warning-light)" }} /> {recipe.rating}/5
+                                        <Star
+                                            size={16}
+                                            style={{ fill: 'var(--mui-palette-warning-light)', color: 'var(--mui-palette-warning-light)' }}
+                                        />{' '}
+                                        {recipe.rating}/5
                                     </Box>
                                 )}
                                 {recipe.category && (
@@ -250,7 +256,10 @@ export default function RecipesShow({ recipe }: Props) {
                                     No ingredients listed.
                                 </Typography>
                             )}
-                            <Link href={shoppingIndex().url} style={{ display: "block", marginTop: 16, fontSize: "0.75rem", color: "var(--mui-palette-text-secondary)" }}>
+                            <Link
+                                href={shoppingIndex().url}
+                                style={{ display: 'block', marginTop: 16, fontSize: '0.75rem', color: 'var(--mui-palette-text-secondary)' }}
+                            >
                                 Add to shopping list →
                             </Link>
                         </Box>

@@ -1,4 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { Fab } from '@mui/material';
 import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -166,15 +167,15 @@ export default function ChoresIndex({ chores, members }: Props) {
                         </Typography>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button size="sm">
-                                    <Plus size={16} style={{ marginRight: 4 }} /> New Chore
-                                </Button>
+                                <Fab color="primary" size="small" aria-label="New Chore">
+                                    <Plus className="size-4" />
+                                </Fab>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle>Create Chore</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={handleCreate} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                                <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Title</Label>
                                         <Input
@@ -213,7 +214,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             <Label>Next Due</Label>
                                             <DateTimeInput
                                                 value={createForm.data.next_due_date}
-                                                onChange={(e) => createForm.setData('next_due_date', e.target.value)}
+                                                onChange={(value) => createForm.setData('next_due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                             />
                                         </Box>
                                     </Box>
@@ -249,7 +250,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Label htmlFor="create-chore-reminder-enabled" style={{ cursor: "pointer" }}>
+                                            <Label htmlFor="create-chore-reminder-enabled" style={{ cursor: 'pointer' }}>
                                                 Reminder
                                             </Label>
                                             <Switch
@@ -260,7 +261,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         </Box>
                                         {createForm.data.reminder_enabled && (
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label sx={{ fontSize: "0.75rem", color: "text.secondary" }}>Send reminder</Label>
+                                                <Label sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>Send reminder</Label>
                                                 <Select
                                                     value={String(createForm.data.reminder_lead_time)}
                                                     onValueChange={(v) => createForm.setData('reminder_lead_time', Number(v))}
@@ -279,7 +280,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             </Box>
                                         )}
                                     </Box>
-                                    <Button type="submit" sx={{ width: "100%" }} disabled={createForm.processing}>
+                                    <Button type="submit" sx={{ width: '100%' }} disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Chore'}
                                     </Button>
                                 </form>
@@ -451,7 +452,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         }}
                                                     >
                                                         <Box sx={{ mt: 0.25, flexShrink: 0 }}>
-                                                            <RefreshCw size={14} style={{ color: "var(--mui-palette-success-main)" }} />
+                                                            <RefreshCw size={14} style={{ color: 'var(--mui-palette-success-main)' }} />
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
                                                             <Typography
@@ -490,9 +491,14 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                 onClick={() => markComplete(chore)}
                                                                 title="Mark complete"
                                                             >
-                                                                <CheckCircle size={20} style={{ color: "var(--mui-palette-success-main)" }} />
+                                                                <CheckCircle size={20} style={{ color: 'var(--mui-palette-success-main)' }} />
                                                             </Button>
-                                                            <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(chore)}>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                                onClick={() => openEdit(chore)}
+                                                            >
                                                                 <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path
                                                                         strokeLinecap="round"
@@ -502,8 +508,13 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                     />
                                                                 </svg>
                                                             </Button>
-                                                            <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => deleteChore(chore)}>
-                                                                <Trash2 size={20} style={{ color: "var(--mui-palette-error-main)" }} />
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                                onClick={() => deleteChore(chore)}
+                                                            >
+                                                                <Trash2 size={20} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                             </Button>
                                                         </Box>
                                                     </Box>
@@ -571,7 +582,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 style={{ backgroundColor: '#94a3b815', border: '1px solid #94a3b8' }}
                                             >
                                                 <Box sx={{ mt: 0.25, flexShrink: 0 }}>
-                                                    <RefreshCw size={14} style={{ color: "var(--mui-palette-text-secondary)" }} />
+                                                    <RefreshCw size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                                 </Box>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
                                                     <Typography
@@ -610,9 +621,14 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         onClick={() => markComplete(chore)}
                                                         title="Mark complete"
                                                     >
-                                                        <CheckCircle size={12} style={{ color: "var(--mui-palette-success-main)" }} />
+                                                        <CheckCircle size={12} style={{ color: 'var(--mui-palette-success-main)' }} />
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => openEdit(chore)}>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                        onClick={() => openEdit(chore)}
+                                                    >
                                                         <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path
                                                                 strokeLinecap="round"
@@ -622,8 +638,13 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                             />
                                                         </svg>
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" sx={{ width: 24, height: 24, minWidth: 24 }} onClick={() => deleteChore(chore)}>
-                                                        <Trash2 size={12} style={{ color: "var(--mui-palette-error-main)" }} />
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
+                                                        onClick={() => deleteChore(chore)}
+                                                    >
+                                                        <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                     </Button>
                                                 </Box>
                                             </Box>
@@ -663,7 +684,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                             <DialogTitle>Edit Chore</DialogTitle>
                         </DialogHeader>
                         {editingChore && (
-                            <form onSubmit={handleEdit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                            <form onSubmit={handleEdit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Title</Label>
                                     <Input value={editForm.data.title} onChange={(e) => editForm.setData('title', e.target.value)} required />
@@ -693,7 +714,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         <Label>Next Due</Label>
                                         <DateTimeInput
                                             value={editForm.data.next_due_date}
-                                            onChange={(e) => editForm.setData('next_due_date', e.target.value)}
+                                            onChange={(value) => editForm.setData('next_due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         />
                                     </Box>
                                 </Box>
@@ -715,7 +736,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         ))}
                                     </Box>
                                 </Box>
-                                <Button type="submit" sx={{ width: "100%" }} disabled={editForm.processing}>
+                                <Button type="submit" sx={{ width: '100%' }} disabled={editForm.processing}>
                                     {editForm.processing ? 'Saving…' : 'Save Changes'}
                                 </Button>
                             </form>

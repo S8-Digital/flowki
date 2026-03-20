@@ -1,4 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { Fab } from '@mui/material';
 import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
@@ -56,26 +57,32 @@ export default function ShoppingShow({ list }: Props) {
                         )}
                     </Box>
 
-                    <Box component="form" onSubmit={handleAddItem} sx={{ display: 'flex', gap: 1 }}>
-                        <Box sx={{ flex: 1 }}>
+                    <Box component="form" onSubmit={handleAddItem} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
                             <Input value={data.name} onChange={(e) => setData('name', e.target.value)} placeholder="Add item…" required />
                             <InputError message={errors.name} />
                         </Box>
-                        <Input value={data.quantity} onChange={(e) => setData('quantity', e.target.value)} placeholder="Qty" className="w-20" />
-                        <Select value={data.category} onValueChange={(v) => setData('category', v)}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="groceries">Groceries</SelectItem>
-                                <SelectItem value="household">Household</SelectItem>
-                                <SelectItem value="personal_care">Personal Care</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <Button type="submit" size="sm" disabled={processing}>
-                            <Plus className="size-4" />
-                        </Button>
+                        <Box sx={{ width: 56, flexShrink: 0 }}>
+                            <Input value={data.quantity} onChange={(e) => setData('quantity', e.target.value)} placeholder="Qty" />
+                        </Box>
+                        <Box sx={{ width: 140, flexShrink: 0 }}>
+                            <Select value={data.category} onValueChange={(v) => setData('category', v)}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="groceries">Groceries</SelectItem>
+                                    <SelectItem value="household">Household</SelectItem>
+                                    <SelectItem value="personal_care">Personal Care</SelectItem>
+                                    <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </Box>
+                        <Box>
+                            <Fab type="submit" color="primary" size="small" disabled={processing}>
+                                <Plus className="size-4" />
+                            </Fab>
+                        </Box>
                     </Box>
 
                     {unchecked.length > 0 && (

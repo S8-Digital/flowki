@@ -42,7 +42,11 @@ export default function Welcome() {
                     <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <AppearanceToggle />
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                            <MuiLink component={Link} href={login()} sx={{ fontSize: '0.875rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}>
+                            <MuiLink
+                                component={Link}
+                                href={login()}
+                                sx={{ fontSize: '0.875rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
+                            >
                                 Log in
                             </MuiLink>
                             <MuiButton

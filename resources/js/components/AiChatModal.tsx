@@ -276,13 +276,16 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                                     }}
                                 >
                                     {msg.isStreaming && !msg.content ? (
-                                        <Box
-                                            component="span"
-                                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}
-                                        >
-                                            <Box component="span" sx={{ animation: 'bounce 1s infinite' }}>●</Box>
-                                            <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>●</Box>
-                                            <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>●</Box>
+                                        <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
+                                            <Box component="span" sx={{ animation: 'bounce 1s infinite' }}>
+                                                ●
+                                            </Box>
+                                            <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>
+                                                ●
+                                            </Box>
+                                            <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>
+                                                ●
+                                            </Box>
                                         </Box>
                                     ) : (
                                         <Box component="span" sx={{ whiteSpace: 'pre-wrap' }}>

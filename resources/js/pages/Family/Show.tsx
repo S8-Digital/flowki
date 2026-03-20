@@ -1,4 +1,5 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { Chip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -205,7 +206,11 @@ export default function FamilyShow({ family }: Props) {
                             </Box>
                             <Dialog open={editNameOpen} onOpenChange={setEditNameOpen}>
                                 <DialogTrigger asChild>
-                                    <Button variant="ghost" size="sm" sx={{ gap: 0.75, color: "text.secondary", "&:hover": { color: "text.primary" } }}>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        sx={{ gap: 0.75, color: 'text.secondary', '&:hover': { color: 'text.primary' } }}
+                                    >
                                         <Pencil size={14} />
                                         <Typography component="span" sx={{ fontSize: '0.75rem' }}>
                                             Edit name
@@ -228,7 +233,7 @@ export default function FamilyShow({ family }: Props) {
                                             />
                                             <InputError message={editNameForm.errors.name} />
                                         </Box>
-                                        <Button type="submit" sx={{ width: "100%" }} disabled={editNameForm.processing}>
+                                        <Button type="submit" sx={{ width: '100%' }} disabled={editNameForm.processing}>
                                             {editNameForm.processing ? 'Saving…' : 'Save Name'}
                                         </Button>
                                     </Stack>
@@ -284,7 +289,7 @@ export default function FamilyShow({ family }: Props) {
                     <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <MapPin size={16} style={{ color: "var(--mui-palette-text-secondary)" }} />
+                                <MapPin size={16} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                 <Typography component="span" sx={{ fontSize: '0.875rem', fontWeight: 500 }}>
                                     Location
                                 </Typography>
@@ -292,7 +297,11 @@ export default function FamilyShow({ family }: Props) {
                             {canManageFamily && (
                                 <Dialog open={editLocationOpen} onOpenChange={setEditLocationOpen}>
                                     <DialogTrigger asChild>
-                                        <Button variant="ghost" size="sm" sx={{ gap: 0.75, color: "text.secondary", "&:hover": { color: "text.primary" } }}>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            sx={{ gap: 0.75, color: 'text.secondary', '&:hover': { color: 'text.primary' } }}
+                                        >
                                             <Pencil size={14} />
                                             <Typography component="span" sx={{ fontSize: '0.75rem' }}>
                                                 Edit
@@ -354,7 +363,7 @@ export default function FamilyShow({ family }: Props) {
                                                     <InputError message={editLocationForm.errors.longitude} />
                                                 </Box>
                                             </Box>
-                                            <Button type="submit" sx={{ width: "100%" }} disabled={editLocationForm.processing}>
+                                            <Button type="submit" sx={{ width: '100%' }} disabled={editLocationForm.processing}>
                                                 {editLocationForm.processing ? 'Saving…' : 'Save Location'}
                                             </Button>
                                         </Stack>
@@ -424,7 +433,7 @@ export default function FamilyShow({ family }: Props) {
                                                 />
                                                 <InputError message={addChildForm.errors.name} />
                                             </Box>
-                                            <Button type="submit" sx={{ width: "100%" }} disabled={addChildForm.processing}>
+                                            <Button type="submit" sx={{ width: '100%' }} disabled={addChildForm.processing}>
                                                 {addChildForm.processing ? 'Adding…' : 'Add Child'}
                                             </Button>
                                         </Stack>
@@ -470,7 +479,7 @@ export default function FamilyShow({ family }: Props) {
                                                 </Select>
                                                 <InputError message={inviteForm.errors.role} />
                                             </Box>
-                                            <Button type="submit" sx={{ width: "100%" }} disabled={inviteForm.processing}>
+                                            <Button type="submit" sx={{ width: '100%' }} disabled={inviteForm.processing}>
                                                 {inviteForm.processing ? 'Sending Invite…' : 'Send Invitation'}
                                             </Button>
                                         </Stack>
@@ -500,7 +509,11 @@ export default function FamilyShow({ family }: Props) {
                                     onDragEnd={onDragEnd}
                                 >
                                     {canManageMembers && memberOrder.length > 1 && (
-                                        <GripVertical size={16} style={{ flexShrink: 0, cursor: "grab", color: "var(--mui-palette-text-secondary)" }} aria-hidden="true" />
+                                        <GripVertical
+                                            size={16}
+                                            style={{ flexShrink: 0, cursor: 'grab', color: 'var(--mui-palette-text-secondary)' }}
+                                            aria-hidden="true"
+                                        />
                                     )}
                                     <Box sx={{ flex: 1 }}>
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -520,21 +533,6 @@ export default function FamilyShow({ family }: Props) {
                                                     Pending
                                                 </Box>
                                             )}
-                                            {member.is_child && (
-                                                <Box
-                                                    component="span"
-                                                    sx={{
-                                                        borderRadius: '50px',
-                                                        bgcolor: 'info.light',
-                                                        px: 1,
-                                                        py: 0.25,
-                                                        fontSize: '0.75rem',
-                                                        color: 'info.dark',
-                                                    }}
-                                                >
-                                                    Child
-                                                </Box>
-                                            )}
                                         </Box>
                                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                             {member.email ?? 'No email'}
@@ -543,7 +541,19 @@ export default function FamilyShow({ family }: Props) {
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                         {member.id !== currentUserId && !member.is_child ? (
                                             <Select value={member.role} onValueChange={(v) => changeRole(member.id, v)}>
-                                                <SelectTrigger sx={{ height: 24, borderRadius: "50px", border: "1px solid", borderColor: "divider", bgcolor: "transparent", px: 1, py: 0.25, fontSize: "0.75rem", textTransform: "capitalize" }}>
+                                                <SelectTrigger
+                                                    sx={{
+                                                        height: 24,
+                                                        borderRadius: '50px',
+                                                        border: '1px solid',
+                                                        borderColor: 'divider',
+                                                        bgcolor: 'transparent',
+                                                        px: 1,
+                                                        py: 0.25,
+                                                        fontSize: '0.75rem',
+                                                        textTransform: 'capitalize',
+                                                    }}
+                                                >
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -553,30 +563,18 @@ export default function FamilyShow({ family }: Props) {
                                                 </SelectContent>
                                             </Select>
                                         ) : (
-                                            <Box
-                                                component="span"
-                                                sx={{
-                                                    borderRadius: '50px',
-                                                    bgcolor: 'secondary.main',
-                                                    px: 1,
-                                                    py: 0.25,
-                                                    fontSize: '0.75rem',
-                                                    textTransform: 'capitalize',
-                                                }}
-                                            >
-                                                {member.role}
-                                            </Box>
+                                            <Chip label={member.role} size="small" />
                                         )}
                                         {canManageMembers && (
                                             <Button variant="ghost" size="icon" asChild title="Manage settings">
                                                 <Link href={memberProfileEdit({ user: member.id }).url}>
-                                                    <Settings size={16} style={{ color: "var(--mui-palette-text-secondary)" }} />
+                                                    <Settings size={16} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                                 </Link>
                                             </Button>
                                         )}
                                         {member.id !== currentUserId && (
                                             <Button variant="ghost" size="icon" onClick={() => removeUser(member.id)}>
-                                                <UserMinus size={16} style={{ color: "var(--mui-palette-error-main)" }} />
+                                                <UserMinus size={16} style={{ color: 'var(--mui-palette-error-main)' }} />
                                             </Button>
                                         )}
                                     </Box>

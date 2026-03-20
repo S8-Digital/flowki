@@ -48,9 +48,7 @@ export default function WeatherWidget() {
             </Box>
 
             {/* Location */}
-            <Typography
-                sx={{ fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.05em', color: 'text.secondary', textTransform: 'uppercase' }}
-            >
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.05em', color: 'text.secondary', textTransform: 'uppercase' }}>
                 {data.location}
             </Typography>
 

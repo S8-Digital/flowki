@@ -3,6 +3,7 @@ import MuiDivider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import MuiSelect, { type SelectChangeEvent } from '@mui/material/Select';
+import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
@@ -81,9 +82,11 @@ function Select({
                 value={value ?? ''}
                 onChange={(e: SelectChangeEvent) => onValueChange?.(e.target.value)}
                 displayEmpty
-                renderValue={(val) =>
-                    val ? String(val) : <Box component="span" sx={{ color: 'text.secondary' }}>{placeholder}</Box>
-                }
+                renderValue={(val) => {
+                    if (!val) return <Box component="span" sx={{ color: 'text.secondary' }}>{placeholder}</Box>;
+                    const matched = items.find((item) => item.props.value === val);
+                    return matched ? matched.props.children : String(val);
+                }}
                 inputProps={ariaLabel ? { 'aria-label': ariaLabel } : undefined}
                 {...otherTriggerProps}
                 {...(props as any)}
@@ -98,7 +101,7 @@ function Select({
     );
 }
 
-function SelectTrigger({ className: _className, children: _children, ...props }: React.HTMLAttributes<HTMLButtonElement>) {
+function SelectTrigger({ className: _className, children: _children, ...props }: React.HTMLAttributes<HTMLButtonElement> & { sx?: SxProps<Theme> }) {
     // Rendering handled by Select component; this is kept for API compatibility
     return null;
 }

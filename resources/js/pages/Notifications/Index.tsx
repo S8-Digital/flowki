@@ -80,7 +80,14 @@ export default function NotificationsIndex({ notifications }: Props) {
                             {notifications.data.map((notification) => (
                                 <Card
                                     key={notification.id}
-                                    sx={!notification.read_at ? { borderColor: 'color-mix(in srgb, var(--mui-palette-primary-main) 30%, transparent)', bgcolor: 'color-mix(in srgb, var(--mui-palette-primary-main) 5%, transparent)' } : undefined}
+                                    sx={
+                                        !notification.read_at
+                                            ? {
+                                                  borderColor: 'color-mix(in srgb, var(--mui-palette-primary-main) 30%, transparent)',
+                                                  bgcolor: 'color-mix(in srgb, var(--mui-palette-primary-main) 5%, transparent)',
+                                              }
+                                            : undefined
+                                    }
                                 >
                                     <CardContent sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 2, py: 2 }}>
                                         <Stack spacing={0.25}>

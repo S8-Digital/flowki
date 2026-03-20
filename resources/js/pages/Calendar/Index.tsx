@@ -6,11 +6,16 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
+import { Fab } from '@mui/material';
 import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import dayjs from 'dayjs';
 import { CalendarDays, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
@@ -63,6 +68,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
     const calendarRef = useRef<FullCalendar>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [importOpen, setImportOpen] = useState(false);
+    const [fabMenuAnchor, setFabMenuAnchor] = useState<HTMLElement | null>(null);
     const [editEventOpen, setEditEventOpen] = useState(false);
     const [editTodoOpen, setEditTodoOpen] = useState(false);
     const [editChoreOpen, setEditChoreOpen] = useState(false);
@@ -329,40 +335,37 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         [editChoreForm],
     );
 
+    const todayLabel = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+
     return (
         <>
             <Head title="Calendar" />
             <AppLayout breadcrumbs={breadcrumbs}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
-                    <WeatherStrip />
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Typography sx={{ fontSize: '1.25rem', fontWeight: 600 }}>Calendar</Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Select value={calendarView} onValueChange={(v) => switchView(v as CalendarViewType)}>
-                                <SelectTrigger aria-label="Calendar view">
-                                    <SelectValue placeholder="View" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {VIEW_OPTIONS.map((opt) => (
-                                        <SelectItem key={opt.value} value={opt.value}>
-                                            {opt.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <Button size="sm" variant="outline" onClick={() => setImportOpen(true)} sx={{ display: 'flex', gap: 0.5 }}>
-                                <CalendarDays size={16} /> Import Schedule
-                            </Button>
-                            <Button
-                                size="sm"
-                                onClick={() => {
-                                    createForm.setData({ ...createForm.data, start_at: '', end_at: '' });
-                                    setCreateOpen(true);
-                                }}
-                                sx={{ display: 'flex', gap: 0.5 }}
-                            >
-                                <Plus size={16} /> New Event
-                            </Button>
+                    {/* Top bar: date + weather (left) | view select + add (right) */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                            <Typography variant="h5">{todayLabel}</Typography>
+                            <WeatherStrip />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Box>
+                                <Select value={calendarView} onValueChange={(v) => switchView(v as CalendarViewType)}>
+                                    <SelectTrigger aria-label="Calendar view">
+                                        <SelectValue placeholder="View" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {VIEW_OPTIONS.map((opt) => (
+                                            <SelectItem key={opt.value} value={opt.value}>
+                                                {opt.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </Box>
+                            <Fab sx={{ ml: 2 }} color="primary" aria-label="Add event or import" onClick={(e) => setFabMenuAnchor(e.currentTarget)}>
+                                <Plus size={18} />
+                            </Fab>
                         </Box>
                     </Box>
 
@@ -406,7 +409,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
 
                 {/* Create Event */}
                 <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-                    <DialogContent sx={{ maxHeight: '90vh', overflowY: 'auto' }}>
+                    <DialogContent>
                         <DialogHeader>
                             <DialogTitle>New Event</DialogTitle>
                         </DialogHeader>
@@ -441,15 +444,18 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Start</Label>
                                     <DateTimeInput
-                                        value={createForm.data.start_at}
-                                        onChange={(e) => createForm.setData('start_at', e.target.value)}
-                                        required
+                                        value={createForm.data.start_at ? dayjs(createForm.data.start_at) : null}
+                                        onChange={(value) => createForm.setData('start_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
+                                        slotProps={{ textField: { required: true } }}
                                     />
                                     <InputError message={createForm.errors.start_at} />
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>End</Label>
-                                    <DateTimeInput value={createForm.data.end_at} onChange={(e) => createForm.setData('end_at', e.target.value)} />
+                                    <DateTimeInput
+                                        value={createForm.data.end_at ? dayjs(createForm.data.end_at) : null}
+                                        onChange={(value) => createForm.setData('end_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
+                                    />
                                 </Box>
                             </Box>
                             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
@@ -469,11 +475,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
                                     <Label>Colour</Label>
-                                    <Input
-                                        type="color"
-                                        value={createForm.data.color}
-                                        onChange={(e) => createForm.setData('color', e.target.value)}
-                                    />
+                                    <Input type="color" value={createForm.data.color} onChange={(e) => createForm.setData('color', e.target.value)} />
                                 </Box>
                             </Box>
                             <Box sx={{ display: 'grid', gap: 1 }}>
@@ -540,16 +542,16 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Start</Label>
                                         <DateTimeInput
-                                            value={editEventForm.data.start_at}
-                                            onChange={(e) => editEventForm.setData('start_at', e.target.value)}
-                                            required
+                                            value={editEventForm.data.start_at ? dayjs(editEventForm.data.start_at) : null}
+                                            onChange={(value) => editEventForm.setData('start_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
+                                            slotProps={{ textField: { required: true } }}
                                         />
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>End</Label>
                                         <DateTimeInput
-                                            value={editEventForm.data.end_at}
-                                            onChange={(e) => editEventForm.setData('end_at', e.target.value)}
+                                            value={editEventForm.data.end_at ? dayjs(editEventForm.data.end_at) : null}
+                                            onChange={(value) => editEventForm.setData('end_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         />
                                     </Box>
                                 </Box>
@@ -667,8 +669,8 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Due Date &amp; Time</Label>
                                         <DateTimeInput
-                                            value={editTodoForm.data.due_date}
-                                            onChange={(e) => editTodoForm.setData('due_date', e.target.value)}
+                                            value={editTodoForm.data.due_date ? dayjs(editTodoForm.data.due_date) : null}
+                                            onChange={(value) => editTodoForm.setData('due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         />
                                     </Box>
                                 </Box>
@@ -732,8 +734,9 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     <Box sx={{ display: 'grid', gap: 1 }}>
                                         <Label>Next Due</Label>
                                         <DateTimeInput
-                                            value={editChoreForm.data.next_due_date}
-                                            onChange={(e) => editChoreForm.setData('next_due_date', e.target.value)}
+                                            type="date"
+                                            value={editChoreForm.data.next_due_date ? dayjs(editChoreForm.data.next_due_date) : null}
+                                            onChange={(value) => editChoreForm.setData('next_due_date', value?.format('YYYY-MM-DD') ?? '')}
                                         />
                                     </Box>
                                 </Box>
@@ -772,6 +775,40 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
 
                 {/* Import Schedule Modal */}
                 <ScheduleUploadModal open={importOpen} onOpenChange={setImportOpen} />
+
+                {/* Add menu (triggered by toolbar icon button) */}
+                <Menu
+                    anchorEl={fabMenuAnchor}
+                    open={Boolean(fabMenuAnchor)}
+                    onClose={() => setFabMenuAnchor(null)}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    slotProps={{ paper: { sx: { minWidth: 180, borderRadius: 2 } } }}
+                >
+                    <MenuItem
+                        onClick={() => {
+                            setFabMenuAnchor(null);
+                            createForm.setData({ ...createForm.data, start_at: '', end_at: '' });
+                            setCreateOpen(true);
+                        }}
+                    >
+                        <ListItemIcon>
+                            <Plus size={18} />
+                        </ListItemIcon>
+                        <ListItemText>New Event</ListItemText>
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => {
+                            setFabMenuAnchor(null);
+                            setImportOpen(true);
+                        }}
+                    >
+                        <ListItemIcon>
+                            <CalendarDays size={18} />
+                        </ListItemIcon>
+                        <ListItemText>Import Schedule</ListItemText>
+                    </MenuItem>
+                </Menu>
             </AppLayout>
         </>
     );

@@ -104,7 +104,7 @@ vi.mock('@/routes', () => ({
 // ---------------------------------------------------------------------------
 
 function mockForm(overrides = {}) {
-    vi.mocked(useForm).mockReturnValue(makeUseFormReturn(overrides) as ReturnType<typeof useForm>);
+    vi.mocked(useForm).mockReturnValue(makeUseFormReturn(overrides) as unknown as ReturnType<typeof useForm>);
 }
 
 const baseUser = {
@@ -170,7 +170,7 @@ describe('Chores page (/chores)', () => {
                         reminder_lead_time: 60,
                     },
                     errors: {},
-                }) as ReturnType<typeof useForm>,
+                }) as unknown as ReturnType<typeof useForm>,
             )
             .mockReturnValue(
                 makeUseFormReturn({
@@ -184,7 +184,7 @@ describe('Chores page (/chores)', () => {
                         reminder_lead_time: 60,
                     },
                     errors: {},
-                }) as ReturnType<typeof useForm>,
+                }) as unknown as ReturnType<typeof useForm>,
             );
     });
 
@@ -269,7 +269,8 @@ describe('Calendar page (/calendar)', () => {
 
     it('renders the Calendar heading', () => {
         render(<CalendarIndex events={[]} todos={[]} chores={[]} members={[baseUser]} />);
-        expect(screen.getByRole('heading', { name: /calendar/i })).toBeInTheDocument();
+        // The page sets <Head title="Calendar" /> which the mock renders as <title>Calendar</title>
+        expect(document.querySelector('title')).toHaveTextContent('Calendar');
     });
 
     it('renders the view-switcher select', () => {
@@ -280,12 +281,16 @@ describe('Calendar page (/calendar)', () => {
 
     it('renders the "New Event" button', () => {
         render(<CalendarIndex events={[]} todos={[]} chores={[]} members={[baseUser]} />);
-        expect(screen.getByRole('button', { name: /new event/i })).toBeInTheDocument();
+        // A single FAB opens a menu with "New Event" and "Import Schedule" options
+        expect(screen.getByRole('button', { name: /add event or import/i })).toBeInTheDocument();
     });
 
-    it('renders the "Import Schedule" button', () => {
+    it('renders the "Import Schedule" button', async () => {
+        const user = userEvent.setup();
         render(<CalendarIndex events={[]} todos={[]} chores={[]} members={[baseUser]} />);
-        expect(screen.getByRole('button', { name: /import schedule/i })).toBeInTheDocument();
+        // Click the FAB to reveal the "Import Schedule" menu item
+        await user.click(screen.getByRole('button', { name: /add event or import/i }));
+        expect(screen.getByText('Import Schedule')).toBeInTheDocument();
     });
 
     it('defaults to the family view and renders FamilyScheduleView', () => {
@@ -302,7 +307,9 @@ describe('Calendar page (/calendar)', () => {
     it('opens the Import Schedule modal when the button is clicked', async () => {
         const user = userEvent.setup();
         render(<CalendarIndex events={[]} todos={[]} chores={[]} members={[baseUser]} />);
-        await user.click(screen.getByRole('button', { name: /import schedule/i }));
+        // Open the FAB menu, then click "Import Schedule"
+        await user.click(screen.getByRole('button', { name: /add event or import/i }));
+        await user.click(screen.getByText('Import Schedule'));
         // The modal's dialog title "Import Schedule" appears (may appear multiple times due to button + title)
         expect(screen.getAllByText(/import schedule/i).length).toBeGreaterThanOrEqual(1);
     });

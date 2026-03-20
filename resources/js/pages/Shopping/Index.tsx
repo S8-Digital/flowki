@@ -1,4 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { Fab } from '@mui/material';
 import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -55,9 +56,9 @@ export default function ShoppingIndex({ lists }: Props) {
                         </Typography>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
-                                <Button size="sm">
-                                    <Plus className="mr-1 size-4" /> New List
-                                </Button>
+                                <Fab color="primary" size="small" aria-label="New List">
+                                    <Plus className="size-4" />
+                                </Fab>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
