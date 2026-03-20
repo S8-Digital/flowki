@@ -12,7 +12,7 @@
         "noEmit": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
-        "types": ["vite/client", "./resources/js/types"],
+        "types": ["vite/client", "./resources/js/types", "google.maps"],
         "paths": {
             "@/*": ["./resources/js/*"]
         }
