@@ -168,9 +168,9 @@ describe('Register page', () => {
 
     it('renders all registration fields', () => {
         render(<Register />);
-        expect(screen.getByLabelText(/^name$/i)).toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: /^name$/i })).toBeInTheDocument();
         expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/^password\b/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
     });
 
@@ -292,6 +292,6 @@ describe('AcceptInvite page', () => {
     it('renders name and password fields', () => {
         render(<AcceptInvite token="tok123" email="user@example.com" familyName="The Smiths" role="member" />);
         expect(screen.getByLabelText(/your name/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/^password\b/i)).toBeInTheDocument();
     });
 });

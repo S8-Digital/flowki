@@ -10,7 +10,6 @@ import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import AppLayout from '@/layouts/AppLayout';
@@ -76,8 +75,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                 </DialogHeader>
                                 <Stack component="form" onSubmit={handleCreate} spacing={2}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Title</Label>
                                         <Input
+                                            label="Title"
                                             value={data.title}
                                             onChange={(e) => setData('title', e.target.value)}
                                             placeholder="Recipe name"
@@ -86,8 +85,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                         <InputError message={errors.title} />
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Description</Label>
                                         <Input
+                                            label="Description"
                                             value={data.description}
                                             onChange={(e) => setData('description', e.target.value)}
                                             placeholder="Brief description"
@@ -95,8 +94,7 @@ export default function RecipesIndex({ recipes }: Props) {
                                     </Box>
                                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label>Category</Label>
-                                            <Select value={data.category} onValueChange={(v) => setData('category', v)}>
+                                            <Select label="Category" value={data.category} onValueChange={(v) => setData('category', v)}>
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="None" />
                                                 </SelectTrigger>
@@ -112,8 +110,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                             </Select>
                                         </Box>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label>Servings</Label>
                                             <Input
+                                                label="Servings"
                                                 type="number"
                                                 min="1"
                                                 value={data.servings}
@@ -124,8 +122,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                     </Box>
                                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label>Prep (min)</Label>
                                             <Input
+                                                label="Prep (min)"
                                                 type="number"
                                                 min="0"
                                                 value={data.prep_time_minutes}
@@ -134,8 +132,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                             />
                                         </Box>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label>Cook (min)</Label>
                                             <Input
+                                                label="Cook (min)"
                                                 type="number"
                                                 min="0"
                                                 value={data.cook_time_minutes}
@@ -145,8 +143,8 @@ export default function RecipesIndex({ recipes }: Props) {
                                         </Box>
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Instructions</Label>
                                         <TextField
+                                            label="Instructions"
                                             value={data.instructions}
                                             onChange={(e) => setData('instructions', e.target.value)}
                                             multiline
@@ -159,7 +157,9 @@ export default function RecipesIndex({ recipes }: Props) {
                                         <InputError message={errors.instructions} />
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Photo</Label>
+                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                            Photo
+                                        </Typography>
                                         <Input type="file" accept="image/*" onChange={(e) => setData('photo', e.target.files?.[0] ?? null)} />
                                         <InputError message={errors.photo} />
                                     </Box>

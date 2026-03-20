@@ -1,5 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
@@ -9,7 +10,6 @@ import TextLink from '@/components/TextLink';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
@@ -40,10 +40,10 @@ export default function Login({ status, canResetPassword }: Props) {
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Box sx={{ display: 'grid', gap: 3 }}>
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
                             type="email"
+                            label="Email address"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             required
@@ -56,17 +56,17 @@ export default function Login({ status, canResetPassword }: Props) {
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Label htmlFor="password">Password</Label>
-                            {canResetPassword && (
+                        {canResetPassword && (
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                 <TextLink href={request()} className="text-sm" tabIndex={5}>
                                     Forgot password?
                                 </TextLink>
-                            )}
-                        </Box>
+                            </Box>
+                        )}
                         <Input
                             id="password"
                             type="password"
+                            label="Password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             required
@@ -77,8 +77,8 @@ export default function Login({ status, canResetPassword }: Props) {
                         <InputError message={errors.password} />
                     </Box>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Label htmlFor="remember" className="flex items-center space-x-3">
+                    <FormControlLabel
+                        control={
                             <Checkbox
                                 id="remember"
                                 name="remember"
@@ -86,9 +86,9 @@ export default function Login({ status, canResetPassword }: Props) {
                                 onCheckedChange={(checked) => setData('remember', checked as boolean)}
                                 tabIndex={3}
                             />
-                            <span>Remember me</span>
-                        </Label>
-                    </Box>
+                        }
+                        label="Remember me"
+                    />
 
                     <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

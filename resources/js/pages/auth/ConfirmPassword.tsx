@@ -6,7 +6,6 @@ import { store } from '@/actions/App/Http/Controllers/Auth/ConfirmablePasswordCo
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout';
 
 export default function ConfirmPassword() {
@@ -27,10 +26,10 @@ export default function ConfirmPassword() {
             <form onSubmit={handleSubmit}>
                 <Stack spacing={3}>
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
                             type="password"
+                            label="Password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             required

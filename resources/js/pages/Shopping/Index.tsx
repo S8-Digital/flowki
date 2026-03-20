@@ -12,7 +12,6 @@ import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, ShoppingList } from '@/types';
@@ -66,9 +65,9 @@ export default function ShoppingIndex({ lists }: Props) {
                                 </DialogHeader>
                                 <Stack component="form" onSubmit={handleCreate} spacing={2}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label htmlFor="name">List Name</Label>
                                         <Input
                                             id="name"
+                                            label="List Name"
                                             value={data.name}
                                             onChange={(e) => setData('name', e.target.value)}
                                             placeholder="e.g. Weekly Groceries"

@@ -6,7 +6,6 @@ import { join, store } from '@/actions/App/Http/Controllers/FamilyController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -36,9 +35,9 @@ export default function FamilyCreate() {
                         </Box>
                         <Stack component="form" onSubmit={handleSubmit} spacing={2}>
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label htmlFor="name">Family Name</Label>
                                 <Input
                                     id="name"
+                                    label="Family Name"
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
                                     placeholder="e.g. The Smith Family"

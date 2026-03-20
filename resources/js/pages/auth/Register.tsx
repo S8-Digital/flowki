@@ -8,7 +8,6 @@ import SocialAuthButtons from '@/components/SocialAuthButtons';
 import TextLink from '@/components/TextLink';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout';
 import { login } from '@/routes';
 
@@ -32,10 +31,10 @@ export default function Register() {
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Box sx={{ display: 'grid', gap: 3 }}>
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="name">Name</Label>
                         <Input
                             id="name"
                             type="text"
+                            label="Name"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                             required
@@ -48,10 +47,10 @@ export default function Register() {
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
                             type="email"
+                            label="Email address"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             required
@@ -63,10 +62,10 @@ export default function Register() {
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
                             type="password"
+                            label="Password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             required
@@ -78,10 +77,10 @@ export default function Register() {
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="password_confirmation">Confirm password</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
+                            label="Confirm password"
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             required

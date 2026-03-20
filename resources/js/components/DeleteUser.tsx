@@ -18,7 +18,6 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
 export default function DeleteUser() {
     const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -75,26 +74,13 @@ export default function DeleteUser() {
                             </DialogHeader>
 
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label
-                                    htmlFor="password"
-                                    style={{
-                                        position: 'absolute',
-                                        width: 1,
-                                        height: 1,
-                                        overflow: 'hidden',
-                                        clip: 'rect(0,0,0,0)',
-                                        whiteSpace: 'nowrap',
-                                    }}
-                                >
-                                    Password
-                                </Label>
                                 <Input
                                     id="password"
                                     ref={passwordInputRef}
                                     type="password"
+                                    label="Password"
                                     value={form.data.password}
                                     onChange={(e) => form.setData('password', e.target.value)}
-                                    placeholder="Password"
                                 />
                                 <InputError message={form.errors.password} />
                             </Box>

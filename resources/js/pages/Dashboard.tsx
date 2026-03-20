@@ -12,7 +12,6 @@ import TodoListWidget from '@/components/Dashboard/TodoListWidget';
 import WeatherWidget from '@/components/Dashboard/WeatherWidget';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
 import { dashboard } from '@/routes';
@@ -294,8 +293,7 @@ export default function Dashboard({
                         </DialogHeader>
                         <Stack spacing={2}>
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label>Widget Type</Label>
-                                <Select value={newWidgetType} onValueChange={setNewWidgetType}>
+                                <Select label="Widget Type" value={newWidgetType} onValueChange={setNewWidgetType}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Choose a widget…" />
                                     </SelectTrigger>
@@ -310,8 +308,7 @@ export default function Dashboard({
                             </Box>
                             {showListFilter && (
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Shopping List</Label>
-                                    <Select value={newWidgetListId} onValueChange={setNewWidgetListId}>
+                                    <Select label="Shopping List" value={newWidgetListId} onValueChange={setNewWidgetListId}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="All lists (first list)" />
                                         </SelectTrigger>
@@ -327,10 +324,7 @@ export default function Dashboard({
                             )}
                             {showCategoryFilter && (
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>
-                                        Category Filter <span className="text-xs text-muted-foreground">(optional)</span>
-                                    </Label>
-                                    <Select value={newWidgetCategory} onValueChange={setNewWidgetCategory}>
+                                    <Select label="Category Filter (optional)" value={newWidgetCategory} onValueChange={setNewWidgetCategory}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="All categories" />
                                         </SelectTrigger>
@@ -362,8 +356,7 @@ export default function Dashboard({
                             <Stack spacing={2}>
                                 {settingsWidget.type === 'shopping_list' && (
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Shopping List</Label>
-                                        <Select value={settingsListId} onValueChange={setSettingsListId}>
+                                        <Select label="Shopping List" value={settingsListId} onValueChange={setSettingsListId}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="First list" />
                                             </SelectTrigger>
@@ -379,10 +372,7 @@ export default function Dashboard({
                                 )}
                                 {settingsWidget.type === 'todo_list' && (
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>
-                                            Category Filter <span className="text-xs text-muted-foreground">(optional)</span>
-                                        </Label>
-                                        <Select value={settingsCategory} onValueChange={setSettingsCategory}>
+                                        <Select label="Category Filter (optional)" value={settingsCategory} onValueChange={setSettingsCategory}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="All categories" />
                                             </SelectTrigger>

@@ -7,7 +7,6 @@ import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settin
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout';
 import MemberSettingsLayout from '@/layouts/settings/MemberLayout';
 import type { BreadcrumbItem } from '@/types';
@@ -63,7 +62,9 @@ export default function MemberProfile({ member }: Props) {
                         />
                         <Stack component="form" onSubmit={handleColorSubmit} spacing={2}>
                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Label htmlFor={`color-${member.id}`}>Colour</Label>
+                                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                    Colour
+                                </Typography>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                     <Box
                                         component="input"

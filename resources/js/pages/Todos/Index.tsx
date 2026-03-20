@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { DateTimeInput } from '@/components/ui/datetime-input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
@@ -172,9 +171,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                 </DialogHeader>
                                 <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label htmlFor="title">Title</Label>
                                         <Input
                                             id="title"
+                                            label="Title"
                                             value={createForm.data.title}
                                             onChange={(e) => createForm.setData('title', e.target.value)}
                                             placeholder="What needs doing?"
@@ -183,8 +182,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         <InputError message={createForm.errors.title} />
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Description</Label>
                                         <Input
+                                            label="Description"
                                             value={createForm.data.description}
                                             onChange={(e) => createForm.setData('description', e.target.value)}
                                             placeholder="Optional details"
@@ -192,8 +191,11 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                     </Box>
                                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label>Category</Label>
-                                            <Select value={createForm.data.category} onValueChange={(v) => createForm.setData('category', v)}>
+                                            <Select
+                                                label="Category"
+                                                value={createForm.data.category}
+                                                onValueChange={(v) => createForm.setData('category', v)}
+                                            >
                                                 <SelectTrigger>
                                                     <SelectValue />
                                                 </SelectTrigger>
@@ -207,8 +209,11 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             </Select>
                                         </Box>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Label>Priority</Label>
-                                            <Select value={createForm.data.priority} onValueChange={(v) => createForm.setData('priority', v)}>
+                                            <Select
+                                                label="Priority"
+                                                value={createForm.data.priority}
+                                                onValueChange={(v) => createForm.setData('priority', v)}
+                                            >
                                                 <SelectTrigger>
                                                     <SelectValue />
                                                 </SelectTrigger>
@@ -222,7 +227,11 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                     </Box>
                                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                         <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Select value={createForm.data.status} onValueChange={(v) => createForm.setData('status', v)}>
+                                            <Select
+                                                label="Status"
+                                                value={createForm.data.status}
+                                                onValueChange={(v) => createForm.setData('status', v)}
+                                            >
                                                 <SelectTrigger>
                                                     <SelectValue />
                                                 </SelectTrigger>
@@ -244,8 +253,11 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </Box>
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Assign To</Label>
-                                        <Select value={createForm.data.assigned_to} onValueChange={(v) => createForm.setData('assigned_to', v)}>
+                                        <Select
+                                            label="Assign To"
+                                            value={createForm.data.assigned_to}
+                                            onValueChange={(v) => createForm.setData('assigned_to', v)}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Unassigned" />
                                             </SelectTrigger>
@@ -271,9 +283,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Label htmlFor="create-reminder-enabled" style={{ cursor: 'pointer' }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                                 Reminder
-                                            </Label>
+                                            </Typography>
                                             <Switch
                                                 id="create-reminder-enabled"
                                                 checked={createForm.data.reminder_enabled}
@@ -282,8 +294,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </Box>
                                         {createForm.data.reminder_enabled && (
                                             <Box sx={{ display: 'grid', gap: 1 }}>
-                                                <Label sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>Send reminder</Label>
                                                 <Select
+                                                    label="Send reminder"
                                                     value={String(createForm.data.reminder_lead_time)}
                                                     onValueChange={(v) => createForm.setData('reminder_lead_time', Number(v))}
                                                 >
@@ -771,18 +783,28 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                         {editingTodo && (
                             <form onSubmit={handleEdit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Title</Label>
-                                    <Input value={editForm.data.title} onChange={(e) => editForm.setData('title', e.target.value)} required />
+                                    <Input
+                                        label="Title"
+                                        value={editForm.data.title}
+                                        onChange={(e) => editForm.setData('title', e.target.value)}
+                                        required
+                                    />
                                     <InputError message={editForm.errors.title} />
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Description</Label>
-                                    <Input value={editForm.data.description} onChange={(e) => editForm.setData('description', e.target.value)} />
+                                    <Input
+                                        label="Description"
+                                        value={editForm.data.description}
+                                        onChange={(e) => editForm.setData('description', e.target.value)}
+                                    />
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Category</Label>
-                                        <Select value={editForm.data.category} onValueChange={(v) => editForm.setData('category', v)}>
+                                        <Select
+                                            label="Category"
+                                            value={editForm.data.category}
+                                            onValueChange={(v) => editForm.setData('category', v)}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue />
                                             </SelectTrigger>
@@ -796,8 +818,11 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </Select>
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Priority</Label>
-                                        <Select value={editForm.data.priority} onValueChange={(v) => editForm.setData('priority', v)}>
+                                        <Select
+                                            label="Priority"
+                                            value={editForm.data.priority}
+                                            onValueChange={(v) => editForm.setData('priority', v)}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue />
                                             </SelectTrigger>
@@ -811,8 +836,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                 </Box>
                                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Status</Label>
-                                        <Select value={editForm.data.status} onValueChange={(v) => editForm.setData('status', v)}>
+                                        <Select label="Status" value={editForm.data.status} onValueChange={(v) => editForm.setData('status', v)}>
                                             <SelectTrigger>
                                                 <SelectValue />
                                             </SelectTrigger>
@@ -824,16 +848,19 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         </Select>
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Label>Due Date &amp; Time</Label>
                                         <DateTimeInput
+                                            label="Due Date & Time"
                                             value={editForm.data.due_date}
                                             onChange={(value) => editForm.setData('due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
                                         />
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Label>Assign To</Label>
-                                    <Select value={editForm.data.assigned_to} onValueChange={(v) => editForm.setData('assigned_to', v)}>
+                                    <Select
+                                        label="Assign To"
+                                        value={editForm.data.assigned_to}
+                                        onValueChange={(v) => editForm.setData('assigned_to', v)}
+                                    >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Unassigned" />
                                         </SelectTrigger>

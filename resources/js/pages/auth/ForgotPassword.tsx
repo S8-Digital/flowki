@@ -8,7 +8,6 @@ import InputError from '@/components/InputError';
 import TextLink from '@/components/TextLink';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout';
 import { login } from '@/routes';
 
@@ -33,10 +32,10 @@ export default function ForgotPassword({ status }: Props) {
             <Stack spacing={3}>
                 <form onSubmit={handleSubmit}>
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
                             type="email"
+                            label="Email address"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             autoComplete="off"

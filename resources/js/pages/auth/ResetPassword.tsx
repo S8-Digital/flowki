@@ -5,7 +5,6 @@ import { store } from '@/actions/App/Http/Controllers/Auth/NewPasswordController
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout';
 
 interface Props {
@@ -33,10 +32,10 @@ export default function ResetPassword({ token, email }: Props) {
             <form onSubmit={handleSubmit}>
                 <Box sx={{ display: 'grid', gap: 3 }}>
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
                             type="email"
+                            label="Email"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             autoComplete="email"
@@ -46,10 +45,10 @@ export default function ResetPassword({ token, email }: Props) {
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
                             type="password"
+                            label="Password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             autoComplete="new-password"
@@ -60,10 +59,10 @@ export default function ResetPassword({ token, email }: Props) {
                     </Box>
 
                     <Box sx={{ display: 'grid', gap: 1 }}>
-                        <Label htmlFor="password_confirmation">Confirm Password</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
+                            label="Confirm Password"
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             autoComplete="new-password"
