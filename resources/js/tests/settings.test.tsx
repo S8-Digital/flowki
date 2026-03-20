@@ -6,8 +6,7 @@ import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import Appearance from '@/pages/settings/Appearance';
 import MemberProfile from '@/pages/settings/MemberProfile';
 import NotificationSettings from '@/pages/settings/Notifications';
-import Password from '@/pages/settings/Password';
-import Profile from '@/pages/settings/Profile';
+import Security from '@/pages/settings/Security';
 import { makeUseFormReturn } from './__mocks__/inertia';
 
 // ---------------------------------------------------------------------------
@@ -124,26 +123,31 @@ describe('Appearance settings page', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Password settings page
+// Security settings page (password + 2FA)
 // ---------------------------------------------------------------------------
 
-describe('Password settings page', () => {
+describe('Security settings page', () => {
     beforeEach(() => {
         mockForm({
             data: { current_password: '', password: '', password_confirmation: '' },
             errors: {},
         });
+        vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ json: () => Promise.resolve({ svg: '<svg/>', secretKey: 'SECRET' }) }));
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
     });
 
     it('renders the password form fields', () => {
-        render(<Password />);
+        render(<Security twoFactorEnabled={false} twoFactorConfirmed={false} />);
         expect(screen.getByLabelText(/current password/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/^new password$/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
     });
 
     it('renders the update button', () => {
-        render(<Password />);
+        render(<Security twoFactorEnabled={false} twoFactorConfirmed={false} />);
         expect(screen.getByRole('button', { name: /save password/i })).toBeInTheDocument();
     });
 
@@ -153,7 +157,7 @@ describe('Password settings page', () => {
             errors: {},
             recentlySuccessful: true,
         });
-        render(<Password />);
+        render(<Security twoFactorEnabled={false} twoFactorConfirmed={false} />);
         expect(screen.getByText(/saved/i)).toBeInTheDocument();
     });
 
@@ -161,9 +165,35 @@ describe('Password settings page', () => {
         const putFn = vi.fn();
         mockForm({ data: { current_password: 'old', password: 'new', password_confirmation: 'new' }, errors: {}, put: putFn });
         const user = userEvent.setup();
-        render(<Password />);
+        render(<Security twoFactorEnabled={false} twoFactorConfirmed={false} />);
         await user.click(screen.getByRole('button', { name: /save password/i }));
         expect(putFn).toHaveBeenCalledOnce();
+    });
+
+    it('shows "enable" button when 2FA is not enabled', () => {
+        render(<Security twoFactorEnabled={false} twoFactorConfirmed={false} />);
+        expect(screen.getByRole('button', { name: /enable/i })).toBeInTheDocument();
+        expect(screen.getByText(/two-factor authentication is not enabled/i)).toBeInTheDocument();
+    });
+
+    it('shows setup QR code prompt when 2FA is enabled but not confirmed', () => {
+        render(<Security twoFactorEnabled={true} twoFactorConfirmed={false} />);
+        expect(screen.getByText(/finish setting up two-factor authentication/i)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /confirm/i })).toBeInTheDocument();
+    });
+
+    it('shows active 2FA state and disable button when fully enabled', () => {
+        render(<Security twoFactorEnabled={true} twoFactorConfirmed={true} />);
+        expect(screen.getByText(/two-factor authentication is enabled/i)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /disable/i })).toBeInTheDocument();
+    });
+
+    it('calls router.post when enabling 2FA', async () => {
+        const { router } = await import('@inertiajs/react');
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
+        render(<Security twoFactorEnabled={false} twoFactorConfirmed={false} />);
+        await user.click(screen.getByRole('button', { name: /enable/i }));
+        expect(router.post).toHaveBeenCalledWith('/user/two-factor-authentication', {}, expect.any(Object));
     });
 });
 
@@ -257,56 +287,5 @@ describe('Member Profile settings page', () => {
         render(<MemberProfile member={{ ...mockMember, profile_color: '#ff0000' }} />);
         await user.click(screen.getByRole('button', { name: /save colour/i }));
         expect(patchFn).toHaveBeenCalledOnce();
-    });
-});
-
-// ---------------------------------------------------------------------------
-// Profile two-factor authentication section
-// ---------------------------------------------------------------------------
-
-const profileBaseProps = {
-    mustVerifyEmail: false,
-    status: undefined,
-    hasGoogleCalendarConnected: false,
-};
-
-describe('Profile page – two-factor authentication section', () => {
-    beforeEach(() => {
-        mockForm({
-            data: { name: 'Alice', email: 'alice@example.com', profile_color: '' },
-            errors: {},
-        });
-        // Stub global fetch so QR-code API calls don't throw
-        vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ json: () => Promise.resolve({ svg: '<svg/>', secretKey: 'SECRET' }) }));
-    });
-
-    afterEach(() => {
-        vi.unstubAllGlobals();
-    });
-
-    it('shows "enable" button when 2FA is not enabled', () => {
-        render(<Profile {...profileBaseProps} twoFactorEnabled={false} twoFactorConfirmed={false} />);
-        expect(screen.getByRole('button', { name: /enable/i })).toBeInTheDocument();
-        expect(screen.getByText(/two-factor authentication is not enabled/i)).toBeInTheDocument();
-    });
-
-    it('shows setup QR code prompt when 2FA is enabled but not confirmed', () => {
-        render(<Profile {...profileBaseProps} twoFactorEnabled={true} twoFactorConfirmed={false} />);
-        expect(screen.getByText(/finish setting up two-factor authentication/i)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /confirm/i })).toBeInTheDocument();
-    });
-
-    it('shows active 2FA state and disable button when fully enabled', () => {
-        render(<Profile {...profileBaseProps} twoFactorEnabled={true} twoFactorConfirmed={true} />);
-        expect(screen.getByText(/two-factor authentication is enabled/i)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /disable/i })).toBeInTheDocument();
-    });
-
-    it('calls router.post when enabling 2FA', async () => {
-        const { router } = await import('@inertiajs/react');
-        const user = userEvent.setup({ pointerEventsCheck: 0 });
-        render(<Profile {...profileBaseProps} twoFactorEnabled={false} twoFactorConfirmed={false} />);
-        await user.click(screen.getByRole('button', { name: /enable/i }));
-        expect(router.post).toHaveBeenCalledWith('/user/two-factor-authentication', {}, expect.any(Object));
     });
 });

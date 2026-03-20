@@ -24,8 +24,6 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
             'hasGoogleCalendarConnected' => $user->hasGoogleCalendarConnected(),
-            'twoFactorEnabled' => $user->hasEnabledTwoFactorAuthentication(),
-            'twoFactorConfirmed' => ! is_null($user->two_factor_confirmed_at),
         ]);
     }
 
