@@ -20,7 +20,7 @@ class PasswordController extends Controller
         $user = $request->user();
 
         return Inertia::render('settings/Security', [
-            'twoFactorEnabled' => $user->hasEnabledTwoFactorAuthentication(),
+            'twoFactorEnabled' => ! is_null($user->two_factor_secret),
             'twoFactorConfirmed' => ! is_null($user->two_factor_confirmed_at),
             'status' => $request->session()->get('status'),
         ]);

@@ -25,6 +25,24 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->assertNull($user->fresh()->two_factor_confirmed_at);
     }
 
+    public function test_security_page_shows_setup_in_progress_after_enabling_before_confirming(): void
+    {
+        $user = User::factory()->create();
+
+        app(EnableTwoFactorAuthentication::class)($user);
+
+        $response = $this
+            ->actingAs($user)
+            ->get(route('password.edit'));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('settings/Security')
+            ->where('twoFactorEnabled', true)
+            ->where('twoFactorConfirmed', false)
+        );
+    }
+
     public function test_two_factor_authentication_rejects_invalid_confirmation_code(): void
     {
         $user = User::factory()->create();
@@ -38,7 +56,7 @@ class TwoFactorAuthenticationTest extends TestCase
                 'code' => '000000',
             ]);
 
-        $response->assertSessionHasErrors('code');
+        $response->assertSessionHasErrorsIn('confirmTwoFactorAuthentication', ['code']);
         $this->assertNull($user->fresh()->two_factor_confirmed_at);
     }
 

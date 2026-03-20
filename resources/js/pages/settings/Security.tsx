@@ -20,7 +20,7 @@ interface Props {
     status?: string;
 }
 
-const breadcrumbItems: BreadcrumbItem[] = [{ title: 'Security settings', href: '/settings/password' }];
+const breadcrumbItems: BreadcrumbItem[] = [{ title: 'Security settings', href: '/settings/security' }];
 
 export default function Security({ twoFactorEnabled, twoFactorConfirmed, status }: Props) {
     const { data, setData, put, processing, errors, reset, recentlySuccessful } = useForm({
