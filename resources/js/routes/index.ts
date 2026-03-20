@@ -1,5 +1,61 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults, validateParameters } from './../wayfinder'
 /**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:60
+* @route '/logout'
+*/
+export const logout = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: logout.url(options),
+    method: 'post',
+})
+
+logout.definition = {
+    methods: ["post"],
+    url: '/logout',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:60
+* @route '/logout'
+*/
+logout.url = (options?: RouteQueryOptions) => {
+    return logout.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:60
+* @route '/logout'
+*/
+logout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: logout.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:60
+* @route '/logout'
+*/
+const logoutForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: logout.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:60
+* @route '/logout'
+*/
+logoutForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: logout.url(options),
+    method: 'post',
+})
+
+logout.form = logoutForm
+
+/**
 * @see \Laravel\Telescope\Http\Controllers\HomeController::telescope
 * @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
 * @route '/telescope/{view?}'
@@ -339,7 +395,7 @@ searchForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 search.form = searchForm
 
 /**
-* @see routes/settings.php:28
+* @see routes/settings.php:29
 * @route '/settings/appearance'
 */
 export const appearance = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -353,7 +409,7 @@ appearance.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/settings.php:28
+* @see routes/settings.php:29
 * @route '/settings/appearance'
 */
 appearance.url = (options?: RouteQueryOptions) => {
@@ -361,7 +417,7 @@ appearance.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/settings.php:28
+* @see routes/settings.php:29
 * @route '/settings/appearance'
 */
 appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -370,7 +426,7 @@ appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/settings.php:28
+* @see routes/settings.php:29
 * @route '/settings/appearance'
 */
 appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -379,7 +435,7 @@ appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/settings.php:28
+* @see routes/settings.php:29
 * @route '/settings/appearance'
 */
 const appearanceForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -388,7 +444,7 @@ const appearanceForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 })
 
 /**
-* @see routes/settings.php:28
+* @see routes/settings.php:29
 * @route '/settings/appearance'
 */
 appearanceForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -397,7 +453,7 @@ appearanceForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 })
 
 /**
-* @see routes/settings.php:28
+* @see routes/settings.php:29
 * @route '/settings/appearance'
 */
 appearanceForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -495,7 +551,7 @@ register.form = registerForm
 
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:19
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
 * @route '/login'
 */
 export const login = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -510,7 +566,7 @@ login.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:19
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
 * @route '/login'
 */
 login.url = (options?: RouteQueryOptions) => {
@@ -519,7 +575,7 @@ login.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:19
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
 * @route '/login'
 */
 login.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -529,7 +585,7 @@ login.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:19
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
 * @route '/login'
 */
 login.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -539,7 +595,7 @@ login.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:19
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
 * @route '/login'
 */
 const loginForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -549,7 +605,7 @@ const loginForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:19
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
 * @route '/login'
 */
 loginForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -559,7 +615,7 @@ loginForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:19
+* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
 * @route '/login'
 */
 loginForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -573,59 +629,3 @@ loginForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 login.form = loginForm
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:42
-* @route '/logout'
-*/
-export const logout = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: logout.url(options),
-    method: 'post',
-})
-
-logout.definition = {
-    methods: ["post"],
-    url: '/logout',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:42
-* @route '/logout'
-*/
-logout.url = (options?: RouteQueryOptions) => {
-    return logout.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:42
-* @route '/logout'
-*/
-logout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: logout.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:42
-* @route '/logout'
-*/
-const logoutForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: logout.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
-* @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:42
-* @route '/logout'
-*/
-logoutForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: logout.url(options),
-    method: 'post',
-})
-
-logout.form = logoutForm

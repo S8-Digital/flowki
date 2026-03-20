@@ -1,3 +1,4 @@
+import TwoFactorController from './TwoFactorController'
 import ProfileController from './ProfileController'
 import PasswordController from './PasswordController'
 import CategoriesController from './CategoriesController'
@@ -8,6 +9,7 @@ import MemberColorController from './MemberColorController'
 import MemberOrderController from './MemberOrderController'
 
 const Settings = {
+    TwoFactorController: Object.assign(TwoFactorController, TwoFactorController),
     ProfileController: Object.assign(ProfileController, ProfileController),
     PasswordController: Object.assign(PasswordController, PasswordController),
     CategoriesController: Object.assign(CategoriesController, CategoriesController),

@@ -1,3 +1,5 @@
+import Auth from './Auth'
+import Settings from './Settings'
 import FirebaseServiceWorkerController from './FirebaseServiceWorkerController'
 import DashboardController from './DashboardController'
 import FamilyController from './FamilyController'
@@ -13,12 +15,12 @@ import GlobalSearchController from './GlobalSearchController'
 import FcmTokenController from './FcmTokenController'
 import WeatherController from './WeatherController'
 import NotificationController from './NotificationController'
-import Settings from './Settings'
 import GoogleCalendarController from './GoogleCalendarController'
-import Auth from './Auth'
 import AcceptInviteController from './AcceptInviteController'
 
 const Controllers = {
+    Auth: Object.assign(Auth, Auth),
+    Settings: Object.assign(Settings, Settings),
     FirebaseServiceWorkerController: Object.assign(FirebaseServiceWorkerController, FirebaseServiceWorkerController),
     DashboardController: Object.assign(DashboardController, DashboardController),
     FamilyController: Object.assign(FamilyController, FamilyController),
@@ -34,9 +36,7 @@ const Controllers = {
     FcmTokenController: Object.assign(FcmTokenController, FcmTokenController),
     WeatherController: Object.assign(WeatherController, WeatherController),
     NotificationController: Object.assign(NotificationController, NotificationController),
-    Settings: Object.assign(Settings, Settings),
     GoogleCalendarController: Object.assign(GoogleCalendarController, GoogleCalendarController),
-    Auth: Object.assign(Auth, Auth),
     AcceptInviteController: Object.assign(AcceptInviteController, AcceptInviteController),
 }
 
