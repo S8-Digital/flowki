@@ -87,7 +87,7 @@ class CalendarEventModelTest extends TestCase
         $this->assertEquals($user1->family_id, $events->first()->family_id);
     }
 
-    public function test_upcoming_scope_returns_future_events(): void
+    public function test_can_filter_events_starting_after_now(): void
     {
         $user = User::factory()->withFamily()->create();
         CalendarEvent::factory()->create([

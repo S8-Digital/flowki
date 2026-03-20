@@ -128,7 +128,7 @@ class ListScheduleToolTest extends TestCase
         $tool = new ListSchedule($user);
         $result = $tool->handle(new Request([]));
 
-        $this->assertStringContainsString('1', $result);
+        $this->assertStringContainsString('Schedule shifts (1):', $result);
     }
 
     public function test_description_is_non_empty_string(): void

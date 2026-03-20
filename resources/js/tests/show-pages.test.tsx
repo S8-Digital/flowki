@@ -1,5 +1,6 @@
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import RecipesShow from '@/pages/Recipes/Show';
@@ -143,11 +144,12 @@ describe('Recipes Show page', () => {
         expect(screen.getByText(/60 min total/i)).toBeInTheDocument();
     });
 
-    it('renders the cook time label in edit form', () => {
+    it('shows cook time input in the edit dialog after opening it', async () => {
+        const user = userEvent.setup();
         render(<RecipesShow recipe={makeRecipe()} />);
-        // The cook time label is visible in edit dialog once opened
-        // Just verify the recipe loads without error
-        expect(screen.getByText('Pasta Bolognese')).toBeInTheDocument();
+        await user.click(screen.getByRole('button', { name: /edit/i }));
+        // Cook time label is only visible once the edit dialog is open
+        expect(screen.getByLabelText(/cook \(min\)/i)).toBeInTheDocument();
     });
 
     it('renders the instructions', () => {
@@ -155,11 +157,15 @@ describe('Recipes Show page', () => {
         expect(screen.getByText(/cook pasta/i)).toBeInTheDocument();
     });
 
-    it('renders the favourite icon when recipe is a favourite', () => {
-        render(<RecipesShow recipe={makeRecipe({ is_favorite: true })} />);
-        // The favourite heart/star icon should be present
-        const svgs = document.querySelectorAll('svg');
-        expect(svgs.length).toBeGreaterThan(0);
+    it('renders the favourite heart icon only when recipe is a favourite', () => {
+        // Lucide Heart renders as svg.lucide-heart – only visible when is_favorite is true.
+        const { container: withFav } = render(<RecipesShow recipe={makeRecipe({ is_favorite: true })} />);
+        expect(withFav.querySelector('svg.lucide-heart')).toBeInTheDocument();
+    });
+
+    it('does not render the favourite heart icon when recipe is not a favourite', () => {
+        const { container } = render(<RecipesShow recipe={makeRecipe({ is_favorite: false })} />);
+        expect(container.querySelector('svg.lucide-heart')).not.toBeInTheDocument();
     });
 
     it('renders an edit button', () => {
@@ -167,11 +173,17 @@ describe('Recipes Show page', () => {
         expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
     });
 
-    it('renders a delete button (trash icon)', () => {
+    it('calls router.delete when the delete icon button is clicked', async () => {
+        window.confirm = vi.fn(() => true);
+        const user = userEvent.setup();
         render(<RecipesShow recipe={makeRecipe()} />);
-        // The delete button has a Trash2 icon, find it by its container
+        // There are two buttons in the action area: "Edit" and the icon-only delete button.
+        // The delete button is the one without a text label.
         const buttons = screen.getAllByRole('button');
-        expect(buttons.length).toBeGreaterThan(0);
+        const deleteBtn = buttons.find((b) => b !== screen.getByRole('button', { name: /edit/i }));
+        expect(deleteBtn).toBeTruthy();
+        await user.click(deleteBtn!);
+        expect(vi.mocked(router).delete).toHaveBeenCalledWith(expect.stringContaining('/recipes/1'), expect.any(Object));
     });
 
     it('renders the servings information', () => {

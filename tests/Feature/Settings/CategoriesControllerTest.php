@@ -29,7 +29,7 @@ class CategoriesControllerTest extends TestCase
             );
     }
 
-    public function test_user_without_family_is_redirected(): void
+    public function test_user_without_family_receives_404(): void
     {
         $user = User::factory()->create(['family_id' => null]);
 

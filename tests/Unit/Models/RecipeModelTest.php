@@ -85,7 +85,7 @@ class RecipeModelTest extends TestCase
         $this->assertInstanceOf(RecipeCategory::class, $recipe->fresh()->category);
     }
 
-    public function test_recipe_favorite_scope_returns_only_favorites(): void
+    public function test_can_filter_recipes_by_is_favorite(): void
     {
         $user = User::factory()->withFamily()->create();
         Recipe::factory()->create(['family_id' => $user->family_id, 'is_favorite' => true]);
