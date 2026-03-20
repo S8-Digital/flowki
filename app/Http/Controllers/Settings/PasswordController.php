@@ -13,11 +13,17 @@ use Inertia\Response;
 class PasswordController extends Controller
 {
     /**
-     * Show the user's password settings page.
+     * Show the user's security settings page.
      */
-    public function edit(): Response
+    public function edit(Request $request): Response
     {
-        return Inertia::render('settings/Password');
+        $user = $request->user();
+
+        return Inertia::render('settings/Security', [
+            'twoFactorEnabled' => $user->hasEnabledTwoFactorAuthentication(),
+            'twoFactorConfirmed' => ! is_null($user->two_factor_confirmed_at),
+            'status' => $request->session()->get('status'),
+        ]);
     }
 
     /**
