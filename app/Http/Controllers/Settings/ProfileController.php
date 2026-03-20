@@ -18,10 +18,14 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
+
         return Inertia::render('settings/Profile', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
-            'hasGoogleCalendarConnected' => $request->user()->hasGoogleCalendarConnected(),
+            'hasGoogleCalendarConnected' => $user->hasGoogleCalendarConnected(),
+            'twoFactorEnabled' => $user->hasEnabledTwoFactorAuthentication(),
+            'twoFactorConfirmed' => ! is_null($user->two_factor_confirmed_at),
         ]);
     }
 
