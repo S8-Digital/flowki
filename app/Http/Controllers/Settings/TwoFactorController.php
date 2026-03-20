@@ -49,12 +49,13 @@ class TwoFactorController extends Controller
 
     /**
      * Return the user's QR code SVG and secret key for setup.
+     * Only available while 2FA has not yet been confirmed.
      */
     public function show(Request $request): JsonResponse
     {
         $user = $request->user();
 
-        if (is_null($user->two_factor_secret)) {
+        if (is_null($user->two_factor_secret) || ! is_null($user->two_factor_confirmed_at)) {
             abort(404);
         }
 

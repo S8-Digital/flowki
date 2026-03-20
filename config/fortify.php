@@ -47,8 +47,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'limiters' => [
-        'login' => null,
-        'two-factor' => null,
+        'login' => 'login',
+        'two-factor' => 'two-factor',
     ],
 
     /*

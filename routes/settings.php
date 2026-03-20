@@ -50,10 +50,22 @@ Route::middleware('auth')->group(function () {
     Route::patch('settings/members/order', [MemberOrderController::class, 'update'])->name('settings.members.order.update');
 
     // Two-factor authentication management
-    Route::post('user/two-factor-authentication', [TwoFactorController::class, 'store'])->name('two-factor.enable');
-    Route::put('user/confirmed-two-factor-authentication', [TwoFactorController::class, 'update'])->name('two-factor.confirm');
-    Route::delete('user/two-factor-authentication', [TwoFactorController::class, 'destroy'])->name('two-factor.disable');
-    Route::get('user/two-factor-qr-code', [TwoFactorController::class, 'show'])->name('two-factor.qr-code');
-    Route::get('user/two-factor-recovery-codes', [TwoFactorController::class, 'recoveryCodes'])->name('two-factor.recovery-codes');
-    Route::post('user/two-factor-recovery-codes', [TwoFactorController::class, 'regenerateRecoveryCodes'])->name('two-factor.recovery-codes.regenerate');
+    Route::post('user/two-factor-authentication', [TwoFactorController::class, 'store'])
+        ->middleware('password.confirm')
+        ->name('two-factor.enable');
+    Route::put('user/confirmed-two-factor-authentication', [TwoFactorController::class, 'update'])
+        ->middleware('password.confirm')
+        ->name('two-factor.confirm');
+    Route::delete('user/two-factor-authentication', [TwoFactorController::class, 'destroy'])
+        ->middleware('password.confirm')
+        ->name('two-factor.disable');
+    Route::get('user/two-factor-qr-code', [TwoFactorController::class, 'show'])
+        ->middleware('password.confirm')
+        ->name('two-factor.qr-code');
+    Route::get('user/two-factor-recovery-codes', [TwoFactorController::class, 'recoveryCodes'])
+        ->middleware('password.confirm')
+        ->name('two-factor.recovery-codes');
+    Route::post('user/two-factor-recovery-codes', [TwoFactorController::class, 'regenerateRecoveryCodes'])
+        ->middleware('password.confirm')
+        ->name('two-factor.recovery-codes.regenerate');
 });

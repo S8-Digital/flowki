@@ -30,8 +30,12 @@ Route::middleware('guest')->group(function () {
     Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('social.redirect');
 
     // Two-factor authentication challenge
-    Route::get('two-factor-challenge', [TwoFactorChallengeController::class, 'create'])->name('two-factor.login');
-    Route::post('two-factor-challenge', [TwoFactorChallengeController::class, 'store'])->name('two-factor.login.store');
+    Route::get('two-factor-challenge', [TwoFactorChallengeController::class, 'create'])
+        ->middleware('throttle:6,1')
+        ->name('two-factor.login');
+    Route::post('two-factor-challenge', [TwoFactorChallengeController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('two-factor.login.store');
 });
 
 // Social OAuth callback — no middleware; handles both sign-in (guest) and link (authenticated) flows

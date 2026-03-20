@@ -507,7 +507,19 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                                 )}
 
                                 <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <Button variant="outline" size="sm" onClick={loadRecoveryCodes}>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            if (showRecoveryCodes) {
+                                                setShowRecoveryCodes(false);
+
+                                                return;
+                                            }
+
+                                            loadRecoveryCodes();
+                                        }}
+                                    >
                                         {showRecoveryCodes ? 'Hide recovery codes' : 'Show recovery codes'}
                                     </Button>
                                     {showRecoveryCodes && (

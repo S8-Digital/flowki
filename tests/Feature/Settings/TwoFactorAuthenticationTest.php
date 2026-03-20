@@ -25,7 +25,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->assertNull($user->fresh()->two_factor_confirmed_at);
     }
 
-    public function test_two_factor_authentication_can_be_confirmed(): void
+    public function test_two_factor_authentication_rejects_invalid_confirmation_code(): void
     {
         $user = User::factory()->create();
 

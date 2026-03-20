@@ -47,7 +47,11 @@ class TwoFactorChallengeController extends Controller
         } elseif (! $request->hasValidCode()) {
             event(new TwoFactorAuthenticationFailed($user));
 
-            return back()->withErrors(['code' => __('The provided two-factor authentication code was invalid.')]);
+            $errorKey = $request->filled('recovery_code') ? 'recovery_code' : 'code';
+
+            return back()->withErrors([
+                $errorKey => __('The provided two-factor authentication code was invalid.'),
+            ]);
         }
 
         event(new ValidTwoFactorAuthenticationCodeProvided($user));
