@@ -1,7 +1,7 @@
 services:
     flowki:
         build:
-            context: './docker/8.5'
+            context: '.docker/8.5'
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
