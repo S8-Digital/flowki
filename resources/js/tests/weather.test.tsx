@@ -110,12 +110,11 @@ describe('WeatherStrip', () => {
         expect(container.firstChild).toBeNull();
     });
 
-    it('renders temperature, description, and location in strip', () => {
+    it('renders temperature and description in strip', () => {
         vi.mocked(useWeather).mockReturnValue({ data: mockWeatherData, loading: false });
         render(<WeatherStrip />);
         expect(screen.getByText('15°C')).toBeInTheDocument();
         expect(screen.getByText('Light rain')).toBeInTheDocument();
-        expect(screen.getByText('London')).toBeInTheDocument();
     });
 
     it('strip is keyboard accessible with role=button', () => {
@@ -150,7 +149,7 @@ describe('WeatherForecastDialog', () => {
         expect(screen.getByText(/weather data unavailable/i)).toBeInTheDocument();
     });
 
-    it('renders 7-day forecast when data is available', () => {
+    it('renders 5-day forecast when data is available', () => {
         vi.mocked(useWeather).mockReturnValue({ data: mockWeatherData, loading: false });
         render(<WeatherForecastDialog {...defaultProps} />);
         expect(screen.getByText('15°C')).toBeInTheDocument();

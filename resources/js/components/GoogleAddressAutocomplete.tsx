@@ -27,7 +27,7 @@ const MAPS_SCRIPT_ID = 'google-maps-places-script';
 // the time the user opens a dialog containing this component, Maps is already ready.
 const MAPS_PREWARM_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined;
 
-if (MAPS_PREWARM_KEY) {
+if (typeof window !== 'undefined' && MAPS_PREWARM_KEY) {
     loadGoogleMapsScript(MAPS_PREWARM_KEY)
         .then(() => google.maps.importLibrary('places'))
         .catch(() => {});
@@ -41,6 +41,12 @@ if (MAPS_PREWARM_KEY) {
  */
 function loadGoogleMapsScript(apiKey: string): Promise<void> {
     return new Promise((resolve, reject) => {
+        if (typeof document === 'undefined') {
+            reject(new Error('Not a browser environment'));
+
+            return;
+        }
+
         // Bootstrap already loaded
         if (typeof google !== 'undefined') {
             resolve();
@@ -199,11 +205,18 @@ export default function GoogleAddressAutocomplete({ value, onChange, onPlaceSele
             await place.fetchFields({ fields: ['formattedAddress', 'location'] });
 
             const address = place.formattedAddress ?? displayText;
-            const lat = place.location?.lat() ?? 0;
-            const lng = place.location?.lng() ?? 0;
+            const location = place.location;
 
             setLocalValue(address);
             onChangeRef.current?.(address);
+
+            if (!location) {
+                return;
+            }
+
+            const lat = location.lat();
+            const lng = location.lng();
+
             onPlaceSelectedRef.current({ address, latitude: lat, longitude: lng });
         } catch {
             // displayText is already committed as a fallback

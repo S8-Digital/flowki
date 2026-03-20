@@ -18,10 +18,14 @@ export function getFirebaseApp(): FirebaseApp {
     if (!firebaseApp) {
         firebaseApp = initializeApp(firebaseConfig);
 
-        initializeAppCheck(firebaseApp, {
-            provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_FIREBASE_RECAPTCHA_SITE_KEY),
-            isTokenAutoRefreshEnabled: true,
-        });
+        const recaptchaKey = import.meta.env.VITE_FIREBASE_RECAPTCHA_SITE_KEY;
+
+        if (recaptchaKey) {
+            initializeAppCheck(firebaseApp, {
+                provider: new ReCaptchaEnterpriseProvider(recaptchaKey),
+                isTokenAutoRefreshEnabled: true,
+            });
+        }
     }
 
     return firebaseApp;

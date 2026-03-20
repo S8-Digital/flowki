@@ -52,7 +52,7 @@ const theme = createTheme({
         fontWeightBold: 700,
     },
     shape: {
-        borderRadius: 8, // 0.875rem
+        borderRadius: 8,
     },
     spacing: 8,
     components: {

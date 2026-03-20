@@ -34,7 +34,7 @@ function ForecastSkeleton() {
                     <Skeleton width="80%" height={16} />
                 </Box>
             </Box>
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1 }}>
                 {Array.from({ length: 5 }).map((_, i) => (
                     <Box key={i} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
                         <Skeleton width={32} height={12} />
@@ -48,7 +48,7 @@ function ForecastSkeleton() {
 }
 
 /**
- * Displays a 7-day weather forecast in a dialog.
+ * Displays a 5-day weather forecast in a dialog.
  *
  * Defaults to the family's stored location; the user can type another location
  * using the Google Places autocomplete to temporarily preview a different forecast

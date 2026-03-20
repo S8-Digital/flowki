@@ -8,7 +8,7 @@ import type { AppPageProps } from '@/types';
 /**
  * A compact weather strip shown at the top of date-based calendar views.
  * Silently renders nothing when weather data is unavailable.
- * Clicking it opens a 7-day forecast dialog with an editable location.
+ * Clicking it opens a 5-day forecast dialog with an editable location.
  */
 export default function WeatherStrip() {
     const { data, loading } = useWeather();

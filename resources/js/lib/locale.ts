@@ -90,7 +90,7 @@ export function resolveLocale(): SupportedLocale {
  * Import this directly when you need a stable locale string.
  *
  * @example
- * import { locale } from '@/lib/resolve-locale';
+ * import { locale } from '@/lib/locale';
  * <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
  */
 export const locale: SupportedLocale = resolveLocale();
