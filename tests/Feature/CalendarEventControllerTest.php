@@ -143,4 +143,171 @@ class CalendarEventControllerTest extends TestCase
                 );
         });
     }
+
+    public function test_guests_cannot_store_event(): void
+    {
+        $this->post(route('calendar.store'), [])->assertRedirect(route('login'));
+    }
+
+    public function test_authenticated_user_can_store_event(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $this->actingAs($user)
+            ->post(route('calendar.store'), [
+                'title' => 'Team Standup',
+                'start_at' => now()->addDay()->toIso8601String(),
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('calendar_events', [
+            'title' => 'Team Standup',
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+        ]);
+    }
+
+    public function test_store_requires_title(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $this->actingAs($user)
+            ->post(route('calendar.store'), ['start_at' => now()->addDay()->toIso8601String()])
+            ->assertSessionHasErrors('title');
+    }
+
+    public function test_store_requires_start_at(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $this->actingAs($user)
+            ->post(route('calendar.store'), ['title' => 'No Start'])
+            ->assertSessionHasErrors('start_at');
+    }
+
+    public function test_store_validates_end_at_is_after_start_at(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $this->actingAs($user)
+            ->post(route('calendar.store'), [
+                'title' => 'Bad Dates',
+                'start_at' => now()->addDays(2)->toIso8601String(),
+                'end_at' => now()->addDay()->toIso8601String(),
+            ])
+            ->assertSessionHasErrors('end_at');
+    }
+
+    public function test_store_syncs_attendees(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $member = User::factory()->asMemberOf($user->family)->create();
+
+        $this->actingAs($user)
+            ->post(route('calendar.store'), [
+                'title' => 'Birthday Party',
+                'start_at' => now()->addDay()->toIso8601String(),
+                'attendee_ids' => [$member->id],
+            ])
+            ->assertRedirect();
+
+        $event = CalendarEvent::where('title', 'Birthday Party')->firstOrFail();
+        $this->assertTrue($event->attendees()->where('users.id', $member->id)->exists());
+    }
+
+    public function test_guests_cannot_update_event(): void
+    {
+        $event = CalendarEvent::factory()->create();
+
+        $this->patch(route('calendar.update', $event), [])->assertRedirect(route('login'));
+    }
+
+    public function test_authenticated_user_can_update_own_event(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $event = CalendarEvent::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+            'title' => 'Old Title',
+        ]);
+
+        $this->actingAs($user)
+            ->patch(route('calendar.update', $event), [
+                'title' => 'Updated Title',
+                'start_at' => now()->addDay()->toIso8601String(),
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('calendar_events', ['id' => $event->id, 'title' => 'Updated Title']);
+    }
+
+    public function test_guests_cannot_move_event(): void
+    {
+        $event = CalendarEvent::factory()->create();
+
+        $this->patch(route('calendar.move', $event), [])->assertRedirect(route('login'));
+    }
+
+    public function test_authenticated_user_can_move_event(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $newStart = now()->addDays(5)->toIso8601String();
+        $event = CalendarEvent::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)
+            ->patch(route('calendar.move', $event), ['start_at' => $newStart])
+            ->assertRedirect();
+    }
+
+    public function test_move_requires_start_at(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $event = CalendarEvent::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)
+            ->patch(route('calendar.move', $event), [])
+            ->assertSessionHasErrors('start_at');
+    }
+
+    public function test_guests_cannot_delete_event(): void
+    {
+        $event = CalendarEvent::factory()->create();
+
+        $this->delete(route('calendar.destroy', $event))->assertRedirect(route('login'));
+    }
+
+    public function test_authenticated_user_can_delete_own_event(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $event = CalendarEvent::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)
+            ->delete(route('calendar.destroy', $event))
+            ->assertRedirect();
+
+        $this->assertDatabaseMissing('calendar_events', ['id' => $event->id]);
+    }
+
+    public function test_user_cannot_delete_another_familys_event(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $other = User::factory()->withFamily()->create();
+        $event = CalendarEvent::factory()->create([
+            'family_id' => $other->family_id,
+            'created_by' => $other->id,
+        ]);
+
+        $this->actingAs($user)
+            ->delete(route('calendar.destroy', $event))
+            ->assertForbidden();
+    }
 }

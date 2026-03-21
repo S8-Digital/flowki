@@ -70,4 +70,24 @@ class AiControllerTest extends TestCase
         $response->assertOk();
         $this->assertStringContainsString('AI is not configured', $response->getContent());
     }
+
+    public function test_chat_returns_sse_response_for_user_without_family(): void
+    {
+        config(['ai.providers.openai.key' => null, 'ai.providers.anthropic.key' => null]);
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('assistant.chat'), ['message' => 'hello'], ['Accept' => 'text/event-stream']);
+
+        $response->assertOk();
+        $this->assertStringContainsString('AI is not configured', $response->getContent());
+    }
+
+    public function test_authenticated_user_without_family_can_view_assistant(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get(route('assistant.index'))->assertOk();
+    }
 }

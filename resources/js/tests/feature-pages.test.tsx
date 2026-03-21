@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AssistantIndex from '@/pages/Assistant/Index';
+import ChoresIndex from '@/pages/Chores/Index';
 import RecipesIndex from '@/pages/Recipes/Index';
 import ShoppingIndex from '@/pages/Shopping/Index';
 import TodosIndex from '@/pages/Todos/Index';
@@ -293,5 +294,65 @@ describe('AI Assistant page', () => {
         // The send button has an SVG icon child, find the button by its accessible name or by querying more loosely
         const buttons = screen.getAllByRole('button');
         expect(buttons.length).toBeGreaterThan(0);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Chores page
+// ---------------------------------------------------------------------------
+
+const baseChore = {
+    id: 1,
+    title: 'Vacuum living room',
+    description: null,
+    frequency: 'weekly',
+    next_due_date: null,
+    reminder_enabled: false,
+    reminder_lead_time: 60,
+    family_id: 1,
+    assignees: [baseUser],
+    created_at: '2024-01-01T00:00:00.000000Z',
+    updated_at: '2024-01-01T00:00:00.000000Z',
+};
+
+describe('Chores page', () => {
+    beforeEach(() => {
+        mockForm({
+            data: {
+                title: '',
+                description: '',
+                frequency: 'weekly',
+                next_due_date: '',
+                reminder_enabled: false,
+                reminder_lead_time: 60,
+                assignee_ids: [],
+            },
+            errors: {},
+        });
+    });
+
+    it('renders the Chores heading', () => {
+        render(<ChoresIndex chores={[baseChore]} members={[baseUser]} />);
+        expect(screen.getByRole('heading', { name: /chores/i })).toBeInTheDocument();
+    });
+
+    it('renders a chore title', () => {
+        render(<ChoresIndex chores={[baseChore]} members={[baseUser]} />);
+        expect(screen.getByText('Vacuum living room')).toBeInTheDocument();
+    });
+
+    it('shows loading skeleton when chores is null (deferred)', () => {
+        render(<ChoresIndex chores={null} members={[baseUser]} />);
+        expect(screen.getByTestId('app-layout')).toBeInTheDocument();
+    });
+
+    it('renders an Add Chore button', () => {
+        render(<ChoresIndex chores={[]} members={[baseUser]} />);
+        expect(screen.getByRole('button', { name: /new chore/i })).toBeInTheDocument();
+    });
+
+    it('renders member filter buttons', () => {
+        render(<ChoresIndex chores={[baseChore]} members={[baseUser]} />);
+        expect(screen.getByTitle(/hide alice smith/i)).toBeInTheDocument();
     });
 });
