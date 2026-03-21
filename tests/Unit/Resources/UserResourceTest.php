@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Resources;
 
+use App\Enums\FamilyRole;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -78,11 +79,11 @@ class UserResourceTest extends TestCase
     {
         $admin = User::factory()->withFamily()->create();
         $member = User::factory()->create(['family_id' => $admin->family_id]);
-        $admin->family->members()->attach($member->id, ['role' => 'Member']);
+        $admin->family->members()->attach($member->id, ['role' => FamilyRole::Member->value]);
 
         $userWithPivot = $admin->family->members()->where('users.id', $member->id)->first();
         $resource = (new UserResource($userWithPivot))->toArray(new Request);
 
-        $this->assertEquals('Member', $resource['role']);
+        $this->assertEquals(FamilyRole::Member, $resource['role']);
     }
 }

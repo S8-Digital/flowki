@@ -75,11 +75,11 @@ class AddShoppingItemToolTest extends TestCase
         $user = User::factory()->withFamily()->create();
         $tool = new AddShoppingItem($user);
 
-        $tool->handle(new Request(['name' => 'Shampoo', 'category' => ShoppingItemCategory::PersonalCare->value]));
+        $tool->handle(new Request(['name' => 'Shampoo', 'category' => ShoppingItemCategory::Personal->value]));
 
         $this->assertDatabaseHas('shopping_items', [
             'name' => 'Shampoo',
-            'category' => ShoppingItemCategory::PersonalCare->value,
+            'category' => ShoppingItemCategory::Personal->value,
         ]);
     }
 

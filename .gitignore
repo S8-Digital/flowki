@@ -1,5 +1,6 @@
 /.phpunit.cache
 /bootstrap/ssr
+/coverage
 /node_modules
 /public/build
 /public/hot
@@ -27,4 +28,4 @@ yarn-error.log
 
 mobile/.expo/
 mobile/node_modules/
-mobile/dist/
+mobile/dist//coverage

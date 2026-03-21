@@ -14,7 +14,7 @@ class WeatherControllerTest extends TestCase
 
     public function test_guests_cannot_access_weather_endpoint(): void
     {
-        $this->getJson(route('weather.index'))->assertRedirect(route('login'));
+        $this->getJson(route('weather.index'))->assertUnauthorized();
     }
 
     public function test_returns_204_when_family_has_no_location(): void
