@@ -25,7 +25,7 @@ class AddShoppingItemTool extends Tool
             return Response::text('Error: User is not part of a family.');
         }
 
-        $input = $request->input();
+        $input = $request->all();
 
         if (empty($input['name'])) {
             return Response::text('Error: item name is required.');

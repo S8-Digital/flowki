@@ -11,8 +11,8 @@ class MemberOrderController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'member_order' => ['required', 'array'],
-            'member_order.*' => ['required', 'integer'],
+            'member_order' => ['present', 'array'],
+            'member_order.*' => ['integer'],
         ]);
 
         $family = $request->user()->family()->firstOrFail();

@@ -24,7 +24,7 @@ class ListChoresTool extends Tool
             return Response::text('Error: User is not part of a family.');
         }
 
-        $input = $request->input();
+        $input = $request->all();
 
         $chores = Chore::query()
             ->forFamily($user->family_id)

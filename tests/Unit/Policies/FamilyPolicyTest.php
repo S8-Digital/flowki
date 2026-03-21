@@ -84,4 +84,32 @@ class FamilyPolicyTest extends TestCase
 
         $this->assertFalse($this->policy->manageMembers($member, $admin->family));
     }
+
+    public function test_view_any_always_returns_false(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $this->assertFalse($this->policy->viewAny($user));
+    }
+
+    public function test_create_always_returns_false(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $this->assertFalse($this->policy->create($user));
+    }
+
+    public function test_restore_always_returns_false(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $this->assertFalse($this->policy->restore($user, $user->family));
+    }
+
+    public function test_force_delete_always_returns_false(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $this->assertFalse($this->policy->forceDelete($user, $user->family));
+    }
 }

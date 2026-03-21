@@ -27,7 +27,7 @@ class CreateTodoTool extends Tool
             return Response::text('Error: User is not part of a family.');
         }
 
-        $input = $request->input();
+        $input = $request->all();
 
         $todo = Todo::create([
             'family_id' => $user->family_id,

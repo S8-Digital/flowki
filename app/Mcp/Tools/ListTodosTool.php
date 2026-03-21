@@ -24,7 +24,7 @@ class ListTodosTool extends Tool
             return Response::text('Error: User is not part of a family.');
         }
 
-        $input = $request->input();
+        $input = $request->all();
 
         $todos = Todo::query()
             ->forFamily($user->family_id)
