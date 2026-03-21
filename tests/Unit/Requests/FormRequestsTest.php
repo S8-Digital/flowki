@@ -6,6 +6,7 @@ use App\Http\Requests\CalendarEvent\MoveCalendarEventRequest;
 use App\Http\Requests\CalendarEvent\StoreCalendarEventRequest;
 use App\Http\Requests\CalendarEvent\UpdateCalendarEventRequest;
 use App\Http\Requests\Family\AddFamilyMemberRequest;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
@@ -15,6 +16,8 @@ use Tests\TestCase;
  */
 class FormRequestsTest extends TestCase
 {
+    use RefreshDatabase;
+
     // -----------------------------------------------------------------------
     // AddFamilyMemberRequest
     // -----------------------------------------------------------------------

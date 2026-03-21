@@ -25,7 +25,7 @@ class CreateChoreTool extends Tool
             return Response::text('Error: User is not part of a family.');
         }
 
-        $input = $request->input();
+        $input = $request->all();
 
         if (empty($input['title'])) {
             return Response::text('Error: title is required.');

@@ -24,7 +24,7 @@ class CreateEventTool extends Tool
             return Response::text('Error: User is not part of a family.');
         }
 
-        $input = $request->input();
+        $input = $request->all();
 
         if (empty($input['title']) || empty($input['start_at'])) {
             return Response::text('Error: title and start_at are required.');

@@ -148,6 +148,9 @@ class JobsTest extends TestCase
 
         $job = new SyncItemToGoogleCalendar($user, $eventData, null);
         $job->handle($mock);
+
+        $this->assertTrue($user->hasGoogleCalendarConnected());
+        $this->addToAssertionCount(Mockery::getContainer()->mockery_getExpectationCount());
     }
 
     public function test_sync_item_to_google_calendar_skips_when_not_connected(): void
@@ -167,6 +170,9 @@ class JobsTest extends TestCase
 
         $job = new SyncItemToGoogleCalendar($user, $eventData, null);
         $job->handle($mock);
+
+        $this->assertFalse($user->hasGoogleCalendarConnected());
+        $this->addToAssertionCount(Mockery::getContainer()->mockery_getExpectationCount());
     }
 
     public function test_sync_item_passes_google_event_id_when_provided(): void
@@ -193,6 +199,9 @@ class JobsTest extends TestCase
 
         $job = new SyncItemToGoogleCalendar($user, $eventData, 'existing-id');
         $job->handle($mock);
+
+        $this->assertEquals('existing-id', $job->googleEventId);
+        $this->addToAssertionCount(Mockery::getContainer()->mockery_getExpectationCount());
     }
 
     protected function tearDown(): void

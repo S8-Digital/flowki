@@ -3,10 +3,13 @@
 namespace Tests\Unit\Enums;
 
 use App\Enums\FamilyRole;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class FamilyRoleTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_label_returns_correct_value_for_admin(): void
     {
         $this->assertEquals('Admin', FamilyRole::Admin->label());
