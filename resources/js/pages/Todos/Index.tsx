@@ -88,7 +88,7 @@ const ProgressFill = styled(Box)({
 });
 
 const EmptyColumnCaption = styled(Typography)({
-    textAlign: 'center' as const,
+    textAlign: 'center',
 });
 
 const TodoCard = styled(Box)({
@@ -110,12 +110,12 @@ const TodoMeta = styled(Box)(({ theme }) => ({
 
 const PriorityLabel = styled(Typography)({
     fontWeight: 500,
-    textTransform: 'capitalize' as const,
+    textTransform: 'capitalize',
 });
 
 const EmptyStateBox = styled(Box)(({ theme }) => ({
     borderRadius: (theme.shape.borderRadius as number) * 3,
-    textAlign: 'center' as const,
+    textAlign: 'center',
     fontSize: '0.875rem',
     color: theme.palette.text.secondary,
 }));
