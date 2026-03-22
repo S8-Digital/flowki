@@ -9,6 +9,7 @@ import ThemeWrapper from './components/ThemeWrapper';
 import { initializeTheme } from './hooks/useAppearance';
 import { getFirebaseAnalytics, trackEvent } from './lib/firebase-analytics';
 import { initializePerformanceMonitoring } from './lib/firebase-performance';
+import { initializeRemoteConfig } from './lib/firebase-remote-config';
 import { store } from './store';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -39,6 +40,7 @@ initializeTheme();
 // Initialize Firebase services
 getFirebaseAnalytics();
 initializePerformanceMonitoring();
+initializeRemoteConfig();
 
 // Register PWA service worker
 if ('serviceWorker' in navigator) {
