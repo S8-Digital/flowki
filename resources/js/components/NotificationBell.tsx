@@ -1,5 +1,8 @@
-import { Link, router, usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import MuiLink from '@mui/material/Link';
+import { alpha, styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { Bell, CheckCheck, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { recent, markRead } from '@/actions/App/Http/Controllers/NotificationController';
@@ -8,6 +11,81 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { onForegroundMessage } from '@/lib/firebase-messaging';
 import type { AppNotification, AppPageProps } from '@/types';
+
+const UnreadBadge = styled('span')(({ theme }) => ({
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    display: 'flex',
+    width: 20,
+    minWidth: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
+    fontSize: '0.75rem',
+    fontWeight: 500,
+    padding: 0,
+}));
+
+const NotificationHeader = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1.5),
+    paddingBottom: theme.spacing(1.5),
+}));
+
+const NotificationTitle = styled('span')({
+    fontWeight: 600,
+});
+
+const EmptyNotificationState = styled(Box)(({ theme }) => ({
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const NotificationRow = styled(Box, { shouldForwardProp: (prop) => prop !== 'isRead' })<{ isRead: boolean }>(({ theme, isRead }) => ({
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: theme.spacing(1.5),
+    '&:not(:last-child)': { borderBottom: `1px solid ${theme.palette.divider}` },
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1.5),
+    paddingBottom: theme.spacing(1.5),
+    backgroundColor: isRead ? 'transparent' : alpha(theme.palette.primary.main, 0.05),
+}));
+
+const NotificationMessage = styled('p', { shouldForwardProp: (prop) => prop !== 'isRead' })<{ isRead: boolean }>(({ theme, isRead }) => ({
+    margin: 0,
+    fontSize: '0.875rem',
+    lineHeight: 1.4,
+    fontWeight: isRead ? 400 : 500,
+    color: isRead ? theme.palette.text.secondary : theme.palette.text.primary,
+}));
+
+const NotificationTime = styled(Typography)(({ theme }) => ({
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+    margin: 0,
+}));
+
+const NotificationFooterLink = styled(MuiLink)(({ theme }) => ({
+    display: 'block',
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    textDecoration: 'none',
+    color: theme.palette.primary.main,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+}));
 
 function notificationMessage(notification: AppNotification): string {
     const d = notification.data;
@@ -153,92 +231,33 @@ export default function NotificationBell() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" style={{ position: 'relative', width: 36, height: 36 }} aria-label="Notifications">
                     <Bell style={{ width: 20, height: 20 }} />
-                    {displayedUnreadCount > 0 && (
-                        <Box
-                            component="span"
-                            sx={{
-                                position: 'absolute',
-                                top: -4,
-                                right: -4,
-                                display: 'flex',
-                                width: 20,
-                                minWidth: 20,
-                                height: 20,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: '50%',
-                                bgcolor: 'var(--destructive)',
-                                color: 'var(--destructive-foreground)',
-                                fontSize: '0.75rem',
-                                fontWeight: 500,
-                                p: 0,
-                            }}
-                        >
-                            {displayedUnreadCount > 99 ? '99+' : displayedUnreadCount}
-                        </Box>
-                    )}
+                    {displayedUnreadCount > 0 && <UnreadBadge>{displayedUnreadCount > 99 ? '99+' : displayedUnreadCount}</UnreadBadge>}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" style={{ width: 320, padding: 0 }}>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        borderBottom: '1px solid',
-                        borderColor: 'divider',
-                        px: 2,
-                        py: 1.5,
-                    }}
-                >
-                    <Box component="span" sx={{ fontWeight: 600 }}>
-                        Notifications
-                    </Box>
+                <NotificationHeader>
+                    <NotificationTitle>Notifications</NotificationTitle>
                     {displayedUnreadCount > 0 && (
                         <Button variant="ghost" size="sm" style={{ height: 28, gap: 4, fontSize: '0.75rem' }} onClick={markAllRead}>
                             <CheckCheck style={{ width: 12, height: 12 }} />
                             Mark all read
                         </Button>
                     )}
-                </Box>
+                </NotificationHeader>
 
                 {loading ? (
-                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>Loading…</Box>
+                    <EmptyNotificationState sx={{ py: 3 }}>Loading…</EmptyNotificationState>
                 ) : loaded && notifications.length === 0 ? (
-                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>No notifications</Box>
+                    <EmptyNotificationState sx={{ py: 3 }}>No notifications</EmptyNotificationState>
                 ) : !loaded && unreadCount === 0 ? (
-                    <Box sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>No notifications</Box>
+                    <EmptyNotificationState sx={{ py: 3 }}>No notifications</EmptyNotificationState>
                 ) : (
                     <ScrollArea style={{ maxHeight: 288 }}>
                         {notifications.map((n) => (
-                            <Box
-                                key={n.id}
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'flex-start',
-                                    gap: 1.5,
-                                    '&:not(:last-child)': { borderBottom: '1px solid', borderColor: 'divider' },
-                                    px: 2,
-                                    py: 1.5,
-                                    bgcolor: !n.read_at ? 'color-mix(in srgb, var(--primary) 5%, transparent)' : 'transparent',
-                                }}
-                            >
+                            <NotificationRow key={n.id} isRead={!!n.read_at}>
                                 <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.25 }}>
-                                    <Box
-                                        component="p"
-                                        sx={{
-                                            m: 0,
-                                            fontSize: '0.875rem',
-                                            lineHeight: 1.4,
-                                            fontWeight: !n.read_at ? 500 : 400,
-                                            color: !n.read_at ? 'text.primary' : 'text.secondary',
-                                        }}
-                                    >
-                                        {notificationMessage(n)}
-                                    </Box>
-                                    <Box component="p" sx={{ m: 0, fontSize: '0.75rem', color: 'text.secondary' }}>
-                                        {formatRelativeTime(n.created_at)}
-                                    </Box>
+                                    <NotificationMessage isRead={!!n.read_at}>{notificationMessage(n)}</NotificationMessage>
+                                    <NotificationTime>{formatRelativeTime(n.created_at)}</NotificationTime>
                                 </Box>
                                 <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.5 }}>
                                     {!n.read_at && (
@@ -255,27 +274,22 @@ export default function NotificationBell() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        sx={{ width: 24, height: 24, color: 'text.secondary' }}
+                                        sx={{ width: 24, height: 24 }}
+                                        style={{ color: 'var(--muted-foreground)' }}
                                         onClick={() => deleteNotification(n.id)}
                                         aria-label="Delete notification"
                                     >
                                         <Trash2 style={{ width: 12, height: 12 }} />
                                     </Button>
                                 </Box>
-                            </Box>
+                            </NotificationRow>
                         ))}
                     </ScrollArea>
                 )}
 
-                <Box sx={{ borderTop: '1px solid', borderColor: 'divider', px: 2, py: 1 }}>
-                    <Link
-                        href="/notifications"
-                        style={{ display: 'block', textAlign: 'center', fontSize: '0.75rem', color: 'var(--primary)', textDecoration: 'none' }}
-                        onClick={() => setOpen(false)}
-                    >
-                        View all notifications
-                    </Link>
-                </Box>
+                <NotificationFooterLink href="/notifications" onClick={() => setOpen(false)}>
+                    View all notifications
+                </NotificationFooterLink>
             </DropdownMenuContent>
         </DropdownMenu>
     );
