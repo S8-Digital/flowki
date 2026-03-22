@@ -167,7 +167,7 @@ export default function Security({ twoFactorEnabled, twoFactorConfirmed, status 
                                 Save password
                             </Button>
                             {recentlySuccessful && (
-                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                <Typography variant="body2" color="text.secondary">
                                     Saved.
                                 </Typography>
                             )}
@@ -207,7 +207,7 @@ export default function Security({ twoFactorEnabled, twoFactorConfirmed, status 
                                                 </Typography>
                                                 <Chip label="Active" color="success" size="small" />
                                             </Box>
-                                            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                                 Your account is secured with an authenticator app.
                                             </Typography>
                                         </Box>
@@ -297,7 +297,7 @@ export default function Security({ twoFactorEnabled, twoFactorConfirmed, status 
                                         <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                             Finish setting up two-factor authentication
                                         </Typography>
-                                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                             Scan the QR code below with your authenticator app, then enter the code to confirm.
                                         </Typography>
                                     </Box>
@@ -338,7 +338,7 @@ export default function Security({ twoFactorEnabled, twoFactorConfirmed, status 
                                     </Box>
                                 </Box>
                                 {confirmError && (
-                                    <Typography variant="caption" sx={{ color: 'error.main' }}>
+                                    <Typography variant="caption" color="error.main">
                                         {confirmError}
                                     </Typography>
                                 )}
@@ -367,7 +367,7 @@ export default function Security({ twoFactorEnabled, twoFactorConfirmed, status 
                                         <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                             Two-factor authentication is not enabled
                                         </Typography>
-                                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                             Enable 2FA to protect your account with an authenticator app.
                                         </Typography>
                                     </Box>

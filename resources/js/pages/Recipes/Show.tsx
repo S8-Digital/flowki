@@ -249,7 +249,7 @@ export default function RecipesShow({ recipe }: Props) {
                                                 </Typography>
                                             )}
                                             {ingredient.unit && (
-                                                <Typography component="span" sx={{ color: 'text.secondary' }}>
+                                                <Typography component="span" color="text.secondary">
                                                     {ingredient.unit}
                                                 </Typography>
                                             )}
@@ -258,7 +258,7 @@ export default function RecipesShow({ recipe }: Props) {
                                     ))}
                                 </Stack>
                             ) : (
-                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                <Typography variant="body2" color="text.secondary">
                                     No ingredients listed.
                                 </Typography>
                             )}

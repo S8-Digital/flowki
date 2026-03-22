@@ -460,7 +460,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     >
                                                         {member.name}
                                                     </Typography>
-                                                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                    <Typography variant="caption" color="text.secondary">
                                                         {pending} pending &middot; {done} done
                                                     </Typography>
                                                 </Box>
@@ -648,7 +648,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 >
                                                     Unassigned
                                                 </Typography>
-                                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                <Typography variant="caption" color="text.secondary">
                                                     {columns.unassigned.filter((t) => t.status !== 'completed').length} pending &middot;{' '}
                                                     {columns.unassigned.filter((t) => t.status === 'completed').length} done
                                                 </Typography>

@@ -51,7 +51,7 @@ export default function Privacy() {
                             {/* fontWeight/letterSpacing inherited from h4 theme variant */}
                             <Typography variant="h4">Privacy Policy</Typography>
                             {/* fontSize/lineHeight from body2 theme variant */}
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            <Typography variant="body2" color="text.secondary">
                                 Effective date: {EFFECTIVE_DATE}
                             </Typography>
                         </Stack>
@@ -197,7 +197,7 @@ export default function Privacy() {
                         <MuiLink component={Link} href={terms()} sx={footerLinkSx}>
                             Terms of Service
                         </MuiLink>
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        <Typography variant="caption" color="text.secondary">
                             © {new Date().getFullYear()} Flowki
                         </Typography>
                     </Stack>

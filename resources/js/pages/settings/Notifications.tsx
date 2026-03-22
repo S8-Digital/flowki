@@ -63,7 +63,7 @@ export default function NotificationSettings({ preferences }: Props) {
                                             <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                                 Email notifications
                                             </Typography>
-                                            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                                 Receive notifications via email when items are assigned or completed.
                                             </Typography>
                                         </Box>
@@ -94,7 +94,7 @@ export default function NotificationSettings({ preferences }: Props) {
                                             <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                                 Push notifications
                                             </Typography>
-                                            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                                 Receive push notifications on your devices when items are assigned or completed.
                                             </Typography>
                                         </Box>
@@ -109,7 +109,7 @@ export default function NotificationSettings({ preferences }: Props) {
                                 Save preferences
                             </Button>
                             {recentlySuccessful && (
-                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                <Typography variant="body2" color="text.secondary">
                                     Saved.
                                 </Typography>
                             )}

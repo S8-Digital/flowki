@@ -84,7 +84,7 @@ export default function MemberProfile({ member }: Props) {
                                         onChange={(e) => setColorData('profile_color', e.target.value)}
                                         aria-label={`Pick colour for ${member.name}`}
                                     />
-                                    <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
+                                    <Typography component="span" variant="body2" color="text.secondary">
                                         {colorData.profile_color ? colorData.profile_color : 'No colour set'}
                                     </Typography>
                                     {colorData.profile_color && (
@@ -113,7 +113,7 @@ export default function MemberProfile({ member }: Props) {
                                     {colorProcessing ? 'Saving…' : 'Save colour'}
                                 </Button>
                                 {colorRecentlySuccessful && (
-                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    <Typography variant="body2" color="text.secondary">
                                         Colour saved.
                                     </Typography>
                                 )}

@@ -147,7 +147,7 @@ export default function Categories({ todoCategories: initialTodo, recipeCategori
                         {saving ? 'Saving…' : 'Save Categories'}
                     </Button>
                     {saved && (
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        <Typography variant="body2" color="text.secondary">
                             Saved.
                         </Typography>
                     )}
