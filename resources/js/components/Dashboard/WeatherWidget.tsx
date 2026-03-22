@@ -58,6 +58,10 @@ const TempHigh = styled('span')({
     fontWeight: 500,
 });
 
+const TempLow = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
 function formatDay(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 }
@@ -114,10 +118,7 @@ export default function WeatherWidget() {
                             {day.icon_url && <Box component="img" src={day.icon_url} alt={day.description} sx={{ width: 32, height: 32 }} />}
                             <TempRange>
                                 <TempHigh>{day.temp_max}°</TempHigh>
-                                <Typography component="span" color="text.secondary">
-                                    {' '}
-                                    / {day.temp_min}°
-                                </Typography>
+                                <TempLow> / {day.temp_min}°</TempLow>
                             </TempRange>
                         </Box>
                     ))}

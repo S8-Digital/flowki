@@ -45,10 +45,7 @@ const StatusBadge = styled('span')(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.6),
     fontSize: '0.75rem',
     textTransform: 'capitalize',
-    paddingLeft: '8px',
-    paddingRight: '8px',
-    paddingTop: '2px',
-    paddingBottom: '2px',
+    padding: theme.spacing(0.25, 1),
 }));
 
 interface TodoItem {
