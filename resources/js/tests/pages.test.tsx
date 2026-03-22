@@ -53,6 +53,8 @@ vi.mock('@/routes', () => ({
     register: () => '/register',
     logout: () => '/logout',
     dashboard: () => '/dashboard',
+    privacy: () => '/privacy',
+    terms: () => '/terms',
 }));
 
 vi.mock('@/components/AppearanceToggle', () => ({
@@ -66,7 +68,7 @@ vi.mock('@/components/AppearanceToggle', () => ({
 describe('Welcome page', () => {
     it('renders the main heading', () => {
         render(<Welcome />);
-        expect(screen.getByRole('heading', { name: /organise your family/i })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /family life/i })).toBeInTheDocument();
     });
 
     it('renders a Log in link', () => {
@@ -76,13 +78,13 @@ describe('Welcome page', () => {
 
     it('renders a Get Started / Create your family link', () => {
         render(<Welcome />);
-        expect(screen.getByRole('link', { name: /get started/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Get started free/i })).toBeInTheDocument();
     });
 
     it('renders feature cards', () => {
         render(<Welcome />);
-        expect(screen.getByText('Todos')).toBeInTheDocument();
-        expect(screen.getByText('Calendar')).toBeInTheDocument();
+        expect(screen.getByText('Shared Todos')).toBeInTheDocument();
+        expect(screen.getByText('Family Calendar')).toBeInTheDocument();
         expect(screen.getByText('Recipes')).toBeInTheDocument();
     });
 });

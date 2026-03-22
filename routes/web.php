@@ -29,6 +29,15 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
+// Public legal pages
+Route::get('/privacy', function () {
+    return Inertia::render('Privacy');
+})->name('privacy');
+
+Route::get('/terms', function () {
+    return Inertia::render('Terms');
+})->name('terms');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('dashboard/widgets', [DashboardController::class, 'store'])->name('dashboard.widgets.store');

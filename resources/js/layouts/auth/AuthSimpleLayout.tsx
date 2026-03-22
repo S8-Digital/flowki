@@ -51,7 +51,7 @@ export default function AuthSimpleLayout({ children, title, description }: Props
                                     borderRadius: 1.5,
                                 }}
                             >
-                                <AppLogoIcon fill="currentColor" style={{ width: 36, height: 36 }} />
+                                <AppLogoIcon style={{ width: 36, height: 36 }} />
                             </Box>
                             <Box
                                 component="span"

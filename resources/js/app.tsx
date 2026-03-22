@@ -1,17 +1,16 @@
 import '../css/app.css';
 
 import { createInertiaApp, router } from '@inertiajs/react';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+import ThemeWrapper from './components/ThemeWrapper';
 import { initializeTheme } from './hooks/useAppearance';
 import { getFirebaseAnalytics, trackEvent } from './lib/firebase-analytics';
 import { initializePerformanceMonitoring } from './lib/firebase-performance';
+import { initializeRemoteConfig } from './lib/firebase-remote-config';
 import { store } from './store';
-import theme from './theme';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -22,12 +21,11 @@ createInertiaApp({
         const root = createRoot(el);
         root.render(
             <StrictMode>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
+                <ThemeWrapper>
                     <Provider store={store}>
                         <App {...props} />
                     </Provider>
-                </ThemeProvider>
+                </ThemeWrapper>
             </StrictMode>,
         );
     },
@@ -42,6 +40,18 @@ initializeTheme();
 // Initialize Firebase services
 getFirebaseAnalytics();
 initializePerformanceMonitoring();
+initializeRemoteConfig();
+
+// Register PWA service worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch((err) => {
+            if (import.meta.env.DEV) {
+                console.warn('[PWA] Service worker registration failed:', err);
+            }
+        });
+    });
+}
 
 // Track page views on every Inertia navigation
 router.on('navigate', (event) => {

@@ -47,7 +47,7 @@ export default function AuthCardLayout({ children, title, description }: Props) 
                             justifyContent: 'center',
                         }}
                     >
-                        <AppLogoIcon fill="currentColor" style={{ width: 36, height: 36 }} />
+                        <AppLogoIcon style={{ width: 36, height: 36 }} />
                     </Box>
                 </Box>
 

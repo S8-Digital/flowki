@@ -19,26 +19,128 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 
-export default function DeleteUser() {
-    const passwordInputRef = useRef<HTMLInputElement>(null);
-    const [open, setOpen] = useState(false);
+interface Props {
+    /** True when the authenticated user has a password set. False for OAuth-only accounts. */
+    hasPasswordSet?: boolean;
+}
 
+function PasswordDeleteForm({ onSuccess }: { onSuccess: () => void }) {
+    const inputRef = useRef<HTMLInputElement>(null);
     const form = useForm({ password: '' });
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         form.submit(destroy(), {
             preserveScroll: true,
-            onError: () => passwordInputRef.current?.focus(),
-            onSuccess: () => setOpen(false),
+            onError: () => inputRef.current?.focus(),
+            onSuccess: () => {
+                form.reset();
+                form.clearErrors();
+                onSuccess();
+            },
         });
     }
 
-    function handleCancel() {
-        form.reset();
-        form.clearErrors();
-        setOpen(false);
+    return (
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <DialogHeader style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
+                <DialogDescription>
+                    Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm.
+                </DialogDescription>
+            </DialogHeader>
+            <Box sx={{ display: 'grid', gap: 1 }}>
+                <Input
+                    id="delete-password"
+                    ref={inputRef}
+                    type="password"
+                    label="Password"
+                    value={form.data.password}
+                    onChange={(e) => form.setData('password', e.target.value)}
+                />
+                <InputError message={form.errors.password} />
+            </Box>
+            <DialogFooter style={{ gap: 8 }}>
+                <DialogClose asChild>
+                    <Button
+                        variant="secondary"
+                        type="button"
+                        onClick={() => {
+                            form.reset();
+                            form.clearErrors();
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                </DialogClose>
+                <Button type="submit" variant="destructive" disabled={form.processing}>
+                    Delete account
+                </Button>
+            </DialogFooter>
+        </Box>
+    );
+}
+
+function EmailDeleteForm({ onSuccess }: { onSuccess: () => void }) {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const form = useForm({ email: '' });
+
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        form.submit(destroy(), {
+            preserveScroll: true,
+            onError: () => inputRef.current?.focus(),
+            onSuccess: () => {
+                form.reset();
+                form.clearErrors();
+                onSuccess();
+            },
+        });
     }
+
+    return (
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <DialogHeader style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
+                <DialogDescription>
+                    Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your email address to
+                    confirm.
+                </DialogDescription>
+            </DialogHeader>
+            <Box sx={{ display: 'grid', gap: 1 }}>
+                <Input
+                    id="delete-email"
+                    ref={inputRef}
+                    type="email"
+                    label="Your email address"
+                    value={form.data.email}
+                    onChange={(e) => form.setData('email', e.target.value)}
+                />
+                <InputError message={form.errors.email} />
+            </Box>
+            <DialogFooter style={{ gap: 8 }}>
+                <DialogClose asChild>
+                    <Button
+                        variant="secondary"
+                        type="button"
+                        onClick={() => {
+                            form.reset();
+                            form.clearErrors();
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                </DialogClose>
+                <Button type="submit" variant="destructive" disabled={form.processing}>
+                    Delete account
+                </Button>
+            </DialogFooter>
+        </Box>
+    );
+}
+
+export default function DeleteUser({ hasPasswordSet = true }: Props) {
+    const [open, setOpen] = useState(false);
 
     return (
         <Stack spacing={3}>
@@ -64,38 +166,11 @@ export default function DeleteUser() {
                         <Button variant="destructive">Delete account</Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                            <DialogHeader style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                                <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
-                                <DialogDescription>
-                                    Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your
-                                    password to confirm you would like to permanently delete your account.
-                                </DialogDescription>
-                            </DialogHeader>
-
-                            <Box sx={{ display: 'grid', gap: 1 }}>
-                                <Input
-                                    id="password"
-                                    ref={passwordInputRef}
-                                    type="password"
-                                    label="Password"
-                                    value={form.data.password}
-                                    onChange={(e) => form.setData('password', e.target.value)}
-                                />
-                                <InputError message={form.errors.password} />
-                            </Box>
-
-                            <DialogFooter style={{ gap: 8 }}>
-                                <DialogClose asChild>
-                                    <Button variant="secondary" type="button" onClick={handleCancel}>
-                                        Cancel
-                                    </Button>
-                                </DialogClose>
-                                <Button type="submit" variant="destructive" disabled={form.processing}>
-                                    Delete account
-                                </Button>
-                            </DialogFooter>
-                        </Box>
+                        {hasPasswordSet ? (
+                            <PasswordDeleteForm onSuccess={() => setOpen(false)} />
+                        ) : (
+                            <EmailDeleteForm onSuccess={() => setOpen(false)} />
+                        )}
                     </DialogContent>
                 </Dialog>
             </Box>

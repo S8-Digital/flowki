@@ -170,9 +170,7 @@ export default function Dashboard({
             <AppLayout breadcrumbs={breadcrumbs}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                            Dashboard
-                        </Typography>
+                        <Typography variant="h6">Dashboard</Typography>
                         <Button size="sm" onClick={() => setAddOpen(true)}>
                             <Plus className="mr-1 size-4" /> Add Widget
                         </Button>

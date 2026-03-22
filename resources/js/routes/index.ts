@@ -233,6 +233,154 @@ homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 home.form = homeForm
 
 /**
+* @see routes/web.php:33
+* @route '/privacy'
+*/
+export const privacy = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: privacy.url(options),
+    method: 'get',
+})
+
+privacy.definition = {
+    methods: ["get","head"],
+    url: '/privacy',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see routes/web.php:33
+* @route '/privacy'
+*/
+privacy.url = (options?: RouteQueryOptions) => {
+    return privacy.definition.url + queryParams(options)
+}
+
+/**
+* @see routes/web.php:33
+* @route '/privacy'
+*/
+privacy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: privacy.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:33
+* @route '/privacy'
+*/
+privacy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: privacy.url(options),
+    method: 'head',
+})
+
+/**
+* @see routes/web.php:33
+* @route '/privacy'
+*/
+const privacyForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: privacy.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:33
+* @route '/privacy'
+*/
+privacyForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: privacy.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:33
+* @route '/privacy'
+*/
+privacyForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: privacy.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+privacy.form = privacyForm
+
+/**
+* @see routes/web.php:37
+* @route '/terms'
+*/
+export const terms = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: terms.url(options),
+    method: 'get',
+})
+
+terms.definition = {
+    methods: ["get","head"],
+    url: '/terms',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see routes/web.php:37
+* @route '/terms'
+*/
+terms.url = (options?: RouteQueryOptions) => {
+    return terms.definition.url + queryParams(options)
+}
+
+/**
+* @see routes/web.php:37
+* @route '/terms'
+*/
+terms.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: terms.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:37
+* @route '/terms'
+*/
+terms.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: terms.url(options),
+    method: 'head',
+})
+
+/**
+* @see routes/web.php:37
+* @route '/terms'
+*/
+const termsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: terms.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:37
+* @route '/terms'
+*/
+termsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: terms.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:37
+* @route '/terms'
+*/
+termsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: terms.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+terms.form = termsForm
+
+/**
 * @see \App\Http\Controllers\DashboardController::dashboard
 * @see app/Http/Controllers/DashboardController.php:18
 * @route '/dashboard'
