@@ -5,7 +5,7 @@
 #  Resources
 #  ──────────
 #  • Artifact Registry        — Docker image repository
-#  • Cloud SQL (MySQL)        — db-f1-micro, single zone, no HA
+#  • Cloud SQL (postgres)        — db-f1-micro, single zone, no HA
 #  • Secret Manager           — APP_KEY, DB_PASSWORD, CLOUDFLARE_API_TOKEN
 #  • GCS Bucket               — Laravel cloud disk (FILESYSTEM_DISK=gcs)
 #  • Cloud Run Service        — Application (scale-to-zero capable)
@@ -163,16 +163,16 @@ resource "google_artifact_registry_repository" "app" {
 }
 
 # ──────────────────────────────────────────────────────────────
-# Cloud SQL — MySQL (db-f1-micro, single zone, no HA)
+# Cloud SQL — postgres (db-f1-micro, single zone, no HA)
 # ──────────────────────────────────────────────────────────────
 resource "random_id" "db_suffix" {
   byte_length = 4
 }
 
-resource "google_sql_database_instance" "mysql" {
+resource "google_sql_database_instance" "postgres" {
   project          = var.project_id
-  name             = "${var.app_name}-mysql-${random_id.db_suffix.hex}"
-  database_version = "MYSQL_8_0"
+  name             = "${var.app_name}-pg-${random_id.db_suffix.hex}"
+  database_version = "POSTGRES_16"
   region           = var.region
 
   settings {
@@ -181,7 +181,6 @@ resource "google_sql_database_instance" "mysql" {
 
     backup_configuration {
       enabled            = true
-      binary_log_enabled = true # required for point-in-time recovery on MySQL
       start_time         = "03:00"
     }
 
@@ -192,13 +191,8 @@ resource "google_sql_database_instance" "mysql" {
     }
 
     database_flags {
-      name  = "slow_query_log"
-      value = "on"
-    }
-
-    database_flags {
-      name  = "long_query_time"
-      value = "2"
+      name  = "log_min_duration_statement"
+      value = "2000" # Log queries taking longer than 2 seconds
     }
 
     deletion_protection_enabled = true
@@ -212,7 +206,7 @@ resource "google_sql_database_instance" "mysql" {
 
 resource "google_sql_database" "app" {
   project  = var.project_id
-  instance = google_sql_database_instance.mysql.name
+  instance = google_sql_database_instance.postgres.name
   name     = var.db_name
   charset  = "utf8mb4"
   collation = "utf8mb4_unicode_ci"
@@ -226,7 +220,7 @@ resource "random_password" "db_password" {
 
 resource "google_sql_user" "app" {
   project  = var.project_id
-  instance = google_sql_database_instance.mysql.name
+  instance = google_sql_database_instance.postgres.name
   name     = var.db_user
   password = random_password.db_password.result
   host     = "cloudsqlproxy~%"
@@ -305,7 +299,7 @@ resource "google_storage_bucket" "laravel_storage" {
 # Cloud Run Service — Application
 # ──────────────────────────────────────────────────────────────
 locals {
-  cloud_sql_connection = "${var.project_id}:${var.region}:${google_sql_database_instance.mysql.name}"
+  cloud_sql_connection = "${var.project_id}:${var.region}:${google_sql_database_instance.postgres.name}"
   db_socket_path       = "/cloudsql/${local.cloud_sql_connection}"
   image_placeholder    = "${var.region}-docker.pkg.dev/${var.project_id}/${var.app_name}/${var.app_name}:latest"
 }
@@ -370,7 +364,7 @@ resource "google_cloud_run_v2_service" "app" {
       }
       env {
         name  = "DB_CONNECTION"
-        value = "mysql"
+        value = "pgsql"
       }
       env {
         name  = "DB_SOCKET"
@@ -490,7 +484,7 @@ resource "google_cloud_run_v2_service" "app" {
 
   depends_on = [
     google_project_iam_member.cloud_run_roles,
-    google_sql_database_instance.mysql,
+    google_sql_database_instance.postgres,
     google_secret_manager_secret.app_key,
     google_secret_manager_secret.db_password,
     google_secret_manager_secret.cloudflare_api_token,
@@ -544,7 +538,7 @@ resource "google_cloud_run_v2_job" "migrate" {
         }
         env {
           name  = "DB_CONNECTION"
-          value = "mysql"
+          value = "pgsql"
         }
         env {
           name  = "DB_SOCKET"
@@ -611,7 +605,7 @@ resource "google_cloud_run_v2_job" "migrate" {
 
   depends_on = [
     google_project_iam_member.cloud_run_roles,
-    google_sql_database_instance.mysql,
+    google_sql_database_instance.postgres,
     google_secret_manager_secret.app_key,
     google_secret_manager_secret.db_password,
   ]

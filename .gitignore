@@ -13,6 +13,7 @@
 .env.production
 .phpactor.json
 .phpunit.result.cache
+/terraform/.terraform.lock.hcl
 Homestead.json
 Homestead.yaml
 npm-debug.log
@@ -28,4 +29,5 @@ yarn-error.log
 
 mobile/.expo/
 mobile/node_modules/
-mobile/dist//coverage
+mobile/dist/coverage
+/terraform/.terraform/

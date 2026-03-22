@@ -1,0 +1,7 @@
+project_id             = "414442590715"
+region                 = "australia-southeast1"
+app_name               = "flowki"
+app_url                = "https://flowki.family"
+terraform_state_bucket = "414442590715-tfstate"
+github_org             = "S8-Digital"
+github_repo            = "flowki"
