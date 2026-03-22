@@ -1,10 +1,44 @@
 import { Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { PropsWithChildren } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { home } from '@/routes';
+
+const AuthPageContainer = styled(Stack)(({ theme }) => ({
+    backgroundColor: theme.palette.background.default,
+}));
+
+const LogoLink = styled(Box)({
+    fontWeight: 500,
+    textDecoration: 'none',
+    color: 'inherit',
+}) as typeof Box;
+
+const LogoIconWrapper = styled(Box)(({ theme }) => ({
+    borderRadius: theme.spacing(1.5),
+})) as typeof Box;
+
+const SrOnlyText = styled(Box)({
+    whiteSpace: 'nowrap',
+}) as typeof Box;
+
+const CenteredStack = styled(Stack)({
+    textAlign: 'center',
+});
+
+const PageTitle = styled(Typography)({
+    fontSize: '1.25rem',
+    fontWeight: 500,
+});
+
+const PageDescription = styled(Typography)(({ theme }) => ({
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+    textAlign: 'center',
+}));
 
 interface Props extends PropsWithChildren {
     title?: string;
@@ -13,13 +47,12 @@ interface Props extends PropsWithChildren {
 
 export default function AuthSimpleLayout({ children, title, description }: Props) {
     return (
-        <Stack
+        <AuthPageContainer
             direction="column"
             alignItems="center"
             justifyContent="center"
             sx={{
                 minHeight: '100svh',
-                backgroundColor: 'var(--background)',
                 p: { xs: 3, md: 5 },
                 gap: 3,
             }}
@@ -27,7 +60,7 @@ export default function AuthSimpleLayout({ children, title, description }: Props
             <Box sx={{ width: '100%', maxWidth: 384 }}>
                 <Stack direction="column" sx={{ gap: 4 }}>
                     <Stack direction="column" alignItems="center" sx={{ gap: 2 }}>
-                        <Box
+                        <LogoLink
                             component={Link}
                             href={home()}
                             sx={{
@@ -35,12 +68,9 @@ export default function AuthSimpleLayout({ children, title, description }: Props
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 gap: 1,
-                                fontWeight: 500,
-                                textDecoration: 'none',
-                                color: 'inherit',
                             }}
                         >
-                            <Box
+                            <LogoIconWrapper
                                 sx={{
                                     mb: 0.5,
                                     display: 'flex',
@@ -48,12 +78,11 @@ export default function AuthSimpleLayout({ children, title, description }: Props
                                     height: 36,
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    borderRadius: 1.5,
                                 }}
                             >
                                 <AppLogoIcon style={{ width: 36, height: 36 }} />
-                            </Box>
-                            <Box
+                            </LogoIconWrapper>
+                            <SrOnlyText
                                 component="span"
                                 sx={{
                                     position: 'absolute',
@@ -61,24 +90,19 @@ export default function AuthSimpleLayout({ children, title, description }: Props
                                     height: 1,
                                     overflow: 'hidden',
                                     clip: 'rect(0,0,0,0)',
-                                    whiteSpace: 'nowrap',
                                 }}
                             >
                                 {title}
-                            </Box>
-                        </Box>
-                        <Stack spacing={1} sx={{ textAlign: 'center' }}>
-                            <Typography variant="h6" sx={{ fontSize: '1.25rem', fontWeight: 500 }}>
-                                {title}
-                            </Typography>
-                            <Typography sx={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', textAlign: 'center' }}>
-                                {description}
-                            </Typography>
-                        </Stack>
+                            </SrOnlyText>
+                        </LogoLink>
+                        <CenteredStack spacing={1}>
+                            <PageTitle variant="h6">{title}</PageTitle>
+                            <PageDescription>{description}</PageDescription>
+                        </CenteredStack>
                     </Stack>
                     {children}
                 </Stack>
             </Box>
-        </Stack>
+        </AuthPageContainer>
     );
 }

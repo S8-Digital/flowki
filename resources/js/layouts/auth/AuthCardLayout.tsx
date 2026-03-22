@@ -1,10 +1,21 @@
 import { Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import type { PropsWithChildren } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { home } from '@/routes';
+
+const AuthPageContainer = styled(Stack)(({ theme }) => ({
+    backgroundColor: theme.palette.action.hover,
+}));
+
+const LogoLink = styled(Box)({
+    fontWeight: 500,
+    textDecoration: 'none',
+    color: 'inherit',
+}) as typeof Box;
 
 interface Props extends PropsWithChildren {
     title?: string;
@@ -13,19 +24,18 @@ interface Props extends PropsWithChildren {
 
 export default function AuthCardLayout({ children, title, description }: Props) {
     return (
-        <Stack
+        <AuthPageContainer
             direction="column"
             alignItems="center"
             justifyContent="center"
             sx={{
                 minHeight: '100svh',
-                backgroundColor: 'var(--muted)',
                 p: { xs: 3, md: 5 },
                 gap: 3,
             }}
         >
             <Stack direction="column" sx={{ width: '100%', maxWidth: 448, gap: 3 }}>
-                <Box
+                <LogoLink
                     component={Link}
                     href={home()}
                     sx={{
@@ -33,9 +43,6 @@ export default function AuthCardLayout({ children, title, description }: Props) 
                         alignItems: 'center',
                         gap: 1,
                         alignSelf: 'center',
-                        fontWeight: 500,
-                        textDecoration: 'none',
-                        color: 'inherit',
                     }}
                 >
                     <Box
@@ -49,7 +56,7 @@ export default function AuthCardLayout({ children, title, description }: Props) 
                     >
                         <AppLogoIcon style={{ width: 36, height: 36 }} />
                     </Box>
-                </Box>
+                </LogoLink>
 
                 <Card style={{ borderRadius: '0.75rem' }}>
                     <CardHeader style={{ padding: '32px 40px 0', textAlign: 'center' }}>
@@ -59,6 +66,6 @@ export default function AuthCardLayout({ children, title, description }: Props) 
                     <CardContent style={{ padding: '32px 40px' }}>{children}</CardContent>
                 </Card>
             </Stack>
-        </Stack>
+        </AuthPageContainer>
     );
 }
