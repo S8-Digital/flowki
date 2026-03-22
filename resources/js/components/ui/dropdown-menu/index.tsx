@@ -2,10 +2,35 @@ import Box from '@mui/material/Box';
 import MuiDivider from '@mui/material/Divider';
 import MuiMenu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { Slot } from '@/lib/slot';
 import { cn } from '@/lib/utils';
+
+const StyledDropdownMenuLabel = styled(Box)({
+    fontSize: '0.875rem',
+    fontWeight: 600,
+});
+
+const StyledDropdownMenuShortcut = styled(Typography)({
+    letterSpacing: '0.1em',
+    opacity: 0.6,
+});
+
+const StyledDropdownMenuSubTrigger = styled(Box)({
+    cursor: 'default',
+    userSelect: 'none' as const,
+    fontSize: '0.875rem',
+    borderRadius: 4,
+});
+
+const StyledDropdownMenuSubContent = styled(Box)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius * 2,
+    border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[4],
+}));
 
 interface DropdownMenuContextValue {
     anchorEl: HTMLElement | null;
@@ -124,9 +149,9 @@ function DropdownMenuItem({
 
 function DropdownMenuLabel({ className, inset, ...props }: React.HTMLAttributes<HTMLDivElement> & { inset?: boolean }) {
     return (
-        <Box
+        <StyledDropdownMenuLabel
             className={cn(inset && 'pl-8', className)}
-            sx={{ py: 0.75, px: 1, fontSize: '0.875rem', fontWeight: 600 }}
+            sx={{ py: 0.75, px: 1 }}
             {...(props as any)}
         />
     );
@@ -142,11 +167,11 @@ function DropdownMenuGroup({ children, ...props }: React.HTMLAttributes<HTMLDivE
 
 function DropdownMenuShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
     return (
-        <Typography
+        <StyledDropdownMenuShortcut
             component="span"
             variant="caption"
             className={cn(className)}
-            sx={{ ml: 'auto', letterSpacing: '0.1em', opacity: 0.6 }}
+            sx={{ ml: 'auto' }}
             {...(props as any)}
         />
     );
@@ -163,40 +188,21 @@ function DropdownMenuSubTrigger({
     ...props
 }: React.HTMLAttributes<HTMLDivElement> & { inset?: boolean }) {
     return (
-        <Box
+        <StyledDropdownMenuSubTrigger
             className={cn(inset && 'pl-8', className)}
-            sx={{
-                display: 'flex',
-                cursor: 'default',
-                userSelect: 'none',
-                alignItems: 'center',
-                borderRadius: 1,
-                px: 1,
-                py: 0.5,
-                fontSize: '0.875rem',
-            }}
+            sx={{ display: 'flex', alignItems: 'center', px: 1, py: 0.5 }}
             {...(props as any)}
         >
             {children}
-        </Box>
+        </StyledDropdownMenuSubTrigger>
     );
 }
 
 function DropdownMenuSubContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <Box
+        <StyledDropdownMenuSubContent
             className={cn(className)}
-            sx={{
-                zIndex: 50,
-                minWidth: 128,
-                overflow: 'hidden',
-                borderRadius: 2,
-                border: 1,
-                borderColor: 'divider',
-                bgcolor: 'background.paper',
-                p: 0.5,
-                boxShadow: 4,
-            }}
+            sx={{ zIndex: 50, minWidth: 128, overflow: 'hidden', p: 0.5 }}
             {...(props as any)}
         />
     );

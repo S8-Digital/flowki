@@ -15,7 +15,7 @@ function Separator({
             orientation={orientation}
             role={decorative ? 'none' : 'separator'}
             className={className}
-            sx={{ borderColor: 'divider', ...(orientation === 'vertical' ? { height: '100%', alignSelf: 'stretch' } : {}) }}
+            sx={orientation === 'vertical' ? { height: '100%', alignSelf: 'stretch' } : undefined}
             {...(props as any)}
         />
     );

@@ -1,12 +1,31 @@
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
 import { Slot } from '@/lib/slot';
 import { cn } from '@/lib/utils';
+
+const StyledSheetBox = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.default,
+    color: theme.palette.text.primary,
+}));
+
+const StyledSheetCloseButton = styled(IconButton)({
+    opacity: 0.7,
+    '&:hover': { opacity: 1 },
+});
+
+const StyledSheetHeader = styled(Box)({
+    textAlign: 'left' as const,
+});
+
+const StyledSheetDescription = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
 
 interface SheetContextValue {
     open: boolean;
@@ -124,21 +143,15 @@ function SheetContent({
             onClose={() => ctx?.setOpen(false)}
             {...(props as any)}
         >
-            <Box
+            <StyledSheetBox
                 className={cn(className)}
-                sx={{
-                    p: 3,
-                    position: 'relative',
-                    minWidth: 300,
-                    bgcolor: 'background.default',
-                    color: 'text.primary',
-                }}
+                sx={{ p: 3, position: 'relative', minWidth: 300 }}
             >
                 {children}
-                <IconButton
+                <StyledSheetCloseButton
                     size="small"
                     onClick={() => ctx?.setOpen(false)}
-                    sx={{ position: 'absolute', top: 1, right: 1, opacity: 0.7, '&:hover': { opacity: 1 } }}
+                    sx={{ position: 'absolute', top: 1, right: 1 }}
                 >
                     <XIcon size={16} />
                     <Box
@@ -147,17 +160,17 @@ function SheetContent({
                     >
                         Close
                     </Box>
-                </IconButton>
-            </Box>
+                </StyledSheetCloseButton>
+            </StyledSheetBox>
         </MuiDrawer>
     );
 }
 
 function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
     return (
-        <Box
+        <StyledSheetHeader
             className={cn(className)}
-            sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, textAlign: 'left', mb: 2 }}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, mb: 2 }}
             {...(props as any)}
         />
     );
@@ -187,11 +200,11 @@ function SheetTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingEle
 
 function SheetDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
     return (
-        <Typography
+        <StyledSheetDescription
             variant="body2"
             component="p"
             className={cn(className)}
-            sx={{ color: 'text.secondary', m: 0 }}
+            sx={{ m: 0 }}
             {...(props as any)}
         />
     );

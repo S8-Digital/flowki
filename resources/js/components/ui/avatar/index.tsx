@@ -1,16 +1,28 @@
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
+const StyledAvatar = styled(Box)({
+    borderRadius: '50%',
+});
+
+const StyledAvatarFallback = styled(Box)(({ theme }) => ({
+    borderRadius: '50%',
+    backgroundColor: theme.palette.action.selected,
+    fontSize: '0.875rem',
+    fontWeight: 500,
+}));
 
 function Avatar({ className, children, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
     return (
-        <Box
+        <StyledAvatar
             component="span"
             className={className}
-            sx={{ position: 'relative', display: 'flex', flexShrink: 0, overflow: 'hidden', borderRadius: '50%' }}
+            sx={{ position: 'relative', display: 'flex', flexShrink: 0, overflow: 'hidden' }}
             {...(props as any)}
         >
             {children}
-        </Box>
+        </StyledAvatar>
     );
 }
 
@@ -30,24 +42,14 @@ function AvatarImage({ src, alt, className, ...props }: React.ImgHTMLAttributes<
 
 function AvatarFallback({ className, children, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
     return (
-        <Box
+        <StyledAvatarFallback
             component="span"
             className={className}
-            sx={{
-                display: 'flex',
-                height: '100%',
-                width: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '50%',
-                bgcolor: 'action.selected',
-                fontSize: '0.875rem',
-                fontWeight: 500,
-            }}
+            sx={{ display: 'flex', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center' }}
             {...(props as any)}
         >
             {children}
-        </Box>
+        </StyledAvatarFallback>
     );
 }
 

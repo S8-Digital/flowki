@@ -3,12 +3,32 @@ import MuiDialog from '@mui/material/Dialog';
 import MuiDialogContent from '@mui/material/DialogContent';
 import MuiDialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { XIcon } from 'lucide-react';
 import * as React from 'react';
 import { Slot } from '@/lib/slot';
 import { cn } from '@/lib/utils';
+
+const StyledCloseButton = styled(IconButton)({
+    opacity: 0.7,
+    '&:hover': { opacity: 1 },
+});
+
+const StyledDialogHeader = styled(Box)({
+    textAlign: 'left' as const,
+});
+
+const StyledDialogTitle = styled(MuiDialogTitle)({
+    fontSize: '1.125rem',
+    fontWeight: 600,
+    lineHeight: 1,
+});
+
+const StyledDialogDescription = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
 
 interface DialogContextValue {
     open: boolean;
@@ -115,10 +135,10 @@ function DialogContent({ className, children, ...props }: React.HTMLAttributes<H
         <MuiDialog open={ctx?.open ?? false} onClose={() => ctx?.setOpen(false)} maxWidth="sm" fullWidth {...(props as any)}>
             <MuiDialogContent className={cn(className)} sx={{ position: 'relative', pt: 3 }}>
                 {children}
-                <IconButton
+                <StyledCloseButton
                     size="small"
                     onClick={() => ctx?.setOpen(false)}
-                    sx={{ position: 'absolute', top: 5, right: 5, opacity: 0.7, '&:hover': { opacity: 1 } }}
+                    sx={{ position: 'absolute', top: 5, right: 5 }}
                 >
                     <XIcon size={16} />
                     <Box
@@ -127,7 +147,7 @@ function DialogContent({ className, children, ...props }: React.HTMLAttributes<H
                     >
                         Close
                     </Box>
-                </IconButton>
+                </StyledCloseButton>
             </MuiDialogContent>
         </MuiDialog>
     );
@@ -135,9 +155,9 @@ function DialogContent({ className, children, ...props }: React.HTMLAttributes<H
 
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <Box
+        <StyledDialogHeader
             className={cn(className)}
-            sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: 'left', mb: 2 }}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}
             {...(props as any)}
         />
     );
@@ -154,16 +174,16 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 }
 
 function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-    return <MuiDialogTitle className={cn(className)} sx={{ p: 0, fontSize: '1.125rem', fontWeight: 600, lineHeight: 1 }} {...(props as any)} />;
+    return <StyledDialogTitle className={cn(className)} sx={{ p: 0 }} {...(props as any)} />;
 }
 
 function DialogDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
     return (
-        <Typography
+        <StyledDialogDescription
             variant="body2"
             component="p"
             className={cn(className)}
-            sx={{ color: 'text.secondary', m: 0 }}
+            sx={{ m: 0 }}
             {...(props as any)}
         />
     );
