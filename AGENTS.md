@@ -327,6 +327,36 @@ Wayfinder generates TypeScript functions for Laravel routes. Import from `@/acti
 - To run all tests in a file: `vendor/bin/sail artisan test --compact tests/Feature/ExampleTest.php`.
 - To filter on a particular test name: `vendor/bin/sail artisan test --compact --filter=testName` (recommended after making a change to a related file).
 
+=== mui/styling rules ===
+
+# MUI Styling Conventions
+
+## sx Prop — Permitted Uses
+
+The `sx` prop is **only** permitted for layout and spacing properties. Allowed properties: `m`, `p`, `mt`, `mb`, `ml`, `mr`, `mx`, `my`, `pt`, `pb`, `pl`, `pr`, `px`, `py`, `gap`, `display`, `flexDirection`, `alignItems`, `justifyContent`, `width`, `height`, `flex`, `flexGrow`, `flexShrink`, `flexWrap`, `position`, `top`, `right`, `bottom`, `left`, `overflow`, `gridTemplateColumns`, `gridColumn`, `gridRow`.
+
+## Visual/Design Styling — Must Use the Theme
+
+Never use `sx` for visual or design properties. These must be defined in the MUI theme (`resources/js/theme.ts`) via `palette`, `typography`, `styleOverrides`, or custom theme tokens:
+
+- **Colors** — `color`, `backgroundColor`, `bgcolor`, `borderColor`
+- **Typography** — `fontSize`, `fontWeight`, `fontFamily`, `letterSpacing`, `lineHeight`, `textAlign`, `textDecoration`, `textTransform`, `whiteSpace`, `textOverflow`
+- **Borders & Shape** — `border`, `borderRadius`, `boxShadow`, `outline`
+- **Opacity & Transitions** — `opacity`, `transition`
+
+## Extracting to styled() Components
+
+If a component needs more than 2–3 `sx` properties, extract it to a `styled()` component with a meaningful, descriptive name. Do not pile many sx properties onto a single element inline.
+
+## No Raw Values for Theme Tokens
+
+Never use raw values in `sx` for anything that should reference a theme token. Always reference theme tokens instead:
+
+- ❌ `sx={{ color: '#ff0000' }}`
+- ✅ `sx={{ color: 'error.main' }}`
+- ❌ `sx={{ backgroundColor: 'var(--muted)' }}`
+- ✅ use `styleOverrides` in theme or a `styled()` component that references `theme.palette`
+
 === tailwindcss/core rules ===
 
 # Tailwind CSS
