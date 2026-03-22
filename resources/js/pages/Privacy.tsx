@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { Li, P, Section, Ul } from '@/components/PublicLegal';
+import { FooterBox, LogoLink, PageRoot } from '@/lib/publicStyled';
 import { footerLinkSx, logoWordmarkSx } from '@/lib/publicSx';
 import { terms } from '@/routes';
 
@@ -17,7 +18,7 @@ export default function Privacy() {
         <>
             <Head title="Privacy Policy — Flowki" />
 
-            <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary' }}>
+            <PageRoot sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
                 {/* Header */}
                 <Box
                     component="header"
@@ -35,12 +36,12 @@ export default function Privacy() {
                         bgcolor: 'background.default',
                     }}
                 >
-                    <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'inherit' }}>
+                    <LogoLink component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <AppLogoIcon style={{ width: 32, height: 32 }} />
                         <Typography component="span" sx={logoWordmarkSx}>
                             Flowki
                         </Typography>
-                    </Box>
+                    </LogoLink>
                     <AppearanceToggle />
                 </Box>
 
@@ -189,7 +190,7 @@ export default function Privacy() {
                 </Box>
 
                 {/* Footer */}
-                <Box component="footer" sx={{ borderTop: 1, borderColor: 'divider', px: { xs: 2, sm: 4 }, py: 3, bgcolor: 'background.paper' }}>
+                <FooterBox component="footer" sx={{ px: { xs: 2, sm: 4 }, py: 3 }}>
                     <Stack direction="row" spacing={2} alignItems="center" justifyContent="center" flexWrap="wrap">
                         <MuiLink component={Link} href="/" sx={footerLinkSx}>
                             Home
@@ -201,8 +202,8 @@ export default function Privacy() {
                             © {new Date().getFullYear()} Flowki
                         </Typography>
                     </Stack>
-                </Box>
-            </Box>
+                </FooterBox>
+            </PageRoot>
         </>
     );
 }

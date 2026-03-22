@@ -1,5 +1,6 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
@@ -8,6 +9,12 @@ import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/AuthLayout';
 import { toUrl } from '@/lib/utils';
 import { logout } from '@/routes';
+
+const StatusMessage = styled(Typography)(({ theme }) => ({
+    fontWeight: 500,
+    textAlign: 'center',
+    color: theme.palette.success.main,
+}));
 
 interface Props {
     status?: string;
@@ -26,9 +33,9 @@ export default function VerifyEmail({ status }: Props) {
             <Head title="Email verification" />
 
             {status === 'verification-link-sent' && (
-                <Typography sx={{ mb: 2, textAlign: 'center', fontWeight: 500, color: 'success.main' }}>
+                <StatusMessage sx={{ mb: 2 }}>
                     A new verification link has been sent to the email address you provided during registration.
-                </Typography>
+                </StatusMessage>
             )}
 
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>

@@ -114,11 +114,17 @@ const PriorityLabel = styled(Typography)({
 });
 
 const EmptyStateBox = styled(Box)(({ theme }) => ({
-    borderRadius: (theme.shape.borderRadius as number) * 3,
+    borderRadius: Number(theme.shape.borderRadius) * 3,
     textAlign: 'center',
     fontSize: '0.875rem',
     color: theme.palette.text.secondary,
 }));
+
+const ColumnContainer = styled(Box)(({ theme }) => ({
+    borderRadius: Number(theme.shape.borderRadius) * 3,
+}));
+
+const ReminderBox = styled(Box)({ borderRadius: '12px' });
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Todos', href: '/todos' }];
 
@@ -360,12 +366,11 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             </SelectContent>
                                         </Select>
                                     </Box>
-                                    <Box
+                                    <ReminderBox
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: 1.5,
-                                            borderRadius: '12px',
                                             border: 1,
                                             borderColor: 'divider',
                                             p: 1.5,
@@ -399,7 +404,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 </Select>
                                             </Box>
                                         )}
-                                    </Box>
+                                    </ReminderBox>
                                     <Button type="submit" sx={{ width: '100%' }} disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Todo'}
                                     </Button>
@@ -474,7 +479,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                 const completionPct = total > 0 ? Math.round((done / total) * 100) : 0;
 
                                 return (
-                                    <Box
+                                    <ColumnContainer
                                         key={member.id}
                                         sx={{
                                             display: 'flex',
@@ -483,7 +488,6 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             flex: 1,
                                             flexDirection: 'column',
                                             overflow: 'hidden',
-                                            borderRadius: 3,
                                             border: 1,
                                             borderColor: 'divider',
                                         }}
@@ -595,13 +599,13 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 ))
                                             )}
                                         </Box>
-                                    </Box>
+                                    </ColumnContainer>
                                 );
                             })}
 
                             {/* Unassigned column */}
                             {unassignedVisible && columns.unassigned.length > 0 && (
-                                <Box
+                                <ColumnContainer
                                     sx={{
                                         display: 'flex',
                                         maxWidth: 320,
@@ -609,7 +613,6 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         flex: 1,
                                         flexDirection: 'column',
                                         overflow: 'hidden',
-                                        borderRadius: 3,
                                         border: 1,
                                         borderColor: 'divider',
                                     }}
@@ -700,7 +703,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             </TodoCard>
                                         ))}
                                     </Box>
-                                </Box>
+                                </ColumnContainer>
                             )}
 
                             {/* All hidden state */}

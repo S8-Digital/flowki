@@ -1,6 +1,7 @@
 import { Head, router } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { GripVertical, Plus, Settings2, X } from 'lucide-react';
 import { useState } from 'react';
@@ -28,6 +29,19 @@ interface Props {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard() }];
+
+const WidgetLabel = styled(Typography)({ fontWeight: 500 });
+
+const CategoryBadge = styled(Box)(({ theme }) => ({
+    borderRadius: '50px',
+    backgroundColor: theme.palette.secondary.main,
+    fontSize: '0.75rem',
+    textTransform: 'capitalize' as const,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingTop: theme.spacing(0.25),
+    paddingBottom: theme.spacing(0.25),
+}));
 
 export default function Dashboard({
     widgets: initialWidgets,
@@ -208,24 +222,8 @@ export default function Dashboard({
                                 >
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <GripVertical className="size-4 cursor-grab text-muted-foreground/40 active:cursor-grabbing" />
-                                        <Typography component="span" variant="body2" sx={{ fontWeight: 500 }}>
-                                            {widgetLabel(widget.type)}
-                                        </Typography>
-                                        {(widget.settings?.category as string) && (
-                                            <Box
-                                                component="span"
-                                                sx={{
-                                                    borderRadius: '50px',
-                                                    bgcolor: 'secondary.main',
-                                                    px: 1,
-                                                    py: 0.25,
-                                                    fontSize: '0.75rem',
-                                                    textTransform: 'capitalize',
-                                                }}
-                                            >
-                                                {widget.settings.category as string}
-                                            </Box>
-                                        )}
+                                        <WidgetLabel variant="body2">{widgetLabel(widget.type)}</WidgetLabel>
+                                        {(widget.settings?.category as string) && <CategoryBadge>{widget.settings.category as string}</CategoryBadge>}
                                     </Box>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                         {hasSettings(widget.type) && (

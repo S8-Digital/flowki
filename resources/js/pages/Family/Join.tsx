@@ -1,6 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { create, joinStore } from '@/actions/App/Http/Controllers/FamilyController';
 import InputError from '@/components/InputError';
@@ -8,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem } from '@/types';
+
+const FamilyHeading = styled(Typography)({ fontWeight: 700 });
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Join Family', href: '/family/join' }];
 
@@ -26,10 +29,8 @@ export default function FamilyJoin() {
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 4 }}>
                     <Stack spacing={3} sx={{ width: '100%', maxWidth: 444 }}>
                         <Box>
-                            <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                                Join a Family
-                            </Typography>
-                            <Typography variant="body2" sx={{ mt: 0.5, color: 'text.secondary' }}>
+                            <FamilyHeading variant="h5">Join a Family</FamilyHeading>
+                            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
                                 Enter the invite code shared by your family admin.
                             </Typography>
                         </Box>
@@ -50,7 +51,7 @@ export default function FamilyJoin() {
                                 {processing ? 'Joining…' : 'Join Family'}
                             </Button>
                         </Stack>
-                        <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+                        <Typography variant="body2" align="center" color="text.secondary">
                             Don't have an invite code?{' '}
                             <Link href={create().url} className="underline underline-offset-4 hover:text-foreground">
                                 Create a new family

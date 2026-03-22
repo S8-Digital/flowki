@@ -62,7 +62,7 @@ const TruncatedBold = styled(Typography)({
 });
 
 const EmptyColumnCaption = styled(Typography)({
-    textAlign: 'center' as const,
+    textAlign: 'center',
 });
 
 const ChoreCard = styled(Box)({
@@ -83,15 +83,21 @@ const ChoreMeta = styled(Box)(({ theme }) => ({
 }));
 
 const FrequencySpan = styled('span')({
-    textTransform: 'capitalize' as const,
+    textTransform: 'capitalize',
 });
 
 const EmptyStateBox = styled(Box)(({ theme }) => ({
     borderRadius: Number(theme.shape.borderRadius) * 3,
-    textAlign: 'center' as const,
+    textAlign: 'center',
     fontSize: '0.875rem',
     color: theme.palette.text.secondary,
 }));
+
+const ColumnContainer = styled(Box)(({ theme }) => ({
+    borderRadius: Number(theme.shape.borderRadius) * 3,
+}));
+
+const ReminderBox = styled(Box)({ borderRadius: '12px' });
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Chores', href: '/chores' }];
 
@@ -306,12 +312,11 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             ))}
                                         </Box>
                                     </Box>
-                                    <Box
+                                    <ReminderBox
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: 1.5,
-                                            borderRadius: '12px',
                                             border: 1,
                                             borderColor: 'divider',
                                             p: 1.5,
@@ -345,7 +350,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 </Select>
                                             </Box>
                                         )}
-                                    </Box>
+                                    </ReminderBox>
                                     <Button type="submit" sx={{ width: '100%' }} disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Chore'}
                                     </Button>
@@ -418,7 +423,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                 const color = getMemberColor(member, idx);
 
                                 return (
-                                    <Box
+                                    <ColumnContainer
                                         key={member.id}
                                         sx={{
                                             display: 'flex',
@@ -427,7 +432,6 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             flex: 1,
                                             flexDirection: 'column',
                                             overflow: 'hidden',
-                                            borderRadius: 3,
                                             border: 1,
                                             borderColor: 'divider',
                                         }}
@@ -514,12 +518,12 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 ))
                                             )}
                                         </Box>
-                                    </Box>
+                                    </ColumnContainer>
                                 );
                             })}
                             {/* Unassigned column */}
                             {unassignedVisible && columns.unassigned.length > 0 && (
-                                <Box
+                                <ColumnContainer
                                     sx={{
                                         display: 'flex',
                                         maxWidth: 320,
@@ -527,7 +531,6 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         flex: 1,
                                         flexDirection: 'column',
                                         overflow: 'hidden',
-                                        borderRadius: 3,
                                         border: 1,
                                         borderColor: 'divider',
                                     }}
@@ -600,7 +603,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             </ChoreCard>
                                         ))}
                                     </Box>
-                                </Box>
+                                </ColumnContainer>
                             )}
 
                             {/* All hidden state */}
