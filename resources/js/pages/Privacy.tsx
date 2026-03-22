@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogoIcon from '@/components/AppLogoIcon';
+import { terms } from '@/routes';
 
 const EFFECTIVE_DATE = '22 March 2025';
 const CONTACT_EMAIL = 'privacy@flowki.app';
@@ -226,7 +227,7 @@ export default function Privacy() {
                         </MuiLink>
                         <MuiLink
                             component={Link}
-                            href="/terms"
+                            href={terms()}
                             sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
                         >
                             Terms of Service

@@ -53,6 +53,8 @@ vi.mock('@/routes', () => ({
     register: () => '/register',
     logout: () => '/logout',
     dashboard: () => '/dashboard',
+    privacy: () => '/privacy',
+    terms: () => '/terms',
 }));
 
 vi.mock('@/components/AppearanceToggle', () => ({

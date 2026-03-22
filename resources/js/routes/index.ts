@@ -629,3 +629,42 @@ loginForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 login.form = loginForm
+
+
+// ── Public page route helpers ──────────────────────────────────────────────
+// These routes use closures in web.php so Wayfinder does not auto-generate
+// them. Defined here manually following the same pattern.
+
+/**
+ * @route '/privacy'
+ */
+export const privacy = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: privacy.url(options),
+    method: 'get',
+})
+
+privacy.definition = {
+    methods: ['get'],
+    url: '/privacy',
+} satisfies RouteDefinition<['get']>
+
+privacy.url = (options?: RouteQueryOptions) => {
+    return privacy.definition.url + queryParams(options)
+}
+
+/**
+ * @route '/terms'
+ */
+export const terms = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: terms.url(options),
+    method: 'get',
+})
+
+terms.definition = {
+    methods: ['get'],
+    url: '/terms',
+} satisfies RouteDefinition<['get']>
+
+terms.url = (options?: RouteQueryOptions) => {
+    return terms.definition.url + queryParams(options)
+}

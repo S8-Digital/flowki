@@ -3,7 +3,7 @@
 
 const CACHE_NAME = 'flowki-cache-v1';
 
-const APP_SHELL_URLS = ['/', '/offline'];
+const APP_SHELL_URLS = ['/'];
 
 const API_ROUTE_PATTERNS = [/^\/api\//, /^\/calendar/, /^\/todos/, /^\/chores/, /^\/shopping/];
 
@@ -84,11 +84,24 @@ self.addEventListener('fetch', (event) => {
                     if (response.ok) {
                         cache.put(request, response.clone());
                     }
+
                     return response;
                 });
 
-                // Return cached immediately; revalidate in background
-                return cached || networkFetch;
+                if (cached) {
+                    // Revalidate in the background; swallow errors to avoid unhandled rejections
+                    event.waitUntil(networkFetch.catch(() => {}));
+
+                    return cached;
+                }
+
+                return networkFetch.catch(
+                    () =>
+                        new Response('Offline – content unavailable', {
+                            status: 503,
+                            statusText: 'Service Unavailable',
+                        }),
+                );
             });
         }),
     );

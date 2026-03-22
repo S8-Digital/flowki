@@ -11,7 +11,7 @@ import { Bell, CalendarDays, CheckSquare, ChefHat, MessageSquare, RotateCcw, Shi
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { useRemoteConfig } from '@/hooks/useRemoteConfig';
-import { login, register } from '@/routes';
+import { login, privacy, register, terms } from '@/routes';
 
 /** Map of icon names (stored in Remote Config) to Lucide components */
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -477,14 +477,14 @@ export default function Welcome() {
                         <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" justifyContent="center">
                             <MuiLink
                                 component={Link}
-                                href="/privacy"
+                                href={privacy()}
                                 sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
                             >
                                 Privacy Policy
                             </MuiLink>
                             <MuiLink
                                 component={Link}
-                                href="/terms"
+                                href={terms()}
                                 sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
                             >
                                 Terms of Service

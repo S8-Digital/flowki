@@ -33,7 +33,11 @@ function PasswordDeleteForm({ onSuccess }: { onSuccess: () => void }) {
         form.submit(destroy(), {
             preserveScroll: true,
             onError: () => inputRef.current?.focus(),
-            onSuccess,
+            onSuccess: () => {
+                form.reset();
+                form.clearErrors();
+                onSuccess();
+            },
         });
     }
 
@@ -86,7 +90,11 @@ function EmailDeleteForm({ onSuccess }: { onSuccess: () => void }) {
         form.submit(destroy(), {
             preserveScroll: true,
             onError: () => inputRef.current?.focus(),
-            onSuccess,
+            onSuccess: () => {
+                form.reset();
+                form.clearErrors();
+                onSuccess();
+            },
         });
     }
 
