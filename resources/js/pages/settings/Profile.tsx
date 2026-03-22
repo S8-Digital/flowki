@@ -354,7 +354,7 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                     </Box>
                 </Stack>
 
-                <DeleteUser />
+                <DeleteUser hasPasswordSet={hasPasswordSet} />
             </SettingsLayout>
         </AppLayout>
     );

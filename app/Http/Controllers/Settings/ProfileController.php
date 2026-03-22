@@ -45,14 +45,27 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's profile.
+     *
+     * Users with a password must confirm it. OAuth-only users confirm by
+     * typing their email address instead (Apple App Store requirement).
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
         $user = $request->user();
+
+        if ($user->hasPasswordSet()) {
+            $request->validate([
+                'password' => ['required', 'current_password'],
+            ]);
+        } else {
+            $request->validate([
+                'email' => ['required', 'string', function ($attribute, $value, $fail) use ($user) {
+                    if (strtolower(trim($value)) !== strtolower($user->email)) {
+                        $fail('The email address does not match your account.');
+                    }
+                }],
+            ]);
+        }
 
         Auth::logout();
 

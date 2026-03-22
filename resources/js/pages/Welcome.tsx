@@ -1,52 +1,105 @@
 import { Head, Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import MuiButton from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
 import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { CalendarDays, CheckSquare, ChefHat, RotateCcw, ShoppingCart, Users } from 'lucide-react';
+import { Bell, CalendarDays, CheckSquare, ChefHat, MessageSquare, RotateCcw, Shield, ShoppingCart, Smartphone, Zap } from 'lucide-react';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { login, register } from '@/routes';
 
 const features = [
-    { name: 'Todos', icon: CheckSquare },
-    { name: 'Chores', icon: RotateCcw },
-    { name: 'Calendar', icon: CalendarDays },
-    { name: 'Shopping', icon: ShoppingCart },
-    { name: 'Recipes', icon: ChefHat },
-    { name: 'Family', icon: Users },
+    {
+        name: 'Shared Todos',
+        icon: CheckSquare,
+        description: 'Assign tasks to family members with due dates. Everyone stays accountable.',
+    },
+    {
+        name: 'Chores Roster',
+        icon: RotateCcw,
+        description: 'Recurring chores with automatic rotation. No more arguments about whose turn it is.',
+    },
+    {
+        name: 'Family Calendar',
+        icon: CalendarDays,
+        description: 'One shared calendar for everyone. Syncs with Google Calendar too.',
+    },
+    {
+        name: 'Shopping Lists',
+        icon: ShoppingCart,
+        description: 'Real-time shared lists. Tick items off as you shop — everyone sees instantly.',
+    },
+    {
+        name: 'Recipes',
+        icon: ChefHat,
+        description: 'Save family favourites and plan meals together. Ingredients go straight to shopping.',
+    },
+    {
+        name: 'AI Assistant',
+        icon: MessageSquare,
+        description: "Ask your family assistant anything — schedules, reminders, or what's for dinner.",
+    },
+];
+
+const benefits = [
+    { icon: Zap, title: 'Instant sync', description: 'Changes appear for every family member in real time.' },
+    { icon: Smartphone, title: 'Works everywhere', description: 'Install on your home screen. Works offline when signal drops.' },
+    { icon: Bell, title: 'Smart notifications', description: 'Get reminded at the right time. No app required — push works on mobile browsers.' },
+    { icon: Shield, title: 'Private & secure', description: 'Your family data is yours. No ads, no tracking, no selling your data.' },
+];
+
+const steps = [
+    { step: '1', title: 'Create your family', body: 'Sign up in 30 seconds. Name your family group and set a colour scheme.' },
+    { step: '2', title: 'Invite everyone', body: 'Send a magic-link invite. Family members join with one tap — no setup required.' },
+    { step: '3', title: 'Organise together', body: 'Assign tasks, plan the week, shop smarter. Life gets calmer immediately.' },
 ];
 
 export default function Welcome() {
     return (
         <>
-            <Head title="Flowki" />
+            <Head title="Flowki — Organise your family, together" />
 
             <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary' }}>
+                {/* ── Header ── */}
                 <Box
                     component="header"
                     sx={{
+                        position: 'sticky',
+                        top: 0,
+                        zIndex: 100,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         borderBottom: 1,
                         borderColor: 'divider',
-                        px: 3,
-                        py: 2,
+                        px: { xs: 2, sm: 4 },
+                        py: 1.5,
+                        bgcolor: 'background.default',
+                        backdropFilter: 'blur(8px)',
                     }}
                 >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '1.125rem', fontWeight: 700 }}>
-                        <AppLogoIcon style={{ width: 28, height: 28 }} />
-                        Flowki
+                    <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'inherit' }}>
+                        <AppLogoIcon style={{ width: 32, height: 32 }} />
+                        <Typography component="span" sx={{ fontSize: '1.125rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
+                            Flowki
+                        </Typography>
                     </Box>
-                    <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
                         <AppearanceToggle />
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <MuiLink
                                 component={Link}
                                 href={login()}
-                                sx={{ fontSize: '0.875rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
+                                sx={{
+                                    fontSize: '0.875rem',
+                                    color: 'text.secondary',
+                                    textDecoration: 'none',
+                                    '&:hover': { color: 'text.primary' },
+                                    display: { xs: 'none', sm: 'inline' },
+                                }}
                             >
                                 Log in
                             </MuiLink>
@@ -55,84 +108,369 @@ export default function Welcome() {
                                 href={register()}
                                 variant="contained"
                                 size="small"
-                                sx={{ textTransform: 'none', fontWeight: 500 }}
+                                sx={{ textTransform: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}
                             >
-                                Get Started
+                                Get started free
                             </MuiButton>
                         </Box>
                     </Box>
                 </Box>
 
+                {/* ── Hero ── */}
                 <Box
-                    component="main"
+                    component="section"
                     sx={{
                         display: 'flex',
-                        flex: 1,
                         flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 4,
-                        px: 3,
-                        py: 10,
                         textAlign: 'center',
+                        px: { xs: 2, sm: 4 },
+                        pt: { xs: 10, sm: 16 },
+                        pb: { xs: 10, sm: 14 },
+                        gap: 4,
+                        bgcolor: 'background.default',
                     }}
                 >
-                    <Stack spacing={2}>
+                    <Chip
+                        label="✨ Free for families · No credit card needed"
+                        size="small"
+                        sx={{
+                            fontWeight: 500,
+                            bgcolor: 'primary.main',
+                            color: 'primary.contrastText',
+                            fontSize: '0.8rem',
+                            height: 28,
+                        }}
+                    />
+
+                    <Stack spacing={2} sx={{ maxWidth: 760 }}>
                         <Typography
-                            variant="h3"
-                            sx={{ fontWeight: 700, letterSpacing: '-0.025em', fontSize: { xs: '2.25rem', sm: '3rem', lg: '3.75rem' } }}
+                            variant="h1"
+                            sx={{
+                                fontWeight: 800,
+                                letterSpacing: '-0.04em',
+                                lineHeight: 1.1,
+                                fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.25rem' },
+                            }}
                         >
-                            Organise your family, together.
+                            Family life,{' '}
+                            <Box component="span" sx={{ color: 'primary.main' }}>
+                                organised.
+                            </Box>
                         </Typography>
-                        <Typography sx={{ mx: 'auto', maxWidth: 600, fontSize: '1.125rem', color: 'text.secondary' }}>
-                            Shared todos, chores, calendar, shopping lists, and recipes — all in one place for the whole family.
+                        <Typography
+                            sx={{
+                                mx: 'auto',
+                                maxWidth: 560,
+                                fontSize: { xs: '1.0625rem', sm: '1.25rem' },
+                                color: 'text.secondary',
+                                lineHeight: 1.6,
+                            }}
+                        >
+                            Shared todos, chores, calendars, shopping lists, and recipes — all in one place for the whole family. Less chaos. More
+                            together time.
                         </Typography>
                     </Stack>
 
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 1.5 }}>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ width: '100%', maxWidth: 360 }}>
                         <MuiButton
                             component={Link}
                             href={register()}
                             variant="contained"
-                            sx={{ textTransform: 'none', fontWeight: 600, px: 3, py: 1.25 }}
+                            fullWidth
+                            size="large"
+                            sx={{ textTransform: 'none', fontWeight: 700, fontSize: '1rem', py: 1.5 }}
                         >
-                            Create your family
+                            Start for free
                         </MuiButton>
                         <MuiButton
                             component={Link}
                             href={login()}
                             variant="outlined"
+                            fullWidth
+                            size="large"
                             color="inherit"
-                            sx={{ textTransform: 'none', fontWeight: 600, px: 3, py: 1.25 }}
+                            sx={{ textTransform: 'none', fontWeight: 600, fontSize: '1rem', py: 1.5 }}
                         >
                             Sign in
                         </MuiButton>
-                    </Box>
+                    </Stack>
 
-                    <Box sx={{ mt: 4, display: 'grid', maxWidth: 840, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
-                        {features.map((feature) => (
-                            <Box
-                                key={feature.name}
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    borderRadius: 2,
-                                    border: 1,
-                                    borderColor: 'divider',
-                                    bgcolor: 'background.paper',
-                                    p: 2,
-                                    fontSize: '0.875rem',
-                                }}
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        Join thousands of families already using Flowki · No credit card required
+                    </Typography>
+                </Box>
+
+                {/* ── Features ── */}
+                <Box
+                    component="section"
+                    sx={{
+                        px: { xs: 2, sm: 4, md: 6 },
+                        py: { xs: 10, sm: 14 },
+                        bgcolor: 'background.paper',
+                        borderTop: 1,
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                    }}
+                >
+                    <Stack spacing={8} sx={{ maxWidth: 1024, mx: 'auto' }}>
+                        <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
+                            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: '0.12em' }}>
+                                Everything your family needs
+                            </Typography>
+                            <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: '-0.03em', fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
+                                One app. Zero juggling.
+                            </Typography>
+                            <Typography sx={{ color: 'text.secondary', maxWidth: 520, mx: 'auto', fontSize: '1.0625rem' }}>
+                                Flowki brings the whole family together in a single, beautifully simple app.
+                            </Typography>
+                        </Stack>
+
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+                                gap: 3,
+                            }}
+                        >
+                            {features.map((feature) => (
+                                <Box
+                                    key={feature.name}
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 1.5,
+                                        borderRadius: 3,
+                                        border: 1,
+                                        borderColor: 'divider',
+                                        bgcolor: 'background.default',
+                                        p: 3,
+                                        transition: 'box-shadow 0.2s',
+                                        '&:hover': { boxShadow: '0 4px 24px rgba(0,0,0,0.07)' },
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            display: 'inline-flex',
+                                            width: 44,
+                                            height: 44,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: 2,
+                                            bgcolor: 'primary.main',
+                                            color: 'primary.contrastText',
+                                        }}
+                                    >
+                                        <feature.icon size={22} />
+                                    </Box>
+                                    <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>{feature.name}</Typography>
+                                    <Typography sx={{ fontSize: '0.9rem', color: 'text.secondary', lineHeight: 1.6 }}>
+                                        {feature.description}
+                                    </Typography>
+                                </Box>
+                            ))}
+                        </Box>
+                    </Stack>
+                </Box>
+
+                {/* ── How it works ── */}
+                <Box component="section" sx={{ px: { xs: 2, sm: 4, md: 6 }, py: { xs: 10, sm: 14 }, bgcolor: 'background.default' }}>
+                    <Stack spacing={8} sx={{ maxWidth: 840, mx: 'auto' }}>
+                        <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
+                            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: '0.12em' }}>
+                                Get started in minutes
+                            </Typography>
+                            <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: '-0.03em', fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
+                                Up and running in 3 steps
+                            </Typography>
+                        </Stack>
+
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 4 }}>
+                            {steps.map((s, i) => (
+                                <Stack
+                                    key={s.step}
+                                    spacing={2}
+                                    sx={{ alignItems: { xs: 'flex-start', md: 'center' }, textAlign: { xs: 'left', md: 'center' } }}
+                                >
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            width: 48,
+                                            height: 48,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: '50%',
+                                            bgcolor: 'primary.main',
+                                            color: 'primary.contrastText',
+                                            fontWeight: 800,
+                                            fontSize: '1.25rem',
+                                        }}
+                                    >
+                                        {s.step}
+                                    </Box>
+                                    <Typography sx={{ fontWeight: 700, fontSize: '1.0625rem' }}>{s.title}</Typography>
+                                    <Typography sx={{ fontSize: '0.9rem', color: 'text.secondary', lineHeight: 1.6 }}>{s.body}</Typography>
+                                    {i < steps.length - 1 && (
+                                        <Divider
+                                            sx={{
+                                                display: { xs: 'block', md: 'none' },
+                                                width: '100%',
+                                                borderStyle: 'dashed',
+                                                opacity: 0.4,
+                                            }}
+                                        />
+                                    )}
+                                </Stack>
+                            ))}
+                        </Box>
+                    </Stack>
+                </Box>
+
+                {/* ── Benefits / Why Flowki ── */}
+                <Box
+                    component="section"
+                    sx={{
+                        px: { xs: 2, sm: 4, md: 6 },
+                        py: { xs: 10, sm: 14 },
+                        bgcolor: 'background.paper',
+                        borderTop: 1,
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                    }}
+                >
+                    <Stack spacing={8} sx={{ maxWidth: 1024, mx: 'auto' }}>
+                        <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
+                            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: '0.12em' }}>
+                                Built for real families
+                            </Typography>
+                            <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: '-0.03em', fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
+                                Why families love Flowki
+                            </Typography>
+                        </Stack>
+
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3 }}>
+                            {benefits.map((b) => (
+                                <Stack key={b.title} direction="row" spacing={2.5} alignItems="flex-start">
+                                    <Box
+                                        sx={{
+                                            flexShrink: 0,
+                                            display: 'inline-flex',
+                                            width: 44,
+                                            height: 44,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: 2,
+                                            bgcolor: 'background.default',
+                                            border: 1,
+                                            borderColor: 'divider',
+                                        }}
+                                    >
+                                        <b.icon size={20} color="var(--mui-palette-primary-main)" />
+                                    </Box>
+                                    <Stack spacing={0.5}>
+                                        <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>{b.title}</Typography>
+                                        <Typography sx={{ fontSize: '0.9rem', color: 'text.secondary', lineHeight: 1.6 }}>{b.description}</Typography>
+                                    </Stack>
+                                </Stack>
+                            ))}
+                        </Box>
+                    </Stack>
+                </Box>
+
+                {/* ── Final CTA ── */}
+                <Box
+                    component="section"
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        px: { xs: 2, sm: 4 },
+                        py: { xs: 12, sm: 16 },
+                        gap: 4,
+                        bgcolor: 'background.default',
+                    }}
+                >
+                    <Stack spacing={2} sx={{ maxWidth: 600 }}>
+                        <Typography variant="h2" sx={{ fontWeight: 800, letterSpacing: '-0.03em', fontSize: { xs: '2rem', sm: '2.75rem' } }}>
+                            Ready to bring your family together?
+                        </Typography>
+                        <Typography sx={{ color: 'text.secondary', fontSize: '1.0625rem', lineHeight: 1.6 }}>
+                            Set up Flowki for your family in under two minutes — completely free. No credit card, no commitment.
+                        </Typography>
+                    </Stack>
+
+                    <MuiButton
+                        component={Link}
+                        href={register()}
+                        variant="contained"
+                        size="large"
+                        sx={{ textTransform: 'none', fontWeight: 700, fontSize: '1.0625rem', px: 5, py: 1.75 }}
+                    >
+                        Create your family — it's free
+                    </MuiButton>
+
+                    <MuiLink
+                        component={Link}
+                        href={login()}
+                        sx={{ fontSize: '0.875rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
+                    >
+                        Already have an account? Sign in →
+                    </MuiLink>
+                </Box>
+
+                {/* ── Footer ── */}
+                <Box
+                    component="footer"
+                    sx={{
+                        borderTop: 1,
+                        borderColor: 'divider',
+                        px: { xs: 2, sm: 4 },
+                        py: 4,
+                        bgcolor: 'background.paper',
+                    }}
+                >
+                    <Stack
+                        direction={{ xs: 'column', sm: 'row' }}
+                        alignItems={{ xs: 'center', sm: 'center' }}
+                        justifyContent="space-between"
+                        spacing={2}
+                    >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <AppLogoIcon style={{ width: 24, height: 24 }} />
+                            <Typography component="span" sx={{ fontWeight: 700, fontSize: '0.9rem' }}>
+                                Flowki
+                            </Typography>
+                        </Box>
+
+                        <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" justifyContent="center">
+                            <MuiLink
+                                component={Link}
+                                href="/privacy"
+                                sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
                             >
-                                <feature.icon size={24} color="var(--mui-palette-primary-main)" />
-                                <Typography component="span" sx={{ fontWeight: 500 }}>
-                                    {feature.name}
-                                </Typography>
-                            </Box>
-                        ))}
-                    </Box>
+                                Privacy Policy
+                            </MuiLink>
+                            <MuiLink
+                                component={Link}
+                                href="/terms"
+                                sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
+                            >
+                                Terms of Service
+                            </MuiLink>
+                            <MuiLink
+                                component={Link}
+                                href={login()}
+                                sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
+                            >
+                                Sign in
+                            </MuiLink>
+                        </Stack>
+
+                        <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
+                            © {new Date().getFullYear()} Flowki. All rights reserved.
+                        </Typography>
+                    </Stack>
                 </Box>
             </Box>
         </>
