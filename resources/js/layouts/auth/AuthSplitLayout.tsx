@@ -55,7 +55,7 @@ export default function AuthSplitLayout({ children, title, description }: Props)
                         color: '#fff',
                     }}
                 >
-                    <AppLogoIcon fill="currentColor" style={{ width: 32, height: 32, marginRight: 8 }} />
+                    <AppLogoIcon style={{ width: 32, height: 32, marginRight: 8 }} />
                     {name}
                 </Box>
                 {quote && (

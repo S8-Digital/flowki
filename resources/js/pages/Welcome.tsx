@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CalendarDays, CheckSquare, ChefHat, RotateCcw, ShoppingCart, Users } from 'lucide-react';
 import AppearanceToggle from '@/components/AppearanceToggle';
+import AppLogoIcon from '@/components/AppLogoIcon';
 import { login, register } from '@/routes';
 
 const features = [
@@ -36,7 +37,7 @@ export default function Welcome() {
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '1.125rem', fontWeight: 700 }}>
-                        <Users size={20} color="var(--mui-palette-primary-main)" />
+                        <AppLogoIcon style={{ width: 28, height: 28 }} />
                         Flowki
                     </Box>
                     <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
