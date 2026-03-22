@@ -12,7 +12,7 @@ const StyledNavigationMenuLink = styled(MuiLink, {
     borderRadius: theme.shape.borderRadius * 2,
     fontSize: '0.875rem',
     fontWeight: 500,
-    color: 'inherit',
+    color: theme.palette.text.primary,
     transition: 'color 0.15s, background-color 0.15s',
     '&:hover': { backgroundColor: theme.palette.action.hover },
     ...(active ? { backgroundColor: theme.palette.action.selected } : {}),

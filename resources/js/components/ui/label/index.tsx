@@ -4,12 +4,11 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-const StyledLabel = styled(FormLabel)(({ theme }) => ({
+const StyledLabel = styled(FormLabel)({
     fontSize: '0.875rem',
     fontWeight: 500,
-    color: theme.palette.text.primary,
     cursor: 'pointer',
-}));
+});
 
 function Label({ className, sx, ...props }: React.LabelHTMLAttributes<HTMLLabelElement> & { sx?: SxProps<Theme> }) {
     return <StyledLabel className={cn(className)} sx={sx} {...(props as any)} />;

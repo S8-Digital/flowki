@@ -9,10 +9,10 @@ const StyledBreadcrumbList = styled(Box)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledBreadcrumbLink = styled(MuiLink)({
+const StyledBreadcrumbLink = styled(MuiLink)(({ theme }) => ({
     transition: 'color 0.15s',
-    '&:hover': { color: 'inherit' },
-});
+    '&:hover': { color: theme.palette.text.primary },
+}));
 
 function Breadcrumb({ ...props }: React.HTMLAttributes<HTMLElement>) {
     return <Box component="nav" aria-label="breadcrumb" {...(props as any)} />;
