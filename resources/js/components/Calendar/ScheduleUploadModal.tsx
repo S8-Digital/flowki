@@ -23,11 +23,11 @@ const DropZone = styled(Box, { shouldForwardProp: (prop) => prop !== 'isDragging
     transition: 'border-color 0.2s, background-color 0.2s',
     borderRadius: (theme.shape.borderRadius as number) * 3,
     border: '2px dashed',
-    borderColor: isDragging ? theme.palette.primary.main : 'var(--muted-foreground)',
+    borderColor: isDragging ? theme.palette.primary.main : theme.palette.text.secondary,
     backgroundColor: isDragging ? alpha(theme.palette.primary.main, 0.05) : 'transparent',
     '&:hover': {
         borderColor: theme.palette.primary.main,
-        backgroundColor: 'var(--muted)',
+        backgroundColor: theme.palette.action.hover,
     },
 }));
 
@@ -68,7 +68,7 @@ const ItemMetaBox = styled(Box)(({ theme }) => ({
 
 const AllDayBadge = styled('span')(({ theme }) => ({
     borderRadius: (theme.shape.borderRadius as number) * 0.5,
-    backgroundColor: 'var(--muted)',
+    backgroundColor: theme.palette.action.selected,
     fontSize: '0.625rem',
 }));
 

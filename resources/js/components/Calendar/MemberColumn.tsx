@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
-import { alpha, styled } from '@mui/material/styles';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { CheckCircle2, Circle, Clock, RefreshCw } from 'lucide-react';
 import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo } from '@/types';
@@ -128,6 +128,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
     const { user, events, allDayEvents, todos, chores, totalItems, completedItems, completionPct, colorIndex } = column;
     const color = getMemberColor(user, colorIndex);
     const isEmpty = totalItems === 0;
+    const theme = useTheme();
 
     return (
         <ColumnBox
@@ -202,7 +203,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                             {formatTime(event.start_at)}
                             {event.end_at ? ` – ${formatTime(event.end_at)}` : ''}
                         </MetaText>
-                        {event.location && <TruncatedMetaText sx={{ mt: 0.25, overflow: 'hidden' }}>{event.location}</TruncatedMetaText>}
+                        {event.location && <TruncatedMetaText sx={{ mt: 0.25 }}>{event.location}</TruncatedMetaText>}
                     </ItemCard>
                 ))}
 
@@ -227,7 +228,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                         key={`todo-${todo.id}`}
                         onClick={() => onTodoClick?.(todo)}
                         style={{
-                            backgroundColor: todo.status === 'completed' ? alpha('#000', 0.08) : `${color}22`,
+                            backgroundColor: todo.status === 'completed' ? theme.palette.action.disabledBackground : `${color}22`,
                             borderLeft: `3px solid ${
                                 todo.status === 'completed' ? 'var(--mui-palette-action-disabled)' : 'var(--mui-palette-warning-main)'
                             }`,
@@ -252,7 +253,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                         key={`chore-${chore.id}`}
                         onClick={() => onChoreClick?.(chore)}
                         style={{
-                            backgroundColor: alpha('#10b981', 0.13),
+                            backgroundColor: alpha(theme.palette.success.main, 0.13),
                             borderLeft: '3px solid var(--mui-palette-success-main)',
                         }}
                     >
