@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
+import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { CheckCircle2, Circle, Clock, RefreshCw } from 'lucide-react';
 import type { CalendarEvent, Chore, FamilyScheduleColumn, Todo } from '@/types';
@@ -34,17 +35,94 @@ function formatTime(value: string): string {
     return new Date(value).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
 }
 
-/** Shared sx styles for clickable item cards inside a member column */
-const itemCardSx = {
+const ColumnBox = styled(Box)(({ theme }) => ({
+    borderRadius: (theme.shape.borderRadius as number) * 3,
+    border: `1px solid ${theme.palette.divider}`,
+}));
+
+const AvatarBox = styled(Box)({
+    borderRadius: '50%',
+    fontSize: '0.75rem',
+    fontWeight: 700,
+    color: '#fff',
+});
+
+const UserNameText = styled(Typography)({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontSize: '0.875rem',
+    fontWeight: 600,
+});
+
+const MetaText = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: '0.75rem',
+}));
+
+const CapsMetaText = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: '0.75rem',
+    textTransform: 'capitalize',
+}));
+
+const ProgressStatsBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
+
+const ProgressTrack = styled(Box)(({ theme }) => ({
+    height: 6,
     width: '100%',
-    borderRadius: 2,
-    p: 1,
+    overflow: 'hidden',
+    borderRadius: '9999px',
+    backgroundColor: theme.palette.action.selected,
+}));
+
+const ProgressFill = styled(Box)({
+    height: '100%',
+    borderRadius: '9999px',
+    transition: 'all 0.3s',
+});
+
+const ItemCard = styled(ButtonBase)(({ theme }) => ({
+    width: '100%',
+    borderRadius: (theme.shape.borderRadius as number) * 2,
+    padding: theme.spacing(1),
     textAlign: 'left',
     fontSize: '0.75rem',
     cursor: 'pointer',
     transition: 'opacity 0.15s',
     '&:hover': { opacity: 0.8 },
-} as const;
+}));
+
+const ItemTitle = styled(Box, { shouldForwardProp: (prop) => prop !== 'completed' })<{ completed?: boolean }>(({ theme, completed }) => ({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontWeight: 500,
+    ...(completed && {
+        color: theme.palette.text.secondary,
+        textDecoration: 'line-through',
+    }),
+}));
+
+const TruncatedMetaText = styled(Typography)(({ theme }) => ({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    color: theme.palette.text.secondary,
+    fontSize: '0.75rem',
+}));
+
+const EmptyText = styled(Typography)(({ theme }) => ({
+    textAlign: 'center',
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
 
 export default function MemberColumn({ column, onEventClick, onTodoClick, onChoreClick }: Props) {
     const { user, events, allDayEvents, todos, chores, totalItems, completedItems, completionPct, colorIndex } = column;
@@ -52,7 +130,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
     const isEmpty = totalItems === 0;
 
     return (
-        <Box
+        <ColumnBox
             sx={{
                 display: 'flex',
                 maxWidth: 280,
@@ -60,9 +138,6 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                 flex: 1,
                 flexDirection: 'column',
                 overflow: 'hidden',
-                borderRadius: 3,
-                border: 1,
-                borderColor: 'divider',
             }}
         >
             {/* Header */}
@@ -71,7 +146,7 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                 style={{ backgroundColor: `${color}22`, borderBottom: `3px solid ${color}` }}
             >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Box
+                    <AvatarBox
                         sx={{
                             display: 'flex',
                             width: 32,
@@ -79,122 +154,83 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                             flexShrink: 0,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            borderRadius: '50%',
-                            fontSize: '0.75rem',
-                            fontWeight: 700,
-                            color: '#fff',
                         }}
                         style={{ backgroundColor: color }}
                         aria-label={user.name}
                     >
                         {getInitials(user.name)}
-                    </Box>
+                    </AvatarBox>
                     <Box sx={{ minWidth: 0, flex: 1 }}>
-                        <Typography
-                            sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.875rem', fontWeight: 600 }}
-                        >
-                            {user.name}
-                        </Typography>
-                        <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                        <UserNameText>{user.name}</UserNameText>
+                        <MetaText>
                             {totalItems} item{totalItems !== 1 ? 's' : ''}
-                        </Typography>
+                        </MetaText>
                     </Box>
                 </Box>
                 {totalItems > 0 && (
                     <Box sx={{ mt: 0.5 }}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                fontSize: '0.75rem',
-                                color: 'text.secondary',
-                            }}
-                        >
+                        <ProgressStatsBox>
                             <Box component="span">{completedItems} done</Box>
                             <Box component="span">{completionPct}%</Box>
-                        </Box>
-                        <Box sx={{ mt: 0.5, height: 6, width: '100%', overflow: 'hidden', borderRadius: '9999px', bgcolor: 'action.selected' }}>
-                            <Box
-                                sx={{ height: '100%', borderRadius: '9999px', transition: 'all 0.3s' }}
-                                style={{ width: `${completionPct}%`, backgroundColor: color }}
-                            />
-                        </Box>
+                        </ProgressStatsBox>
+                        <ProgressTrack sx={{ mt: 0.5 }}>
+                            <ProgressFill style={{ width: `${completionPct}%`, backgroundColor: color }} />
+                        </ProgressTrack>
                     </Box>
                 )}
             </Box>
 
             {/* Items */}
             <Box sx={{ flex: 1, overflowY: 'auto', p: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                {isEmpty && (
-                    <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.75rem', color: 'text.secondary' }}>Nothing scheduled</Typography>
-                )}
+                {isEmpty && <EmptyText sx={{ py: 3 }}>Nothing scheduled</EmptyText>}
 
                 {/* Timed events */}
                 {events.map((event) => (
-                    <ButtonBase
+                    <ItemCard
                         key={`event-${event.id}`}
                         onClick={() => onEventClick?.(event)}
-                        sx={{
-                            ...itemCardSx,
+                        style={{
                             backgroundColor: `${event.color ?? color}22`,
                             borderLeft: `3px solid ${event.color ?? color}`,
                         }}
                     >
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                             <Clock style={{ width: 12, height: 12, flexShrink: 0, color: event.color ?? color }} />
-                            <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
-                                {event.title}
-                            </Box>
+                            <ItemTitle>{event.title}</ItemTitle>
                         </Box>
-                        <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>
+                        <MetaText sx={{ mt: 0.25 }}>
                             {formatTime(event.start_at)}
                             {event.end_at ? ` – ${formatTime(event.end_at)}` : ''}
-                        </Typography>
-                        {event.location && (
-                            <Typography
-                                sx={{
-                                    mt: 0.25,
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    color: 'text.secondary',
-                                    fontSize: '0.75rem',
-                                }}
-                            >
-                                {event.location}
-                            </Typography>
-                        )}
-                    </ButtonBase>
+                        </MetaText>
+                        {event.location && <TruncatedMetaText sx={{ mt: 0.25, overflow: 'hidden' }}>{event.location}</TruncatedMetaText>}
+                    </ItemCard>
                 ))}
 
                 {/* All-day events */}
                 {allDayEvents.map((event) => (
-                    <ButtonBase
+                    <ItemCard
                         key={`allday-${event.id}`}
                         onClick={() => onEventClick?.(event)}
-                        sx={{
-                            ...itemCardSx,
+                        style={{
                             backgroundColor: `${event.color ?? color}22`,
                             borderLeft: `3px solid ${event.color ?? color}`,
                         }}
                     >
-                        <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
-                            {event.title}
-                        </Box>
-                        <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>All day</Typography>
-                    </ButtonBase>
+                        <ItemTitle>{event.title}</ItemTitle>
+                        <MetaText sx={{ mt: 0.25 }}>All day</MetaText>
+                    </ItemCard>
                 ))}
 
                 {/* Todos */}
                 {todos.map((todo) => (
-                    <ButtonBase
+                    <ItemCard
                         key={`todo-${todo.id}`}
                         onClick={() => onTodoClick?.(todo)}
-                        sx={{
-                            ...itemCardSx,
-                            backgroundColor: todo.status === 'completed' ? 'action.disabledBackground' : 'var(--mui-palette-warning-main)22',
-                            borderLeft: `3px solid ${todo.status === 'completed' ? 'var(--mui-palette-action-disabled)' : 'var(--mui-palette-warning-main)'}`,
+                        style={{
+                            backgroundColor: todo.status === 'completed' ? alpha('#000', 0.08) : `${color}22`,
+                            borderLeft: `3px solid ${
+                                todo.status === 'completed' ? 'var(--mui-palette-action-disabled)' : 'var(--mui-palette-warning-main)'
+                            }`,
                         }}
                     >
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -203,55 +239,32 @@ export default function MemberColumn({ column, onEventClick, onTodoClick, onChor
                             ) : (
                                 <Circle style={{ width: 12, height: 12, flexShrink: 0, color: 'var(--mui-palette-warning-main)' }} />
                             )}
-                            <Box
-                                component="span"
-                                className={todo.status === 'completed' ? 'line-through' : undefined}
-                                sx={{
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    fontWeight: 500,
-                                    ...(todo.status === 'completed' ? { color: 'text.secondary', textDecoration: 'line-through' } : {}),
-                                }}
-                            >
-                                {todo.title}
-                            </Box>
+                            <ItemTitle completed={todo.status === 'completed'}>{todo.title}</ItemTitle>
                         </Box>
-                        {todo.due_date && (
-                            <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>{formatTime(todo.due_date)}</Typography>
-                        )}
-                        <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'capitalize' }}>
-                            {todo.priority} priority
-                        </Typography>
-                    </ButtonBase>
+                        {todo.due_date && <MetaText sx={{ mt: 0.25 }}>{formatTime(todo.due_date)}</MetaText>}
+                        <CapsMetaText sx={{ mt: 0.25 }}>{todo.priority} priority</CapsMetaText>
+                    </ItemCard>
                 ))}
 
                 {/* Chores */}
                 {chores.map((chore) => (
-                    <ButtonBase
+                    <ItemCard
                         key={`chore-${chore.id}`}
                         onClick={() => onChoreClick?.(chore)}
-                        sx={{
-                            ...itemCardSx,
-                            backgroundColor: 'var(--mui-palette-success-main)22',
+                        style={{
+                            backgroundColor: alpha('#10b981', 0.13),
                             borderLeft: '3px solid var(--mui-palette-success-main)',
                         }}
                     >
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                             <RefreshCw style={{ width: 12, height: 12, flexShrink: 0, color: 'var(--mui-palette-success-main)' }} />
-                            <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
-                                {chore.title}
-                            </Box>
+                            <ItemTitle>{chore.title}</ItemTitle>
                         </Box>
-                        {chore.next_due_date && (
-                            <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem' }}>{formatTime(chore.next_due_date)}</Typography>
-                        )}
-                        <Typography sx={{ mt: 0.25, color: 'text.secondary', fontSize: '0.75rem', textTransform: 'capitalize' }}>
-                            {chore.frequency}
-                        </Typography>
-                    </ButtonBase>
+                        {chore.next_due_date && <MetaText sx={{ mt: 0.25 }}>{formatTime(chore.next_due_date)}</MetaText>}
+                        <CapsMetaText sx={{ mt: 0.25 }}>{chore.frequency}</CapsMetaText>
+                    </ItemCard>
                 ))}
             </Box>
-        </Box>
+        </ColumnBox>
     );
 }
