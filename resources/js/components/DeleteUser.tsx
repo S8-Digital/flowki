@@ -181,6 +181,7 @@ export default function DeleteUser({ hasPasswordSet = true }: Props) {
                         )}
                     </DialogContent>
                 </Dialog>
-            </DeleteWarningBox>        </Stack>
+            </DeleteWarningBox>
+        </Stack>
     );
 }
