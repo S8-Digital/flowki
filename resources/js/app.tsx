@@ -43,6 +43,17 @@ initializeTheme();
 getFirebaseAnalytics();
 initializePerformanceMonitoring();
 
+// Register PWA service worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch((err) => {
+            if (import.meta.env.DEV) {
+                console.warn('[PWA] Service worker registration failed:', err);
+            }
+        });
+    });
+}
+
 // Track page views on every Inertia navigation
 router.on('navigate', (event) => {
     trackEvent('page_view', {
