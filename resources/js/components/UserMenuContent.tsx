@@ -1,5 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import { LogOut, Settings } from 'lucide-react';
 import { DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import UserInfo from '@/components/UserInfo';
@@ -12,6 +13,11 @@ interface UserMenuContentProps {
     user: User;
 }
 
+const MenuLabelContent = styled(Box)({
+    textAlign: 'left',
+    fontSize: '0.875rem',
+});
+
 export default function UserMenuContent({ user }: UserMenuContentProps) {
     function handleLogout() {
         router.flushAll();
@@ -21,9 +27,9 @@ export default function UserMenuContent({ user }: UserMenuContentProps) {
     return (
         <>
             <DropdownMenuLabel style={{ padding: 0, fontWeight: 400 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 0.5, py: 0.75, textAlign: 'left', fontSize: '0.875rem' }}>
+                <MenuLabelContent sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 0.5, py: 0.75 }}>
                     <UserInfo user={user} showEmail showAppearanceToggle />
-                </Box>
+                </MenuLabelContent>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild style={{ cursor: 'pointer' }}>

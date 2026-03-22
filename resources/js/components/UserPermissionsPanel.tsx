@@ -58,7 +58,7 @@ export default function UserPermissionsPanel({ permissionGroups, grantedPermissi
             {permissionGroups.map((group, index) => (
                 <Box key={group.group}>
                     {index > 0 && <Separator style={{ marginBottom: 24 }} />}
-                    <Typography variant="subtitle2" sx={{ mb: 1.5, color: 'var(--foreground)' }}>
+                    <Typography variant="subtitle2" sx={{ mb: 1.5 }} color="text.primary">
                         {groupLabels[group.group] ?? group.group}
                     </Typography>
                     <Stack spacing={1.5}>
