@@ -11,6 +11,7 @@ import { Bell, CalendarDays, CheckSquare, ChefHat, MessageSquare, RotateCcw, Shi
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { useRemoteConfig } from '@/hooks/useRemoteConfig';
+import { footerLinkSx, logoWordmarkSx, navLinkSx } from '@/lib/publicSx';
 import { login, privacy, register, terms } from '@/routes';
 
 /** Map of icon names (stored in Remote Config) to Lucide components */
@@ -127,33 +128,17 @@ export default function Welcome() {
                 >
                     <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'inherit' }}>
                         <AppLogoIcon style={{ width: 32, height: 32 }} />
-                        <Typography component="span" sx={{ fontSize: '1.125rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
+                        <Typography component="span" sx={logoWordmarkSx}>
                             Flowki
                         </Typography>
                     </Box>
                     <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
                         <AppearanceToggle />
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <MuiLink
-                                component={Link}
-                                href={login()}
-                                sx={{
-                                    fontSize: '0.875rem',
-                                    color: 'text.secondary',
-                                    textDecoration: 'none',
-                                    '&:hover': { color: 'text.primary' },
-                                    display: { xs: 'none', sm: 'inline' },
-                                }}
-                            >
+                            <MuiLink component={Link} href={login()} sx={{ ...navLinkSx, display: { xs: 'none', sm: 'inline' } }}>
                                 Log in
                             </MuiLink>
-                            <MuiButton
-                                component={Link}
-                                href={register()}
-                                variant="contained"
-                                size="small"
-                                sx={{ textTransform: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}
-                            >
+                            <MuiButton component={Link} href={register().url} variant="contained" size="small" sx={{ whiteSpace: 'nowrap' }}>
                                 Get started free
                             </MuiButton>
                         </Box>
@@ -181,16 +166,9 @@ export default function Welcome() {
                         sx={{ fontWeight: 500, bgcolor: 'primary.main', color: 'primary.contrastText', fontSize: '0.8rem', height: 28 }}
                     />
 
-                    <Stack spacing={2} sx={{ maxWidth: 760 }}>
-                        <Typography
-                            variant="h1"
-                            sx={{
-                                fontWeight: 800,
-                                letterSpacing: '-0.04em',
-                                lineHeight: 1.1,
-                                fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.25rem' },
-                            }}
-                        >
+                    <Stack alignItems="center" spacing={2} sx={{ maxWidth: 760 }}>
+                        {/* fontWeight/letterSpacing/lineHeight inherited from h1 theme variant */}
+                        <Typography variant="h1" sx={{ fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.25rem' } }}>
                             {heroHighlight ? (
                                 <>
                                     {headlinePrefix}{' '}
@@ -202,13 +180,13 @@ export default function Welcome() {
                                 heroHeadline
                             )}
                         </Typography>
+                        {/* lineHeight inherited from body1 theme variant */}
                         <Typography
                             sx={{
                                 mx: 'auto',
                                 maxWidth: 560,
                                 fontSize: { xs: '1.0625rem', sm: '1.25rem' },
                                 color: 'text.secondary',
-                                lineHeight: 1.6,
                                 whiteSpace: 'pre-line',
                             }}
                         >
@@ -217,24 +195,25 @@ export default function Welcome() {
                     </Stack>
 
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ width: '100%', maxWidth: 360 }}>
+                        {/* textTransform/fontWeight come from MuiButton theme override */}
                         <MuiButton
                             component={Link}
-                            href={register()}
+                            href={register().url}
                             variant="contained"
                             fullWidth
                             size="large"
-                            sx={{ textTransform: 'none', fontWeight: 700, fontSize: '1rem', py: 1.5 }}
+                            sx={{ fontSize: '1rem', py: 1.5 }}
                         >
                             {heroCTAPrimary}
                         </MuiButton>
                         <MuiButton
                             component={Link}
-                            href={login()}
+                            href={login().url}
                             variant="outlined"
                             fullWidth
                             size="large"
                             color="inherit"
-                            sx={{ textTransform: 'none', fontWeight: 600, fontSize: '1rem', py: 1.5 }}
+                            sx={{ fontSize: '1rem', py: 1.5 }}
                         >
                             {heroCTASecondary}
                         </MuiButton>
@@ -251,18 +230,20 @@ export default function Welcome() {
                     sx={{
                         px: { xs: 2, sm: 4, md: 6 },
                         py: { xs: 10, sm: 14 },
-                        bgcolor: 'background.paper',
+                        bgcolor: 'background.subtle',
                         borderTop: 1,
                         borderBottom: 1,
                         borderColor: 'divider',
                     }}
                 >
                     <Stack spacing={8} sx={{ maxWidth: 1024, mx: 'auto' }}>
-                        <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
-                            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: '0.12em' }}>
+                        <Stack spacing={1.5} alignItems="center" textAlign="center">
+                            {/* fontWeight/letterSpacing inherited from overline theme variant */}
+                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
                                 {featuresEyebrow}
                             </Typography>
-                            <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: '-0.03em', fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
+                            {/* fontWeight/letterSpacing inherited from h3 theme variant */}
+                            <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
                                 {featuresHeadline}
                             </Typography>
                             <Typography sx={{ color: 'text.secondary', maxWidth: 520, mx: 'auto', fontSize: '1.0625rem' }}>
@@ -270,13 +251,7 @@ export default function Welcome() {
                             </Typography>
                         </Stack>
 
-                        <Box
-                            sx={{
-                                display: 'grid',
-                                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
-                                gap: 3,
-                            }}
-                        >
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
                             {features.map((feature) => {
                                 const Icon = ICON_MAP[feature.icon] ?? CheckSquare;
 
@@ -293,7 +268,7 @@ export default function Welcome() {
                                             bgcolor: 'background.default',
                                             p: 3,
                                             transition: 'box-shadow 0.2s',
-                                            '&:hover': { boxShadow: '0 4px 24px rgba(0,0,0,0.07)' },
+                                            '&:hover': { boxShadow: 2 },
                                         }}
                                     >
                                         <Box
@@ -310,8 +285,12 @@ export default function Welcome() {
                                         >
                                             <Icon size={22} />
                                         </Box>
-                                        <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>{feature.name}</Typography>
-                                        <Typography sx={{ fontSize: '0.9rem', color: 'text.secondary', lineHeight: 1.6 }}>
+                                        {/* fontSize matches body1; fontWeight overrides body1 default of 400 */}
+                                        <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                                            {feature.name}
+                                        </Typography>
+                                        {/* fontSize/lineHeight from body2 theme variant */}
+                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                             {feature.description}
                                         </Typography>
                                     </Box>
@@ -322,13 +301,13 @@ export default function Welcome() {
                 </Box>
 
                 {/* ── How it works ── */}
-                <Box component="section" sx={{ px: { xs: 2, sm: 4, md: 6 }, py: { xs: 10, sm: 14 }, bgcolor: 'background.default' }}>
+                <Box component="section" sx={{ px: { xs: 2, sm: 4, md: 6 }, py: { xs: 10, sm: 14 }, bgcolor: 'background.paper' }}>
                     <Stack spacing={8} sx={{ maxWidth: 840, mx: 'auto' }}>
                         <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
-                            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: '0.12em' }}>
+                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
                                 {stepsEyebrow}
                             </Typography>
-                            <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: '-0.03em', fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
+                            <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
                                 {stepsHeadline}
                             </Typography>
                         </Stack>
@@ -350,14 +329,17 @@ export default function Welcome() {
                                             borderRadius: '50%',
                                             bgcolor: 'primary.main',
                                             color: 'primary.contrastText',
-                                            fontWeight: 800,
+                                            fontWeight: 'bold',
                                             fontSize: '1.25rem',
                                         }}
                                     >
                                         {s.step}
                                     </Box>
                                     <Typography sx={{ fontWeight: 700, fontSize: '1.0625rem' }}>{s.title}</Typography>
-                                    <Typography sx={{ fontSize: '0.9rem', color: 'text.secondary', lineHeight: 1.6 }}>{s.body}</Typography>
+                                    {/* fontSize/lineHeight from body2 theme variant */}
+                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                        {s.body}
+                                    </Typography>
                                     {i < steps.length - 1 && (
                                         <Divider sx={{ display: { xs: 'block', md: 'none' }, width: '100%', borderStyle: 'dashed', opacity: 0.4 }} />
                                     )}
@@ -373,7 +355,7 @@ export default function Welcome() {
                     sx={{
                         px: { xs: 2, sm: 4, md: 6 },
                         py: { xs: 10, sm: 14 },
-                        bgcolor: 'background.paper',
+                        bgcolor: 'background.subtle',
                         borderTop: 1,
                         borderBottom: 1,
                         borderColor: 'divider',
@@ -381,10 +363,10 @@ export default function Welcome() {
                 >
                     <Stack spacing={8} sx={{ maxWidth: 1024, mx: 'auto' }}>
                         <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
-                            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: '0.12em' }}>
+                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
                                 {benefitsEyebrow}
                             </Typography>
-                            <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: '-0.03em', fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
+                            <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
                                 {benefitsHeadline}
                             </Typography>
                         </Stack>
@@ -409,11 +391,13 @@ export default function Welcome() {
                                                 borderColor: 'divider',
                                             }}
                                         >
-                                            <Icon size={20} color="var(--mui-palette-primary-main)" />
+                                            <Icon size={20} />
                                         </Box>
                                         <Stack spacing={0.5}>
-                                            <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>{b.title}</Typography>
-                                            <Typography sx={{ fontSize: '0.9rem', color: 'text.secondary', lineHeight: 1.6 }}>
+                                            <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                                                {b.title}
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                                 {b.description}
                                             </Typography>
                                         </Stack>
@@ -439,27 +423,25 @@ export default function Welcome() {
                     }}
                 >
                     <Stack spacing={2} sx={{ maxWidth: 600 }}>
-                        <Typography variant="h2" sx={{ fontWeight: 800, letterSpacing: '-0.03em', fontSize: { xs: '2rem', sm: '2.75rem' } }}>
+                        {/* fontWeight/letterSpacing inherited from h2 theme variant */}
+                        <Typography variant="h2" sx={{ fontSize: { xs: '2rem', sm: '2.75rem' } }}>
                             {ctaHeadline}
                         </Typography>
-                        <Typography sx={{ color: 'text.secondary', fontSize: '1.0625rem', lineHeight: 1.6 }}>{ctaSubheadline}</Typography>
+                        {/* lineHeight inherited from body1 theme variant */}
+                        <Typography sx={{ color: 'text.secondary', fontSize: '1.0625rem' }}>{ctaSubheadline}</Typography>
                     </Stack>
 
                     <MuiButton
                         component={Link}
-                        href={register()}
+                        href={register().url}
                         variant="contained"
                         size="large"
-                        sx={{ textTransform: 'none', fontWeight: 700, fontSize: '1.0625rem', px: 5, py: 1.75 }}
+                        sx={{ fontSize: '1.0625rem', px: 5, py: 1.75 }}
                     >
                         {ctaButton}
                     </MuiButton>
 
-                    <MuiLink
-                        component={Link}
-                        href={login()}
-                        sx={{ fontSize: '0.875rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
-                    >
+                    <MuiLink component={Link} href={login()} sx={navLinkSx}>
                         {ctaSigninLink}
                     </MuiLink>
                 </Box>
@@ -475,30 +457,18 @@ export default function Welcome() {
                         </Box>
 
                         <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" justifyContent="center">
-                            <MuiLink
-                                component={Link}
-                                href={privacy()}
-                                sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
-                            >
+                            <MuiLink component={Link} href={privacy()} sx={footerLinkSx}>
                                 Privacy Policy
                             </MuiLink>
-                            <MuiLink
-                                component={Link}
-                                href={terms()}
-                                sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
-                            >
+                            <MuiLink component={Link} href={terms()} sx={footerLinkSx}>
                                 Terms of Service
                             </MuiLink>
-                            <MuiLink
-                                component={Link}
-                                href={login()}
-                                sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
-                            >
+                            <MuiLink component={Link} href={login()} sx={footerLinkSx}>
                                 Sign in
                             </MuiLink>
                         </Stack>
 
-                        <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                             © {new Date().getFullYear()} Flowki. All rights reserved.
                         </Typography>
                     </Stack>

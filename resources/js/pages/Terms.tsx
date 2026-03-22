@@ -5,41 +5,12 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogoIcon from '@/components/AppLogoIcon';
+import { Li, P, Section, Ul } from '@/components/PublicLegal';
+import { footerLinkSx, logoWordmarkSx } from '@/lib/publicSx';
 import { privacy } from '@/routes';
 
 const EFFECTIVE_DATE = '22 March 2025';
 const CONTACT_EMAIL = 'legal@flowki.app';
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-    return (
-        <Stack spacing={1.5}>
-            <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '1.0625rem' }}>
-                {title}
-            </Typography>
-            {children}
-        </Stack>
-    );
-}
-
-function P({ children }: { children: React.ReactNode }) {
-    return <Typography sx={{ fontSize: '0.9375rem', color: 'text.secondary', lineHeight: 1.75 }}>{children}</Typography>;
-}
-
-function Ul({ children }: { children: React.ReactNode }) {
-    return (
-        <Box component="ul" sx={{ m: 0, pl: 3, '& li': { mb: 0.5 } }}>
-            {children}
-        </Box>
-    );
-}
-
-function Li({ children }: { children: React.ReactNode }) {
-    return (
-        <Typography component="li" sx={{ fontSize: '0.9375rem', color: 'text.secondary', lineHeight: 1.75 }}>
-            {children}
-        </Typography>
-    );
-}
 
 export default function Terms() {
     return (
@@ -66,7 +37,7 @@ export default function Terms() {
                 >
                     <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'inherit' }}>
                         <AppLogoIcon style={{ width: 32, height: 32 }} />
-                        <Typography component="span" sx={{ fontSize: '1.125rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
+                        <Typography component="span" sx={logoWordmarkSx}>
                             Flowki
                         </Typography>
                     </Box>
@@ -77,10 +48,12 @@ export default function Terms() {
                 <Box component="main" sx={{ flex: 1, px: { xs: 2, sm: 4 }, py: { xs: 6, sm: 10 } }}>
                     <Stack spacing={6} sx={{ maxWidth: 720, mx: 'auto' }}>
                         <Stack spacing={1}>
-                            <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-0.03em' }}>
-                                Terms of Service
+                            {/* fontWeight/letterSpacing inherited from h4 theme variant */}
+                            <Typography variant="h4">Terms of Service</Typography>
+                            {/* fontSize/lineHeight from body2 theme variant */}
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                Effective date: {EFFECTIVE_DATE}
                             </Typography>
-                            <Typography sx={{ fontSize: '0.9rem', color: 'text.secondary' }}>Effective date: {EFFECTIVE_DATE}</Typography>
                         </Stack>
 
                         <P>
@@ -209,21 +182,15 @@ export default function Terms() {
                 {/* Footer */}
                 <Box component="footer" sx={{ borderTop: 1, borderColor: 'divider', px: { xs: 2, sm: 4 }, py: 3, bgcolor: 'background.paper' }}>
                     <Stack direction="row" spacing={2} alignItems="center" justifyContent="center" flexWrap="wrap">
-                        <MuiLink
-                            component={Link}
-                            href="/"
-                            sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
-                        >
+                        <MuiLink component={Link} href="/" sx={footerLinkSx}>
                             Home
                         </MuiLink>
-                        <MuiLink
-                            component={Link}
-                            href={privacy()}
-                            sx={{ fontSize: '0.8125rem', color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
-                        >
+                        <MuiLink component={Link} href={privacy()} sx={footerLinkSx}>
                             Privacy Policy
                         </MuiLink>
-                        <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>© {new Date().getFullYear()} Flowki</Typography>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                            © {new Date().getFullYear()} Flowki
+                        </Typography>
                     </Stack>
                 </Box>
             </Box>

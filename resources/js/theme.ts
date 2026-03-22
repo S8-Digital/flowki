@@ -15,6 +15,15 @@ const sharedTypography = {
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightBold: 700,
+    // Heading styles — baked in so components don't repeat these values individually.
+    h1: { fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1 },
+    h2: { fontWeight: 800, letterSpacing: '-0.03em' },
+    h3: { fontWeight: 800, letterSpacing: '-0.03em' },
+    h4: { fontWeight: 800, letterSpacing: '-0.03em' },
+    h6: { fontWeight: 700 },
+    overline: { fontWeight: 700, letterSpacing: '0.12em' },
+    body1: { lineHeight: 1.6 },
+    body2: { lineHeight: 1.6 },
 };
 
 const sharedShape = { borderRadius: 8 };
@@ -55,7 +64,7 @@ const sharedComponents = {
         styleOverrides: {
             root: {
                 textTransform: 'none',
-                fontWeight: 500,
+                fontWeight: 700,
             },
         },
     },
@@ -113,6 +122,7 @@ export function createAppTheme(mode: 'light' | 'dark'): Theme {
             background: {
                 default: isDark ? 'hsl(40, 6%, 10%)' : 'hsl(0, 0%, 100%)',
                 paper: isDark ? 'hsl(40, 6%, 13%)' : 'hsl(0, 0%, 100%)',
+                subtle: isDark ? 'hsl(207, 40%, 12%)' : 'hsl(207, 55%, 96%)',
             },
             text: {
                 primary: isDark ? 'hsl(40, 12%, 94%)' : 'hsl(220, 15%, 12%)',

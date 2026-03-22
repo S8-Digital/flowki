@@ -19,3 +19,9 @@ declare module '@inertiajs/core' {
         sharedPageProps: AppPageProps;
     }
 }
+
+declare module '@mui/material/styles' {
+    interface TypeBackground {
+        subtle: string;
+    }
+}
