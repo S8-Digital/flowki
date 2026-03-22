@@ -20,7 +20,7 @@ const features = [
 export default function Welcome() {
     return (
         <>
-            <Head title="Family Organizer" />
+            <Head title="Flowki" />
 
             <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary' }}>
                 <Box
@@ -37,7 +37,7 @@ export default function Welcome() {
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '1.125rem', fontWeight: 700 }}>
                         <Users size={20} color="var(--mui-palette-primary-main)" />
-                        Family Organizer
+                        Flowki
                     </Box>
                     <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <AppearanceToggle />
