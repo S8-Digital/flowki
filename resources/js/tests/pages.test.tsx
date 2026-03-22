@@ -78,7 +78,7 @@ describe('Welcome page', () => {
 
     it('renders a Get Started / Create your family link', () => {
         render(<Welcome />);
-        expect(screen.getByRole('link', { name: /get started free/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Get started free/i })).toBeInTheDocument();
     });
 
     it('renders feature cards', () => {
