@@ -365,12 +365,8 @@ export default function ChoresIndex({ chores, members }: Props) {
                                     key={member.id}
                                     type="button"
                                     onClick={() => toggleMember(member.id)}
+                                    sx={{ gap: 0.75, px: 1.25, py: 0.5 }}
                                     style={{
-                                        gap: '6px',
-                                        paddingLeft: '10px',
-                                        paddingRight: '10px',
-                                        paddingTop: '4px',
-                                        paddingBottom: '4px',
                                         borderColor: color,
                                         color: hidden ? undefined : color,
                                         backgroundColor: hidden ? undefined : `${color}15`,
@@ -388,12 +384,8 @@ export default function ChoresIndex({ chores, members }: Props) {
                         <MemberToggleButton
                             type="button"
                             onClick={() => toggleMember(UNASSIGNED_ID)}
+                            sx={{ gap: 0.75, px: 1.25, py: 0.5 }}
                             style={{
-                                gap: '6px',
-                                paddingLeft: '10px',
-                                paddingRight: '10px',
-                                paddingTop: '4px',
-                                paddingBottom: '4px',
                                 borderColor: '#94a3b8',
                                 color: hiddenMembers.has(UNASSIGNED_ID) ? undefined : '#94a3b8',
                                 backgroundColor: hiddenMembers.has(UNASSIGNED_ID) ? undefined : '#94a3b815',
