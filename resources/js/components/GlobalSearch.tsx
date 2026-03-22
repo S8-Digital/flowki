@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import { Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -17,6 +18,64 @@ interface SearchResults {
     recipes: Array<{ id: number; title: string }>;
     shopping_items: Array<{ id: number; name: string }>;
 }
+
+const SearchOverlay = styled(Box)({
+    position: 'absolute',
+    inset: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    backdropFilter: 'blur(4px)',
+    cursor: 'pointer',
+});
+
+const SearchPanel = styled(Box)(({ theme }) => ({
+    position: 'relative',
+    zIndex: 10,
+    width: '100%',
+    maxWidth: '32rem',
+    borderRadius: 12,
+    border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[24],
+}));
+
+const SearchInputWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1.5),
+    paddingBottom: theme.spacing(1.5),
+}));
+
+const SearchEmptyState = styled('p')(({ theme }) => ({
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+    margin: 0,
+}));
+
+const SearchSectionHeader = styled('p')(({ theme }) => ({
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    letterSpacing: '0.05em',
+    color: theme.palette.text.secondary,
+    textTransform: 'uppercase',
+    margin: 0,
+}));
+
+const SearchResultItem = styled(Box, { shouldForwardProp: (prop) => prop !== 'muted' })<{ muted?: boolean }>(({ theme, muted }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    borderRadius: 6,
+    fontSize: '0.875rem',
+    textDecoration: 'none',
+    color: muted ? theme.palette.text.secondary : 'inherit',
+    ...(!muted && { '&:hover': { backgroundColor: theme.palette.action.hover } }),
+    margin: 0,
+})) as React.ComponentType<React.ComponentProps<typeof Box> & { muted?: boolean }>;
 
 export default function GlobalSearch() {
     const [isOpen, setIsOpen] = useState(false);
@@ -81,32 +140,10 @@ export default function GlobalSearch() {
                             pt: '80px',
                         }}
                     >
-                        <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={close} />
+                        <SearchOverlay onClick={close} />
 
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                zIndex: 10,
-                                width: '100%',
-                                maxWidth: '32rem',
-                                borderRadius: '12px',
-                                border: '1px solid',
-                                borderColor: 'var(--border)',
-                                bgcolor: 'var(--background)',
-                                boxShadow: 24,
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    borderBottom: '1px solid',
-                                    borderColor: 'var(--border)',
-                                    px: 2,
-                                    py: 1.5,
-                                }}
-                            >
+                        <SearchPanel>
+                            <SearchInputWrapper>
                                 <Search style={{ width: 16, height: 16, flexShrink: 0, color: 'var(--muted-foreground)' }} />
                                 <Input
                                     value={query}
@@ -118,244 +155,99 @@ export default function GlobalSearch() {
                                 <Button variant="ghost" size="icon" style={{ width: 24, height: 24, flexShrink: 0 }} onClick={close}>
                                     <X style={{ width: 16, height: 16 }} />
                                 </Button>
-                            </Box>
+                            </SearchInputWrapper>
 
                             <Box sx={{ maxHeight: '24rem', overflowY: 'auto', p: 1 }}>
-                                {isLoading && (
-                                    <Box
-                                        component="p"
-                                        sx={{ py: 2, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)', m: 0 }}
-                                    >
-                                        Searching…
-                                    </Box>
-                                )}
+                                {isLoading && <SearchEmptyState sx={{ py: 2 }}>Searching…</SearchEmptyState>}
 
                                 {!isLoading && query.length >= 2 && !hasResults && (
-                                    <Box
-                                        component="p"
-                                        sx={{ py: 2, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)', m: 0 }}
-                                    >
-                                        No results for &ldquo;{query}&rdquo;
-                                    </Box>
+                                    <SearchEmptyState sx={{ py: 2 }}>No results for &ldquo;{query}&rdquo;</SearchEmptyState>
                                 )}
 
                                 {results && (
                                     <>
                                         {results.todos.length > 0 && (
                                             <Box>
-                                                <Box
-                                                    component="p"
-                                                    sx={{
-                                                        px: 1,
-                                                        pt: 1,
-                                                        pb: 0.5,
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 600,
-                                                        letterSpacing: '0.05em',
-                                                        color: 'var(--muted-foreground)',
-                                                        textTransform: 'uppercase',
-                                                        m: 0,
-                                                    }}
-                                                >
-                                                    Todos
-                                                </Box>
+                                                <SearchSectionHeader sx={{ px: 1, pt: 1, pb: 0.5 }}>Todos</SearchSectionHeader>
                                                 {results.todos.map((t) => (
-                                                    <Box
+                                                    <SearchResultItem
                                                         key={t.id}
                                                         component={Link as React.ElementType}
                                                         href={todoIndex().url}
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 1,
-                                                            borderRadius: 1.5,
-                                                            px: 1,
-                                                            py: '6px',
-                                                            fontSize: '0.875rem',
-                                                            textDecoration: 'none',
-                                                            color: 'inherit',
-                                                            '&:hover': { bgcolor: 'var(--accent)' },
-                                                        }}
+                                                        sx={{ px: 1, py: '6px' }}
                                                         onClick={close}
                                                     >
                                                         {t.title}
-                                                    </Box>
+                                                    </SearchResultItem>
                                                 ))}
                                             </Box>
                                         )}
 
                                         {results.chores.length > 0 && (
                                             <Box>
-                                                <Box
-                                                    component="p"
-                                                    sx={{
-                                                        px: 1,
-                                                        pt: 1,
-                                                        pb: 0.5,
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 600,
-                                                        letterSpacing: '0.05em',
-                                                        color: 'var(--muted-foreground)',
-                                                        textTransform: 'uppercase',
-                                                        m: 0,
-                                                    }}
-                                                >
-                                                    Chores
-                                                </Box>
+                                                <SearchSectionHeader sx={{ px: 1, pt: 1, pb: 0.5 }}>Chores</SearchSectionHeader>
                                                 {results.chores.map((c) => (
-                                                    <Box
+                                                    <SearchResultItem
                                                         key={c.id}
                                                         component={Link as React.ElementType}
                                                         href={choreIndex().url}
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 1,
-                                                            borderRadius: 1.5,
-                                                            px: 1,
-                                                            py: '6px',
-                                                            fontSize: '0.875rem',
-                                                            textDecoration: 'none',
-                                                            color: 'inherit',
-                                                            '&:hover': { bgcolor: 'var(--accent)' },
-                                                        }}
+                                                        sx={{ px: 1, py: '6px' }}
                                                         onClick={close}
                                                     >
                                                         {c.title}
-                                                    </Box>
+                                                    </SearchResultItem>
                                                 ))}
                                             </Box>
                                         )}
 
                                         {results.events.length > 0 && (
                                             <Box>
-                                                <Box
-                                                    component="p"
-                                                    sx={{
-                                                        px: 1,
-                                                        pt: 1,
-                                                        pb: 0.5,
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 600,
-                                                        letterSpacing: '0.05em',
-                                                        color: 'var(--muted-foreground)',
-                                                        textTransform: 'uppercase',
-                                                        m: 0,
-                                                    }}
-                                                >
-                                                    Events
-                                                </Box>
+                                                <SearchSectionHeader sx={{ px: 1, pt: 1, pb: 0.5 }}>Events</SearchSectionHeader>
                                                 {results.events.map((e) => (
-                                                    <Box
+                                                    <SearchResultItem
                                                         key={e.id}
                                                         component={Link as React.ElementType}
                                                         href={calendarIndex().url}
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 1,
-                                                            borderRadius: 1.5,
-                                                            px: 1,
-                                                            py: '6px',
-                                                            fontSize: '0.875rem',
-                                                            textDecoration: 'none',
-                                                            color: 'inherit',
-                                                            '&:hover': { bgcolor: 'var(--accent)' },
-                                                        }}
+                                                        sx={{ px: 1, py: '6px' }}
                                                         onClick={close}
                                                     >
                                                         {e.title}
-                                                    </Box>
+                                                    </SearchResultItem>
                                                 ))}
                                             </Box>
                                         )}
 
                                         {results.recipes.length > 0 && (
                                             <Box>
-                                                <Box
-                                                    component="p"
-                                                    sx={{
-                                                        px: 1,
-                                                        pt: 1,
-                                                        pb: 0.5,
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 600,
-                                                        letterSpacing: '0.05em',
-                                                        color: 'var(--muted-foreground)',
-                                                        textTransform: 'uppercase',
-                                                        m: 0,
-                                                    }}
-                                                >
-                                                    Recipes
-                                                </Box>
+                                                <SearchSectionHeader sx={{ px: 1, pt: 1, pb: 0.5 }}>Recipes</SearchSectionHeader>
                                                 {results.recipes.map((r) => (
-                                                    <Box
+                                                    <SearchResultItem
                                                         key={r.id}
                                                         component={Link as React.ElementType}
                                                         href={recipeShow(r.id).url}
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 1,
-                                                            borderRadius: 1.5,
-                                                            px: 1,
-                                                            py: '6px',
-                                                            fontSize: '0.875rem',
-                                                            textDecoration: 'none',
-                                                            color: 'inherit',
-                                                            '&:hover': { bgcolor: 'var(--accent)' },
-                                                        }}
+                                                        sx={{ px: 1, py: '6px' }}
                                                         onClick={close}
                                                     >
                                                         {r.title}
-                                                    </Box>
+                                                    </SearchResultItem>
                                                 ))}
                                             </Box>
                                         )}
 
                                         {results.shopping_items.length > 0 && (
                                             <Box>
-                                                <Box
-                                                    component="p"
-                                                    sx={{
-                                                        px: 1,
-                                                        pt: 1,
-                                                        pb: 0.5,
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 600,
-                                                        letterSpacing: '0.05em',
-                                                        color: 'var(--muted-foreground)',
-                                                        textTransform: 'uppercase',
-                                                        m: 0,
-                                                    }}
-                                                >
-                                                    Shopping Items
-                                                </Box>
+                                                <SearchSectionHeader sx={{ px: 1, pt: 1, pb: 0.5 }}>Shopping Items</SearchSectionHeader>
                                                 {results.shopping_items.map((item) => (
-                                                    <Box
-                                                        key={item.id}
-                                                        component="p"
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: 1,
-                                                            borderRadius: 1.5,
-                                                            px: 1,
-                                                            py: '6px',
-                                                            fontSize: '0.875rem',
-                                                            color: 'var(--muted-foreground)',
-                                                            m: 0,
-                                                        }}
-                                                    >
+                                                    <SearchResultItem key={item.id} muted component="p" sx={{ px: 1, py: '6px' }}>
                                                         {item.name}
-                                                    </Box>
+                                                    </SearchResultItem>
                                                 ))}
                                             </Box>
                                         )}
                                     </>
                                 )}
                             </Box>
-                        </Box>
+                        </SearchPanel>
                     </Box>,
                     document.body,
                 )}

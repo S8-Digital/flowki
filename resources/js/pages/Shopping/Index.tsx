@@ -153,7 +153,7 @@ export default function ShoppingIndex({ lists }: Props) {
                                     <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                                         <Box>
                                             <Typography sx={{ fontWeight: 500 }}>{list.name}</Typography>
-                                            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                                 {list.items_count ?? 0} items{list.is_shared && ' · Shared'}
                                             </Typography>
                                         </Box>

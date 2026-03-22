@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
+import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { CalendarDays, FileText, Upload, X } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -16,6 +17,90 @@ interface Props {
 
 const ACCEPTED_TYPES = '.txt,.csv,.jpg,.jpeg,.png,.gif,.webp,.pdf';
 const MAX_SIZE_MB = 10;
+
+const DropZone = styled(Box, { shouldForwardProp: (prop) => prop !== 'isDragging' })<{ isDragging?: boolean }>(({ theme, isDragging }) => ({
+    cursor: 'pointer',
+    transition: 'border-color 0.2s, background-color 0.2s',
+    borderRadius: (theme.shape.borderRadius as number) * 3,
+    border: '2px dashed',
+    borderColor: isDragging ? theme.palette.primary.main : theme.palette.text.secondary,
+    backgroundColor: isDragging ? alpha(theme.palette.primary.main, 0.05) : 'transparent',
+    '&:hover': {
+        borderColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
+
+const ErrorBox = styled(Box)(({ theme }) => ({
+    borderRadius: (theme.shape.borderRadius as number) * 2,
+    border: `1px solid ${theme.palette.error.light}`,
+    backgroundColor: alpha(theme.palette.error.main, 0.1),
+    fontSize: '0.875rem',
+    color: theme.palette.error.main,
+}));
+
+const PreviewList = styled('ul')(({ theme }) => ({
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: (theme.shape.borderRadius as number) * 2,
+    '& > li + li': {
+        borderTop: `1px solid ${theme.palette.divider}`,
+    },
+}));
+
+const PreviewItemTitle = styled(Typography)({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+});
+
+const ItemMetaBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
+
+const AllDayBadge = styled('span')(({ theme }) => ({
+    borderRadius: (theme.shape.borderRadius as number) * 0.5,
+    backgroundColor: theme.palette.action.selected,
+    fontSize: '0.625rem',
+}));
+
+const RemoveButton = styled(ButtonBase)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius as number,
+    color: theme.palette.text.secondary,
+    '&:hover': {
+        backgroundColor: theme.palette.error.light,
+        color: theme.palette.error.main,
+    },
+}));
+
+const DescriptionText = styled(Typography)(({ theme }) => ({
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const DropZoneTitle = styled(Typography)({
+    fontSize: '0.875rem',
+    fontWeight: 500,
+});
+
+const SmallSecondaryText = styled(Typography)(({ theme }) => ({
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
+
+const CenteredSecondaryText = styled(Typography)(({ theme }) => ({
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
 
 function formatShiftTime(shift: ParsedShift): string {
     if (shift.is_all_day) {
@@ -181,32 +266,17 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
 
                 {step === 'upload' && (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+                        <DescriptionText>
                             Upload your schedule file to auto-populate your calendar. Accepted formats: plain text (.txt, .csv), images (.jpg, .png),
                             and PDFs. Works great with work rosters, shift schedules, and timetables.
-                        </Typography>
+                        </DescriptionText>
 
                         {/* Drop zone */}
-                        <Box
+                        <DropZone
+                            isDragging={isDragging}
                             role="button"
                             tabIndex={0}
-                            sx={{
-                                display: 'flex',
-                                cursor: 'pointer',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: 3,
-                                border: '2px dashed',
-                                borderColor: isDragging ? 'primary.main' : 'var(--muted-foreground)',
-                                bgcolor: isDragging ? 'rgba(var(--primary-rgb), 0.05)' : 'transparent',
-                                p: 5,
-                                transition: 'color 0.2s, background-color 0.2s',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    bgcolor: 'var(--muted)',
-                                },
-                            }}
+                            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 5 }}
                             onClick={() => fileInputRef.current?.click()}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' || e.key === ' ') {
@@ -223,12 +293,12 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                             aria-label="Drop schedule file here or click to browse"
                         >
                             <Upload size={40} style={{ marginBottom: 12, color: 'var(--mui-palette-text-secondary)' }} />
-                            <Typography sx={{ fontSize: '0.875rem', fontWeight: 500 }}>Drop your schedule file here</Typography>
-                            <Typography sx={{ mt: 0.5, fontSize: '0.75rem', color: 'text.secondary' }}>or click to browse</Typography>
-                            <Typography sx={{ mt: 1.5, fontSize: '0.75rem', color: 'text.secondary' }}>
+                            <DropZoneTitle>Drop your schedule file here</DropZoneTitle>
+                            <SmallSecondaryText sx={{ mt: 0.5 }}>or click to browse</SmallSecondaryText>
+                            <SmallSecondaryText sx={{ mt: 1.5 }}>
                                 {ACCEPTED_TYPES.replace(/\./g, '').toUpperCase().replace(/,/g, ', ')} · max {MAX_SIZE_MB} MB
-                            </Typography>
-                        </Box>
+                            </SmallSecondaryText>
+                        </DropZone>
 
                         <Box
                             component="input"
@@ -240,59 +310,28 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                             aria-hidden="true"
                         />
 
-                        {isLoading && (
-                            <Typography sx={{ textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>
-                                Parsing your schedule…
-                            </Typography>
-                        )}
+                        {isLoading && <CenteredSecondaryText>Parsing your schedule…</CenteredSecondaryText>}
 
-                        {error && (
-                            <Box
-                                sx={{
-                                    borderRadius: 2,
-                                    border: '1px solid',
-                                    borderColor: 'error.light',
-                                    bgcolor: 'rgba(var(--destructive-rgb), 0.1)',
-                                    p: 1.5,
-                                    fontSize: '0.875rem',
-                                    color: 'error.main',
-                                }}
-                            >
-                                {error}
-                            </Box>
-                        )}
+                        {error && <ErrorBox sx={{ p: 1.5 }}>{error}</ErrorBox>}
                     </Box>
                 )}
 
                 {step === 'preview' && (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+                            <DescriptionText>
                                 {items.length} shift{items.length !== 1 ? 's' : ''} found. Remove any you don't want to import, then click{' '}
                                 <strong>Import</strong>.
-                            </Typography>
-                            <Button variant="ghost" size="sm" onClick={() => setStep('upload')} sx={{ fontSize: '0.75rem' }}>
+                            </DescriptionText>
+                            <Button variant="ghost" size="sm" onClick={() => setStep('upload')} style={{ fontSize: '0.75rem' }}>
                                 ← Re-upload
                             </Button>
                         </Box>
 
                         {items.length === 0 ? (
-                            <Typography sx={{ py: 3, textAlign: 'center', fontSize: '0.875rem', color: 'text.secondary' }}>
-                                All shifts removed. Re-upload a file or close.
-                            </Typography>
+                            <CenteredSecondaryText sx={{ py: 3 }}>All shifts removed. Re-upload a file or close.</CenteredSecondaryText>
                         ) : (
-                            <Box
-                                component="ul"
-                                sx={{
-                                    m: 0,
-                                    p: 0,
-                                    listStyle: 'none',
-                                    border: '1px solid',
-                                    borderColor: 'var(--border)',
-                                    borderRadius: 2,
-                                    '& > li + li': { borderTop: 1, borderColor: 'divider' },
-                                }}
-                            >
+                            <PreviewList>
                                 {items.map((item) => (
                                     <Box
                                         component="li"
@@ -307,63 +346,23 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
                                         }}
                                     >
                                         <Box sx={{ minWidth: 0 }}>
-                                            <Typography
-                                                sx={{
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    fontSize: '0.875rem',
-                                                    fontWeight: 500,
-                                                }}
-                                            >
-                                                {item.title}
-                                            </Typography>
-                                            <Box
-                                                sx={{
-                                                    mt: 0.25,
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: 0.5,
-                                                    fontSize: '0.75rem',
-                                                    color: 'text.secondary',
-                                                }}
-                                            >
+                                            <PreviewItemTitle>{item.title}</PreviewItemTitle>
+                                            <ItemMetaBox sx={{ mt: 0.25 }}>
                                                 <FileText style={{ width: 12, height: 12, flexShrink: 0 }} />
                                                 {formatShiftTime(item)}
-                                                {item.is_all_day && (
-                                                    <Box
-                                                        component="span"
-                                                        sx={{
-                                                            ml: 0.5,
-                                                            borderRadius: 0.5,
-                                                            bgcolor: 'var(--muted)',
-                                                            px: 0.5,
-                                                            py: 0.25,
-                                                            fontSize: '0.625rem',
-                                                        }}
-                                                    >
-                                                        All day
-                                                    </Box>
-                                                )}
-                                            </Box>
+                                                {item.is_all_day && <AllDayBadge style={{ marginLeft: 4, padding: '1px 4px' }}>All day</AllDayBadge>}
+                                            </ItemMetaBox>
                                         </Box>
-                                        <ButtonBase
+                                        <RemoveButton
                                             onClick={() => removeItem(item._key)}
                                             aria-label={`Remove ${item.title}`}
-                                            sx={{
-                                                mt: 0.25,
-                                                flexShrink: 0,
-                                                borderRadius: 1,
-                                                p: 0.5,
-                                                color: 'text.secondary',
-                                                '&:hover': { bgcolor: 'error.light', color: 'error.main' },
-                                            }}
+                                            sx={{ mt: 0.25, flexShrink: 0, p: 0.5 }}
                                         >
                                             <X style={{ width: 14, height: 14 }} />
-                                        </ButtonBase>
+                                        </RemoveButton>
                                     </Box>
                                 ))}
-                            </Box>
+                            </PreviewList>
                         )}
 
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, pt: 0.5 }}>

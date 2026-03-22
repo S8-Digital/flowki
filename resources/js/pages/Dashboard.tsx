@@ -272,7 +272,7 @@ export default function Dashboard({
                                     textAlign: 'center',
                                 }}
                             >
-                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                <Typography variant="body2" color="text.secondary">
                                     No widgets yet.
                                 </Typography>
                                 <Button variant="outline" size="sm" className="mt-3" onClick={() => setAddOpen(true)}>

@@ -172,7 +172,7 @@ export default function Welcome() {
                             {heroHighlight ? (
                                 <>
                                     {headlinePrefix}{' '}
-                                    <Box component="span" sx={{ color: 'primary.main' }}>
+                                    <Box component="span" color="primary.main">
                                         {heroHighlight}
                                     </Box>
                                 </>
@@ -219,7 +219,7 @@ export default function Welcome() {
                         </MuiButton>
                     </Stack>
 
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    <Typography variant="caption" color="text.secondary">
                         {heroSocialProof}
                     </Typography>
                 </Box>
@@ -239,7 +239,7 @@ export default function Welcome() {
                     <Stack spacing={8} sx={{ maxWidth: 1024, mx: 'auto' }}>
                         <Stack spacing={1.5} alignItems="center" textAlign="center">
                             {/* fontWeight/letterSpacing inherited from overline theme variant */}
-                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
+                            <Typography variant="overline" color="primary.main">
                                 {featuresEyebrow}
                             </Typography>
                             {/* fontWeight/letterSpacing inherited from h3 theme variant */}
@@ -290,7 +290,7 @@ export default function Welcome() {
                                             {feature.name}
                                         </Typography>
                                         {/* fontSize/lineHeight from body2 theme variant */}
-                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                        <Typography variant="body2" color="text.secondary">
                                             {feature.description}
                                         </Typography>
                                     </Box>
@@ -304,7 +304,7 @@ export default function Welcome() {
                 <Box component="section" sx={{ px: { xs: 2, sm: 4, md: 6 }, py: { xs: 10, sm: 14 }, bgcolor: 'background.paper' }}>
                     <Stack spacing={8} sx={{ maxWidth: 840, mx: 'auto' }}>
                         <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
-                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
+                            <Typography variant="overline" color="primary.main">
                                 {stepsEyebrow}
                             </Typography>
                             <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
@@ -337,7 +337,7 @@ export default function Welcome() {
                                     </Box>
                                     <Typography sx={{ fontWeight: 700, fontSize: '1.0625rem' }}>{s.title}</Typography>
                                     {/* fontSize/lineHeight from body2 theme variant */}
-                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    <Typography variant="body2" color="text.secondary">
                                         {s.body}
                                     </Typography>
                                     {i < steps.length - 1 && (
@@ -363,7 +363,7 @@ export default function Welcome() {
                 >
                     <Stack spacing={8} sx={{ maxWidth: 1024, mx: 'auto' }}>
                         <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
-                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
+                            <Typography variant="overline" color="primary.main">
                                 {benefitsEyebrow}
                             </Typography>
                             <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
@@ -397,7 +397,7 @@ export default function Welcome() {
                                             <Typography variant="body1" sx={{ fontWeight: 700 }}>
                                                 {b.title}
                                             </Typography>
-                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                            <Typography variant="body2" color="text.secondary">
                                                 {b.description}
                                             </Typography>
                                         </Stack>
@@ -468,7 +468,7 @@ export default function Welcome() {
                             </MuiLink>
                         </Stack>
 
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        <Typography variant="caption" color="text.secondary">
                             © {new Date().getFullYear()} Flowki. All rights reserved.
                         </Typography>
                     </Stack>

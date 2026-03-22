@@ -1,6 +1,52 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled, alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+
+const EmptyStateBox = styled(Box)(({ theme }) => ({
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const TodoItemLi = styled('li')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    overflow: 'hidden',
+    borderRadius: Number(theme.shape.borderRadius) * 2,
+    padding: theme.spacing(1.5),
+}));
+
+const PriorityDot = styled(Box)({
+    width: 8,
+    height: 8,
+    flexShrink: 0,
+    borderRadius: '50%',
+});
+
+const TodoTitle = styled(Typography)({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+});
+
+const CategoryLabel = styled(Typography)({
+    fontSize: '0.75rem',
+    textTransform: 'capitalize',
+    opacity: 0.7,
+});
+
+const StatusBadge = styled('span')(({ theme }) => ({
+    flexShrink: 0,
+    borderRadius: '9999px',
+    backgroundColor: alpha(theme.palette.common.white, 0.6),
+    fontSize: '0.75rem',
+    textTransform: 'capitalize',
+    padding: theme.spacing(0.25, 1),
+}));
 
 interface TodoItem {
     id: number;
@@ -24,48 +70,25 @@ export default function TodoListWidget({ todos }: TodoListWidgetProps) {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {todos.length === 0 ? (
-                <Box sx={{ py: 4, textAlign: 'center', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>No todos due today.</Box>
+                <EmptyStateBox sx={{ py: 4 }}>No todos due today.</EmptyStateBox>
             ) : (
                 <Stack spacing={1} component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
                     {todos.map((todo) => (
-                        <Box
-                            component="li"
-                            key={todo.id}
-                            sx={{ display: 'flex', alignItems: 'center', gap: 1.5, overflow: 'hidden', borderRadius: 2, p: 1.5 }}
-                        >
-                            <Box sx={{ width: 8, height: 8, flexShrink: 0, borderRadius: '50%', bgcolor: priorityColor(todo.priority) }} />
+                        <TodoItemLi key={todo.id}>
+                            <PriorityDot style={{ backgroundColor: priorityColor(todo.priority) }} />
                             <Box sx={{ minWidth: 0, flex: 1 }}>
-                                <Typography
-                                    className={todo.status === 'completed' ? 'line-through' : undefined}
-                                    sx={{
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        fontSize: '0.875rem',
-                                        fontWeight: 500,
+                                <TodoTitle
+                                    style={{
                                         textDecoration: todo.status === 'completed' ? 'line-through' : 'none',
                                         opacity: todo.status === 'completed' ? 0.5 : 1,
                                     }}
                                 >
                                     {todo.title}
-                                </Typography>
-                                <Typography sx={{ fontSize: '0.75rem', textTransform: 'capitalize', opacity: 0.7 }}>{todo.category}</Typography>
+                                </TodoTitle>
+                                <CategoryLabel>{todo.category}</CategoryLabel>
                             </Box>
-                            <Box
-                                component="span"
-                                sx={{
-                                    flexShrink: 0,
-                                    borderRadius: '9999px',
-                                    bgcolor: 'rgba(255,255,255,0.6)',
-                                    px: '8px',
-                                    py: '2px',
-                                    fontSize: '0.75rem',
-                                    textTransform: 'capitalize',
-                                }}
-                            >
-                                {todo.status.replace('_', ' ')}
-                            </Box>
-                        </Box>
+                            <StatusBadge>{todo.status.replace('_', ' ')}</StatusBadge>
+                        </TodoItemLi>
                     ))}
                 </Stack>
             )}

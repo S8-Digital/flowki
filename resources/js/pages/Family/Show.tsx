@@ -210,7 +210,7 @@ export default function FamilyShow({ family }: Props) {
                                 <Typography variant="h5" sx={{ fontWeight: 700 }}>
                                     {family.name}
                                 </Typography>
-                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                <Typography variant="body2" color="text.secondary">
                                     {family.members?.length ?? 0} members
                                 </Typography>
                             </Box>
@@ -263,7 +263,7 @@ export default function FamilyShow({ family }: Props) {
                                 py: 1,
                             }}
                         >
-                            <Typography component="span" variant="caption" sx={{ color: 'text.secondary' }}>
+                            <Typography component="span" variant="caption" color="text.secondary">
                                 Invite code:
                             </Typography>
                             <Box component="span" sx={{ fontFamily: 'monospace', fontSize: '0.875rem', letterSpacing: '0.2em' }}>
@@ -288,7 +288,7 @@ export default function FamilyShow({ family }: Props) {
                                 <Copy size={16} />
                             </Box>
                             {copied && (
-                                <Typography component="span" variant="caption" sx={{ color: 'success.main' }}>
+                                <Typography component="span" variant="caption" color="success.main">
                                     Copied!
                                 </Typography>
                             )}
@@ -323,7 +323,7 @@ export default function FamilyShow({ family }: Props) {
                                             <DialogTitle>Set Family Location</DialogTitle>
                                         </DialogHeader>
                                         <Stack component="form" onSubmit={handleEditLocation} spacing={2}>
-                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                            <Typography variant="body2" color="text.secondary">
                                                 Used to show local weather on the dashboard and calendar. Start typing an address to search, or enter
                                                 a city name and optional coordinates manually.
                                             </Typography>
@@ -374,7 +374,7 @@ export default function FamilyShow({ family }: Props) {
                                                 </Box>
                                             </Box>
                                             {editLocationForm.data.latitude && editLocationForm.data.longitude && (
-                                                <Typography variant="caption" sx={{ color: 'success.main' }}>
+                                                <Typography variant="caption" color="success.main">
                                                     ✓ Coordinates set ({editLocationForm.data.latitude}, {editLocationForm.data.longitude})
                                                 </Typography>
                                             )}
@@ -417,7 +417,7 @@ export default function FamilyShow({ family }: Props) {
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Typography sx={{ fontWeight: 600 }}>Members</Typography>
                                 {canManageMembers && memberOrder.length > 1 && (
-                                    <Typography component="span" variant="caption" sx={{ color: 'text.secondary' }} role="status" aria-live="polite">
+                                    <Typography component="span" variant="caption" color="text.secondary" role="status" aria-live="polite">
                                         {orderSaving ? 'Saving…' : orderSaved ? 'Order saved' : ''}
                                     </Typography>
                                 )}
@@ -433,7 +433,7 @@ export default function FamilyShow({ family }: Props) {
                                         <DialogHeader>
                                             <DialogTitle>Add Child</DialogTitle>
                                         </DialogHeader>
-                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                        <Typography variant="body2" color="text.secondary">
                                             Children are added directly and don't need to log in. They can be assigned todos and chores.
                                         </Typography>
                                         <Stack component="form" onSubmit={handleAddChild} spacing={2}>
@@ -466,7 +466,7 @@ export default function FamilyShow({ family }: Props) {
                                             <DialogTitle>Invite Family Member</DialogTitle>
                                         </DialogHeader>
                                         <Stack component="form" onSubmit={handleInvite} spacing={2}>
-                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                            <Typography variant="body2" color="text.secondary">
                                                 An invitation email will be sent with a link to set up their account and join your family.
                                             </Typography>
                                             <Box sx={{ display: 'grid', gap: 1 }}>
@@ -552,7 +552,7 @@ export default function FamilyShow({ family }: Props) {
                                                 </Box>
                                             )}
                                         </Box>
-                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                        <Typography variant="body2" color="text.secondary">
                                             {member.email ?? 'No email'}
                                         </Typography>
                                     </Box>

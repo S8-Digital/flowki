@@ -429,7 +429,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                     >
                                                         {member.name}
                                                     </Typography>
-                                                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                    <Typography variant="caption" color="text.secondary">
                                                         {pending} chore{pending !== 1 ? 's' : ''}
                                                     </Typography>
                                                 </Box>
@@ -572,7 +572,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 >
                                                     Unassigned
                                                 </Typography>
-                                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                <Typography variant="caption" color="text.secondary">
                                                     {columns.unassigned.length} chore{columns.unassigned.length !== 1 ? 's' : ''}
                                                 </Typography>
                                             </Box>
