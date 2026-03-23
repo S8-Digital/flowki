@@ -2,6 +2,16 @@
 
 namespace App\Providers;
 
+use App\Models\CalendarEvent;
+use App\Models\Chore;
+use App\Models\ShoppingItem;
+use App\Models\ShoppingList;
+use App\Models\Todo;
+use App\Observers\CalendarEventObserver;
+use App\Observers\ChoreObserver;
+use App\Observers\ShoppingItemObserver;
+use App\Observers\ShoppingListObserver;
+use App\Observers\TodoObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Apple\AppleExtendSocialite;
@@ -23,5 +33,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Event::listen(SocialiteWasCalled::class, AppleExtendSocialite::class);
+
+        Todo::observe(TodoObserver::class);
+        Chore::observe(ChoreObserver::class);
+        ShoppingItem::observe(ShoppingItemObserver::class);
+        ShoppingList::observe(ShoppingListObserver::class);
+        CalendarEvent::observe(CalendarEventObserver::class);
     }
 }

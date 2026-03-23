@@ -74,4 +74,29 @@ class Todo extends Model
                 ->orWhere('description', 'like', "%{$term}%");
         });
     }
+
+    /**
+     * Serialise this todo for Firebase Realtime Database sync.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSyncArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'family_id' => $this->family_id,
+            'created_by' => $this->created_by,
+            'assigned_to' => $this->assigned_to,
+            'title' => $this->title,
+            'description' => $this->description,
+            'category' => $this->category?->value,
+            'priority' => $this->priority?->value,
+            'status' => $this->status?->value,
+            'due_date' => $this->due_date?->toIso8601String(),
+            'reminder_enabled' => $this->reminder_enabled,
+            'reminder_lead_time' => $this->reminder_lead_time,
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+        ];
+    }
 }
