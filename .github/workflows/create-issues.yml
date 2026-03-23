@@ -1,0 +1,454 @@
+name: Create Roadmap Issues
+
+on:
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create milestone
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let milestoneNumber;
+            try {
+              const ms = await github.rest.issues.createMilestone({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'Mobile MVP + Sync – April/May 2026',
+                description: 'Phase 0: Mobile App + Firebase Realtime Sync, Phase 1: Voice AI, Phase 2: Meal Planner & Gamification, Phase 3: Polish'
+              });
+              milestoneNumber = ms.data.number;
+              console.log(`Created milestone: ${milestoneNumber}`);
+            } catch (e) {
+              if (e.status === 422) {
+                const milestones = await github.rest.issues.listMilestones({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo
+                });
+                const existing = milestones.data.find(m => m.title === 'Mobile MVP + Sync – April/May 2026');
+                milestoneNumber = existing ? existing.number : undefined;
+                console.log(`Milestone already exists: ${milestoneNumber}`);
+              } else throw e;
+            }
+            core.exportVariable('MILESTONE_NUMBER', milestoneNumber);
+
+      - name: Create labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              { name: 'mobile-first', color: '0075ca', description: 'Mobile-first feature or initiative' },
+              { name: 'priority-critical', color: 'd73a4a', description: 'Critical priority' },
+              { name: 'priority-high', color: 'e4e669', description: 'High priority' },
+              { name: 'priority-medium', color: 'a2eeef', description: 'Medium priority' },
+              { name: 'priority-low', color: 'cfd3d7', description: 'Low priority' },
+              { name: 'phase-0', color: 'b60205', description: 'Phase 0: Mobile MVP + Firebase Realtime Sync' },
+              { name: 'phase-1', color: 'e99695', description: 'Phase 1: Voice AI Integration' },
+              { name: 'phase-2', color: 'f9d0c4', description: 'Phase 2: Meal Planner & Gamification' },
+              { name: 'phase-3', color: 'fef2c0', description: 'Phase 3: Extras / Post-MVP Polish' },
+              { name: 'firebase', color: 'ffca28', description: 'Firebase related' },
+              { name: 'voice', color: '7057ff', description: 'Voice / AI assistant integration' },
+            ];
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ...label
+                });
+                console.log(`Created label: ${label.name}`);
+              } catch (e) {
+                if (e.status === 422) {
+                  console.log(`Label already exists: ${label.name}`);
+                } else throw e;
+              }
+            }
+
+      - name: Create Issue 1 - Firebase RTDB Sync Mirror
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Implement Real-Time Data Sync Mirror with Firebase Realtime Database (Postgres → RTDB)',
+              labels: ['mobile-first', 'priority-critical', 'phase-0', 'firebase'],
+              body: `## Description
+
+            Mirror shared family data (todos, chores, shopping lists, calendar events, notifications) from Postgres to Firebase Realtime Database for instant client-side sync. Laravel saves to Postgres first, then pushes serialized changes to RTDB. Clients (web + mobile) listen directly to RTDB paths for live updates.
+
+            ## Why
+
+            FCM is notifications only; RTDB provides true real-time listeners, offline persistence, and auto-sync — delivering the instant cross-device feel you want (beats Maple/Family Wall sync bugs). Postgres stays source of truth for complex queries/backups.
+
+            ## Acceptance Criteria
+
+            - RTDB structure: \`/families/{family_id}/todos/{todo_id}\` (object with all fields), same for chores/shopping_items/events/notifications.
+            - Laravel: Use model observers/events (e.g., \`TodoObserver\`) or queued jobs to sync on create/update/delete (e.g., \`$firebase->database()->getReference("families/{$family->id}/todos/{$todo->id}")->set($todo->toSyncArray())\`). Handle deletes with \`.remove()\`.
+            - Initial sync: Artisan command to bulk mirror existing families on first setup.
+            - Web (React/Inertia): Firebase JS SDK listeners (\`.on('value')\`, \`.on('child_changed')\`) update Redux/Inertia props optimistically.
+            - Mobile (Expo): Same Firebase JS SDK listeners in components/hooks; update Redux state.
+            - Offline: Enable Firebase persistence (\`firebase.database().enablePersistence()\`); show offline indicator.
+            - Conflict resolution: Last-write-wins (add \`updated_at\` timestamp in sync payload).
+            - Security: Firebase rules restrict read/write to authenticated users in the family (check UID via custom claims or family_user pivot lookup).
+            - Tests: Multi-client simulation (e.g., change on web → see on mobile).
+
+            ## Tech Notes
+
+            - \`kreait/laravel-firebase\` for server writes.
+            - \`firebase/app\` + \`firebase/database\` on web/mobile (\`expo install firebase\` works in managed workflow).
+            - Start with todos + shopping lists (high collaboration).
+            - Queue heavy syncs via Horizon to avoid blocking.
+
+            ## Effort
+
+            **Medium (1.5–2 weeks).** Priority: Critical. Dependencies: Firebase project rules setup.`
+            });
+            console.log('Created Issue 1');
+
+      - name: Create Issue 2 - Mobile App MVP with Expo
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Build Mobile App MVP with Expo (Core Features + RTDB Listeners)',
+              labels: ['mobile-first', 'priority-critical', 'phase-0', 'firebase'],
+              body: `## Description
+
+            Expand the blank Expo scaffold (\`/mobile\`) into a native MVP with daily-use screens, pulling live data from Firebase RTDB.
+
+            ## Why
+
+            Users expect a real native app; RTDB listeners make it feel instant and reliable.
+
+            ## Acceptance Criteria
+
+            - **Auth:** Full flows (email/social/magic/2FA) via Sanctum + \`expo-secure-store\` for tokens.
+            - **Dashboard:** Drag-reorder widgets (Today's Schedule, Todo List, Shopping List, Weather) pulling from RTDB.
+            - **Tabs/Screens:** Calendar (\`react-native-calendars\` or custom), Todos (list + create/edit), Chores (recurring + completion), Shopping Lists (multi-list + check-off).
+            - **Real-time:** RTDB listeners for live updates + optimistic UI.
+            - **Notifications:** FCM rich pushes (already partially set up).
+            - **Features:** Dark/light mode, per-member colours, global search (initially Postgres-backed).
+            - Deep linking + offline indicator.
+
+            ## Tech Notes
+
+            - \`expo-router\` for navigation.
+            - Redux Toolkit for state (listeners dispatch actions).
+            - UI: NativeBase/Tamagui or React Native Paper (avoid MUI for native perf).
+            - API client: Sanctum for writes; RTDB for reads/live sync.
+            - Start with Todos/Shopping/Calendar as core.
+
+            ## Effort
+
+            **High (4 weeks for solid MVP).** Priority: Critical.`
+            });
+            console.log('Created Issue 2');
+
+      - name: Create Issue 3 - Push Notifications + Offline Sync
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Enhance Mobile Push Notifications + Firebase Offline/Background Sync',
+              labels: ['mobile-first', 'priority-high', 'phase-0', 'firebase'],
+              body: `## Description
+
+            Finalize FCM pushes; leverage RTDB's built-in offline queuing for data sync.
+
+            ## Why
+
+            Complements RTDB for true mobile reliability (edits offline → sync on reconnect).
+
+            ## Acceptance Criteria
+
+            - Rich FCM pushes on assignments/completions/reminders (tap opens app to item).
+            - RTDB persistence enabled; background fetch/sync via \`expo-background-fetch\`.
+            - Conflict UI if merges needed (simple for now).
+
+            ## Tech Notes
+
+            - \`expo-notifications\` + \`expo-background-fetch\` + \`expo-task-manager\`.
+            - \`firebase.database().enablePersistence()\`.
+
+            ## Effort
+
+            **Medium (1 week).** Priority: High.`
+            });
+            console.log('Created Issue 3');
+
+      - name: Create Issue 4 - Voice API + MCP Server (RTDB-Aware)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Voice-Optimized API Endpoints + Expand MCP Server for Voice Commands (RTDB-Aware)',
+              labels: ['priority-high', 'phase-1', 'voice', 'firebase'],
+              body: `## Description
+
+            Add voice-friendly tools in MCP; ensure they write to Postgres → push to RTDB for instant sync.
+
+            ## Why
+
+            Enables "Hey Siri/Google, add milk to shopping list" with live visibility everywhere.
+
+            ## Acceptance Criteria
+
+            - New \`/api/voice/command\` endpoint: natural language → structured MCP call → Postgres save → RTDB sync.
+            - MCP tools (\`createTodo\`, \`addShoppingItem\`, \`completeChore\`, etc.) include RTDB write in handler.
+            - Family-scoped + rate-limited.
+
+            ## Tech Notes
+
+            - Laravel AI SDK + existing MCP; add Firebase writes post-save.
+
+            ## Effort
+
+            **Medium (1 week).** Priority: High.`
+            });
+            console.log('Created Issue 4');
+
+      - name: Create Issue 5 - iOS Siri & App Intents
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'iOS Siri & App Intents Integration',
+              labels: ['mobile-first', 'priority-high', 'phase-1', 'voice'],
+              body: `## Description
+
+            Custom App Intents for Siri commands → trigger \`/api/voice/command\` → Postgres + RTDB sync.
+
+            ## Why
+
+            Native iOS voice control — huge for daily use.
+
+            ## Acceptance Criteria
+
+            - Intents: \`CreateTodoIntent\`, \`AddShoppingItemIntent\`, \`GetTodayScheduleIntent\`, \`CompleteChoreIntent\`.
+            - Background execution + Siri suggestions.
+
+            ## Tech Notes
+
+            - Expo config plugin + App Intents (minimal native code or wrapper).
+
+            ## Effort
+
+            **Medium (1.5 weeks).** Priority: High.`
+            });
+            console.log('Created Issue 5');
+
+      - name: Create Issue 6 - Android Google Assistant App Actions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Android Google Assistant App Actions Integration',
+              labels: ['mobile-first', 'priority-high', 'phase-1', 'voice'],
+              body: `## Description
+
+            App Actions for Google Assistant → same voice backend flow.
+
+            ## Why
+
+            Android parity with iOS Siri integration.
+
+            ## Acceptance Criteria
+
+            - Custom actions + \`shortcuts.xml\`.
+            - Triggers deep links or \`/api/voice/command\`.
+
+            ## Tech Notes
+
+            - Expo plugin for \`AndroidManifest\`/shortcuts.
+
+            ## Effort
+
+            **Medium (1 week).** Priority: High.`
+            });
+            console.log('Created Issue 6');
+
+      - name: Create Issue 7 - Meal Planner with RTDB Sync
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Build Visual Meal Planner with Recipe Drag-and-Drop & Auto Grocery (RTDB Sync)',
+              labels: ['priority-high', 'phase-2', 'firebase'],
+              body: `## Description
+
+            Dedicated \`/meals\` weekly grid; drag recipes → days; auto-add scaled ingredients to shopping list (sync via RTDB).
+
+            ## Acceptance Criteria
+
+            - 7-day view (MUI grid or FullCalendar port).
+            - Drag → create meal entry → RTDB push → grocery aggregation job.
+            - Dashboard widget for week's dinners.
+
+            ## Tech Notes
+
+            - New \`meals\` table (Postgres) + RTDB mirror (\`/families/{id}/meals\`).
+
+            ## Effort
+
+            **High (3 weeks).** Priority: High (after mobile launch).`
+            });
+            console.log('Created Issue 7');
+
+      - name: Create Issue 8 - AI Meal Suggestions & Auto-Planning
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'AI Meal Suggestions & Weekly Auto-Planning',
+              labels: ['priority-medium', 'phase-2', 'firebase'],
+              body: `## Description
+
+            AI suggests/fills weekly meals (prefs, calendar-aware); accept → create meals + groceries (RTDB sync).
+
+            ## Acceptance Criteria
+
+            - New MCP tool: \`suggest_weekly_meals\` → structured output → UI preview/accept.
+            - Accepted suggestions create meal entries + auto-populate grocery list → RTDB sync.
+
+            ## Effort
+
+            **Medium.** Priority: Medium (after Phase 2 Meal Planner).`
+            });
+            console.log('Created Issue 8');
+
+      - name: Create Issue 9 - Chore Rewards & Points System
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Chore Rewards & Points System',
+              labels: ['priority-medium', 'phase-2', 'firebase'],
+              body: `## Description
+
+            Points for chore completions; redeem rewards; kid dashboard (RTDB for live leaderboard).
+
+            ## Acceptance Criteria
+
+            - Points config per chore; approval queue; simplified child view.
+            - Live leaderboard via RTDB listener.
+
+            ## Tech Notes
+
+            - New tables (\`chore_points\`, \`rewards\`) + RTDB mirror.
+
+            ## Effort
+
+            **Medium.** Priority: Medium (after Phase 2 launch).`
+            });
+            console.log('Created Issue 9');
+
+      - name: Create Issue 10 - Family Chat & Messaging (RTDB-Based)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Family Chat & Messaging (RTDB-Based)',
+              labels: ['priority-medium', 'phase-3', 'firebase'],
+              body: `## Description
+
+            Real-time chat (text/photos) scoped to family/threads using RTDB \`.push()\` for messages.
+
+            ## Acceptance Criteria
+
+            - Family-scoped chat threads.
+            - Text + photo messages.
+            - RTDB \`.push()\` for message storage and live delivery.
+            - Read receipts.
+
+            ## Effort
+
+            **Medium.** Priority: Medium (Phase 3 polish).`
+            });
+            console.log('Created Issue 10');
+
+      - name: Create Issue 11 - Shared Photo & Video Gallery
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Shared Photo & Video Gallery',
+              labels: ['priority-low', 'phase-3'],
+              body: `## Description
+
+            Upload/album view; auto-tag from events (GCS + RTDB metadata).
+
+            ## Acceptance Criteria
+
+            - Photo/video upload to GCS.
+            - Album view per family.
+            - Auto-tag media from calendar events.
+            - RTDB metadata for real-time gallery updates.
+
+            ## Effort
+
+            **Medium-low.** Priority: Low (Phase 3 polish).`
+            });
+            console.log('Created Issue 11');
+
+      - name: Create Issue 12 - Tablet Kiosk / Wall Mode (PWA Optimization)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: parseInt(process.env.MILESTONE_NUMBER) || undefined,
+              title: 'Tablet Kiosk / Wall Mode (PWA Optimization)',
+              labels: ['priority-low', 'phase-3', 'firebase'],
+              body: `## Description
+
+            Fullscreen PWA mode for tablets (large fonts, always-on, RTDB listeners).
+
+            ## Acceptance Criteria
+
+            - Fullscreen PWA manifest + service worker optimised for tablets.
+            - Large-font, always-on layout with RTDB listeners for live updates.
+            - Kiosk-friendly touch targets.
+
+            ## Effort
+
+            **Low.** Priority: Low (Phase 3 polish).`
+            });
+            console.log('Created Issue 12');
