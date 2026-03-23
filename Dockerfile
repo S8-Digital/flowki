@@ -52,20 +52,26 @@ WORKDIR /app
 # Add Node.js / npm for Vite
 RUN apk add --no-cache nodejs npm
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install Composer (pinned for reproducible builds)
+COPY --from=composer:2.8.5 /usr/bin/composer /usr/bin/composer
 
-# Install PHP dependencies (no-dev: only production packages are needed to run
-# artisan and generate wayfinder types; the same vendor dir is shipped to prod)
+# Install PHP dependencies — no-dev: only production packages are needed to run
+# artisan and generate wayfinder types; the same vendor dir is shipped to prod.
+# Split into two steps: install with the lockfile first (good layer cache),
+# then regenerate the classmap after the full app code is present.
 COPY composer*.json ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --no-progress
 
 # Install Node dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy application code
 COPY . .
+
+# Regenerate the optimized autoloader with the full application codebase present
+# so classmap entries for all app classes are included
+RUN composer dump-autoload --optimize
 
 # Create a minimal, ephemeral .env so Laravel can boot for `php artisan wayfinder:generate`
 # (invoked by the Vite plugin during `npm run build`).
