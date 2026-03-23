@@ -289,6 +289,11 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 label="Next Due"
                                                 value={createForm.data.next_due_date}
                                                 onChange={(value) => createForm.setData('next_due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
+                                                slotProps={{
+                                                    textField: {
+                                                        size: 'small',
+                                                    },
+                                                }}
                                             />
                                         </Box>
                                     </Box>

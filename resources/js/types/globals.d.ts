@@ -25,3 +25,5 @@ declare module '@mui/material/styles' {
         subtle: string;
     }
 }
+
+export type PolymorphicProps = { component?: ElementType; href?: string };

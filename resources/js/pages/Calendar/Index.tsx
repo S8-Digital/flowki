@@ -445,7 +445,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                         label="Start"
                                         value={createForm.data.start_at ? dayjs(createForm.data.start_at) : null}
                                         onChange={(value) => createForm.setData('start_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
-                                        slotProps={{ textField: { required: true } }}
+                                        slotProps={{ textField: { required: true, size: 'small' } }}
                                     />
                                     <InputError message={createForm.errors.start_at} />
                                 </Box>
@@ -454,6 +454,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                         label="End"
                                         value={createForm.data.end_at ? dayjs(createForm.data.end_at) : null}
                                         onChange={(value) => createForm.setData('end_at', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
+                                        slotProps={{ textField: { size: 'small' } }}
                                     />
                                 </Box>
                             </Box>
@@ -476,10 +477,12 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                                     </Select>
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                        Colour
-                                    </Typography>
-                                    <Input type="color" value={createForm.data.color} onChange={(e) => createForm.setData('color', e.target.value)} />
+                                    <Input
+                                        label="Colour"
+                                        type="color"
+                                        value={createForm.data.color}
+                                        onChange={(e) => createForm.setData('color', e.target.value)}
+                                    />
                                 </Box>
                             </Box>
                             <Box sx={{ display: 'grid', gap: 1 }}>
