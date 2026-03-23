@@ -77,9 +77,11 @@ RUN composer dump-autoload --optimize
 # (invoked by the Vite plugin during `npm run build`).
 # The APP_KEY is randomly generated at build time and is only used to satisfy
 # Laravel's boot requirements — it is never written into the final image.
-# Array drivers prevent any live DB / Redis / cache connections during the build.
+# SQLite in-memory + array session/cache/queue prevent any live DB / Redis / cache
+# connections during the build. DB_CONNECTION=array is not a valid Laravel database
+# driver; use sqlite with DB_DATABASE=:memory: instead.
 RUN KEY=$(php -r "echo base64_encode(random_bytes(32));") \
-    && printf "APP_KEY=base64:%s\nDB_CONNECTION=array\nSESSION_DRIVER=array\nCACHE_STORE=array\nQUEUE_CONNECTION=sync\nBROADCAST_CONNECTION=log\n" "$KEY" > .env \
+    && printf "APP_KEY=base64:%s\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\nSESSION_DRIVER=array\nCACHE_STORE=array\nQUEUE_CONNECTION=sync\nBROADCAST_CONNECTION=log\n" "$KEY" > .env \
     && npm run build \
     && rm -f .env
 
