@@ -14,6 +14,7 @@ export const logoWordmarkSx: SxProps<Theme> = {
  * Muted text link for the page header nav (body2 size).
  */
 export const navLinkSx: SxProps<Theme> = {
+    marginRight: 2,
     fontSize: '0.875rem',
     color: 'text.secondary',
     textDecoration: 'none',

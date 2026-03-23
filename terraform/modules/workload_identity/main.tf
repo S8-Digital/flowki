@@ -59,22 +59,12 @@ resource "google_iam_workload_identity_pool_provider" "github_oidc" {
 }
 
 # ------------------------------------------------------------------
-# 3. Look up the pre-existing service account that CI will act as.
-#    The account itself is created in the root module so that all
-#    IAM bindings live in one place.
-# ------------------------------------------------------------------
-data "google_service_account" "github_actions_sa" {
-  project    = var.project_id
-  account_id = var.service_account_id
-}
-
-# ------------------------------------------------------------------
-# 4. Allow WIF-authenticated GitHub tokens to impersonate the SA.
+# 3. Allow WIF-authenticated GitHub tokens to impersonate the SA.
 #    The principal matches tokens whose `repository` attribute
 #    equals "<org>/<repo>", ensuring only that repo can impersonate.
 # ------------------------------------------------------------------
 resource "google_service_account_iam_member" "wif_impersonation" {
-  service_account_id = data.google_service_account.github_actions_sa.name
+  service_account_id = "projects/${var.project_id}/serviceAccounts/${var.service_account_id}@${var.project_id}.iam.gserviceaccount.com"
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${var.github_org}/${var.github_repo}"
 }
