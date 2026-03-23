@@ -7,7 +7,7 @@ locals {
     APP_LOCALE                   = "en"
     LOG_LEVEL                    = "info"
     DB_CONNECTION                = "pgsql"
-    DB_SOCKET                    = local.db_socket_path
+    DB_HOST                      = local.db_socket_path
     DB_DATABASE                  = var.db_name
     DB_USERNAME                  = var.db_user
     FILESYSTEM_DISK              = "gcs"

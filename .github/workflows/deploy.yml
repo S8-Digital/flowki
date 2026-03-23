@@ -152,8 +152,7 @@ jobs:
           image: ${{ needs.build.outputs.image }}
           region: ${{ env.GCP_REGION }}
           project_id: ${{ env.GCP_PROJECT_ID }}
-          # Traffic is shifted to the new revision only after a successful deploy
-          flags: "--traffic=LATEST"
+          revision_traffic: LATEST=100
 
       - name: Print deployed URL
         run: echo "Deployed to ${{ steps.deploy.outputs.url }}"
