@@ -8,6 +8,9 @@
 /storage/*.key
 /storage/pail
 /vendor
+/resources/js/actions
+/resources/js/routes
+/resources/js/wayfinder
 .env
 .env.backup
 .env.production

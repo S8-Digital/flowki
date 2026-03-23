@@ -12,3 +12,8 @@
 # Ignore build artifacts that we generate INSIDE the Dockerfile
 public/build
 # (We don't ignore .docker because we need those config files!)
+
+# Wayfinder generates these during npm run build — exclude any local copies
+/resources/js/actions
+/resources/js/routes
+/resources/js/wayfinder
