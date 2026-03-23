@@ -1,3 +1,5 @@
+ARG PHP_VERSION=8.4
+
 # --- Stage 1: Build Frontend Assets ---
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app
@@ -7,7 +9,7 @@ COPY . .
 RUN npm run build
 
 # --- Stage 2: Production PHP Image ---
-ARG PHP_VERSION=8.4
+ARG PHP_VERSION
 FROM php:${PHP_VERSION}-fpm-alpine
 
 # Install system dependencies
