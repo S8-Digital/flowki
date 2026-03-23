@@ -68,6 +68,7 @@ jobs:
         run: |
           IMAGE="${{ env.REGISTRY }}/${{ env.APP_NAME }}"
           SHA_TAG="${IMAGE}:${{ github.sha }}"
+
           LATEST_TAG="${IMAGE}:latest"
           echo "image=${SHA_TAG}" >> "$GITHUB_OUTPUT"
           echo "sha_tag=${SHA_TAG}" >> "$GITHUB_OUTPUT"

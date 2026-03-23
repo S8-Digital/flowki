@@ -436,22 +436,24 @@ resource "google_cloud_run_v2_job" "migrate" {
         image   = local.image_placeholder
         command = ["php", "artisan", "migrate", "--force"]
 
-        env {
-          name  = "DB_CONNECTION"
-          value = "pgsql"
+        dynamic "env" {
+          for_each = local.app_env_vars
+          content {
+            name  = env.key
+            value = env.value
+          }
         }
+
         env {
-          name  = "DB_SOCKET"
-          value = local.db_socket_path
+          name = "APP_KEY"
+          value_source {
+            secret_key_ref {
+              secret  = data.google_secret_manager_secret.app_key.secret_id
+              version = "latest"
+            }
+          }
         }
-        env {
-          name  = "DB_DATABASE"
-          value = var.db_name
-        }
-        env {
-          name  = "DB_USERNAME"
-          value = var.db_user
-        }
+
         env {
           name = "DB_PASSWORD"
           value_source {
