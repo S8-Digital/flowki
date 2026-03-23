@@ -138,7 +138,7 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                                     onChange={(e) => setData('profile_color', e.target.value)}
                                     aria-label="Pick your profile colour"
                                 />
-                                <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
+                                <Typography component="span" variant="body2" color="text.secondary">
                                     {data.profile_color ? data.profile_color : 'No colour set'}
                                 </Typography>
                                 {data.profile_color && (
@@ -184,7 +184,7 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Button disabled={processing}>Save</Button>
                             {recentlySuccessful && (
-                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                <Typography variant="body2" color="text.secondary">
                                     Saved.
                                 </Typography>
                             )}
@@ -258,7 +258,7 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                                                 <CheckCircle2 className="size-3" /> Connected
                                             </Typography>
                                         ) : (
-                                            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                                 Not connected
                                             </Typography>
                                         )}
@@ -302,7 +302,7 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                                         <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                             Connected
                                         </Typography>
-                                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                             Todos and chores assigned to you will sync automatically.
                                         </Typography>
                                     </Box>
@@ -331,7 +331,7 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                                         <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                             Not connected
                                         </Typography>
-                                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                             Connect to sync your assigned todos and chores.
                                         </Typography>
                                     </Box>

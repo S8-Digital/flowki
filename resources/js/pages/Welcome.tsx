@@ -5,12 +5,14 @@ import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { LucideIcon } from 'lucide-react';
 import { Bell, CalendarDays, CheckSquare, ChefHat, MessageSquare, RotateCcw, Shield, ShoppingCart, Smartphone, Zap } from 'lucide-react';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { useRemoteConfig } from '@/hooks/useRemoteConfig';
+import { FooterBox, LogoLink, PageRoot } from '@/lib/publicStyled';
 import { footerLinkSx, logoWordmarkSx, navLinkSx } from '@/lib/publicSx';
 import { login, privacy, register, terms } from '@/routes';
 
@@ -68,6 +70,76 @@ const DEFAULT_BENEFITS: BenefitItem[] = [
     { icon: 'Shield', title: 'Private & secure', description: 'Your family data is yours. No ads, no tracking, no selling your data.' },
 ];
 
+// ── Styled components (visual props not permitted in sx) ──────────────────────
+
+const NavCTAButton = styled(MuiButton)({ whiteSpace: 'nowrap' });
+
+const HeroBadge = styled(Chip)(({ theme }) => ({
+    fontWeight: 500,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    fontSize: '0.8rem',
+    height: 28,
+}));
+
+const HeroTitle = styled(Typography)(({ theme }) => ({
+    fontSize: '2.5rem',
+    [theme.breakpoints.up('sm')]: { fontSize: '3.5rem' },
+    [theme.breakpoints.up('md')]: { fontSize: '4.25rem' },
+}));
+
+const HeroSubheading = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    whiteSpace: 'pre-line',
+    fontSize: '1.0625rem',
+    [theme.breakpoints.up('sm')]: { fontSize: '1.25rem' },
+}));
+
+const HeroCTAButton = styled(MuiButton)({ fontSize: '1rem' });
+
+const SectionHeading = styled(Typography)(({ theme }) => ({
+    fontSize: '1.75rem',
+    [theme.breakpoints.up('sm')]: { fontSize: '2.25rem' },
+}));
+
+const SectionSubheading = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: '1.0625rem',
+}));
+
+const ItemTitle = styled(Typography)({ fontWeight: 700 });
+
+const PaperSection = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+}));
+
+const CenteredTextStack = styled(Stack)({ textAlign: 'center' });
+
+const StepStack = styled(Stack)(({ theme }) => ({
+    textAlign: 'left',
+    [theme.breakpoints.up('md')]: { textAlign: 'center' },
+}));
+
+const StepTitle = styled(Typography)({ fontWeight: 700, fontSize: '1.0625rem' });
+
+const DashedDivider = styled(Divider)({ opacity: 0.4, borderStyle: 'dashed' });
+
+const CTAHeading = styled(Typography)(({ theme }) => ({
+    fontSize: '2rem',
+    [theme.breakpoints.up('sm')]: { fontSize: '2.75rem' },
+}));
+
+const CTAMainButton = styled(MuiButton)({ fontSize: '1.0625rem' });
+
+const FooterBranding = styled(Typography)({ fontWeight: 700, fontSize: '0.9rem' });
+
+const CenteredSection = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.default,
+    textAlign: 'center',
+}));
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function Welcome() {
     const { getString, getJson } = useRemoteConfig();
 
@@ -107,7 +179,7 @@ export default function Welcome() {
         <>
             <Head title="Flowki — Organise your family, together" />
 
-            <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary' }}>
+            <PageRoot sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
                 {/* ── Header ── */}
                 <Box
                     component="header"
@@ -126,105 +198,72 @@ export default function Welcome() {
                         backdropFilter: 'blur(8px)',
                     }}
                 >
-                    <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'inherit' }}>
+                    <LogoLink component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <AppLogoIcon style={{ width: 32, height: 32 }} />
                         <Typography component="span" sx={logoWordmarkSx}>
                             Flowki
                         </Typography>
-                    </Box>
+                    </LogoLink>
                     <Box component="nav" sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
                         <AppearanceToggle />
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <MuiLink component={Link} href={login()} sx={{ ...navLinkSx, display: { xs: 'none', sm: 'inline' } }}>
                                 Log in
                             </MuiLink>
-                            <MuiButton component={Link} href={register().url} variant="contained" size="small" sx={{ whiteSpace: 'nowrap' }}>
+                            <NavCTAButton component={Link} href={register().url} variant="contained" size="small">
                                 Get started free
-                            </MuiButton>
+                            </NavCTAButton>
                         </Box>
                     </Box>
                 </Box>
 
                 {/* ── Hero ── */}
-                <Box
+                <CenteredSection
                     component="section"
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        textAlign: 'center',
                         px: { xs: 2, sm: 4 },
                         pt: { xs: 10, sm: 16 },
                         pb: { xs: 10, sm: 14 },
                         gap: 4,
-                        bgcolor: 'background.default',
                     }}
                 >
-                    <Chip
-                        label={badgeText}
-                        size="small"
-                        sx={{ fontWeight: 500, bgcolor: 'primary.main', color: 'primary.contrastText', fontSize: '0.8rem', height: 28 }}
-                    />
+                    <HeroBadge label={badgeText} size="small" />
 
                     <Stack alignItems="center" spacing={2} sx={{ maxWidth: 760 }}>
                         {/* fontWeight/letterSpacing/lineHeight inherited from h1 theme variant */}
-                        <Typography variant="h1" sx={{ fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.25rem' } }}>
+                        <HeroTitle variant="h1">
                             {heroHighlight ? (
                                 <>
                                     {headlinePrefix}{' '}
-                                    <Box component="span" sx={{ color: 'primary.main' }}>
+                                    <Box component="span" color="primary.main">
                                         {heroHighlight}
                                     </Box>
                                 </>
                             ) : (
                                 heroHeadline
                             )}
-                        </Typography>
+                        </HeroTitle>
                         {/* lineHeight inherited from body1 theme variant */}
-                        <Typography
-                            sx={{
-                                mx: 'auto',
-                                maxWidth: 560,
-                                fontSize: { xs: '1.0625rem', sm: '1.25rem' },
-                                color: 'text.secondary',
-                                whiteSpace: 'pre-line',
-                            }}
-                        >
-                            {heroSubheadline}
-                        </Typography>
+                        <HeroSubheading sx={{ mx: 'auto', maxWidth: 560 }}>{heroSubheadline}</HeroSubheading>
                     </Stack>
 
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ width: '100%', maxWidth: 360 }}>
                         {/* textTransform/fontWeight come from MuiButton theme override */}
-                        <MuiButton
-                            component={Link}
-                            href={register().url}
-                            variant="contained"
-                            fullWidth
-                            size="large"
-                            sx={{ fontSize: '1rem', py: 1.5 }}
-                        >
+                        <HeroCTAButton component={Link} href={register().url} variant="contained" fullWidth size="large" sx={{ py: 1.5 }}>
                             {heroCTAPrimary}
-                        </MuiButton>
-                        <MuiButton
-                            component={Link}
-                            href={login().url}
-                            variant="outlined"
-                            fullWidth
-                            size="large"
-                            color="inherit"
-                            sx={{ fontSize: '1rem', py: 1.5 }}
-                        >
+                        </HeroCTAButton>
+                        <HeroCTAButton component={Link} href={login().url} variant="outlined" fullWidth size="large" color="inherit" sx={{ py: 1.5 }}>
                             {heroCTASecondary}
-                        </MuiButton>
+                        </HeroCTAButton>
                     </Stack>
 
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    <Typography variant="caption" color="text.secondary">
                         {heroSocialProof}
                     </Typography>
-                </Box>
-
-                {/* ── Features ── */}
+                </CenteredSection>
                 <Box
                     component="section"
                     sx={{
@@ -239,16 +278,12 @@ export default function Welcome() {
                     <Stack spacing={8} sx={{ maxWidth: 1024, mx: 'auto' }}>
                         <Stack spacing={1.5} alignItems="center" textAlign="center">
                             {/* fontWeight/letterSpacing inherited from overline theme variant */}
-                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
+                            <Typography variant="overline" color="primary.main">
                                 {featuresEyebrow}
                             </Typography>
                             {/* fontWeight/letterSpacing inherited from h3 theme variant */}
-                            <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
-                                {featuresHeadline}
-                            </Typography>
-                            <Typography sx={{ color: 'text.secondary', maxWidth: 520, mx: 'auto', fontSize: '1.0625rem' }}>
-                                {featuresSubheadline}
-                            </Typography>
+                            <SectionHeading variant="h3">{featuresHeadline}</SectionHeading>
+                            <SectionSubheading sx={{ maxWidth: 520, mx: 'auto' }}>{featuresSubheadline}</SectionSubheading>
                         </Stack>
 
                         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
@@ -286,11 +321,9 @@ export default function Welcome() {
                                             <Icon size={22} />
                                         </Box>
                                         {/* fontSize matches body1; fontWeight overrides body1 default of 400 */}
-                                        <Typography variant="body1" sx={{ fontWeight: 700 }}>
-                                            {feature.name}
-                                        </Typography>
+                                        <ItemTitle variant="body1">{feature.name}</ItemTitle>
                                         {/* fontSize/lineHeight from body2 theme variant */}
-                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                        <Typography variant="body2" color="text.secondary">
                                             {feature.description}
                                         </Typography>
                                     </Box>
@@ -301,24 +334,18 @@ export default function Welcome() {
                 </Box>
 
                 {/* ── How it works ── */}
-                <Box component="section" sx={{ px: { xs: 2, sm: 4, md: 6 }, py: { xs: 10, sm: 14 }, bgcolor: 'background.paper' }}>
+                <PaperSection component="section" sx={{ px: { xs: 2, sm: 4, md: 6 }, py: { xs: 10, sm: 14 } }}>
                     <Stack spacing={8} sx={{ maxWidth: 840, mx: 'auto' }}>
-                        <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
-                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
+                        <CenteredTextStack spacing={1.5}>
+                            <Typography variant="overline" color="primary.main">
                                 {stepsEyebrow}
                             </Typography>
-                            <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
-                                {stepsHeadline}
-                            </Typography>
-                        </Stack>
+                            <SectionHeading variant="h3">{stepsHeadline}</SectionHeading>
+                        </CenteredTextStack>
 
                         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 4 }}>
                             {steps.map((s, i) => (
-                                <Stack
-                                    key={s.step}
-                                    spacing={2}
-                                    sx={{ alignItems: { xs: 'flex-start', md: 'center' }, textAlign: { xs: 'left', md: 'center' } }}
-                                >
+                                <StepStack key={s.step} spacing={2} sx={{ alignItems: { xs: 'flex-start', md: 'center' } }}>
                                     <Box
                                         sx={{
                                             display: 'flex',
@@ -335,19 +362,17 @@ export default function Welcome() {
                                     >
                                         {s.step}
                                     </Box>
-                                    <Typography sx={{ fontWeight: 700, fontSize: '1.0625rem' }}>{s.title}</Typography>
+                                    <StepTitle>{s.title}</StepTitle>
                                     {/* fontSize/lineHeight from body2 theme variant */}
-                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    <Typography variant="body2" color="text.secondary">
                                         {s.body}
                                     </Typography>
-                                    {i < steps.length - 1 && (
-                                        <Divider sx={{ display: { xs: 'block', md: 'none' }, width: '100%', borderStyle: 'dashed', opacity: 0.4 }} />
-                                    )}
-                                </Stack>
+                                    {i < steps.length - 1 && <DashedDivider sx={{ display: { xs: 'block', md: 'none' }, width: '100%' }} />}
+                                </StepStack>
                             ))}
                         </Box>
                     </Stack>
-                </Box>
+                </PaperSection>
 
                 {/* ── Benefits ── */}
                 <Box
@@ -362,14 +387,12 @@ export default function Welcome() {
                     }}
                 >
                     <Stack spacing={8} sx={{ maxWidth: 1024, mx: 'auto' }}>
-                        <Stack spacing={1.5} sx={{ textAlign: 'center' }}>
-                            <Typography variant="overline" sx={{ color: 'primary.main' }}>
+                        <CenteredTextStack spacing={1.5}>
+                            <Typography variant="overline" color="primary.main">
                                 {benefitsEyebrow}
                             </Typography>
-                            <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem' } }}>
-                                {benefitsHeadline}
-                            </Typography>
-                        </Stack>
+                            <SectionHeading variant="h3">{benefitsHeadline}</SectionHeading>
+                        </CenteredTextStack>
 
                         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 3 }}>
                             {benefits.map((b) => {
@@ -394,10 +417,8 @@ export default function Welcome() {
                                             <Icon size={20} />
                                         </Box>
                                         <Stack spacing={0.5}>
-                                            <Typography variant="body1" sx={{ fontWeight: 700 }}>
-                                                {b.title}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                            <ItemTitle variant="body1">{b.title}</ItemTitle>
+                                            <Typography variant="body2" color="text.secondary">
                                                 {b.description}
                                             </Typography>
                                         </Stack>
@@ -409,51 +430,37 @@ export default function Welcome() {
                 </Box>
 
                 {/* ── Final CTA ── */}
-                <Box
+                <CenteredSection
                     component="section"
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        textAlign: 'center',
                         px: { xs: 2, sm: 4 },
                         py: { xs: 12, sm: 16 },
                         gap: 4,
-                        bgcolor: 'background.default',
                     }}
                 >
                     <Stack spacing={2} sx={{ maxWidth: 600 }}>
                         {/* fontWeight/letterSpacing inherited from h2 theme variant */}
-                        <Typography variant="h2" sx={{ fontSize: { xs: '2rem', sm: '2.75rem' } }}>
-                            {ctaHeadline}
-                        </Typography>
+                        <CTAHeading variant="h2">{ctaHeadline}</CTAHeading>
                         {/* lineHeight inherited from body1 theme variant */}
-                        <Typography sx={{ color: 'text.secondary', fontSize: '1.0625rem' }}>{ctaSubheadline}</Typography>
+                        <SectionSubheading>{ctaSubheadline}</SectionSubheading>
                     </Stack>
 
-                    <MuiButton
-                        component={Link}
-                        href={register().url}
-                        variant="contained"
-                        size="large"
-                        sx={{ fontSize: '1.0625rem', px: 5, py: 1.75 }}
-                    >
+                    <CTAMainButton component={Link} href={register().url} variant="contained" size="large" sx={{ px: 5, py: 1.75 }}>
                         {ctaButton}
-                    </MuiButton>
+                    </CTAMainButton>
 
                     <MuiLink component={Link} href={login()} sx={navLinkSx}>
                         {ctaSigninLink}
                     </MuiLink>
-                </Box>
-
-                {/* ── Footer ── */}
-                <Box component="footer" sx={{ borderTop: 1, borderColor: 'divider', px: { xs: 2, sm: 4 }, py: 4, bgcolor: 'background.paper' }}>
+                </CenteredSection>
+                <FooterBox component="footer" sx={{ px: { xs: 2, sm: 4 }, py: 4 }}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" justifyContent="space-between" spacing={2}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <AppLogoIcon style={{ width: 24, height: 24 }} />
-                            <Typography component="span" sx={{ fontWeight: 700, fontSize: '0.9rem' }}>
-                                Flowki
-                            </Typography>
+                            <FooterBranding component="span">Flowki</FooterBranding>
                         </Box>
 
                         <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" justifyContent="center">
@@ -468,12 +475,12 @@ export default function Welcome() {
                             </MuiLink>
                         </Stack>
 
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        <Typography variant="caption" color="text.secondary">
                             © {new Date().getFullYear()} Flowki. All rights reserved.
                         </Typography>
                     </Stack>
-                </Box>
-            </Box>
+                </FooterBox>
+            </PageRoot>
         </>
     );
 }

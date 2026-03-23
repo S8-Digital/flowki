@@ -99,7 +99,7 @@ export default function Register() {
 
                 <SocialAuthButtons label="Or sign up with" />
 
-                <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+                <Typography variant="body2" align="center" color="text.secondary">
                     Already have an account?{' '}
                     <TextLink href={login()} className="underline underline-offset-4" tabIndex={6}>
                         Log in

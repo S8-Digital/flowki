@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
+import { styled } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -32,6 +33,22 @@ function localToday(): string {
 
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
+
+const MemberToggle = styled(ButtonBase)({
+    borderRadius: '9999px',
+    fontSize: '0.75rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+    transition: 'all 0.15s',
+});
+
+const EmptyStateBox = styled(Box)(({ theme }) => ({
+    borderRadius: (theme.shape.borderRadius as number) * 3,
+    border: `1px solid ${theme.palette.divider}`,
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
 
 function buildColumns(members: User[], events: CalendarEvent[], todos: Todo[], chores: Chore[], date: string): FamilyScheduleColumn[] {
     return members.map((member, idx) => {
@@ -128,31 +145,22 @@ export default function FamilyScheduleView({
                         const hidden = hiddenMembers.has(member.id);
 
                         return (
-                            <ButtonBase
+                            <MemberToggle
                                 key={member.id}
                                 onClick={() => toggleMember(member.id)}
                                 aria-pressed={!hidden}
                                 title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 0.75,
-                                    borderRadius: '9999px',
-                                    border: `1px solid ${color}`,
-                                    px: 1.25,
-                                    py: 0.5,
-                                    fontSize: '0.75rem',
-                                    fontWeight: 500,
-                                    cursor: 'pointer',
-                                    transition: 'all 0.15s',
+                                sx={{ display: 'flex', alignItems: 'center', gap: 0.75, px: 1.25, py: 0.5 }}
+                                style={{
                                     opacity: hidden ? 0.4 : 1,
                                     color: hidden ? 'inherit' : color,
                                     backgroundColor: hidden ? 'transparent' : `${color}15`,
+                                    border: `1px solid ${color}`,
                                 }}
                             >
                                 {hidden ? <EyeOff style={{ width: 12, height: 12 }} /> : <Eye style={{ width: 12, height: 12 }} />}
                                 {member.name}
-                            </ButtonBase>
+                            </MemberToggle>
                         );
                     })}
                 </Box>
@@ -160,19 +168,7 @@ export default function FamilyScheduleView({
 
             {/* Columns */}
             {visibleColumns.length === 0 ? (
-                <Box
-                    sx={{
-                        borderRadius: 3,
-                        border: 1,
-                        borderColor: 'divider',
-                        py: 8,
-                        textAlign: 'center',
-                        fontSize: '0.875rem',
-                        color: 'text.secondary',
-                    }}
-                >
-                    No members visible. Toggle members above to show their schedules.
-                </Box>
+                <EmptyStateBox sx={{ py: 8 }}>No members visible. Toggle members above to show their schedules.</EmptyStateBox>
             ) : (
                 <Box sx={{ display: 'flex', gap: 1.5, overflowX: 'auto', pb: 1 }}>
                     {visibleColumns.map((column) => (

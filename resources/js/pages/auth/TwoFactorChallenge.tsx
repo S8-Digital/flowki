@@ -1,5 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import InputError from '@/components/InputError';
@@ -7,6 +8,14 @@ import TextLink from '@/components/TextLink';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/AuthLayout';
+
+const TextActionButton = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+    background: 'none',
+    border: 'none',
+})) as typeof Typography;
 
 export default function TwoFactorChallenge() {
     const [useRecoveryCode, setUseRecoveryCode] = useState(false);
@@ -69,7 +78,7 @@ export default function TwoFactorChallenge() {
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
-                    <Typography
+                    <TextActionButton
                         component="button"
                         type="button"
                         variant="body2"
@@ -77,24 +86,17 @@ export default function TwoFactorChallenge() {
                             setUseRecoveryCode(!useRecoveryCode);
                             reset('code', 'recovery_code');
                         }}
-                        sx={{
-                            color: 'text.secondary',
-                            textDecoration: 'underline',
-                            cursor: 'pointer',
-                            background: 'none',
-                            border: 'none',
-                            p: 0,
-                        }}
+                        sx={{ p: 0 }}
                     >
                         {useRecoveryCode ? 'Use an authentication code instead' : 'Use a recovery code instead'}
-                    </Typography>
+                    </TextActionButton>
 
                     <Button type="submit" disabled={processing}>
                         Log in
                     </Button>
                 </Box>
 
-                <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+                <Typography variant="body2" align="center" color="text.secondary">
                     <TextLink href="/login">Back to login</TextLink>
                 </Typography>
             </Box>

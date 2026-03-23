@@ -1,8 +1,13 @@
 import { usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { AppSidebarContext, SIDEBAR_COOKIE } from '@/components/AppSidebarContext';
 import type { AppPageProps } from '@/types';
+
+const SidebarShell = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.default,
+}));
 
 interface AppShellProps {
     variant?: 'header' | 'sidebar';
@@ -25,7 +30,7 @@ export default function AppShell({ variant = 'sidebar', children }: AppShellProp
 
     return (
         <AppSidebarContext.Provider value={{ open, setOpen, mobileOpen, setMobileOpen }}>
-            <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'var(--background)' }}>{children}</Box>
+            <SidebarShell sx={{ display: 'flex', minHeight: '100vh' }}>{children}</SidebarShell>
         </AppSidebarContext.Provider>
     );
 }

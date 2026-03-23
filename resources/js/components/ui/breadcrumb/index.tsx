@@ -1,7 +1,18 @@
 import Box from '@mui/material/Box';
 import MuiLink from '@mui/material/Link';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+
+const StyledBreadcrumbList = styled(Box)(({ theme }) => ({
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const StyledBreadcrumbLink = styled(MuiLink)(({ theme }) => ({
+    transition: 'color 0.15s',
+    '&:hover': { color: theme.palette.text.primary },
+}));
 
 function Breadcrumb({ ...props }: React.HTMLAttributes<HTMLElement>) {
     return <Box component="nav" aria-label="breadcrumb" {...(props as any)} />;
@@ -9,7 +20,7 @@ function Breadcrumb({ ...props }: React.HTMLAttributes<HTMLElement>) {
 
 function BreadcrumbList({ className, ...props }: React.HTMLAttributes<HTMLOListElement>) {
     return (
-        <Box
+        <StyledBreadcrumbList
             component="ol"
             className={className}
             sx={{
@@ -20,8 +31,6 @@ function BreadcrumbList({ className, ...props }: React.HTMLAttributes<HTMLOListE
                 m: 0,
                 p: 0,
                 listStyle: 'none',
-                fontSize: '0.875rem',
-                color: 'text.secondary',
             }}
             {...(props as any)}
         />
@@ -48,16 +57,15 @@ function BreadcrumbLink({
         });
     }
     return (
-        <MuiLink
+        <StyledBreadcrumbLink
             href={href}
             className={className}
             underline="hover"
             color="inherit"
-            sx={{ transition: 'color 0.15s', '&:hover': { color: 'text.primary' } }}
             {...(props as any)}
         >
             {children}
-        </MuiLink>
+        </StyledBreadcrumbLink>
     );
 }
 
@@ -68,8 +76,9 @@ function BreadcrumbPage({ className, ...props }: React.HTMLAttributes<HTMLSpanEl
             role="link"
             aria-disabled="true"
             aria-current="page"
+            color="text.primary"
+            fontWeight={400}
             className={className}
-            sx={{ fontWeight: 400, color: 'text.primary' }}
             {...(props as any)}
         />
     );
@@ -86,7 +95,7 @@ function BreadcrumbSeparator({ children, className, ...props }: React.HTMLAttrib
             {...(props as any)}
         >
             {children ?? (
-                <Typography component="span" sx={{ color: 'text.secondary' }}>
+                <Typography component="span" color="text.secondary">
                     /
                 </Typography>
             )}

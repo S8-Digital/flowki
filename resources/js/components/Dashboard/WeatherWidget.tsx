@@ -1,7 +1,66 @@
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useWeather } from '@/hooks/useWeather';
+
+const TempDisplay = styled(Typography)({
+    fontSize: '1.875rem',
+    lineHeight: 1,
+    fontWeight: 600,
+});
+
+const ConditionText = styled(Typography)(({ theme }) => ({
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+    textTransform: 'capitalize',
+}));
+
+const FeelsLikeText = styled(Typography)(({ theme }) => ({
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
+
+const LocationLabel = styled(Typography)(({ theme }) => ({
+    fontSize: '0.75rem',
+    fontWeight: 500,
+    letterSpacing: '0.05em',
+    color: theme.palette.text.secondary,
+    textTransform: 'uppercase',
+}));
+
+interface ForecastGridProps {
+    columns: number;
+}
+
+const ForecastGrid = styled('ul')<ForecastGridProps>(({ theme, columns }) => ({
+    display: 'grid',
+    gridTemplateColumns: `repeat(${columns}, 1fr)`,
+    gap: theme.spacing(0.5),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    paddingTop: theme.spacing(1.5),
+    margin: 0,
+    paddingLeft: 0,
+    listStyle: 'none',
+}));
+
+const ForecastDay = styled('span')(({ theme }) => ({
+    fontSize: '0.625rem',
+    fontWeight: 500,
+    color: theme.palette.text.secondary,
+}));
+
+const TempRange = styled('span')({
+    fontSize: '0.75rem',
+});
+
+const TempHigh = styled('span')({
+    fontWeight: 500,
+});
+
+const TempLow = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
 
 function formatDay(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
@@ -35,59 +94,35 @@ export default function WeatherWidget() {
                     />
                 )}
                 <Box>
-                    <Typography sx={{ fontSize: '1.875rem', lineHeight: 1, fontWeight: 600 }}>{data.current.temp}°C</Typography>
-                    <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'text.secondary', textTransform: 'capitalize' }}>
-                        {data.current.description}
-                    </Typography>
-                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                    <TempDisplay>{data.current.temp}°C</TempDisplay>
+                    <ConditionText sx={{ mt: 0.5 }}>{data.current.description}</ConditionText>
+                    <FeelsLikeText>
                         Feels {data.current.feels_like}°C · Humidity {data.current.humidity}% · Wind {data.current.wind_speed} km/h
-                    </Typography>
+                    </FeelsLikeText>
                 </Box>
             </Box>
 
             {/* Location */}
-            <Typography sx={{ fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.05em', color: 'text.secondary', textTransform: 'uppercase' }}>
-                {data.location}
-            </Typography>
+            <LocationLabel>{data.location}</LocationLabel>
 
             {/* 7-day forecast */}
             {data.forecast.length > 0 && (
-                <Box
-                    component="ul"
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: `repeat(${Math.min(data.forecast.length, 7)}, 1fr)`,
-                        gap: 0.5,
-                        borderTop: '1px solid',
-                        borderColor: 'divider',
-                        pt: 1.5,
-                        m: 0,
-                        pl: 0,
-                        listStyle: 'none',
-                    }}
-                >
+                <ForecastGrid columns={Math.min(data.forecast.length, 7)}>
                     {data.forecast.slice(0, 7).map((day) => (
                         <Box
                             component="li"
                             key={day.date}
                             sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, textAlign: 'center' }}
                         >
-                            <Typography component="span" sx={{ fontSize: '0.625rem', fontWeight: 500, color: 'text.secondary' }}>
-                                {formatDay(day.date)}
-                            </Typography>
+                            <ForecastDay>{formatDay(day.date)}</ForecastDay>
                             {day.icon_url && <Box component="img" src={day.icon_url} alt={day.description} sx={{ width: 32, height: 32 }} />}
-                            <Typography component="span" sx={{ fontSize: '0.75rem' }}>
-                                <Typography component="span" sx={{ fontWeight: 500 }}>
-                                    {day.temp_max}°
-                                </Typography>
-                                <Typography component="span" sx={{ color: 'text.secondary' }}>
-                                    {' '}
-                                    / {day.temp_min}°
-                                </Typography>
-                            </Typography>
+                            <TempRange>
+                                <TempHigh>{day.temp_max}°</TempHigh>
+                                <TempLow> / {day.temp_min}°</TempLow>
+                            </TempRange>
                         </Box>
                     ))}
-                </Box>
+                </ForecastGrid>
             )}
         </Box>
     );

@@ -1,13 +1,18 @@
 import MuiCard from '@mui/material/Card';
 import MuiCardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
+const StyledCardDescription = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
 function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
-    return <MuiCard className={cn(className)} sx={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }} {...(props as any)} />;
+    return <MuiCard className={cn(className)} {...(props as any)} />;
 }
 
 function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -36,11 +41,11 @@ function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElem
 
 function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
     return (
-        <Typography
+        <StyledCardDescription
             variant="body2"
             component="p"
             className={cn(className)}
-            sx={{ color: 'text.secondary', m: 0 }}
+            sx={{ m: 0 }}
             {...(props as any)}
         />
     );

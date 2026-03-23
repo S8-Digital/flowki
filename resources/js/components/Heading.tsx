@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 interface HeadingProps {
@@ -6,14 +7,17 @@ interface HeadingProps {
     description?: string;
 }
 
+const HeadingTitle = styled(Typography)({
+    fontWeight: 600,
+    letterSpacing: '-0.025em',
+});
+
 export default function Heading({ title, description }: HeadingProps) {
     return (
         <Box sx={{ mb: 4 }}>
-            <Typography variant="h5" sx={{ fontWeight: 600, letterSpacing: '-0.025em' }}>
-                {title}
-            </Typography>
+            <HeadingTitle variant="h5">{title}</HeadingTitle>
             {description && (
-                <Typography variant="body2" sx={{ color: 'var(--muted-foreground)' }}>
+                <Typography variant="body2" color="text.secondary">
                     {description}
                 </Typography>
             )}

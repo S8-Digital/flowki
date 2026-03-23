@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { Bot, Send, Sparkles, User } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
@@ -25,6 +26,84 @@ const suggestions = [
     'Schedule a family dinner on Saturday at 6pm',
     'Add weekly vacuuming as a chore',
 ];
+
+const AiAvatar = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    flexShrink: 0,
+}));
+
+const UserAvatar = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.secondary.main,
+    flexShrink: 0,
+}));
+
+const EmptyChatState = styled(Box)({
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+});
+
+const ChatHeading = styled(Typography)({
+    fontSize: '1.125rem',
+    fontWeight: 600,
+});
+
+const ChatSubheading = styled(Typography)(({ theme }) => ({
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const SuggestionChip = styled('button')(({ theme }) => ({
+    borderRadius: '9999px',
+    border: `1px solid ${theme.palette.divider}`,
+    fontSize: '0.875rem',
+    cursor: 'pointer',
+    background: 'none',
+    transition: 'background-color 0.15s',
+    '&:hover': { backgroundColor: theme.palette.action.hover },
+}));
+
+const UserBubble = styled(Box)(({ theme }) => ({
+    maxWidth: '80%',
+    borderRadius: 16,
+    borderBottomRightRadius: 4,
+    fontSize: '0.875rem',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+}));
+
+const AssistantBubble = styled(Box)(({ theme }) => ({
+    maxWidth: '80%',
+    borderRadius: 16,
+    borderBottomLeftRadius: 4,
+    fontSize: '0.875rem',
+    backgroundColor: alpha(theme.palette.text.primary, 0.06),
+}));
+
+const MessageContent = styled('span')({
+    whiteSpace: 'pre-wrap',
+});
+
+const ChatInputArea = styled(Box)(({ theme }) => ({
+    borderTop: `1px solid ${theme.palette.divider}`,
+}));
+
+const ChatDisclaimer = styled(Typography)(({ theme }) => ({
+    textAlign: 'center',
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
 
 const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -167,19 +246,9 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                width: 32,
-                                height: 32,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: '50%',
-                                bgcolor: 'rgba(var(--primary-rgb), 0.1)',
-                            }}
-                        >
+                        <AiAvatar sx={{ width: 32, height: 32 }}>
                             <Sparkles style={{ width: 16, height: 16, color: 'var(--primary)' }} />
-                        </Box>
+                        </AiAvatar>
                         <DialogTitle style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>Family Assistant</DialogTitle>
                     </Box>
                 </DialogHeader>
@@ -187,134 +256,80 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                 {/* Messages */}
                 <Box ref={messagesContainerRef} sx={{ flex: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {messages.length === 0 ? (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                height: '100%',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: 3,
-                                textAlign: 'center',
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    width: 56,
-                                    height: 56,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    borderRadius: '50%',
-                                    bgcolor: 'rgba(var(--primary-rgb), 0.1)',
-                                }}
-                            >
+                        <EmptyChatState sx={{ gap: 3 }}>
+                            <AiAvatar sx={{ width: 56, height: 56 }}>
                                 <Sparkles style={{ width: 28, height: 28, color: 'var(--primary)' }} />
-                            </Box>
+                            </AiAvatar>
                             <Box>
-                                <Typography sx={{ fontSize: '1.125rem', fontWeight: 600 }}>How can I help?</Typography>
-                                <Typography sx={{ mt: 0.5, fontSize: '0.875rem', color: 'text.secondary' }}>
+                                <ChatHeading>How can I help?</ChatHeading>
+                                <ChatSubheading sx={{ mt: 0.5 }}>
                                     Ask me to create todos, schedule events, add chores, or manage your shopping list.
-                                </Typography>
+                                </ChatSubheading>
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
                                 {suggestions.map((suggestion) => (
-                                    <Box
-                                        key={suggestion}
-                                        component="button"
-                                        onClick={() => sendMessage(suggestion)}
-                                        sx={{
-                                            borderRadius: '9999px',
-                                            border: '1px solid',
-                                            borderColor: 'divider',
-                                            px: 1.5,
-                                            py: 0.75,
-                                            fontSize: '0.875rem',
-                                            cursor: 'pointer',
-                                            background: 'none',
-                                            transition: 'background-color 0.15s',
-                                            '&:hover': { bgcolor: 'action.hover' },
-                                        }}
-                                    >
+                                    <SuggestionChip key={suggestion} onClick={() => sendMessage(suggestion)} sx={{ px: 1.5, py: 0.75 }}>
                                         {suggestion}
-                                    </Box>
+                                    </SuggestionChip>
                                 ))}
                             </Box>
-                        </Box>
+                        </EmptyChatState>
                     ) : (
                         messages.map((msg, i) => (
                             <Box key={i} sx={{ display: 'flex', gap: 1.5, justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                 {msg.role === 'assistant' && (
-                                    <Box
-                                        sx={{
-                                            mt: 0.5,
-                                            display: 'flex',
-                                            width: 28,
-                                            height: 28,
-                                            flexShrink: 0,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '50%',
-                                            bgcolor: 'rgba(var(--primary-rgb), 0.1)',
-                                        }}
-                                    >
+                                    <AiAvatar sx={{ mt: 0.5, width: 28, height: 28 }}>
                                         <Bot style={{ width: 14, height: 14, color: 'var(--primary)' }} />
-                                    </Box>
+                                    </AiAvatar>
                                 )}
-                                <Box
-                                    sx={{
-                                        maxWidth: '80%',
-                                        borderRadius: '16px',
-                                        px: 2,
-                                        py: 1.25,
-                                        fontSize: '0.875rem',
-                                        ...(msg.role === 'user'
-                                            ? { borderBottomRightRadius: '4px', bgcolor: 'primary.main', color: 'primary.contrastText' }
-                                            : { borderBottomLeftRadius: '4px', bgcolor: 'var(--muted)' }),
-                                    }}
-                                >
-                                    {msg.isStreaming && !msg.content ? (
-                                        <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                                            <Box component="span" sx={{ animation: 'bounce 1s infinite' }}>
-                                                ●
+                                {msg.role === 'user' ? (
+                                    <UserBubble sx={{ px: 2, py: 1.25 }}>
+                                        {msg.isStreaming && !msg.content ? (
+                                            <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
+                                                <Box component="span" sx={{ animation: 'bounce 1s infinite' }}>
+                                                    ●
+                                                </Box>
+                                                <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>
+                                                    ●
+                                                </Box>
+                                                <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>
+                                                    ●
+                                                </Box>
                                             </Box>
-                                            <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>
-                                                ●
+                                        ) : (
+                                            <MessageContent>{msg.content}</MessageContent>
+                                        )}
+                                    </UserBubble>
+                                ) : (
+                                    <AssistantBubble sx={{ px: 2, py: 1.25 }}>
+                                        {msg.isStreaming && !msg.content ? (
+                                            <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
+                                                <Box component="span" sx={{ animation: 'bounce 1s infinite' }}>
+                                                    ●
+                                                </Box>
+                                                <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>
+                                                    ●
+                                                </Box>
+                                                <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>
+                                                    ●
+                                                </Box>
                                             </Box>
-                                            <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>
-                                                ●
-                                            </Box>
-                                        </Box>
-                                    ) : (
-                                        <Box component="span" sx={{ whiteSpace: 'pre-wrap' }}>
-                                            {msg.content}
-                                        </Box>
-                                    )}
-                                </Box>
+                                        ) : (
+                                            <MessageContent>{msg.content}</MessageContent>
+                                        )}
+                                    </AssistantBubble>
+                                )}
                                 {msg.role === 'user' && (
-                                    <Box
-                                        sx={{
-                                            mt: 0.5,
-                                            display: 'flex',
-                                            width: 28,
-                                            height: 28,
-                                            flexShrink: 0,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '50%',
-                                            bgcolor: 'var(--secondary)',
-                                        }}
-                                    >
+                                    <UserAvatar sx={{ mt: 0.5, width: 28, height: 28 }}>
                                         <User style={{ width: 14, height: 14 }} />
-                                    </Box>
+                                    </UserAvatar>
                                 )}
                             </Box>
                         ))
                     )}
                 </Box>
 
-                {/* Input */}
-                <Box sx={{ borderTop: '1px solid', borderColor: 'var(--border)', p: 1.5 }}>
+                <ChatInputArea sx={{ p: 1.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
                         <Box sx={{ flex: 1 }}>
                             <Input
@@ -330,10 +345,8 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                             <Send style={{ width: 16, height: 16 }} />
                         </Button>
                     </Box>
-                    <Typography sx={{ mt: 0.75, textAlign: 'center', fontSize: '0.75rem', color: 'text.secondary' }}>
-                        AI can make mistakes. Verify important information.
-                    </Typography>
-                </Box>
+                    <ChatDisclaimer sx={{ mt: 0.75 }}>AI can make mistakes. Verify important information.</ChatDisclaimer>
+                </ChatInputArea>
             </DialogContent>
         </Dialog>
     );

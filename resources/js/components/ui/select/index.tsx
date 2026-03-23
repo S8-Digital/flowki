@@ -4,10 +4,20 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import MuiSelect, { type SelectChangeEvent } from '@mui/material/Select';
+import { styled } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+
+const StyledPlaceholder = styled(Box)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
+const StyledSelectLabel = styled(Typography)(({ theme }) => ({
+    fontWeight: 600,
+    color: theme.palette.text.secondary,
+}));
 
 /** Collect all <SelectItem> elements recursively from a React node tree */
 function collectSelectItems(children: React.ReactNode): React.ReactElement<SelectItemProps>[] {
@@ -93,7 +103,7 @@ function Select({
                 renderValue={(val) => {
                     if (!val) {
                         if (label) return undefined;
-                        return <Box component="span" sx={{ color: 'text.secondary' }}>{placeholder}</Box>;
+                        return <StyledPlaceholder component="span">{placeholder}</StyledPlaceholder>;
                     }
                     const matched = items.find((item) => item.props.value === val);
                     return matched ? matched.props.children : String(val);
@@ -137,13 +147,13 @@ function SelectGroup({ children }: { children?: React.ReactNode }) {
 
 function SelectLabel({ className, children }: { className?: string; children?: React.ReactNode }) {
     return (
-        <Typography
+        <StyledSelectLabel
             variant="caption"
             className={cn(className)}
-            sx={{ display: 'block', py: 0.5, px: 1, fontWeight: 600, color: 'text.secondary' }}
+            sx={{ display: 'block', py: 0.5, px: 1 }}
         >
             {children}
-        </Typography>
+        </StyledSelectLabel>
     );
 }
 

@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import type { PropsWithChildren } from 'react';
@@ -18,6 +19,25 @@ const sidebarNavItems: NavItem[] = [
     { title: 'Notifications', href: '/settings/notifications' },
 ];
 
+const SettingsTabs = styled(Tabs)(({ theme }) => ({
+    borderRight: 0,
+    '& .MuiTab-root': {
+        alignItems: 'flex-start',
+        minHeight: 40,
+        paddingLeft: theme.spacing(1.5),
+        paddingRight: theme.spacing(1.5),
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+        fontSize: '0.875rem',
+    },
+    '& .MuiTabs-indicator': {
+        left: 0,
+        right: 'auto',
+        width: 3,
+        borderRadius: theme.shape.borderRadius,
+    },
+}));
+
 export default function SettingsLayout({ children }: PropsWithChildren) {
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
     const activeItem = sidebarNavItems.find((item) => urlIsActive(item.href, currentPath));
@@ -29,31 +49,11 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
             <Stack direction={{ xs: 'column', lg: 'row' }} spacing={{ lg: 6 }}>
                 <Box component="aside" sx={{ width: '100%', maxWidth: { xs: 576, lg: 192 } }}>
-                    <Tabs
-                        orientation="vertical"
-                        value={activeTab}
-                        sx={{
-                            borderRight: 0,
-                            '& .MuiTab-root': {
-                                alignItems: 'flex-start',
-                                textTransform: 'none',
-                                minHeight: 40,
-                                px: 1.5,
-                                py: 1,
-                                fontSize: '0.875rem',
-                            },
-                            '& .MuiTabs-indicator': {
-                                left: 0,
-                                right: 'auto',
-                                width: 3,
-                                borderRadius: 1,
-                            },
-                        }}
-                    >
+                    <SettingsTabs orientation="vertical" value={activeTab}>
                         {sidebarNavItems.map((item) => (
                             <Tab key={toUrl(item.href)} label={item.title} value={toUrl(item.href)} component={Link} href={item.href} />
                         ))}
-                    </Tabs>
+                    </SettingsTabs>
                 </Box>
 
                 <Box sx={{ display: { xs: 'block', lg: 'none' }, my: 3 }}>

@@ -1,9 +1,30 @@
 import { usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import WeatherForecastDialog from '@/components/WeatherForecastDialog';
 import { useWeather } from '@/hooks/useWeather';
 import type { AppPageProps } from '@/types';
+
+const WeatherButton = styled(Box)(({ theme }) => ({
+    cursor: 'pointer',
+    borderRadius: theme.shape.borderRadius,
+    '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    '&:focus-visible': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+    },
+}));
+
+const TempText = styled(Box)({
+    fontWeight: 600,
+});
+
+const DescriptionText = styled(Box)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    textTransform: 'capitalize',
+}));
 
 /**
  * A compact weather strip shown at the top of date-based calendar views.
@@ -22,22 +43,12 @@ export default function WeatherStrip() {
 
     return (
         <>
-            <Box
+            <WeatherButton
                 role="button"
                 tabIndex={0}
                 onClick={() => setDialogOpen(true)}
                 onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setDialogOpen(true)}
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                    cursor: 'pointer',
-                    borderRadius: 1,
-                    px: 0.75,
-                    py: 0.25,
-                    '&:hover': { bgcolor: 'action.hover' },
-                    '&:focus-visible': { outline: '2px solid', outlineColor: 'primary.main' },
-                }}
+                sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 0.75, py: 0.25 }}
             >
                 {data.current.icon_url && (
                     <Box
@@ -47,13 +58,9 @@ export default function WeatherStrip() {
                         sx={{ width: 24, height: 24, mt: -0.5, mb: -0.5 }}
                     />
                 )}
-                <Box component="span" sx={{ fontWeight: 600 }}>
-                    {data.current.temp}°C
-                </Box>
-                <Box component="span" sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                    {data.current.description}
-                </Box>
-            </Box>
+                <TempText component="span">{data.current.temp}°C</TempText>
+                <DescriptionText component="span">{data.current.description}</DescriptionText>
+            </WeatherButton>
 
             <WeatherForecastDialog
                 open={dialogOpen}

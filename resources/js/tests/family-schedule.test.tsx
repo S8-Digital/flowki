@@ -34,6 +34,8 @@ const baseEvent: CalendarEvent = {
 };
 
 const baseTodo: Todo = {
+    reminder_enabled: false,
+    reminder_lead_time: 0,
     id: 1,
     title: 'Buy groceries',
     description: null,
@@ -48,6 +50,8 @@ const baseTodo: Todo = {
 };
 
 const baseChore: Chore = {
+    reminder_enabled: false,
+    reminder_lead_time: 0,
     id: 1,
     title: 'Vacuum living room',
     description: null,
@@ -156,7 +160,7 @@ describe('MemberColumn', () => {
         });
         render(<MemberColumn column={column} />);
         const titleEl = screen.getByText('Buy groceries');
-        expect(titleEl).toHaveClass('line-through');
+        expect(titleEl).toHaveStyle({ textDecoration: 'line-through' });
     });
 
     it('renders chores', () => {

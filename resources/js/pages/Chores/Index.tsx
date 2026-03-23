@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { CheckCircle, Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -24,6 +25,79 @@ interface Props {
     chores: Chore[] | null;
     members: User[];
 }
+
+const PageTitle = styled(Typography)({ fontWeight: 600 });
+const SectionLabel = styled(Typography)({ fontWeight: 500 });
+
+const MemberToggleButton = styled('button')({
+    display: 'flex',
+    alignItems: 'center',
+    border: '1px solid',
+    borderRadius: '50px',
+    fontSize: '0.75rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    backgroundColor: 'transparent',
+});
+
+const MemberAvatar = styled(Box)({
+    display: 'flex',
+    width: 32,
+    height: 32,
+    flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    fontSize: '0.75rem',
+    fontWeight: 700,
+    color: 'white',
+});
+
+const TruncatedBold = styled(Typography)({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontWeight: 600,
+});
+
+const EmptyColumnCaption = styled(Typography)({
+    textAlign: 'center',
+});
+
+const ChoreCard = styled(Box)({
+    borderRadius: '8px',
+});
+
+const ChoreTitleText = styled(Typography)({
+    display: 'block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontWeight: 500,
+});
+
+const ChoreMeta = styled(Box)(({ theme }) => ({
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
+
+const FrequencySpan = styled('span')({
+    textTransform: 'capitalize',
+});
+
+const EmptyStateBox = styled(Box)(({ theme }) => ({
+    borderRadius: Number(theme.shape.borderRadius) * 3,
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const ColumnContainer = styled(Box)(({ theme }) => ({
+    borderRadius: Number(theme.shape.borderRadius) * 3,
+}));
+
+const ReminderBox = styled(Box)({ borderRadius: '12px' });
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Chores', href: '/chores' }];
 
@@ -161,9 +235,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
                     {/* Header */}
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                            Chores
-                        </Typography>
+                        <PageTitle variant="h6">Chores</PageTitle>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
                                 <Fab color="primary" size="small" aria-label="New Chore">
@@ -221,9 +293,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         </Box>
                                     </Box>
                                     <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                            Assign To
-                                        </Typography>
+                                        <SectionLabel variant="body2">Assign To</SectionLabel>
                                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                             {members.map((m) => (
                                                 <FormControlLabel
@@ -242,21 +312,18 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             ))}
                                         </Box>
                                     </Box>
-                                    <Box
+                                    <ReminderBox
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: 1.5,
-                                            borderRadius: '12px',
                                             border: 1,
                                             borderColor: 'divider',
                                             p: 1.5,
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                                Reminder
-                                            </Typography>
+                                            <SectionLabel variant="body2">Reminder</SectionLabel>
                                             <Switch
                                                 id="create-chore-reminder-enabled"
                                                 checked={createForm.data.reminder_enabled}
@@ -283,7 +350,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                 </Select>
                                             </Box>
                                         )}
-                                    </Box>
+                                    </ReminderBox>
                                     <Button type="submit" sx={{ width: '100%' }} disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Chore'}
                                     </Button>
@@ -299,70 +366,42 @@ export default function ChoresIndex({ chores, members }: Props) {
                             const hidden = hiddenMembers.has(member.id);
 
                             return (
-                                <Box
-                                    component="button"
+                                <MemberToggleButton
                                     key={member.id}
                                     type="button"
                                     onClick={() => toggleMember(member.id)}
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 0.75,
-                                        borderRadius: '50px',
-                                        border: 1,
-                                        px: 1.25,
-                                        py: 0.5,
-                                        fontSize: '0.75rem',
-                                        fontWeight: 500,
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        opacity: hidden ? 0.4 : 1,
-                                        bgcolor: 'transparent',
-                                    }}
+                                    sx={{ gap: 0.75, px: 1.25, py: 0.5 }}
                                     style={{
                                         borderColor: color,
                                         color: hidden ? undefined : color,
                                         backgroundColor: hidden ? undefined : `${color}15`,
+                                        opacity: hidden ? 0.4 : 1,
                                     }}
                                     aria-pressed={!hidden}
                                     title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
                                 >
                                     {hidden ? <EyeOff size={12} /> : <Eye size={12} />}
                                     {member.name}
-                                </Box>
+                                </MemberToggleButton>
                             );
                         })}
                         {/* Unassigned toggle */}
-                        <Box
-                            component="button"
+                        <MemberToggleButton
                             type="button"
                             onClick={() => toggleMember(UNASSIGNED_ID)}
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 0.75,
-                                borderRadius: '50px',
-                                border: 1,
-                                px: 1.25,
-                                py: 0.5,
-                                fontSize: '0.75rem',
-                                fontWeight: 500,
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                opacity: hiddenMembers.has(UNASSIGNED_ID) ? 0.4 : 1,
-                                bgcolor: 'transparent',
-                            }}
+                            sx={{ gap: 0.75, px: 1.25, py: 0.5 }}
                             style={{
                                 borderColor: '#94a3b8',
                                 color: hiddenMembers.has(UNASSIGNED_ID) ? undefined : '#94a3b8',
                                 backgroundColor: hiddenMembers.has(UNASSIGNED_ID) ? undefined : '#94a3b815',
+                                opacity: hiddenMembers.has(UNASSIGNED_ID) ? 0.4 : 1,
                             }}
                             aria-pressed={!hiddenMembers.has(UNASSIGNED_ID)}
                             title={hiddenMembers.has(UNASSIGNED_ID) ? 'Show Unassigned' : 'Hide Unassigned'}
                         >
                             {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff size={12} /> : <Eye size={12} />}
                             Unassigned
-                        </Box>
+                        </MemberToggleButton>
                     </Box>
 
                     {/* Column view */}
@@ -384,7 +423,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                 const color = getMemberColor(member, idx);
 
                                 return (
-                                    <Box
+                                    <ColumnContainer
                                         key={member.id}
                                         sx={{
                                             display: 'flex',
@@ -393,7 +432,6 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             flex: 1,
                                             flexDirection: 'column',
                                             overflow: 'hidden',
-                                            borderRadius: 3,
                                             border: 1,
                                             borderColor: 'divider',
                                         }}
@@ -404,32 +442,12 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             style={{ backgroundColor: `${color}22`, borderBottom: `3px solid ${color}` }}
                                         >
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        width: 32,
-                                                        height: 32,
-                                                        flexShrink: 0,
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        borderRadius: '50%',
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 700,
-                                                        color: 'white',
-                                                    }}
-                                                    style={{ backgroundColor: color }}
-                                                    aria-label={member.name}
-                                                >
+                                                <MemberAvatar style={{ backgroundColor: color }} aria-label={member.name}>
                                                     {getInitials(member.name)}
-                                                </Box>
+                                                </MemberAvatar>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}
-                                                    >
-                                                        {member.name}
-                                                    </Typography>
-                                                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                    <TruncatedBold variant="body2">{member.name}</TruncatedBold>
+                                                    <Typography variant="caption" color="text.secondary">
                                                         {pending} chore{pending !== 1 ? 's' : ''}
                                                     </Typography>
                                                 </Box>
@@ -439,17 +457,14 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         {/* Column items */}
                                         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
                                             {memberChores.length === 0 ? (
-                                                <Typography
-                                                    variant="caption"
-                                                    sx={{ py: 3, textAlign: 'center', color: 'text.secondary', display: 'block' }}
-                                                >
+                                                <EmptyColumnCaption variant="caption" color="text.secondary" sx={{ py: 3, display: 'block' }}>
                                                     No chores
-                                                </Typography>
+                                                </EmptyColumnCaption>
                                             ) : (
                                                 memberChores.map((chore) => (
-                                                    <Box
+                                                    <ChoreCard
                                                         key={chore.id}
-                                                        sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, borderRadius: '8px', p: 1 }}
+                                                        sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
                                                         style={{
                                                             backgroundColor: `${color}15`,
                                                             border: `1px solid ${color}`,
@@ -459,33 +474,11 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                             <RefreshCw size={14} style={{ color: 'var(--mui-palette-success-main)' }} />
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                            <Typography
-                                                                variant="caption"
-                                                                sx={{
-                                                                    display: 'block',
-                                                                    overflow: 'hidden',
-                                                                    textOverflow: 'ellipsis',
-                                                                    whiteSpace: 'nowrap',
-                                                                    fontWeight: 500,
-                                                                }}
-                                                            >
-                                                                {chore.title}
-                                                            </Typography>
-                                                            <Box
-                                                                sx={{
-                                                                    mt: 0.25,
-                                                                    display: 'flex',
-                                                                    flexWrap: 'wrap',
-                                                                    gap: 0.5,
-                                                                    fontSize: '0.75rem',
-                                                                    color: 'text.secondary',
-                                                                }}
-                                                            >
-                                                                <Box component="span" sx={{ textTransform: 'capitalize' }}>
-                                                                    {chore.frequency}
-                                                                </Box>
+                                                            <ChoreTitleText variant="caption">{chore.title}</ChoreTitleText>
+                                                            <ChoreMeta sx={{ mt: 0.25, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                                <FrequencySpan>{chore.frequency}</FrequencySpan>
                                                                 {chore.next_due_date && <span>&middot; {formatDateTime(chore.next_due_date)}</span>}
-                                                            </Box>
+                                                            </ChoreMeta>
                                                         </Box>
                                                         <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
                                                             <Button
@@ -521,16 +514,16 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                                 <Trash2 size={20} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                             </Button>
                                                         </Box>
-                                                    </Box>
+                                                    </ChoreCard>
                                                 ))
                                             )}
                                         </Box>
-                                    </Box>
+                                    </ColumnContainer>
                                 );
                             })}
                             {/* Unassigned column */}
                             {unassignedVisible && columns.unassigned.length > 0 && (
-                                <Box
+                                <ColumnContainer
                                     sx={{
                                         display: 'flex',
                                         maxWidth: 320,
@@ -538,7 +531,6 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         flex: 1,
                                         flexDirection: 'column',
                                         overflow: 'hidden',
-                                        borderRadius: 3,
                                         border: 1,
                                         borderColor: 'divider',
                                     }}
@@ -548,31 +540,10 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         style={{ backgroundColor: '#94a3b822', borderBottom: '3px solid #94a3b8' }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    width: 32,
-                                                    height: 32,
-                                                    flexShrink: 0,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    borderRadius: '50%',
-                                                    bgcolor: '#94a3b8',
-                                                    fontSize: '0.75rem',
-                                                    fontWeight: 700,
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                ?
-                                            </Box>
+                                            <MemberAvatar style={{ backgroundColor: '#94a3b8' }}>?</MemberAvatar>
                                             <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}
-                                                >
-                                                    Unassigned
-                                                </Typography>
-                                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                <TruncatedBold variant="body2">Unassigned</TruncatedBold>
+                                                <Typography variant="caption" color="text.secondary">
                                                     {columns.unassigned.length} chore{columns.unassigned.length !== 1 ? 's' : ''}
                                                 </Typography>
                                             </Box>
@@ -580,42 +551,20 @@ export default function ChoresIndex({ chores, members }: Props) {
                                     </Box>
                                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
                                         {columns.unassigned.map((chore) => (
-                                            <Box
+                                            <ChoreCard
                                                 key={chore.id}
-                                                sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, borderRadius: '8px', p: 1 }}
+                                                sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
                                                 style={{ backgroundColor: '#94a3b815', border: '1px solid #94a3b8' }}
                                             >
                                                 <Box sx={{ mt: 0.25, flexShrink: 0 }}>
                                                     <RefreshCw size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                                 </Box>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                    <Typography
-                                                        variant="caption"
-                                                        sx={{
-                                                            display: 'block',
-                                                            overflow: 'hidden',
-                                                            textOverflow: 'ellipsis',
-                                                            whiteSpace: 'nowrap',
-                                                            fontWeight: 500,
-                                                        }}
-                                                    >
-                                                        {chore.title}
-                                                    </Typography>
-                                                    <Box
-                                                        sx={{
-                                                            mt: 0.25,
-                                                            display: 'flex',
-                                                            flexWrap: 'wrap',
-                                                            gap: 0.5,
-                                                            fontSize: '0.75rem',
-                                                            color: 'text.secondary',
-                                                        }}
-                                                    >
-                                                        <Box component="span" sx={{ textTransform: 'capitalize' }}>
-                                                            {chore.frequency}
-                                                        </Box>
+                                                    <ChoreTitleText variant="caption">{chore.title}</ChoreTitleText>
+                                                    <ChoreMeta sx={{ mt: 0.25, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                        <FrequencySpan>{chore.frequency}</FrequencySpan>
                                                         {chore.next_due_date && <span>&middot; {formatDateTime(chore.next_due_date)}</span>}
-                                                    </Box>
+                                                    </ChoreMeta>
                                                 </Box>
                                                 <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
                                                     <Button
@@ -651,31 +600,27 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                     </Button>
                                                 </Box>
-                                            </Box>
+                                            </ChoreCard>
                                         ))}
                                     </Box>
-                                </Box>
+                                </ColumnContainer>
                             )}
 
                             {/* All hidden state */}
                             {visibleAssigned.length === 0 && (!unassignedVisible || columns.unassigned.length === 0) && (
-                                <Box
+                                <EmptyStateBox
                                     sx={{
                                         width: '100%',
-                                        borderRadius: 3,
                                         border: 1,
                                         borderColor: 'divider',
                                         borderStyle: 'dashed',
                                         py: 8,
-                                        textAlign: 'center',
-                                        fontSize: '0.875rem',
-                                        color: 'text.secondary',
                                     }}
                                 >
                                     {chores.length === 0
                                         ? 'No chores yet. Add your first one!'
                                         : 'No members visible. Toggle members above to show their chores.'}
-                                </Box>
+                                </EmptyStateBox>
                             )}
                         </Box>
                     )}
@@ -733,9 +678,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: 'grid', gap: 1 }}>
-                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                        Assign To
-                                    </Typography>
+                                    <SectionLabel variant="body2">Assign To</SectionLabel>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                         {members.map((m) => (
                                             <FormControlLabel

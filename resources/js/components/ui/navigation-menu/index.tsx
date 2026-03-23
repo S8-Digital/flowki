@@ -1,9 +1,38 @@
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
 import MuiLink from '@mui/material/Link';
+import { styled } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+
+const StyledNavigationMenuLink = styled(MuiLink, {
+    shouldForwardProp: (prop) => prop !== 'active',
+})<{ active?: boolean }>(({ theme, active }) => ({
+    borderRadius: theme.shape.borderRadius * 2,
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    color: theme.palette.text.primary,
+    transition: 'color 0.15s, background-color 0.15s',
+    '&:hover': { backgroundColor: theme.palette.action.hover },
+    ...(active ? { backgroundColor: theme.palette.action.selected } : {}),
+}));
+
+const StyledNavigationMenuTrigger = styled(ButtonBase)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius * 2,
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+    backgroundColor: 'transparent',
+    transition: 'color 0.15s, background-color 0.15s',
+    '&:hover': { backgroundColor: theme.palette.action.hover },
+}));
+
+const StyledNavigationMenuContent = styled(Box)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius * 2,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[4],
+}));
 
 function NavigationMenu({ className, children, ...props }: React.HTMLAttributes<HTMLElement> & { sx?: SxProps<Theme> }) {
     return (
@@ -41,29 +70,16 @@ function NavigationMenuLink({
     ...props
 }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { active?: boolean; asChild?: boolean }) {
     return (
-        <MuiLink
+        <StyledNavigationMenuLink
             href={href}
             className={cn(className)}
             underline="none"
-            sx={{
-                display: 'inline-flex',
-                height: 36,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 2,
-                px: 2,
-                py: 0.5,
-                fontSize: '0.875rem',
-                fontWeight: 500,
-                color: 'inherit',
-                transition: 'color 0.15s, background-color 0.15s',
-                '&:hover': { bgcolor: 'action.hover' },
-                ...(active ? { bgcolor: 'action.selected' } : {}),
-            }}
+            active={active}
+            sx={{ display: 'inline-flex', height: 36, alignItems: 'center', justifyContent: 'center', px: 2, py: 0.5 }}
             {...(props as any)}
         >
             {children}
-        </MuiLink>
+        </StyledNavigationMenuLink>
     );
 }
 
@@ -73,50 +89,25 @@ function navigationMenuTriggerStyle() {
 
 function NavigationMenuTrigger({ className, children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
-        <ButtonBase
+        <StyledNavigationMenuTrigger
             className={cn(className)}
-            sx={{
-                display: 'inline-flex',
-                height: 36,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 2,
-                px: 2,
-                py: 0.5,
-                gap: 0.5,
-                fontSize: '0.875rem',
-                fontWeight: 500,
-                cursor: 'pointer',
-                bgcolor: 'transparent',
-                transition: 'color 0.15s, background-color 0.15s',
-                '&:hover': { bgcolor: 'action.hover' },
-            }}
+            sx={{ display: 'inline-flex', height: 36, alignItems: 'center', justifyContent: 'center', px: 2, py: 0.5, gap: 0.5 }}
             {...(props as any)}
         >
             {children}
-        </ButtonBase>
+        </StyledNavigationMenuTrigger>
     );
 }
 
 function NavigationMenuContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <Box
+        <StyledNavigationMenuContent
             className={cn(className)}
-            sx={{
-                position: 'absolute',
-                left: 0,
-                top: '100%',
-                mt: 0.5,
-                minWidth: 192,
-                borderRadius: 2,
-                bgcolor: 'background.paper',
-                p: 0.5,
-                boxShadow: 4,
-            }}
+            sx={{ position: 'absolute', left: 0, top: '100%', mt: 0.5, minWidth: 192, p: 0.5 }}
             {...(props as any)}
         >
             {children}
-        </Box>
+        </StyledNavigationMenuContent>
     );
 }
 

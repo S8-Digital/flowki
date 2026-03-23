@@ -13,7 +13,7 @@ export default function InputError({ message, className }: InputErrorProps) {
 
     return (
         <Box className={className}>
-            <Typography variant="body2" sx={{ color: 'error.main' }}>
+            <Typography variant="body2" color="error">
                 {message}
             </Typography>
         </Box>

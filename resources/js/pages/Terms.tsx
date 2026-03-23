@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import AppearanceToggle from '@/components/AppearanceToggle';
 import AppLogoIcon from '@/components/AppLogoIcon';
 import { Li, P, Section, Ul } from '@/components/PublicLegal';
+import { FooterBox, LogoLink, PageRoot } from '@/lib/publicStyled';
 import { footerLinkSx, logoWordmarkSx } from '@/lib/publicSx';
 import { privacy } from '@/routes';
 
@@ -17,7 +18,7 @@ export default function Terms() {
         <>
             <Head title="Terms of Service — Flowki" />
 
-            <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary' }}>
+            <PageRoot sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
                 {/* Header */}
                 <Box
                     component="header"
@@ -35,12 +36,12 @@ export default function Terms() {
                         bgcolor: 'background.default',
                     }}
                 >
-                    <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'inherit' }}>
+                    <LogoLink component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <AppLogoIcon style={{ width: 32, height: 32 }} />
                         <Typography component="span" sx={logoWordmarkSx}>
                             Flowki
                         </Typography>
-                    </Box>
+                    </LogoLink>
                     <AppearanceToggle />
                 </Box>
 
@@ -51,7 +52,7 @@ export default function Terms() {
                             {/* fontWeight/letterSpacing inherited from h4 theme variant */}
                             <Typography variant="h4">Terms of Service</Typography>
                             {/* fontSize/lineHeight from body2 theme variant */}
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            <Typography variant="body2" color="text.secondary">
                                 Effective date: {EFFECTIVE_DATE}
                             </Typography>
                         </Stack>
@@ -180,7 +181,7 @@ export default function Terms() {
                 </Box>
 
                 {/* Footer */}
-                <Box component="footer" sx={{ borderTop: 1, borderColor: 'divider', px: { xs: 2, sm: 4 }, py: 3, bgcolor: 'background.paper' }}>
+                <FooterBox component="footer" sx={{ px: { xs: 2, sm: 4 }, py: 3 }}>
                     <Stack direction="row" spacing={2} alignItems="center" justifyContent="center" flexWrap="wrap">
                         <MuiLink component={Link} href="/" sx={footerLinkSx}>
                             Home
@@ -188,12 +189,12 @@ export default function Terms() {
                         <MuiLink component={Link} href={privacy()} sx={footerLinkSx}>
                             Privacy Policy
                         </MuiLink>
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        <Typography variant="caption" color="text.secondary">
                             © {new Date().getFullYear()} Flowki
                         </Typography>
                     </Stack>
-                </Box>
-            </Box>
+                </FooterBox>
+            </PageRoot>
         </>
     );
 }

@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import GoogleAddressAutocomplete from '@/components/GoogleAddressAutocomplete';
@@ -14,6 +15,64 @@ interface Props {
     defaultLat: number | null;
     defaultLng: number | null;
 }
+
+const WeatherEmptyText = styled(Typography)(({ theme }) => ({
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const CurrentTemp = styled(Typography)({
+    fontSize: '2rem',
+    lineHeight: 1,
+    fontWeight: 700,
+});
+
+const CurrentDescription = styled(Typography)(({ theme }) => ({
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const CurrentDetails = styled(Typography)(({ theme }) => ({
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
+
+const ForecastGrid = styled('ul')(({ theme }) => ({
+    display: 'grid',
+    gap: theme.spacing(0.5),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    paddingTop: theme.spacing(1.5),
+    margin: 0,
+    paddingLeft: 0,
+    listStyle: 'none',
+}));
+
+const ForecastDayItem = styled('li')({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 4,
+    textAlign: 'center',
+});
+
+const ForecastDayLabel = styled(Typography)(({ theme }) => ({
+    fontSize: '0.625rem',
+    fontWeight: 500,
+    color: theme.palette.text.secondary,
+}));
+
+const ForecastTempRange = styled(Typography)({
+    fontSize: '0.75rem',
+});
+
+const ForecastTempHigh = styled(Typography)({
+    fontWeight: 600,
+});
+
+const ForecastTempLow = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
 
 function formatDay(dateStr: string): string {
     if (!dateStr) {
@@ -104,9 +163,9 @@ export default function WeatherForecastDialog({ open, onOpenChange, defaultLocat
                 {loading ? (
                     <ForecastSkeleton />
                 ) : !data ? (
-                    <Typography sx={{ mt: 3, color: 'text.secondary', textAlign: 'center', fontSize: '0.875rem' }}>
+                    <WeatherEmptyText sx={{ mt: 3 }}>
                         {hasCoords ? 'Weather data unavailable for this location.' : 'Select a location to view the forecast.'}
-                    </Typography>
+                    </WeatherEmptyText>
                 ) : (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
                         {/* Current conditions */}
@@ -120,60 +179,30 @@ export default function WeatherForecastDialog({ open, onOpenChange, defaultLocat
                                 />
                             )}
                             <Box>
-                                <Typography sx={{ fontSize: '2rem', lineHeight: 1, fontWeight: 700 }}>{data.current.temp}°C</Typography>
-                                <Typography sx={{ mt: 0.25, fontSize: '0.875rem', color: 'text.secondary' }}>{data.current.description}</Typography>
-                                <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                                <CurrentTemp>{data.current.temp}°C</CurrentTemp>
+                                <CurrentDescription sx={{ mt: 0.25 }}>{data.current.description}</CurrentDescription>
+                                <CurrentDetails>
                                     Feels {data.current.feels_like}°C · Humidity {data.current.humidity}% · Wind {data.current.wind_speed} km/h
-                                </Typography>
+                                </CurrentDetails>
                             </Box>
                         </Box>
 
                         {/* 5-day forecast grid */}
                         {data.forecast.length > 0 && (
-                            <Box
-                                component="ul"
-                                sx={{
-                                    display: 'grid',
-                                    gridTemplateColumns: `repeat(${Math.min(data.forecast.length, 5)}, 1fr)`,
-                                    gap: 0.5,
-                                    borderTop: '1px solid',
-                                    borderColor: 'divider',
-                                    pt: 1.5,
-                                    m: 0,
-                                    pl: 0,
-                                    listStyle: 'none',
-                                }}
-                            >
+                            <ForecastGrid sx={{ gridTemplateColumns: `repeat(${Math.min(data.forecast.length, 5)}, 1fr)` }}>
                                 {data.forecast.slice(0, 5).map((day) => (
-                                    <Box
-                                        component="li"
-                                        key={day.date}
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            gap: 0.5,
-                                            textAlign: 'center',
-                                        }}
-                                    >
-                                        <Typography component="span" sx={{ fontSize: '0.625rem', fontWeight: 500, color: 'text.secondary' }}>
-                                            {formatDay(day.date)}
-                                        </Typography>
+                                    <ForecastDayItem key={day.date}>
+                                        <ForecastDayLabel component="span">{formatDay(day.date)}</ForecastDayLabel>
                                         {day.icon_url && (
                                             <Box component="img" src={day.icon_url} alt={day.description} sx={{ width: 28, height: 28 }} />
                                         )}
-                                        <Typography component="span" sx={{ fontSize: '0.75rem' }}>
-                                            <Typography component="span" sx={{ fontWeight: 600 }}>
-                                                {day.temp_max}°
-                                            </Typography>
-                                            <Typography component="span" sx={{ color: 'text.secondary' }}>
-                                                {' '}
-                                                / {day.temp_min}°
-                                            </Typography>
-                                        </Typography>
-                                    </Box>
+                                        <ForecastTempRange component="span">
+                                            <ForecastTempHigh component="span">{day.temp_max}°</ForecastTempHigh>
+                                            <ForecastTempLow component="span"> / {day.temp_min}°</ForecastTempLow>
+                                        </ForecastTempRange>
+                                    </ForecastDayItem>
                                 ))}
-                            </Box>
+                            </ForecastGrid>
                         )}
                     </Box>
                 )}

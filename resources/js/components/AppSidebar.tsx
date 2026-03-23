@@ -11,6 +11,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -32,6 +33,105 @@ import { toUrl, urlIsActive } from '@/lib/utils';
 import { dashboard, logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { AppPageProps, NavItem } from '@/types';
+
+const SidebarContainer = styled(Box)(({ theme }) => ({
+    backgroundColor: 'var(--sidebar)',
+    color: 'var(--sidebar-foreground)',
+    boxShadow: theme.shadows[2],
+}));
+
+const SidebarNavButton = styled(ListItemButton)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius,
+    color: 'var(--sidebar-foreground)',
+    '&.Mui-selected': {
+        backgroundColor: 'var(--sidebar-accent)',
+        color: 'var(--sidebar-accent-foreground)',
+        '&:hover': {
+            backgroundColor: 'var(--sidebar-accent)',
+        },
+    },
+    '&:hover': {
+        backgroundColor: 'var(--sidebar-accent)',
+        color: 'var(--sidebar-accent-foreground)',
+    },
+}));
+
+const SidebarNavIcon = styled(ListItemIcon)({
+    color: 'inherit',
+});
+
+const AiNavButton = styled(ListItemButton)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius,
+    color: 'var(--sidebar-foreground)',
+    '&:hover': {
+        backgroundColor: 'var(--sidebar-accent)',
+        color: 'var(--sidebar-accent-foreground)',
+    },
+}));
+
+const SidebarUserIconButton = styled(IconButton)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius,
+    color: 'var(--sidebar-foreground)',
+    '&:hover': {
+        backgroundColor: 'var(--sidebar-accent)',
+    },
+}));
+
+const SidebarUserButton = styled(ListItemButton)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius,
+    color: 'var(--sidebar-foreground)',
+    '&:hover': {
+        backgroundColor: 'var(--sidebar-accent)',
+        color: 'var(--sidebar-accent-foreground)',
+    },
+}));
+
+const SidebarAvatar = styled(Avatar)(({ theme }) => ({
+    fontSize: '0.75rem',
+    backgroundColor: 'var(--sidebar-primary)',
+    color: 'var(--sidebar-primary-foreground)',
+    borderRadius: theme.shape.borderRadius,
+}));
+
+const SidebarDivider = styled(Divider)(({ theme }) => ({
+    borderColor: theme.palette.divider,
+}));
+
+const UserNameText = styled(Typography)({
+    fontSize: '0.875rem',
+    color: 'inherit',
+});
+
+const UserEmailText = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
+const SidebarMenuItem = styled(MenuItem)({
+    fontSize: '0.875rem',
+});
+
+const LogoutMenuItem = styled(MenuItem)(({ theme }) => ({
+    fontSize: '0.875rem',
+    color: theme.palette.error.main,
+}));
+
+const SidebarDesktopDrawer = styled(Drawer)(({ theme }) => ({
+    transition: 'width 0.2s ease',
+    '& .MuiDrawer-paper': {
+        transition: 'width 0.2s ease',
+        boxSizing: 'border-box',
+        border: 'none',
+        overflow: 'visible',
+        borderRight: `1px solid ${theme.palette.divider}`,
+    },
+}));
+
+const SidebarMobileDrawer = styled(Drawer)({
+    '& .MuiDrawer-paper': {
+        boxSizing: 'border-box',
+        border: 'none',
+    },
+});
 
 export default function AppSidebar() {
     const { open, mobileOpen, setMobileOpen } = useAppSidebar();
@@ -71,16 +171,7 @@ export default function AppSidebar() {
     }
 
     const drawerContent = (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                bgcolor: 'var(--sidebar)',
-                color: 'var(--sidebar-foreground)',
-                boxShadow: 2,
-            }}
-        >
+        <SidebarContainer sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Header / Logo */}
             <Box
                 sx={{
@@ -108,46 +199,26 @@ export default function AppSidebar() {
                         const isActive = urlIsActive(item.href, page.url);
                         const Icon = item.icon;
                         const button = (
-                            <ListItemButton
+                            <SidebarNavButton
                                 component={Link as React.ElementType}
                                 href={item.href}
                                 selected={isActive}
                                 sx={{
-                                    borderRadius: 1,
                                     minHeight: 40,
                                     px: open || isMobile ? 1.5 : 1,
                                     justifyContent: open || isMobile ? 'flex-start' : 'center',
-                                    '&.Mui-selected': {
-                                        bgcolor: 'var(--sidebar-accent)',
-                                        color: 'var(--sidebar-accent-foreground)',
-                                        '&:hover': {
-                                            bgcolor: 'var(--sidebar-accent)',
-                                        },
-                                    },
-                                    '&:hover': {
-                                        bgcolor: 'var(--sidebar-accent)',
-                                        color: 'var(--sidebar-accent-foreground)',
-                                    },
-                                    color: 'var(--sidebar-foreground)',
                                 }}
                             >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open || isMobile ? 1.5 : 0,
-                                        justifyContent: 'center',
-                                        color: 'inherit',
-                                    }}
-                                >
+                                <SidebarNavIcon sx={{ minWidth: 0, mr: open || isMobile ? 1.5 : 0, justifyContent: 'center' }}>
                                     {Icon && <Icon size={18} style={item.iconColor ? { color: item.iconColor } : undefined} />}
-                                </ListItemIcon>
+                                </SidebarNavIcon>
                                 {(open || isMobile) && (
                                     <ListItemText
                                         primary={item.title}
                                         primaryTypographyProps={{ fontSize: '0.875rem', fontWeight: isActive ? 600 : 400 }}
                                     />
                                 )}
-                            </ListItemButton>
+                            </SidebarNavButton>
                         );
 
                         return (
@@ -165,7 +236,7 @@ export default function AppSidebar() {
                 </List>
             </Box>
 
-            <Divider sx={{ borderColor: 'var(--sidebar-border)' }} />
+            <SidebarDivider />
 
             {/* Footer */}
             <Box sx={{ py: 1, px: open || isMobile ? 1 : 0.5 }}>
@@ -173,38 +244,19 @@ export default function AppSidebar() {
                 <ListItem disablePadding sx={{ mb: 0.25 }}>
                     {!open && !isMobile ? (
                         <Tooltip title="AI Assistant" placement="right">
-                            <ListItemButton
-                                onClick={() => aiChatModalRef.current?.open()}
-                                sx={{
-                                    borderRadius: 1,
-                                    minHeight: 40,
-                                    px: 1,
-                                    justifyContent: 'center',
-                                    color: 'var(--sidebar-foreground)',
-                                    '&:hover': { bgcolor: 'var(--sidebar-accent)', color: 'var(--sidebar-accent-foreground)' },
-                                }}
-                            >
-                                <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center', color: 'inherit' }}>
+                            <AiNavButton onClick={() => aiChatModalRef.current?.open()} sx={{ minHeight: 40, px: 1, justifyContent: 'center' }}>
+                                <SidebarNavIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                                     <Sparkles size={18} />
-                                </ListItemIcon>
-                            </ListItemButton>
+                                </SidebarNavIcon>
+                            </AiNavButton>
                         </Tooltip>
                     ) : (
-                        <ListItemButton
-                            onClick={() => aiChatModalRef.current?.open()}
-                            sx={{
-                                borderRadius: 1,
-                                minHeight: 40,
-                                px: 1.5,
-                                color: 'var(--sidebar-foreground)',
-                                '&:hover': { bgcolor: 'var(--sidebar-accent)', color: 'var(--sidebar-accent-foreground)' },
-                            }}
-                        >
-                            <ListItemIcon sx={{ minWidth: 0, mr: 1.5, justifyContent: 'center', color: 'inherit' }}>
+                        <AiNavButton onClick={() => aiChatModalRef.current?.open()} sx={{ minHeight: 40, px: 1.5 }}>
+                            <SidebarNavIcon sx={{ minWidth: 0, mr: 1.5, justifyContent: 'center' }}>
                                 <Sparkles size={18} />
-                            </ListItemIcon>
+                            </SidebarNavIcon>
                             <ListItemText primary="AI Assistant" primaryTypographyProps={{ fontSize: '0.875rem' }} />
-                        </ListItemButton>
+                        </AiNavButton>
                     )}
                 </ListItem>
 
@@ -212,72 +264,31 @@ export default function AppSidebar() {
                 <ListItem disablePadding>
                     {!open && !isMobile ? (
                         <Tooltip title={user.name} placement="right">
-                            <IconButton
-                                onClick={handleUserMenuOpen}
-                                size="small"
-                                sx={{
-                                    width: '100%',
-                                    borderRadius: 1,
-                                    py: 0.75,
-                                    color: 'var(--sidebar-foreground)',
-                                    '&:hover': { bgcolor: 'var(--sidebar-accent)' },
-                                }}
-                            >
-                                <Avatar
-                                    src={user.avatar}
-                                    alt={user.name}
-                                    sx={{
-                                        width: 28,
-                                        height: 28,
-                                        fontSize: '0.75rem',
-                                        bgcolor: 'var(--sidebar-primary)',
-                                        color: 'var(--sidebar-primary-foreground)',
-                                        borderRadius: 1,
-                                    }}
-                                >
+                            <SidebarUserIconButton onClick={handleUserMenuOpen} size="small" sx={{ width: '100%', py: 0.75 }}>
+                                <SidebarAvatar src={user.avatar} alt={user.name} sx={{ width: 28, height: 28 }}>
                                     {getInitials(user.name)}
-                                </Avatar>
-                            </IconButton>
+                                </SidebarAvatar>
+                            </SidebarUserIconButton>
                         </Tooltip>
                     ) : (
-                        <ListItemButton
-                            onClick={handleUserMenuOpen}
-                            sx={{
-                                borderRadius: 1,
-                                minHeight: 48,
-                                px: 1.5,
-                                color: 'var(--sidebar-foreground)',
-                                '&:hover': { bgcolor: 'var(--sidebar-accent)', color: 'var(--sidebar-accent-foreground)' },
-                            }}
-                        >
+                        <SidebarUserButton onClick={handleUserMenuOpen} sx={{ minHeight: 48, px: 1.5 }}>
                             <ListItemIcon sx={{ minWidth: 0, mr: 1.5, justifyContent: 'center' }}>
-                                <Avatar
-                                    src={user.avatar}
-                                    alt={user.name}
-                                    sx={{
-                                        width: 28,
-                                        height: 28,
-                                        fontSize: '0.75rem',
-                                        bgcolor: 'var(--sidebar-primary)',
-                                        color: 'var(--sidebar-primary-foreground)',
-                                        borderRadius: 1,
-                                    }}
-                                >
+                                <SidebarAvatar src={user.avatar} alt={user.name} sx={{ width: 28, height: 28 }}>
                                     {getInitials(user.name)}
-                                </Avatar>
+                                </SidebarAvatar>
                             </ListItemIcon>
                             <Box sx={{ flex: 1, minWidth: 0 }}>
-                                <Typography variant="body2" noWrap fontWeight={500} sx={{ fontSize: '0.875rem', color: 'inherit' }}>
+                                <UserNameText variant="body2" noWrap fontWeight={500}>
                                     {user.name}
-                                </Typography>
+                                </UserNameText>
                                 {user.email && (
-                                    <Typography variant="caption" noWrap sx={{ color: 'var(--muted-foreground)', display: 'block' }}>
+                                    <UserEmailText variant="caption" noWrap sx={{ display: 'block' }}>
                                         {user.email}
-                                    </Typography>
+                                    </UserEmailText>
                                 )}
                             </Box>
                             <AppearanceToggle />
-                        </ListItemButton>
+                        </SidebarUserButton>
                     )}
                 </ListItem>
             </Box>
@@ -289,46 +300,40 @@ export default function AppSidebar() {
                 onClose={handleUserMenuClose}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                slotProps={{ paper: { sx: { minWidth: 180, borderRadius: 2 } } }}
+                slotProps={{ paper: { sx: { minWidth: 180 }, style: { borderRadius: 8 } } }}
             >
-                <MenuItem onClick={handleSettings} sx={{ gap: 1.5, fontSize: '0.875rem' }}>
+                <SidebarMenuItem onClick={handleSettings} sx={{ gap: 1.5 }}>
                     <Settings size={16} />
                     Settings
-                </MenuItem>
+                </SidebarMenuItem>
                 <Divider />
-                <MenuItem onClick={handleLogout} sx={{ gap: 1.5, fontSize: '0.875rem', color: 'error.main' }}>
+                <LogoutMenuItem onClick={handleLogout} sx={{ gap: 1.5 }}>
                     <LogOut size={16} />
                     Log out
-                </MenuItem>
+                </LogoutMenuItem>
             </Menu>
-        </Box>
+        </SidebarContainer>
     );
 
     return (
         <>
             {/* Desktop permanent drawer */}
-            <Drawer
+            <SidebarDesktopDrawer
                 variant="permanent"
                 sx={{
                     display: { xs: 'none', md: 'block' },
                     width: open ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH,
                     flexShrink: 0,
-                    transition: 'width 0.2s ease',
                     '& .MuiDrawer-paper': {
                         width: open ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH,
-                        transition: 'width 0.2s ease',
-                        boxSizing: 'border-box',
-                        border: 'none',
-                        overflow: 'visible',
-                        borderRight: '1px solid var(--sidebar-border)',
                     },
                 }}
             >
                 {drawerContent}
-            </Drawer>
+            </SidebarDesktopDrawer>
 
             {/* Mobile temporary drawer */}
-            <Drawer
+            <SidebarMobileDrawer
                 variant="temporary"
                 open={mobileOpen}
                 onClose={() => setMobileOpen(false)}
@@ -337,13 +342,11 @@ export default function AppSidebar() {
                     display: { xs: 'block', md: 'none' },
                     '& .MuiDrawer-paper': {
                         width: SIDEBAR_WIDTH,
-                        boxSizing: 'border-box',
-                        border: 'none',
                     },
                 }}
             >
                 {drawerContent}
-            </Drawer>
+            </SidebarMobileDrawer>
 
             <AiChatModal ref={aiChatModalRef} />
         </>

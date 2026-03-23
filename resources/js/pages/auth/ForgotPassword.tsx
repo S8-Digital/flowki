@@ -1,6 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
@@ -10,6 +11,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/AuthLayout';
 import { login } from '@/routes';
+
+const StatusMessage = styled(Typography)(({ theme }) => ({
+    fontWeight: 500,
+    textAlign: 'center',
+    color: theme.palette.success.main,
+}));
 
 interface Props {
     status?: string;
@@ -27,7 +34,7 @@ export default function ForgotPassword({ status }: Props) {
         <AuthLayout title="Forgot password" description="Enter your email to receive a password reset link">
             <Head title="Forgot password" />
 
-            {status && <Typography sx={{ mb: 2, textAlign: 'center', fontWeight: 500, color: 'success.main' }}>{status}</Typography>}
+            {status && <StatusMessage sx={{ mb: 2 }}>{status}</StatusMessage>}
 
             <Stack spacing={3}>
                 <form onSubmit={handleSubmit}>
@@ -53,7 +60,7 @@ export default function ForgotPassword({ status }: Props) {
                     </Box>
                 </form>
 
-                <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+                <Typography variant="body2" align="center" color="text.secondary">
                     Or, return to <TextLink href={login()}>log in</TextLink>
                 </Typography>
             </Stack>

@@ -2,6 +2,7 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { Fab } from '@mui/material';
 import Box from '@mui/material/Box';
 
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { CheckCircle2, Circle, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -28,6 +29,102 @@ interface Props {
     members: User[];
     categories: Category[];
 }
+
+const PageTitle = styled(Typography)({ fontWeight: 600 });
+const SectionLabel = styled(Typography)({ fontWeight: 500 });
+
+const MemberToggleButton = styled('button')({
+    display: 'flex',
+    alignItems: 'center',
+    border: '1px solid',
+    borderRadius: '50px',
+    fontSize: '0.75rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    backgroundColor: 'transparent',
+});
+
+const MemberAvatar = styled(Box)({
+    display: 'flex',
+    width: 32,
+    height: 32,
+    flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    fontSize: '0.75rem',
+    fontWeight: 700,
+    color: 'white',
+});
+
+const TruncatedBold = styled(Typography)({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontWeight: 600,
+});
+
+const ProgressStats = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
+
+const ProgressTrack = styled(Box)(({ theme }) => ({
+    height: 6,
+    width: '100%',
+    overflow: 'hidden',
+    borderRadius: '50px',
+    backgroundColor: theme.palette.action.hover,
+}));
+
+const ProgressFill = styled(Box)({
+    height: '100%',
+    borderRadius: '50px',
+    transition: 'all 0.3s',
+});
+
+const EmptyColumnCaption = styled(Typography)({
+    textAlign: 'center',
+});
+
+const TodoCard = styled(Box)({
+    borderRadius: '8px',
+});
+
+const TodoTitle = styled(Typography)({
+    display: 'block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontWeight: 500,
+});
+
+const TodoMeta = styled(Box)(({ theme }) => ({
+    fontSize: '0.75rem',
+    color: theme.palette.text.secondary,
+}));
+
+const PriorityLabel = styled(Typography)({
+    fontWeight: 500,
+    textTransform: 'capitalize',
+});
+
+const EmptyStateBox = styled(Box)(({ theme }) => ({
+    borderRadius: Number(theme.shape.borderRadius) * 3,
+    textAlign: 'center',
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary,
+}));
+
+const ColumnContainer = styled(Box)(({ theme }) => ({
+    borderRadius: Number(theme.shape.borderRadius) * 3,
+}));
+
+const ReminderBox = styled(Box)({ borderRadius: '12px' });
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Todos', href: '/todos' }];
 
@@ -156,9 +253,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
                     {/* Header */}
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                            Todos
-                        </Typography>
+                        <PageTitle variant="h6">Todos</PageTitle>
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger asChild>
                                 <Fab color="primary" size="small" aria-label="New Todo">
@@ -271,21 +366,18 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             </SelectContent>
                                         </Select>
                                     </Box>
-                                    <Box
+                                    <ReminderBox
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: 1.5,
-                                            borderRadius: '12px',
                                             border: 1,
                                             borderColor: 'divider',
                                             p: 1.5,
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                                Reminder
-                                            </Typography>
+                                            <SectionLabel variant="body2">Reminder</SectionLabel>
                                             <Switch
                                                 id="create-reminder-enabled"
                                                 checked={createForm.data.reminder_enabled}
@@ -312,7 +404,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 </Select>
                                             </Box>
                                         )}
-                                    </Box>
+                                    </ReminderBox>
                                     <Button type="submit" sx={{ width: '100%' }} disabled={createForm.processing}>
                                         {createForm.processing ? 'Creating…' : 'Create Todo'}
                                     </Button>
@@ -328,70 +420,42 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                             const hidden = hiddenMembers.has(member.id);
 
                             return (
-                                <Box
-                                    component="button"
+                                <MemberToggleButton
                                     key={member.id}
                                     type="button"
                                     onClick={() => toggleMember(member.id)}
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 0.75,
-                                        borderRadius: '50px',
-                                        border: 1,
-                                        px: 1.25,
-                                        py: 0.5,
-                                        fontSize: '0.75rem',
-                                        fontWeight: 500,
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        opacity: hidden ? 0.4 : 1,
-                                        bgcolor: 'transparent',
-                                    }}
+                                    sx={{ gap: 0.75, px: 1.25, py: 0.5 }}
                                     style={{
                                         borderColor: color,
                                         color: hidden ? undefined : color,
                                         backgroundColor: hidden ? undefined : `${color}15`,
+                                        opacity: hidden ? 0.4 : 1,
                                     }}
                                     aria-pressed={!hidden}
                                     title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
                                 >
                                     {hidden ? <EyeOff size={12} /> : <Eye size={12} />}
                                     {member.name}
-                                </Box>
+                                </MemberToggleButton>
                             );
                         })}
                         {/* Unassigned toggle */}
-                        <Box
-                            component="button"
+                        <MemberToggleButton
                             type="button"
                             onClick={() => toggleMember(UNASSIGNED_ID)}
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 0.75,
-                                borderRadius: '50px',
-                                border: 1,
-                                px: 1.25,
-                                py: 0.5,
-                                fontSize: '0.75rem',
-                                fontWeight: 500,
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                opacity: hiddenMembers.has(UNASSIGNED_ID) ? 0.4 : 1,
-                                bgcolor: 'transparent',
-                            }}
+                            sx={{ gap: 0.75, px: 1.25, py: 0.5 }}
                             style={{
                                 borderColor: '#94a3b8',
                                 color: hiddenMembers.has(UNASSIGNED_ID) ? undefined : '#94a3b8',
                                 backgroundColor: hiddenMembers.has(UNASSIGNED_ID) ? undefined : '#94a3b815',
+                                opacity: hiddenMembers.has(UNASSIGNED_ID) ? 0.4 : 1,
                             }}
                             aria-pressed={!hiddenMembers.has(UNASSIGNED_ID)}
                             title={hiddenMembers.has(UNASSIGNED_ID) ? 'Show Unassigned' : 'Hide Unassigned'}
                         >
                             {hiddenMembers.has(UNASSIGNED_ID) ? <EyeOff size={12} /> : <Eye size={12} />}
                             Unassigned
-                        </Box>
+                        </MemberToggleButton>
                     </Box>
 
                     {/* Column view */}
@@ -415,7 +479,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                 const completionPct = total > 0 ? Math.round((done / total) * 100) : 0;
 
                                 return (
-                                    <Box
+                                    <ColumnContainer
                                         key={member.id}
                                         sx={{
                                             display: 'flex',
@@ -424,7 +488,6 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             flex: 1,
                                             flexDirection: 'column',
                                             overflow: 'hidden',
-                                            borderRadius: 3,
                                             border: 1,
                                             borderColor: 'divider',
                                         }}
@@ -435,65 +498,25 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             style={{ backgroundColor: `${color}22`, borderBottom: `3px solid ${color}` }}
                                         >
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        width: 32,
-                                                        height: 32,
-                                                        flexShrink: 0,
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        borderRadius: '50%',
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: 700,
-                                                        color: 'white',
-                                                    }}
-                                                    style={{ backgroundColor: color }}
-                                                    aria-label={member.name}
-                                                >
+                                                <MemberAvatar style={{ backgroundColor: color }} aria-label={member.name}>
                                                     {getInitials(member.name)}
-                                                </Box>
+                                                </MemberAvatar>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}
-                                                    >
-                                                        {member.name}
-                                                    </Typography>
-                                                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                    <TruncatedBold variant="body2">{member.name}</TruncatedBold>
+                                                    <Typography variant="caption" color="text.secondary">
                                                         {pending} pending &middot; {done} done
                                                     </Typography>
                                                 </Box>
                                             </Box>
                                             {total > 0 && (
                                                 <Box sx={{ mt: 0.5 }}>
-                                                    <Box
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'space-between',
-                                                            fontSize: '0.75rem',
-                                                            color: 'text.secondary',
-                                                        }}
-                                                    >
+                                                    <ProgressStats>
                                                         <span>{done} done</span>
                                                         <span>{completionPct}%</span>
-                                                    </Box>
-                                                    <Box
-                                                        sx={{
-                                                            mt: 0.5,
-                                                            height: 6,
-                                                            width: '100%',
-                                                            overflow: 'hidden',
-                                                            borderRadius: '50px',
-                                                            bgcolor: 'action.hover',
-                                                        }}
-                                                    >
-                                                        <Box
-                                                            sx={{ height: '100%', borderRadius: '50px', transition: 'all 0.3s' }}
-                                                            style={{ width: `${completionPct}%`, backgroundColor: color }}
-                                                        />
-                                                    </Box>
+                                                    </ProgressStats>
+                                                    <ProgressTrack sx={{ mt: 0.5 }}>
+                                                        <ProgressFill style={{ width: `${completionPct}%`, backgroundColor: color }} />
+                                                    </ProgressTrack>
                                                 </Box>
                                             )}
                                         </Box>
@@ -501,17 +524,14 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         {/* Column items */}
                                         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
                                             {memberTodos.length === 0 ? (
-                                                <Typography
-                                                    variant="caption"
-                                                    sx={{ py: 3, textAlign: 'center', color: 'text.secondary', display: 'block' }}
-                                                >
+                                                <EmptyColumnCaption variant="caption" color="text.secondary" sx={{ py: 3, display: 'block' }}>
                                                     No todos
-                                                </Typography>
+                                                </EmptyColumnCaption>
                                             ) : (
                                                 memberTodos.map((todo) => (
-                                                    <Box
+                                                    <TodoCard
                                                         key={todo.id}
-                                                        sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, borderRadius: '8px', p: 1 }}
+                                                        sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
                                                         style={{
                                                             backgroundColor: todo.status === 'completed' ? '#9ca3af22' : `${color}15`,
                                                             borderLeft: `3px solid ${todo.status === 'completed' ? '#9ca3af' : color}`,
@@ -525,51 +545,30 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                             )}
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                            <Typography
+                                                            <TodoTitle
                                                                 variant="caption"
-                                                                sx={{
-                                                                    display: 'block',
-                                                                    overflow: 'hidden',
-                                                                    textOverflow: 'ellipsis',
-                                                                    whiteSpace: 'nowrap',
-                                                                    fontWeight: 500,
-                                                                    ...(todo.status === 'completed'
-                                                                        ? { color: 'text.secondary', textDecoration: 'line-through' }
-                                                                        : {}),
-                                                                }}
+                                                                color={todo.status === 'completed' ? 'text.secondary' : undefined}
+                                                                style={{ textDecoration: todo.status === 'completed' ? 'line-through' : undefined }}
                                                             >
                                                                 {todo.title}
-                                                            </Typography>
-                                                            <Box
-                                                                sx={{
-                                                                    mt: 0.25,
-                                                                    display: 'flex',
-                                                                    flexWrap: 'wrap',
-                                                                    gap: 0.5,
-                                                                    fontSize: '0.75rem',
-                                                                    color: 'text.secondary',
-                                                                }}
-                                                            >
-                                                                <Typography
-                                                                    component="span"
+                                                            </TodoTitle>
+                                                            <TodoMeta sx={{ mt: 0.25, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                                <PriorityLabel
                                                                     variant="caption"
-                                                                    sx={{
-                                                                        fontWeight: 500,
-                                                                        textTransform: 'capitalize',
-                                                                        color:
-                                                                            (
-                                                                                {
-                                                                                    low: 'success.main',
-                                                                                    medium: 'warning.main',
-                                                                                    high: 'error.main',
-                                                                                } as Record<string, string>
-                                                                            )[todo.priority] ?? 'inherit',
-                                                                    }}
+                                                                    color={
+                                                                        (
+                                                                            {
+                                                                                low: 'success.main',
+                                                                                medium: 'warning.main',
+                                                                                high: 'error.main',
+                                                                            } as Record<string, string>
+                                                                        )[todo.priority] ?? 'inherit'
+                                                                    }
                                                                 >
                                                                     {todo.priority}
-                                                                </Typography>
+                                                                </PriorityLabel>
                                                                 {todo.due_date && <span>&middot; {formatDateTime(todo.due_date)}</span>}
-                                                            </Box>
+                                                            </TodoMeta>
                                                         </Box>
                                                         <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
                                                             <Button
@@ -596,17 +595,17 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                                 <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                             </Button>
                                                         </Box>
-                                                    </Box>
+                                                    </TodoCard>
                                                 ))
                                             )}
                                         </Box>
-                                    </Box>
+                                    </ColumnContainer>
                                 );
                             })}
 
                             {/* Unassigned column */}
                             {unassignedVisible && columns.unassigned.length > 0 && (
-                                <Box
+                                <ColumnContainer
                                     sx={{
                                         display: 'flex',
                                         maxWidth: 320,
@@ -614,7 +613,6 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         flex: 1,
                                         flexDirection: 'column',
                                         overflow: 'hidden',
-                                        borderRadius: 3,
                                         border: 1,
                                         borderColor: 'divider',
                                     }}
@@ -624,31 +622,10 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                         style={{ backgroundColor: '#94a3b822', borderBottom: '3px solid #94a3b8' }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    width: 32,
-                                                    height: 32,
-                                                    flexShrink: 0,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    borderRadius: '50%',
-                                                    bgcolor: '#94a3b8',
-                                                    fontSize: '0.75rem',
-                                                    fontWeight: 700,
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                ?
-                                            </Box>
+                                            <MemberAvatar style={{ backgroundColor: '#94a3b8' }}>?</MemberAvatar>
                                             <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}
-                                                >
-                                                    Unassigned
-                                                </Typography>
-                                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                <TruncatedBold variant="body2">Unassigned</TruncatedBold>
+                                                <Typography variant="caption" color="text.secondary">
                                                     {columns.unassigned.filter((t) => t.status !== 'completed').length} pending &middot;{' '}
                                                     {columns.unassigned.filter((t) => t.status === 'completed').length} done
                                                 </Typography>
@@ -658,9 +635,9 @@ export default function TodosIndex({ todos, members, categories }: Props) {
 
                                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
                                         {columns.unassigned.map((todo) => (
-                                            <Box
+                                            <TodoCard
                                                 key={todo.id}
-                                                sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, borderRadius: '8px', p: 1 }}
+                                                sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
                                                 style={{
                                                     backgroundColor: todo.status === 'completed' ? '#9ca3af22' : '#94a3b815',
                                                     borderLeft: `3px solid ${todo.status === 'completed' ? '#9ca3af' : '#94a3b8'}`,
@@ -674,50 +651,29 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     )}
                                                 </Box>
                                                 <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                    <Typography
+                                                    <TodoTitle
                                                         variant="caption"
-                                                        sx={{
-                                                            display: 'block',
-                                                            overflow: 'hidden',
-                                                            textOverflow: 'ellipsis',
-                                                            whiteSpace: 'nowrap',
-                                                            fontWeight: 500,
-                                                            ...(todo.status === 'completed'
-                                                                ? { color: 'text.secondary', textDecoration: 'line-through' }
-                                                                : {}),
-                                                        }}
+                                                        color={todo.status === 'completed' ? 'text.secondary' : undefined}
+                                                        style={{ textDecoration: todo.status === 'completed' ? 'line-through' : undefined }}
                                                     >
                                                         {todo.title}
-                                                    </Typography>
-                                                    <Box
-                                                        sx={{
-                                                            mt: 0.25,
-                                                            display: 'flex',
-                                                            flexWrap: 'wrap',
-                                                            gap: 0.5,
-                                                            fontSize: '0.75rem',
-                                                            color: 'text.secondary',
-                                                        }}
-                                                    >
-                                                        <Typography
-                                                            component="span"
+                                                    </TodoTitle>
+                                                    <TodoMeta sx={{ mt: 0.25, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                        <PriorityLabel
                                                             variant="caption"
-                                                            sx={{
-                                                                fontWeight: 500,
-                                                                textTransform: 'capitalize',
-                                                                color:
-                                                                    (
-                                                                        { low: 'success.main', medium: 'warning.main', high: 'error.main' } as Record<
-                                                                            string,
-                                                                            string
-                                                                        >
-                                                                    )[todo.priority] ?? 'inherit',
-                                                            }}
+                                                            color={
+                                                                (
+                                                                    { low: 'success.main', medium: 'warning.main', high: 'error.main' } as Record<
+                                                                        string,
+                                                                        string
+                                                                    >
+                                                                )[todo.priority] ?? 'inherit'
+                                                            }
                                                         >
                                                             {todo.priority}
-                                                        </Typography>
+                                                        </PriorityLabel>
                                                         {todo.due_date && <span>&middot; {formatDateTime(todo.due_date)}</span>}
-                                                    </Box>
+                                                    </TodoMeta>
                                                 </Box>
                                                 <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
                                                     <Button
@@ -744,31 +700,27 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                         <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
                                                     </Button>
                                                 </Box>
-                                            </Box>
+                                            </TodoCard>
                                         ))}
                                     </Box>
-                                </Box>
+                                </ColumnContainer>
                             )}
 
                             {/* All hidden state */}
                             {visibleAssigned.length === 0 && (!unassignedVisible || columns.unassigned.length === 0) && (
-                                <Box
+                                <EmptyStateBox
                                     sx={{
                                         width: '100%',
-                                        borderRadius: 3,
                                         border: 1,
                                         borderColor: 'divider',
                                         borderStyle: 'dashed',
                                         py: 8,
-                                        textAlign: 'center',
-                                        fontSize: '0.875rem',
-                                        color: 'text.secondary',
                                     }}
                                 >
                                     {todos.length === 0
                                         ? 'No todos yet. Create your first one!'
                                         : 'No members visible. Toggle members above to show their todos.'}
-                                </Box>
+                                </EmptyStateBox>
                             )}
                         </Box>
                     )}

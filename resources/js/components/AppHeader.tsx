@@ -2,6 +2,7 @@ import type { InertiaLinkProps } from '@inertiajs/react';
 import { Link, usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import MuiLink from '@mui/material/Link';
+import { styled } from '@mui/material/styles';
 import { BookOpen, Folder, LayoutGrid, Menu } from 'lucide-react';
 import AppLogo from '@/components/AppLogo';
 import AppLogoIcon from '@/components/AppLogoIcon';
@@ -18,6 +19,40 @@ import { getInitials } from '@/hooks/useInitials';
 import { cn, toUrl, urlIsActive } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import type { AppPageProps, BreadcrumbItem, NavItem } from '@/types';
+
+const MobileNavLink = styled(MuiLink, {
+    shouldForwardProp: (prop) => prop !== 'isActive',
+})<{ isActive?: boolean }>(({ theme, isActive }) => ({
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    textDecoration: 'none',
+    color: theme.palette.text.primary,
+    borderRadius: theme.shape.borderRadius,
+    ...(isActive && {
+        backgroundColor: theme.palette.action.selected,
+    }),
+    '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
+
+const ExternalNavLink = styled(MuiLink)(({ theme }) => ({
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    color: theme.palette.text.primary,
+    textDecoration: 'none',
+    '&:hover': {
+        textDecoration: 'underline',
+    },
+}));
+
+const ActiveNavIndicator = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.text.primary,
+}));
+
+const BreadcrumbsBar = styled(Box)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
 
 interface AppHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
@@ -48,14 +83,10 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<AppPageProps>();
     const auth = page.props.auth;
 
-    const srOnly = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' } as const;
+    const srOnlyLayout = { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' } as const;
 
     function isCurrentRoute(url: NonNullable<InertiaLinkProps['href']>) {
         return urlIsActive(url, page.url);
-    }
-
-    function activeItemSx(url: NonNullable<InertiaLinkProps['href']>) {
-        return isCurrentRoute(toUrl(url)) ? { color: 'text.primary', bgcolor: 'action.selected' } : {};
     }
 
     return (
@@ -71,8 +102,10 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="left" sx={{ width: 300, p: 3 }}>
-                                <SheetTitle sx={srOnly}>Navigation Menu</SheetTitle>
-                                <SheetHeader sx={{ display: 'flex', justifyContent: 'flex-start', textAlign: 'left' }}>
+                                <SheetTitle sx={srOnlyLayout} style={{ whiteSpace: 'nowrap' }}>
+                                    Navigation Menu
+                                </SheetTitle>
+                                <SheetHeader sx={{ display: 'flex', justifyContent: 'flex-start' }}>
                                     <AppLogoIcon style={{ width: 24, height: 24 }} />
                                 </SheetHeader>
                                 <Box
@@ -88,33 +121,27 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 >
                                     <Box component="nav" sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mx: -1.5 }}>
                                         {mainNavItems.map((item) => (
-                                            <MuiLink
+                                            <MobileNavLink
                                                 key={item.title}
                                                 component={Link}
                                                 href={item.href}
+                                                isActive={isCurrentRoute(item.href)}
                                                 sx={{
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     gap: 1.5,
-                                                    borderRadius: 1,
                                                     px: 1.5,
                                                     py: 1,
-                                                    fontSize: '0.875rem',
-                                                    fontWeight: 500,
-                                                    textDecoration: 'none',
-                                                    color: 'text.primary',
-                                                    '&:hover': { bgcolor: 'action.hover' },
-                                                    ...activeItemSx(item.href),
                                                 }}
                                             >
                                                 {item.icon && <item.icon size={20} />}
                                                 {item.title}
-                                            </MuiLink>
+                                            </MobileNavLink>
                                         ))}
                                     </Box>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                         {rightNavItems.map((item) => (
-                                            <MuiLink
+                                            <ExternalNavLink
                                                 key={item.title}
                                                 href={toUrl(item.href)}
                                                 target="_blank"
@@ -123,16 +150,11 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     gap: 1,
-                                                    fontSize: '0.875rem',
-                                                    fontWeight: 500,
-                                                    color: 'text.primary',
-                                                    textDecoration: 'none',
-                                                    '&:hover': { textDecoration: 'underline' },
                                                 }}
                                             >
                                                 {item.icon && <item.icon size={20} />}
                                                 <Box component="span">{item.title}</Box>
-                                            </MuiLink>
+                                            </ExternalNavLink>
                                         ))}
                                     </Box>
                                 </Box>
@@ -158,7 +180,7 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             {item.title}
                                         </Link>
                                         {isCurrentRoute(item.href) && (
-                                            <Box
+                                            <ActiveNavIndicator
                                                 sx={{
                                                     position: 'absolute',
                                                     bottom: 0,
@@ -166,7 +188,6 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                     height: '2px',
                                                     width: '100%',
                                                     transform: 'translateY(1px)',
-                                                    bgcolor: 'text.primary',
                                                 }}
                                             />
                                         )}
@@ -185,9 +206,9 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                     <TooltipProvider key={item.title} delayDuration={0}>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
-                                                <Button variant="ghost" size="icon" asChild sx={{ width: 36, height: 36, cursor: 'pointer' }}>
+                                                <Button variant="ghost" size="icon" asChild sx={{ width: 36, height: 36 }}>
                                                     <a href={toUrl(item.href)} target="_blank" rel="noopener noreferrer">
-                                                        <Box component="span" sx={srOnly}>
+                                                        <Box component="span" sx={srOnlyLayout} style={{ whiteSpace: 'nowrap' }}>
                                                             {item.title}
                                                         </Box>
                                                         {item.icon && <item.icon size={20} style={{ opacity: 0.8 }} />}
@@ -205,12 +226,7 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    sx={{ position: 'relative', width: 40, borderRadius: '50%', p: 0.5 }}
-                                    aria-label="User menu"
-                                >
+                                <Button variant="ghost" size="icon" sx={{ position: 'relative', width: 40, p: 0.5 }} aria-label="User menu">
                                     <Avatar style={{ width: 32, height: 32, overflow: 'hidden', borderRadius: '50%' }}>
                                         {auth.user.avatar && <AvatarImage src={auth.user.avatar} alt={auth.user.name} />}
                                         <AvatarFallback style={{ borderRadius: 8, fontWeight: 600 }}>{getInitials(auth.user?.name)}</AvatarFallback>
@@ -227,7 +243,7 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
             {breadcrumbs.length > 1 && (
                 <Box sx={{ display: 'flex', width: '100%', borderBottom: 1, borderColor: 'divider' }}>
-                    <Box
+                    <BreadcrumbsBar
                         sx={{
                             mx: 'auto',
                             display: 'flex',
@@ -236,11 +252,10 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             alignItems: 'center',
                             justifyContent: 'flex-start',
                             px: 2,
-                            color: 'text.secondary',
                         }}
                     >
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
-                    </Box>
+                    </BreadcrumbsBar>
                 </Box>
             )}
         </Box>

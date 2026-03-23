@@ -46,7 +46,7 @@ function CollapsibleTrigger({ asChild, children, ...props }: { asChild?: boolean
         });
     }
     return (
-        <ButtonBase onClick={handleClick} sx={{ display: 'block', textAlign: 'left', width: '100%' }} {...(props as any)}>
+        <ButtonBase onClick={handleClick} sx={{ display: 'block', width: '100%' }} {...(props as any)}>
             {children}
         </ButtonBase>
     );

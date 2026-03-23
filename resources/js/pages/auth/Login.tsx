@@ -1,6 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
 import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
@@ -13,6 +14,12 @@ import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/AuthLayout';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
+
+const StatusMessage = styled(Typography)(({ theme }) => ({
+    fontWeight: 500,
+    textAlign: 'center',
+    color: theme.palette.success.main,
+}));
 
 interface Props {
     status?: string;
@@ -35,7 +42,7 @@ export default function Login({ status, canResetPassword }: Props) {
         <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
             <Head title="Log in" />
 
-            {status && <Typography sx={{ mb: 2, textAlign: 'center', fontWeight: 500, color: 'success.main' }}>{status}</Typography>}
+            {status && <StatusMessage sx={{ mb: 2 }}>{status}</StatusMessage>}
 
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Box sx={{ display: 'grid', gap: 3 }}>
@@ -98,7 +105,7 @@ export default function Login({ status, canResetPassword }: Props) {
 
                 <SocialAuthButtons />
 
-                <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+                <Typography variant="body2" align="center" color="text.secondary">
                     Don't have an account?{' '}
                     <TextLink href={register()} tabIndex={5}>
                         Sign up
