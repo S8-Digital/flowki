@@ -1,9 +1,9 @@
 import { Link } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { styled } from '@mui/material/styles';
 import type { PropsWithChildren } from 'react';
 import Heading from '@/components/Heading';
 import { Separator } from '@/components/ui/separator';

@@ -1,9 +1,9 @@
 import { Link, usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { styled } from '@mui/material/styles';
 import type { PropsWithChildren } from 'react';
 import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';

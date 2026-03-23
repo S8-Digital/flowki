@@ -1,8 +1,8 @@
 import { useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { alpha, styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { useRef, useState } from 'react';
 import { destroy } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import HeadingSmall from '@/components/HeadingSmall';

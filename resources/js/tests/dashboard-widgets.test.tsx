@@ -115,7 +115,7 @@ describe('TodoListWidget', () => {
     it('renders completed todo with line-through', () => {
         render(<TodoListWidget todos={[{ ...baseTodoItem, status: 'completed' }]} />);
         const titleEl = screen.getByText('Buy milk');
-        expect(titleEl).toHaveClass('line-through');
+        expect(titleEl).toHaveStyle({ textDecoration: 'line-through' });
     });
 
     it('renders multiple todos', () => {

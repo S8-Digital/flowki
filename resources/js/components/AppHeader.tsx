@@ -226,12 +226,7 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    sx={{ position: 'relative', width: 40, p: 0.5 }}
-                                    aria-label="User menu"
-                                >
+                                <Button variant="ghost" size="icon" sx={{ position: 'relative', width: 40, p: 0.5 }} aria-label="User menu">
                                     <Avatar style={{ width: 32, height: 32, overflow: 'hidden', borderRadius: '50%' }}>
                                         {auth.user.avatar && <AvatarImage src={auth.user.avatar} alt={auth.user.name} />}
                                         <AvatarFallback style={{ borderRadius: 8, fontWeight: 600 }}>{getInitials(auth.user?.name)}</AvatarFallback>

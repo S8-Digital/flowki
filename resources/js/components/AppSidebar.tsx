@@ -244,10 +244,7 @@ export default function AppSidebar() {
                 <ListItem disablePadding sx={{ mb: 0.25 }}>
                     {!open && !isMobile ? (
                         <Tooltip title="AI Assistant" placement="right">
-                            <AiNavButton
-                                onClick={() => aiChatModalRef.current?.open()}
-                                sx={{ minHeight: 40, px: 1, justifyContent: 'center' }}
-                            >
+                            <AiNavButton onClick={() => aiChatModalRef.current?.open()} sx={{ minHeight: 40, px: 1, justifyContent: 'center' }}>
                                 <SidebarNavIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                                     <Sparkles size={18} />
                                 </SidebarNavIcon>

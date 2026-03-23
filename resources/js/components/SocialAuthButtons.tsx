@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import MuiButton from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { redirect } from '@/routes/social';
 
 const DividerLine = styled(Box)(({ theme }) => ({
