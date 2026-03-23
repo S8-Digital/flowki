@@ -4,12 +4,13 @@ import { styled } from '@mui/material/styles';
 import { Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import type { PolymorphicProps } from '@/types/globals';
 import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
 import { show as recipeShow } from '@/actions/App/Http/Controllers/RecipeController';
 import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 interface SearchResults {
     todos: Array<{ id: number; title: string }>;
@@ -25,6 +26,7 @@ const SearchOverlay = styled(Box)({
     backgroundColor: 'rgba(0,0,0,0.5)',
     backdropFilter: 'blur(4px)',
     cursor: 'pointer',
+    zIndex: 10,
 });
 
 const SearchPanel = styled(Box)(({ theme }) => ({
@@ -65,17 +67,19 @@ const SearchSectionHeader = styled('p')(({ theme }) => ({
     margin: 0,
 }));
 
-const SearchResultItem = styled(Box, { shouldForwardProp: (prop) => prop !== 'muted' })<{ muted?: boolean }>(({ theme, muted }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    borderRadius: 6,
-    fontSize: '0.875rem',
-    textDecoration: 'none',
-    color: muted ? theme.palette.text.secondary : 'inherit',
-    ...(!muted && { '&:hover': { backgroundColor: theme.palette.action.hover } }),
-    margin: 0,
-})) as React.ComponentType<React.ComponentProps<typeof Box> & { muted?: boolean }>;
+const SearchResultItem = styled(Box, { shouldForwardProp: (prop) => prop !== 'muted' })<PolymorphicProps & { muted?: boolean }>(
+    ({ theme, muted }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        gap: theme.spacing(1),
+        borderRadius: 6,
+        fontSize: '0.875rem',
+        textDecoration: 'none',
+        color: muted ? theme.palette.text.secondary : 'inherit',
+        ...(!muted && { '&:hover': { backgroundColor: theme.palette.action.hover } }),
+        margin: 0,
+    }),
+);
 
 export default function GlobalSearch() {
     const [isOpen, setIsOpen] = useState(false);
@@ -133,7 +137,7 @@ export default function GlobalSearch() {
                         sx={{
                             position: 'fixed',
                             inset: 0,
-                            zIndex: 50,
+                            zIndex: 9999,
                             display: 'flex',
                             alignItems: 'flex-start',
                             justifyContent: 'center',
@@ -146,10 +150,10 @@ export default function GlobalSearch() {
                             <SearchInputWrapper>
                                 <Search style={{ width: 16, height: 16, flexShrink: 0, color: 'var(--muted-foreground)' }} />
                                 <Input
+                                    label="Search"
+                                    placeholder="Search todos, chores, events, recipes…"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="Search todos, chores, events, recipes…"
-                                    style={{ border: 0, padding: 0, boxShadow: 'none', flex: 1 }}
                                     autoFocus
                                 />
                                 <Button variant="ghost" size="icon" style={{ width: 24, height: 24, flexShrink: 0 }} onClick={close}>

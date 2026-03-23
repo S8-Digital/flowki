@@ -17,12 +17,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import UserMenuContent from '@/components/UserMenuContent';
 import { getInitials } from '@/hooks/useInitials';
 import { cn, toUrl, urlIsActive } from '@/lib/utils';
-import { dashboard } from '@/routes';
 import type { AppPageProps, BreadcrumbItem, NavItem } from '@/types';
+import type { PolymorphicProps } from '@/types/globals';
+import { dashboard } from '@/routes';
 
 const MobileNavLink = styled(MuiLink, {
     shouldForwardProp: (prop) => prop !== 'isActive',
-})<{ isActive?: boolean }>(({ theme, isActive }) => ({
+})<PolymorphicProps & { isActive?: boolean }>(({ theme, isActive }) => ({
     fontSize: '0.875rem',
     fontWeight: 500,
     textDecoration: 'none',
@@ -123,8 +124,8 @@ export default function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                         {mainNavItems.map((item) => (
                                             <MobileNavLink
                                                 key={item.title}
-                                                component={Link}
-                                                href={item.href}
+                                                component={Link as React.ElementType}
+                                                href={toUrl(item.href)}
                                                 isActive={isCurrentRoute(item.href)}
                                                 sx={{
                                                     display: 'flex',

@@ -5,6 +5,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useAppSidebar } from '@/components/AppSidebarContext';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import GlobalSearch from '@/components/GlobalSearch';
 import NotificationBell from '@/components/NotificationBell';
 import type { BreadcrumbItem } from '@/types';
 
@@ -45,6 +46,7 @@ export default function AppSidebarHeader({ breadcrumbs = [] }: AppSidebarHeaderP
                 {breadcrumbs.length > 0 && <Breadcrumbs breadcrumbs={breadcrumbs} />}
             </Stack>
             <Stack direction="row" sx={{ alignItems: 'center' }}>
+                <GlobalSearch />
                 <NotificationBell />
             </Stack>
         </Box>
