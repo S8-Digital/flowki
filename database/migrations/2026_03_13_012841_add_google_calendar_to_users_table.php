@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('google_calendar_id')->nullable()->after('remember_token');
-            $table->json('google_calendar_token')->nullable()->after('google_calendar_id');
+            $table->string('google_calendar_id')->nullable();
+            $table->json('google_calendar_token')->nullable();
         });
     }
 

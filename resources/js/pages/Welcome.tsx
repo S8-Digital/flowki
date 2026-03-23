@@ -15,6 +15,7 @@ import { useRemoteConfig } from '@/hooks/useRemoteConfig';
 import { FooterBox, LogoLink, PageRoot } from '@/lib/publicStyled';
 import { footerLinkSx, logoWordmarkSx, navLinkSx } from '@/lib/publicSx';
 import { login, privacy, register, terms } from '@/routes';
+import type { PolymorphicProps } from '@/types/globals';
 
 /** Map of icon names (stored in Remote Config) to Lucide components */
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -72,7 +73,7 @@ const DEFAULT_BENEFITS: BenefitItem[] = [
 
 // ── Styled components (visual props not permitted in sx) ──────────────────────
 
-const NavCTAButton = styled(MuiButton)({ whiteSpace: 'nowrap' });
+const NavCTAButton = styled(MuiButton)<PolymorphicProps>({ whiteSpace: 'nowrap' });
 
 const HeroBadge = styled(Chip)(({ theme }) => ({
     fontWeight: 500,
@@ -95,7 +96,7 @@ const HeroSubheading = styled(Typography)(({ theme }) => ({
     [theme.breakpoints.up('sm')]: { fontSize: '1.25rem' },
 }));
 
-const HeroCTAButton = styled(MuiButton)({ fontSize: '1rem' });
+const HeroCTAButton = styled(MuiButton)<PolymorphicProps>({ fontSize: '1rem' });
 
 const SectionHeading = styled(Typography)(({ theme }) => ({
     fontSize: '1.75rem',
@@ -109,7 +110,7 @@ const SectionSubheading = styled(Typography)(({ theme }) => ({
 
 const ItemTitle = styled(Typography)({ fontWeight: 700 });
 
-const PaperSection = styled(Box)(({ theme }) => ({
+const PaperSection = styled(Box)<PolymorphicProps>(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
@@ -129,11 +130,11 @@ const CTAHeading = styled(Typography)(({ theme }) => ({
     [theme.breakpoints.up('sm')]: { fontSize: '2.75rem' },
 }));
 
-const CTAMainButton = styled(MuiButton)({ fontSize: '1.0625rem' });
+const CTAMainButton = styled(MuiButton)<PolymorphicProps>({ fontSize: '1.0625rem' });
 
-const FooterBranding = styled(Typography)({ fontWeight: 700, fontSize: '0.9rem' });
+const FooterBranding = styled(Typography)<PolymorphicProps>({ fontWeight: 700, fontSize: '0.9rem' });
 
-const CenteredSection = styled(Box)(({ theme }) => ({
+const CenteredSection = styled(Box)<PolymorphicProps>(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     textAlign: 'center',
 }));

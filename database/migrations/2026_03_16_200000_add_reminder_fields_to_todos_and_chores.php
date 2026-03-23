@@ -9,13 +9,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('todos', function (Blueprint $table) {
-            $table->boolean('reminder_enabled')->default(true)->after('due_date');
-            $table->unsignedSmallInteger('reminder_lead_time')->default(60)->after('reminder_enabled');
+            $table->boolean('reminder_enabled')->default(true);
+            $table->unsignedSmallInteger('reminder_lead_time')->default(60);
         });
 
         Schema::table('chores', function (Blueprint $table) {
-            $table->boolean('reminder_enabled')->default(true)->after('next_due_date');
-            $table->unsignedSmallInteger('reminder_lead_time')->default(60)->after('reminder_enabled');
+            $table->boolean('reminder_enabled')->default(true);
+            $table->unsignedSmallInteger('reminder_lead_time')->default(60);
         });
     }
 

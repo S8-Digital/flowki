@@ -57,14 +57,12 @@ const sharedComponents = {
         },
     },
     MuiButton: {
-        defaultProps: {
-            disableRipple: true,
-            disableElevation: true,
-        },
+        defaultProps: {},
         styleOverrides: {
             root: {
                 textTransform: 'none',
                 fontWeight: 700,
+                borderRadius: 32,
             },
         },
     },

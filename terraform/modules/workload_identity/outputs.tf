@@ -10,7 +10,7 @@ output "provider_name" {
 
 output "service_account_email" {
   description = "Email of the service account that GitHub Actions impersonates."
-  value       = data.google_service_account.github_actions_sa.email
+  value = "${var.service_account_id}@${var.project_id}.iam.gserviceaccount.com"
 }
 
 output "workload_identity_provider" {

@@ -1,4 +1,3 @@
-import { router } from '@inertiajs/react';
 import type { MessagePayload } from 'firebase/messaging';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { destroy, store } from '@/actions/App/Http/Controllers/FcmTokenController';
@@ -55,7 +54,14 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
 
             setFcmToken(token);
 
-            router.post(store().url, { token, device_type: 'web' });
+            await fetch(store().url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
+                },
+                body: JSON.stringify({ token, device_type: 'web' }),
+            });
         } finally {
             setIsRegistering(false);
         }
@@ -66,9 +72,13 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
             return;
         }
 
-        router.delete(destroy(fcmToken).url, {
-            onSuccess: () => setFcmToken(null),
+        await fetch(destroy(fcmToken).url, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
+            },
         });
+        setFcmToken(null);
     }, [fcmToken]);
 
     return {

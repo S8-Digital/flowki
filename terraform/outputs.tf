@@ -5,7 +5,7 @@ output "cloud_run_url" {
 
 output "cloud_sql_connection_name" {
   description = "Cloud SQL instance connection name (PROJECT:REGION:INSTANCE)."
-  value       = google_sql_database_instance.mysql.connection_name
+  value       = google_sql_database_instance.postgres.connection_name
 }
 
 output "artifact_registry_repository" {
