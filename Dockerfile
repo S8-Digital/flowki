@@ -1,4 +1,4 @@
-ARG PHP_VERSION=8.5.3
+ARG PHP_VERSION=8.4
 FROM php:${PHP_VERSION}-fpm-alpine
 
 # Install system dependencies
@@ -14,12 +14,24 @@ RUN apk add --no-cache \
     zip \
     unzip \
     bash \
-    icu-dev
+    icu-dev \
+    netcat-openbsd \
+    icu-dev \
+    icu-data-full
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
-        exif gd pdo pdo_pgsql pcntl zip intl opcache
+    && docker-php-ext-configure intl
+
+RUN docker-php-ext-install \
+    exif \
+    gd \
+    pdo \
+    pdo_pgsql \
+    pcntl \
+    zip \
+    intl \
+    opcache
 
 # Redis (using pecl)
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
@@ -51,9 +63,14 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Copy configs
-COPY .docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY .docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
+COPY .docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY .docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY .docker/nginx/app.conf /etc/nginx/http.d/default.conf
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+USER root
+RUN chown -R nobody:nobody /etc/nginx /usr/local/etc/php-fpm.d /etc/supervisor
 
 # Use the 'nobody' user for security
 USER nobody
