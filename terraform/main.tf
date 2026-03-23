@@ -208,8 +208,6 @@ resource "google_sql_database" "app" {
   project  = var.project_id
   instance = google_sql_database_instance.postgres.name
   name     = var.db_name
-  charset  = "utf8mb4"
-  collation = "utf8mb4_unicode_ci"
 }
 
 resource "random_password" "db_password" {

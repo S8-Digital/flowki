@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->json('notification_preferences')->nullable()->after('profile_color');
+            $table->json('notification_preferences')->nullable();
         });
     }
 

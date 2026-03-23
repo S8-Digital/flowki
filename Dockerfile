@@ -10,6 +10,7 @@ RUN apk add --no-cache \
     libjpeg-turbo-dev \
     freetype-dev \
     libzip-dev \
+    libpq-dev \
     zip \
     unzip \
     bash \
@@ -18,7 +19,7 @@ RUN apk add --no-cache \
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
-        exif gd pdo pdo_mysql mysqli pcntl zip intl opcache
+        exif gd pdo pdo_pgsql pcntl zip intl opcache
 
 # Redis (using pecl)
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
