@@ -1,7 +1,14 @@
-node_modules
-vendor
-.git
+# Ignore local environment and dependencies
 .env
-tests
-Dockerfile
-.docker
+/node_modules
+/vendor
+
+# Ignore IDE and OS junk
+.git
+.idea
+.vscode
+.DS_Store
+
+# Ignore build artifacts that we generate INSIDE the Dockerfile
+public/build
+# (We don't ignore .docker because we need those config files!)
