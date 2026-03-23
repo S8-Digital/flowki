@@ -8,7 +8,6 @@ use App\Models\Chore;
 use App\Models\ShoppingItem;
 use App\Models\ShoppingList;
 use App\Models\Todo;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -144,6 +143,22 @@ class RtdbObserversTest extends TestCase
         });
     }
 
+    public function test_updating_a_shopping_list_dispatches_sync_job(): void
+    {
+        Queue::fake();
+
+        $list = ShoppingList::factory()->create();
+        Queue::assertPushed(SyncModelToRtdb::class);
+
+        Queue::fake(); // reset
+        $list->update(['name' => 'Updated Groceries']);
+
+        Queue::assertPushed(SyncModelToRtdb::class, function (SyncModelToRtdb $job) use ($list) {
+            return $job->path === "families/{$list->family_id}/shopping_lists/{$list->id}"
+                && $job->data['name'] === 'Updated Groceries';
+        });
+    }
+
     public function test_deleting_a_shopping_list_dispatches_remove_job(): void
     {
         Queue::fake();
@@ -159,6 +174,39 @@ class RtdbObserversTest extends TestCase
             return $job->path === "families/{$familyId}/shopping_lists/{$listId}"
                 && $job->data === null;
         });
+    }
+
+    public function test_deleting_a_shopping_list_also_removes_orphaned_item_nodes(): void
+    {
+        Queue::fake();
+
+        $list = ShoppingList::factory()->create();
+        $item = ShoppingItem::factory()->create(['shopping_list_id' => $list->id]);
+        $familyId = $list->family_id;
+        $itemId = $item->id;
+
+        Queue::fake(); // reset after create
+        $list->delete();
+
+        // The ShoppingListObserver::deleting() hook must dispatch a remove for
+        // each child item so RTDB doesn't keep orphans after the cascade delete.
+        Queue::assertPushed(SyncModelToRtdb::class, function (SyncModelToRtdb $job) use ($familyId, $itemId) {
+            return $job->path === "families/{$familyId}/shopping_items/{$itemId}"
+                && $job->data === null;
+        });
+    }
+
+    public function test_shopping_list_to_sync_array_contains_expected_keys(): void
+    {
+        Queue::fake();
+
+        $list = ShoppingList::factory()->create();
+
+        $array = $list->toSyncArray();
+
+        foreach (['id', 'family_id', 'created_by', 'name', 'is_shared', 'updated_at'] as $key) {
+            $this->assertArrayHasKey($key, $array, "toSyncArray() is missing key: {$key}");
+        }
     }
 
     // ── ShoppingItem ──────────────────────────────────────────────────────────

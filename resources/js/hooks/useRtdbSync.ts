@@ -75,7 +75,14 @@ export function useRtdbSync<T>(path: string | null, initialValue: T): RtdbSyncSt
                     },
                 );
 
-                unsubscribeRef.current = unsubscribe;
+                // The effect may have been cleaned up while the async imports
+                // were in-flight. Immediately unsubscribe if that happened to
+                // avoid a leaked listener on an old path.
+                if (cancelled) {
+                    unsubscribe();
+                } else {
+                    unsubscribeRef.current = unsubscribe;
+                }
             } catch (err) {
                 if (!cancelled) {
                     setError(err instanceof Error ? err : new Error(String(err)));
