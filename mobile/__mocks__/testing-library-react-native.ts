@@ -10,5 +10,5 @@
  * vitest.config.ts aliases `@testing-library/react-native` to this file for
  * the test environment only, so the source and mobile app code are unaffected.
  */
-export { renderHook, act } from '@testing-library/react';
+export { renderHook, act, waitFor } from '@testing-library/react';
 

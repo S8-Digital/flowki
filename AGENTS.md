@@ -71,13 +71,29 @@ This sets `core.hooksPath = .husky` so the pre-commit hook runs on every `git co
 
 This project includes a native mobile app built with Expo, located in the `mobile/` directory.
 
+### Shared Workspace (`shared/`)
+
+Cross-platform logic shared between the web (`resources/js/`) and mobile (`mobile/`) apps lives in the `shared/` npm workspace:
+
+- **`shared/src/types/index.ts`**: Shared domain types (User, Family, Todo, Chore, etc.)
+- **`shared/src/hooks/useRtdb.ts`**: Platform-agnostic Firebase RTDB hook — accepts `getDatabase`, `ref`, and `onValue` as parameters so each platform supplies its own Firebase initialisation and mockable functions
+- **`shared/src/index.ts`**: Re-exports all shared types and hooks
+
+Rules for shared code:
+- No platform-specific imports (no `react-native`, no `@inertiajs/react`).
+- No `firebase/database` imports — firebase functions are injected by the platform wrapper.
+- Types may reference `firebase` type-only imports if needed, but no runtime imports.
+- Changes to `shared/` must be verified against both mobile tests (`cd mobile && npm test`) and web tests (`npm test`).
+
 ### Mobile Architecture
 
 - **Framework**: Expo + `expo-router` (file-based routing under `mobile/app/`)
 - **State**: Redux Toolkit — store in `mobile/store/`, slices in `mobile/store/slices/`
 - **UI**: `react-native-paper` — do **not** use MUI; it has no native performance story
 - **Auth**: Sanctum bearer tokens stored via `expo-secure-store` (`mobile/lib/storage.ts`)
-- **Real-time**: Firebase RTDB listeners via `mobile/hooks/useRtdb.ts`
+- **Real-time**: Firebase RTDB listeners via `mobile/hooks/useRtdb.ts` (wraps the shared hook, injecting mobile firebase fns)
+- **Push notifications**: `expo-notifications` + `mobile/hooks/usePushNotifications.ts`
+- **Background sync**: `expo-background-fetch` + `expo-task-manager` via `mobile/hooks/useBackgroundSync.ts`
 - **API client**: `mobile/lib/api.ts` — communicates with `/api/mobile/*` Laravel endpoints
 
 ### Mobile Development Rules
@@ -207,10 +223,15 @@ protected function isAccessible(User $user, ?string $path = null): bool
 ## Mobile Tests (Expo / React Native)
 
 - Every new feature or bug fix that touches mobile screens, hooks, components, or API integrations under `mobile/` **must** include associated mobile tests. This is a hard requirement for all PRs.
-- Place mobile test files in `mobile/__tests__/`, mirroring the directory structure of the file being tested (e.g., `mobile/__tests__/hooks/useRtdb.test.ts`, `mobile/__tests__/app/(tabs)/todos.test.tsx`).
-- Mock external dependencies (Firebase, SecureStore, NetInfo, Redux store) at the top of each test file.
+- Place mobile test files in `mobile/__tests__/`, mirroring the directory structure of the file being tested (e.g., `mobile/__tests__/useRtdb.test.ts`, `mobile/__tests__/usePushNotifications.test.ts`).
+- Global mocks live in `mobile/vitest.setup.ts`. **All mocks that must apply to shared workspace modules (e.g. `firebase/database`) must be registered there**, not just in individual test files, because Vitest's per-file `vi.mock` doesn't propagate across the module boundary created by the `@flowki/shared` alias.
+- Mock external dependencies (Firebase, SecureStore, NetInfo, Redux store) via `vitest.setup.ts` or at the top of each test file.
+- `firebase/database` (`ref`, `onValue`, `enableNetwork`) is mocked globally in `vitest.setup.ts`. Per-test behaviour is configured with `vi.mocked(fbRef).mockImplementation(...)` in `beforeEach`.
+- The shim at `mobile/__mocks__/testing-library-react-native.ts` re-exports `renderHook`, `act`, and `waitFor` from `@testing-library/react` for the jsdom environment.
+- Use `waitFor` (not a hand-rolled `flushPromises`) to wait for async RTDB effects to settle.
 - Tests must cover: component rendering, user interactions (create/toggle/delete), loading states, and error states.
-- Run mobile tests with `cd mobile && npm test`.
+- Run mobile tests: `cd mobile && npm test` (or `npm run test:watch` for watch mode).
+- Run a single mobile test file: `cd mobile && npx vitest run __tests__/useRtdb.test.ts`.
 
 ## Full Test Coverage Requirement
 

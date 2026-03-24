@@ -1,6 +1,125 @@
 # Flowki
 
-A family management application built with Laravel 12.
+A family management application built with Laravel 12, a React/Inertia web app, and an Expo mobile app.
+
+---
+
+## Project Structure
+
+```
+flowki/
+├── app/                     # Laravel PHP backend
+├── resources/js/            # Web frontend (React + Inertia + MUI)
+├── mobile/                  # Expo/React Native mobile app
+├── shared/                  # Shared cross-platform TypeScript (types, hooks)
+├── routes/
+│   ├── web.php              # Web routes
+│   ├── mobile.php           # Mobile API routes (/api/mobile/*)
+│   └── ...
+└── ...
+```
+
+### Shared Workspace (`shared/`)
+
+Cross-platform logic re-used by both the web and mobile apps:
+
+| File | Purpose |
+|------|---------|
+| `shared/src/types/index.ts` | Domain types (User, Family, Todo, Chore, etc.) |
+| `shared/src/hooks/useRtdb.ts` | Firebase RTDB hook (platform-agnostic, firebase fns injected) |
+
+---
+
+## Development Setup
+
+### Prerequisites
+
+- Node.js 22+, PHP 8.5+, Composer, Docker (for Sail)
+
+### 1. Install all dependencies
+
+```bash
+npm install        # installs root, mobile, and shared workspaces
+composer install
+```
+
+### 2. Backend (Laravel via Sail)
+
+```bash
+cp .env.example .env
+vendor/bin/sail up -d
+vendor/bin/sail artisan key:generate
+vendor/bin/sail artisan migrate --seed
+```
+
+### 3. Web frontend
+
+```bash
+npm run dev        # Vite dev server
+```
+
+### 4. Mobile app (Expo)
+
+```bash
+cp mobile/.env.example mobile/.env   # fill in EXPO_PUBLIC_* vars
+cd mobile && npm start               # or npx expo start
+```
+
+---
+
+## Testing
+
+### Web frontend (Vitest)
+
+```bash
+# Run all web tests (single pass)
+npm run test
+
+# Watch mode
+npm run test:watch
+```
+
+Configuration: `vitest.config.ts` — environment: `jsdom`, setup: `resources/js/tests/setup.ts`.
+
+### Mobile (Vitest + @testing-library/react)
+
+```bash
+# Run all mobile tests (single pass)
+cd mobile && npm test
+
+# Watch mode
+cd mobile && npm run test:watch
+
+# Single file
+cd mobile && npx vitest run __tests__/useRtdb.test.ts
+```
+
+Configuration: `mobile/vitest.config.ts` — environment: `jsdom`, setup: `mobile/vitest.setup.ts`.
+
+**Important:** Global mocks (including `firebase/database`) are registered in `mobile/vitest.setup.ts`.
+Per-file `vi.mock('firebase/database')` will **not** propagate to `@flowki/shared` modules — always add new shared-module mocks to the setup file.
+
+### PHP (PHPUnit/paratest)
+
+```bash
+vendor/bin/sail artisan test --compact
+# or parallel:
+./vendor/bin/paratest --runner WrapperRunner --processes 12
+```
+
+### Lint & Format
+
+```bash
+# PHP
+vendor/bin/pint
+
+# TypeScript/TSX (ESLint + Prettier)
+npm run lint
+npm run format
+
+# Type-check
+npm run type-check
+```
 
 ---
 

@@ -1,4 +1,3 @@
-import type { Database } from 'firebase/database';
 import { useEffect, useRef, useState } from 'react';
 
 export interface RtdbState<T> {
@@ -11,28 +10,59 @@ export interface RtdbState<T> {
 }
 
 /**
+ * Platform-supplied Firebase functions injected by the caller.
+ * Using injection keeps the shared hook free of any firebase/database import,
+ * which means platform-specific wrappers (mobile, web) can supply properly
+ * mocked versions in tests without module-isolation interference.
+ */
+export interface RtdbFirebaseFns {
+    /**
+     * Create a DatabaseReference at the given path.
+     * Typed as `unknown` so the shared package needs no firebase types.
+     */
+    ref: (db: unknown, path: string) => unknown;
+    /**
+     * Subscribe to value changes at a DatabaseReference.
+     * Returns an unsubscribe function.
+     */
+    onValue: (
+        ref: unknown,
+        callback: (snapshot: { val: () => unknown }) => void,
+        onError: (err: Error) => void,
+    ) => () => void;
+}
+
+/**
  * Subscribe to a Firebase Realtime Database path and keep local state in sync.
  *
- * Accepts a platform-specific `getDatabase` factory so each workspace can
- * supply its own Firebase initialisation (web vs. Expo).
+ * Accepts a platform-specific `getDatabase` factory and `fns` (the firebase
+ * ref/onValue functions) so each workspace can supply its own Firebase
+ * initialisation and properly mockable functions in tests.
  *
  * The listener is torn down automatically on unmount or when `path` changes.
  * Pass `null` as `path` to temporarily disable the listener.
  *
  * @example
- * // Web
- * import { getFirebaseDatabase } from '@/lib/firebase-database';
- * const { data } = useRtdb(getFirebaseDatabase, `families/${id}/todos`, {});
+ * // Mobile (mobile/hooks/useRtdb.ts)
+ * import { ref, onValue } from 'firebase/database';
+ * import { getFirebaseDatabase } from '@/lib/firebase';
+ * export function useRtdb<T>(path, initial) {
+ *   return _useRtdb(getFirebaseDatabase, path, initial, { ref, onValue });
+ * }
  *
  * @example
- * // Mobile
- * import { getFirebaseDatabase } from '@/lib/firebase';
- * const { data } = useRtdb(getFirebaseDatabase, `families/${id}/todos`, {});
+ * // Web (resources/js/hooks/useRtdbSync.ts)
+ * import { ref, onValue } from 'firebase/database';
+ * import { getFirebaseDatabase } from '@/lib/firebase-database';
+ * export function useRtdbSync<T>(path, initial) {
+ *   return useRtdb(getFirebaseDatabase, path, initial, { ref, onValue });
+ * }
  */
 export function useRtdb<T>(
-    getDatabase: () => Promise<Database>,
+    getDatabase: () => Promise<unknown>,
     path: string | null,
     initialValue: T,
+    fns: RtdbFirebaseFns,
 ): RtdbState<T> {
     const [data, setData] = useState<T>(initialValue);
     const [isLoading, setIsLoading] = useState(path !== null);
@@ -62,11 +92,10 @@ export function useRtdb<T>(
 
         (async () => {
             try {
-                const { ref, onValue } = await import('firebase/database');
                 const db = await getDatabase();
-                const dbRef = ref(db, path);
+                const dbRef = fns.ref(db, path);
 
-                const unsubscribe = onValue(
+                const unsubscribe = fns.onValue(
                     dbRef,
                     (snapshot) => {
                         if (!cancelled) {
@@ -103,8 +132,7 @@ export function useRtdb<T>(
                 unsubscribeRef.current = null;
             }
         };
-    }, [path, getDatabase]);
+    }, [path, getDatabase, fns]);
 
     return { data, isLoading, error };
 }
-

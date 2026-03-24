@@ -1,82 +1,102 @@
+/**
+ * Tests for mobile/hooks/useRtdb.ts — the mobile wrapper around the shared
+ * @flowki/shared useRtdb hook.
+ *
+ * Module isolation note:
+ * The shared hook receives `ref` and `onValue` as plain function parameters
+ * (injected by the mobile wrapper from the mobile workspace's import of
+ * firebase/database). This means vi.mock('firebase/database') in the mobile
+ * workspace's global setup (vitest.setup.ts) correctly intercepts those
+ * imports — there is no cross-workspace module isolation problem.
+ */
+
 import { getFirebaseDatabase } from '@/lib/firebase';
-import { renderHook, act } from '@testing-library/react-native';
-import { afterEach, beforeEach, describe, expect, it,  vi } from 'vitest';
-import type {Mock} from 'vitest';
+import { ref as fbRef, onValue as fbOnValue } from 'firebase/database';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { useRtdb } from '@/hooks/useRtdb';
 
-// ── helpers ────────────────────────────────────────────────────────────────
+// ── per-test mock state ─────────────────────────────────────────────────────
 
-/**
- * Flush all pending promises/microtasks so async setup inside hooks completes.
- * Multiple rounds are needed because the hook chains several async operations
- * (dynamic import + getFirebaseDatabase + onValue setup).
- */
-const flushPromises = async () => {
-  for (let i = 0; i < 5; i++) {
-    await new Promise<void>((resolve) => setTimeout(resolve, 0));
-  }
-};
+interface FirebaseMocks {
+  listeners: Map<string, (snapshot: unknown) => void>;
+  errorListeners: Map<string, (err: Error) => void>;
+  unsubscribers: Map<string, Mock>;
+  emit: (path: string, value: unknown) => void;
+  emitError: (path: string, err: Error) => void;
+}
 
-/** Create a minimal Firebase onValue / ref mock pair. */
-function makeFirebaseMocks() {
+function makeFirebaseMocks(): FirebaseMocks {
   const listeners = new Map<string, (snapshot: unknown) => void>();
   const errorListeners = new Map<string, (err: Error) => void>();
   const unsubscribers = new Map<string, Mock>();
 
-  const onValue = vi.fn(
-    (dbRef: { path: string }, success: (s: unknown) => void, error: (e: Error) => void) => {
-      listeners.set(dbRef.path, success);
-      errorListeners.set(dbRef.path, error);
-      const unsub = vi.fn();
-      unsubscribers.set(dbRef.path, unsub);
-
-      return unsub;
-    },
-  );
-
-  const ref = vi.fn((db: unknown, path: string) => ({ path }));
-
-  /** Emit a snapshot value for a path. */
   const emit = (path: string, value: unknown) => {
     const listener = listeners.get(path);
 
     if (!listener) {
-throw new Error(`No listener registered for path: ${path}`);
-}
+      throw new Error(`No listener registered for path: ${path}`);
+    }
 
     listener({ val: () => value });
   };
 
-  /** Emit an error for a path. */
   const emitError = (path: string, err: Error) => {
     const listener = errorListeners.get(path);
 
     if (!listener) {
-throw new Error(`No error listener registered for path: ${path}`);
-}
+      throw new Error(`No error listener registered for path: ${path}`);
+    }
 
     listener(err);
   };
 
-  return { onValue, ref, emit, emitError, unsubscribers };
+  return { listeners, errorListeners, unsubscribers, emit, emitError };
 }
+
+// ── helpers ────────────────────────────────────────────────────────────────
+
+/**
+ * Wait until the RTDB listener has been registered for the given path.
+ *
+ * The hook calls `await getDatabase()` (one async hop) before calling onValue.
+ * `waitFor` polls with real timers and wraps each check in `act`, making it
+ * the most reliable way to wait for the async effect to settle.
+ */
+const waitForListener = (path: string) =>
+  waitFor(() => expect(mocks.unsubscribers.has(path)).toBe(true));
 
 // ── mock setup ──────────────────────────────────────────────────────────────
 
-let mocks = makeFirebaseMocks();
+// `firebase/database` (ref + onValue) is mocked globally in vitest.setup.ts.
+// The mobile wrapper (hooks/useRtdb.ts) imports ref/onValue at module level
+// from firebase/database (mobile workspace import → mock applies), then passes
+// them to the shared hook. Here we configure their per-test behaviour.
 
-vi.mock('../lib/firebase', () => ({
-  getFirebaseDatabase: vi.fn(),
-}));
-
-vi.mock('firebase/database', () => ({
-  ref: (...args: any[]) => mocks.ref(...args),
-  onValue: (...args: any[]) => mocks.onValue(...args),
-}));
+let mocks: FirebaseMocks = makeFirebaseMocks();
 
 beforeEach(() => {
   mocks = makeFirebaseMocks();
+
   vi.mocked(getFirebaseDatabase).mockResolvedValue({} as never);
+
+  vi.mocked(fbRef).mockImplementation((_db: unknown, path: string) => ({ path } as never));
+
+  vi.mocked(fbOnValue).mockImplementation(
+    (
+      dbRef: { path: string },
+      success: (snap: unknown) => void,
+      onError: (e: Error) => void,
+    ) => {
+      mocks.listeners.set(dbRef.path, success);
+      mocks.errorListeners.set(dbRef.path, onError);
+      const unsub = vi.fn();
+      mocks.unsubscribers.set(dbRef.path, unsub);
+
+      return unsub;
+    },
+  );
 });
 
 afterEach(() => {
@@ -106,10 +126,8 @@ describe('useRtdb', () => {
     const path = 'families/1/todos';
     const { result } = renderHook(() => useRtdb<Record<string, { title: string }>>(path, {}));
 
-    // Wait for the async Firebase setup
-    await act(async () => {
-      await flushPromises();
-    });
+    // Wait for the async Firebase setup (getDatabase) to complete.
+    await waitForListener(path);
 
     const snapshot = { 1: { title: 'Buy milk' } };
     await act(async () => {
@@ -126,8 +144,9 @@ describe('useRtdb', () => {
     const initial = { fallback: true };
     const { result } = renderHook(() => useRtdb(path, initial));
 
+    await waitForListener(path);
+
     await act(async () => {
-      await flushPromises();
       mocks.emit(path, null);
     });
 
@@ -138,9 +157,7 @@ describe('useRtdb', () => {
     const path = 'families/1/todos';
     const { result } = renderHook(() => useRtdb(path, {}));
 
-    await act(async () => {
-      await flushPromises();
-    });
+    await waitForListener(path);
 
     const err = new Error('Permission denied');
     await act(async () => {
@@ -155,9 +172,7 @@ describe('useRtdb', () => {
     const path = 'families/1/todos';
     const { unmount } = renderHook(() => useRtdb(path, {}));
 
-    await act(async () => {
-      await flushPromises();
-    });
+    await waitForListener(path);
 
     const unsub = mocks.unsubscribers.get(path);
     expect(unsub).toBeDefined();
@@ -175,26 +190,21 @@ describe('useRtdb', () => {
       initialProps: { p: path1 },
     });
 
-    await act(async () => {
-      await flushPromises();
-    });
+    await waitForListener(path1);
 
     const unsub1 = mocks.unsubscribers.get(path1);
     expect(unsub1).toBeDefined();
 
-    // Rerender with the new path and then flush to allow the new async
-    // subscription to be established.
+    // Switch to the new path and wait for the new subscription to be set up.
     act(() => {
       rerender({ p: path2 });
     });
 
-    await act(async () => {
-      await flushPromises();
-    });
+    await waitForListener(path2);
 
-    // Old path listener should be torn down
+    // Old path listener should be torn down.
     expect(unsub1).toHaveBeenCalled();
-    // New path listener registered
+    // New path listener registered.
     expect(mocks.unsubscribers.has(path2)).toBe(true);
   });
 
@@ -204,9 +214,7 @@ describe('useRtdb', () => {
       initialProps: { p: path },
     });
 
-    await act(async () => {
-      await flushPromises();
-    });
+    await waitForListener(path);
 
     const unsub = mocks.unsubscribers.get(path);
 

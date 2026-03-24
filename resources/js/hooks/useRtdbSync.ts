@@ -1,6 +1,15 @@
+import { onValue, ref } from 'firebase/database';
 import { getFirebaseDatabase } from '@/lib/firebase-database';
 import { useRtdb } from '@flowki/shared';
+
 export type { RtdbState } from '@flowki/shared';
+
+/**
+ * Firebase functions imported at module level so the web workspace's module
+ * context applies (enabling `vi.mock('firebase/database')` to work in tests).
+ */
+const _fns = { ref, onValue } as const;
+
 /**
  * Subscribe to a Firebase Realtime Database path and keep local state in sync.
  *
@@ -15,5 +24,5 @@ export type { RtdbState } from '@flowki/shared';
  * );
  */
 export function useRtdbSync<T>(path: string | null, initialValue: T) {
-    return useRtdb(getFirebaseDatabase, path, initialValue);
+    return useRtdb(getFirebaseDatabase, path, initialValue, _fns);
 }
