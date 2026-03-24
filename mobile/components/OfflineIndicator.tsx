@@ -1,6 +1,6 @@
+import NetInfo from '@react-native-community/netinfo';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
 
 export function OfflineIndicator() {
   const [isOffline, setIsOffline] = useState(false);
@@ -9,10 +9,13 @@ export function OfflineIndicator() {
     const unsub = NetInfo.addEventListener((state) => {
       setIsOffline(state.isConnected === false || state.isInternetReachable === false);
     });
+
     return unsub;
   }, []);
 
-  if (!isOffline) return null;
+  if (!isOffline) {
+return null;
+}
 
   return (
     <View style={styles.banner}>

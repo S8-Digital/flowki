@@ -1,10 +1,3 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useRtdb } from '@/hooks/useRtdb';
-import type { Todo } from '@/lib/api';
-import { todosApi } from '@/lib/api';
 import { useAppSelector } from '@/store';
 import { useState } from 'react';
 import {
@@ -23,6 +16,13 @@ import {
   Portal,
   TextInput,
 } from 'react-native-paper';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useRtdb } from '@/hooks/useRtdb';
+import type { Todo } from '@/lib/api';
+import { todosApi } from '@/lib/api';
 
 function TodoItem({
   todo,
@@ -129,7 +129,10 @@ export default function TodosScreen() {
   };
 
   const handleCreate = async () => {
-    if (!newTitle.trim()) return;
+    if (!newTitle.trim()) {
+return;
+}
+
     try {
       setSaving(true);
       await todosApi.create({ title: newTitle.trim(), status: 'pending' });

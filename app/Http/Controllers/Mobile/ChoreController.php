@@ -11,7 +11,6 @@ use App\Models\ChoreCompletion;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Validation\Rule;
 
 class ChoreController extends Controller
 {

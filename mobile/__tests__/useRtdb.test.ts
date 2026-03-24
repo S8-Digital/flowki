@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react-native';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useRtdb } from '../hooks/useRtdb';
 import { getFirebaseDatabase } from '../lib/firebase';
 
@@ -17,6 +17,7 @@ function makeFirebaseMocks() {
       errorListeners.set(dbRef.path, error);
       const unsub = vi.fn();
       unsubscribers.set(dbRef.path, unsub);
+
       return unsub;
     },
   );
@@ -26,14 +27,22 @@ function makeFirebaseMocks() {
   /** Emit a snapshot value for a path. */
   const emit = (path: string, value: unknown) => {
     const listener = listeners.get(path);
-    if (!listener) throw new Error(`No listener registered for path: ${path}`);
+
+    if (!listener) {
+throw new Error(`No listener registered for path: ${path}`);
+}
+
     listener({ val: () => value });
   };
 
   /** Emit an error for a path. */
   const emitError = (path: string, err: Error) => {
     const listener = errorListeners.get(path);
-    if (!listener) throw new Error(`No error listener registered for path: ${path}`);
+
+    if (!listener) {
+throw new Error(`No error listener registered for path: ${path}`);
+}
+
     listener(err);
   };
 

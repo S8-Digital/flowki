@@ -1,6 +1,7 @@
+import { Text  } from 'react-native';
+import type {TextProps} from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Text, type TextProps } from 'react-native';
 
 type Variant = 'default' | 'title' | 'subtitle' | 'caption' | 'muted';
 

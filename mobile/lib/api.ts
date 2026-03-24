@@ -25,6 +25,7 @@ async function request<T>(
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
+
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
@@ -37,11 +38,14 @@ async function request<T>(
 
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
+
     throw new ApiError(res.status, data?.message ?? res.statusText, data);
   }
 
   // 204 No Content
-  if (res.status === 204) return null;
+  if (res.status === 204) {
+return null;
+}
 
   return res.json() as Promise<T>;
 }
@@ -123,7 +127,11 @@ export const profileApi = {
     password_confirmation: string,
   ) => {
     const payload: Record<string, string> = { password, password_confirmation };
-    if (currentPassword) payload.current_password = currentPassword;
+
+    if (currentPassword) {
+payload.current_password = currentPassword;
+}
+
     return api.put<{ message: string }>('/api/mobile/profile/password', payload);
   },
 };

@@ -78,4 +78,3 @@ Route::prefix('api/mobile')->name('mobile.')->group(function () {
         });
     });
 });
-

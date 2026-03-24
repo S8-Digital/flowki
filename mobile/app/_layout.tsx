@@ -1,5 +1,4 @@
 import { OfflineIndicator } from '@/components/OfflineIndicator';
-import { useAuth } from '@/hooks/useAuth';
 import { store } from '@/store';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -7,6 +6,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
+import { useAuth } from '@/hooks/useAuth';
 
 function AuthGuard() {
   const { user, isLoading } = useAuth();
@@ -14,7 +14,9 @@ function AuthGuard() {
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading) {
+return;
+}
 
     const inAuthGroup = segments[0] === '(auth)';
 

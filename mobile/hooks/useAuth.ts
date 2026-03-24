@@ -1,8 +1,8 @@
+import { useAppDispatch, useAppSelector } from '@/store';
+import { clearCredentials, setCredentials, setLoading } from '@/store/slices/authSlice';
 import { useEffect } from 'react';
 import { authApi } from '@/lib/api';
 import { storage } from '@/lib/storage';
-import { clearCredentials, setCredentials, setLoading } from '@/store/slices/authSlice';
-import { useAppDispatch, useAppSelector } from '@/store';
 
 /**
  * Bootstraps auth state from SecureStore on mount and exposes helpers for
@@ -23,7 +23,9 @@ export function useAuth() {
           storage.getUser(),
         ]);
 
-        if (cancelled) return;
+        if (cancelled) {
+return;
+}
 
         if (savedToken && savedUser) {
           dispatch(setCredentials({ token: savedToken, user: savedUser }));
@@ -31,7 +33,9 @@ export function useAuth() {
           dispatch(setLoading(false));
         }
       } catch {
-        if (!cancelled) dispatch(setLoading(false));
+        if (!cancelled) {
+dispatch(setLoading(false));
+}
       }
     })();
 
@@ -79,6 +83,7 @@ export function useAuth() {
   const refreshUser = async () => {
     try {
       const u = await authApi.me();
+
       if (u) {
         await storage.setUser(u);
         dispatch(setCredentials({ token: token ?? '', user: u }));

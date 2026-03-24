@@ -17,7 +17,10 @@ const firebaseConfig = {
  * Safe to call multiple times.
  */
 export function getFirebaseApp() {
-  if (getApps().length > 0) return getApp();
+  if (getApps().length > 0) {
+return getApp();
+}
+
   return initializeApp(firebaseConfig);
 }
 
@@ -25,5 +28,6 @@ export function getFirebaseApp() {
  * the full RTDB SDK until it is actually needed). */
 export async function getFirebaseDatabase() {
   const { getDatabase } = await import('firebase/database');
+
   return getDatabase(getFirebaseApp());
 }

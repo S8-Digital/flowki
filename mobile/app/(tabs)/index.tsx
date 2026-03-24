@@ -1,11 +1,4 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useRtdb } from '@/hooks/useRtdb';
 import { useAppSelector } from '@/store';
-import type { CalendarEvent, Chore, ShoppingList, Todo, WeatherData } from '@/lib/api';
-import { weatherApi } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import {
   Image,
@@ -15,6 +8,13 @@ import {
   View,
 } from 'react-native';
 import { ActivityIndicator, Card } from 'react-native-paper';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useRtdb } from '@/hooks/useRtdb';
+import type { CalendarEvent, Chore, ShoppingList, Todo, WeatherData } from '@/lib/api';
+import { weatherApi } from '@/lib/api';
 
 type WidgetKey = 'schedule' | 'todos' | 'shopping' | 'chores' | 'weather';
 
@@ -61,6 +61,7 @@ function TodosWidget({ todos }: { todos: Record<string, Todo> }) {
   const pending = Object.values(todos)
     .filter((t) => t.status !== 'done')
     .slice(0, 5);
+
   return (
     <View>
       {pending.length === 0 ? (
@@ -80,6 +81,7 @@ function ShoppingWidget({ lists }: { lists: Record<string, ShoppingList> }) {
   const unchecked = Object.values(lists)
     .flatMap((l) => (l.items ?? []).filter((i) => !i.is_checked))
     .slice(0, 5);
+
   return (
     <View>
       {unchecked.length === 0 ? (
@@ -97,6 +99,7 @@ function ShoppingWidget({ lists }: { lists: Record<string, ShoppingList> }) {
 
 function ChoresWidget({ chores }: { chores: Record<string, Chore> }) {
   const due = Object.values(chores).slice(0, 5);
+
   return (
     <View>
       {due.length === 0 ? (
@@ -121,14 +124,19 @@ function WeatherWidget() {
     weatherApi
       .get()
       .then((d) => {
-        if (!cancelled) setWeather(d);
+        if (!cancelled) {
+setWeather(d);
+}
       })
       .catch(() => {
         /* graceful degradation — weather widget hides itself */
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+setLoading(false);
+}
       });
+
     return () => {
       cancelled = true;
     };
@@ -214,19 +222,27 @@ export default function DashboardScreen() {
   );
 
   const moveUp = (index: number) => {
-    if (index === 0) return;
+    if (index === 0) {
+return;
+}
+
     setWidgets((prev) => {
       const next = [...prev];
       [next[index - 1], next[index]] = [next[index], next[index - 1]];
+
       return next;
     });
   };
 
   const moveDown = (index: number) => {
-    if (index === widgets.length - 1) return;
+    if (index === widgets.length - 1) {
+return;
+}
+
     setWidgets((prev) => {
       const next = [...prev];
       [next[index], next[index + 1]] = [next[index + 1], next[index]];
+
       return next;
     });
   };

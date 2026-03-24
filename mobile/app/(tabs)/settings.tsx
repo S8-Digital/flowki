@@ -1,22 +1,20 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useAuth } from '@/hooks/useAuth';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { profileApi } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import {
-  ActivityIndicator,
   Button,
   Card,
-  Chip,
   Divider,
   List,
   Portal,
   Dialog,
   TextInput,
 } from 'react-native-paper';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useAuth } from '@/hooks/useAuth';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { profileApi } from '@/lib/api';
 
 const PROFILE_COLORS = [
   '#3B82F6', // blue
@@ -83,9 +81,12 @@ export default function SettingsScreen() {
   const handleSaveProfile = async () => {
     if (!profileName.trim() || !profileEmail.trim()) {
       Alert.alert('Error', 'Name and email are required.');
+
       return;
     }
+
     setProfileSaving(true);
+
     try {
       await profileApi.update({
         name: profileName.trim(),
@@ -105,13 +106,18 @@ export default function SettingsScreen() {
   const handleChangePassword = async () => {
     if (!newPassword || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all password fields.');
+
       return;
     }
+
     if (newPassword !== confirmPassword) {
       Alert.alert('Error', 'New passwords do not match.');
+
       return;
     }
+
     setPasswordSaving(true);
+
     try {
       await profileApi.updatePassword(
         currentPassword || undefined,

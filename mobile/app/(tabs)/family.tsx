@@ -1,10 +1,3 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useAuth } from '@/hooks/useAuth';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import type { Family, FamilyMember } from '@/lib/api';
-import { familyApi } from '@/lib/api';
 import * as Clipboard from 'expo-clipboard';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -21,10 +14,16 @@ import {
   Card,
   Chip,
   Dialog,
-  FAB,
   Portal,
   TextInput,
 } from 'react-native-paper';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useAuth } from '@/hooks/useAuth';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import type { Family, FamilyMember } from '@/lib/api';
+import { familyApi } from '@/lib/api';
 
 function MemberAvatar({ member }: { member: FamilyMember }) {
   const initials = member.name
@@ -50,6 +49,7 @@ function RoleChip({ role }: { role: string }) {
     Guest: '#6B7280',
     Child: '#8B5CF6',
   };
+
   return (
     <Chip compact style={{ backgroundColor: colors[role] ?? '#6B7280' }} textStyle={{ color: '#fff', fontSize: 11 }}>
       {role}
@@ -74,8 +74,10 @@ export default function FamilyScreen() {
   const load = useCallback(async () => {
     if (!user?.family_id) {
       setLoading(false);
+
       return;
     }
+
     try {
       const data = await familyApi.get();
       setFamily(data);
@@ -91,8 +93,12 @@ export default function FamilyScreen() {
   }, [load]);
 
   const handleCreate = async () => {
-    if (!familyName.trim()) return;
+    if (!familyName.trim()) {
+return;
+}
+
     setSaving(true);
+
     try {
       const data = await familyApi.create(familyName.trim());
       setFamily(data);
@@ -107,8 +113,12 @@ export default function FamilyScreen() {
   };
 
   const handleJoin = async () => {
-    if (!inviteCode.trim()) return;
+    if (!inviteCode.trim()) {
+return;
+}
+
     setSaving(true);
+
     try {
       const data = await familyApi.join(inviteCode.trim().toUpperCase());
       setFamily(data);
@@ -123,7 +133,10 @@ export default function FamilyScreen() {
   };
 
   const copyInviteCode = async () => {
-    if (!family?.invite_code) return;
+    if (!family?.invite_code) {
+return;
+}
+
     await Clipboard.setStringAsync(family.invite_code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

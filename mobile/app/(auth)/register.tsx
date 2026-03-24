@@ -1,8 +1,3 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useAuth } from '@/hooks/useAuth';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -13,6 +8,11 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useAuth } from '@/hooks/useAuth';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function RegisterScreen() {
   const scheme = useColorScheme();
@@ -28,12 +28,16 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     if (!name || !email || !password || !passwordConfirmation) {
       Alert.alert('Error', 'Please fill in all fields.');
+
       return;
     }
+
     if (password !== passwordConfirmation) {
       Alert.alert('Error', 'Passwords do not match.');
+
       return;
     }
+
     try {
       setLoading(true);
       await register(name.trim(), email.trim(), password, passwordConfirmation);

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import { getFirebaseDatabase } from '@/lib/firebase';
+import { useEffect, useRef, useState } from 'react';
 
 interface RtdbState<T> {
   data: T;
@@ -37,6 +37,7 @@ export function useRtdb<T>(path: string | null, initialValue: T): RtdbState<T> {
 
     if (!path) {
       setIsLoading(false);
+
       return;
     }
 
@@ -82,6 +83,7 @@ export function useRtdb<T>(path: string | null, initialValue: T): RtdbState<T> {
 
     return () => {
       cancelled = true;
+
       if (unsubscribeRef.current) {
         unsubscribeRef.current();
         unsubscribeRef.current = null;

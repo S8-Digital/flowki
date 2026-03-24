@@ -1,8 +1,3 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useAuth } from '@/hooks/useAuth';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -13,6 +8,11 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useAuth } from '@/hooks/useAuth';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function LoginScreen() {
   const scheme = useColorScheme();
@@ -26,8 +26,10 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please enter your email and password.');
+
       return;
     }
+
     try {
       setLoading(true);
       await login(email.trim(), password);

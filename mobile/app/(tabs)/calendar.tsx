@@ -1,13 +1,7 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useRtdb } from '@/hooks/useRtdb';
-import type { CalendarEvent } from '@/lib/api';
-import { calendarApi } from '@/lib/api';
 import { useAppSelector } from '@/store';
 import { useState } from 'react';
 import { Alert, FlatList, StyleSheet, View } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 import {
   ActivityIndicator,
   Button,
@@ -17,7 +11,13 @@ import {
   Portal,
   TextInput,
 } from 'react-native-paper';
-import { Calendar } from 'react-native-calendars';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useRtdb } from '@/hooks/useRtdb';
+import type { CalendarEvent } from '@/lib/api';
+import { calendarApi } from '@/lib/api';
 
 type MarkedDates = Record<
   string,
@@ -125,8 +125,10 @@ export default function CalendarScreen() {
   const handleCreate = async () => {
     if (!newTitle.trim() || !newStart.trim() || !newEnd.trim()) {
       Alert.alert('Error', 'Please fill in all fields.');
+
       return;
     }
+
     try {
       setSaving(true);
       await calendarApi.create({

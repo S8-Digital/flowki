@@ -1,16 +1,8 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useRtdb } from '@/hooks/useRtdb';
-import type { ShoppingItem, ShoppingList } from '@/lib/api';
-import { shoppingApi } from '@/lib/api';
 import { useAppSelector } from '@/store';
 import { useState } from 'react';
 import {
   Alert,
   FlatList,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -24,6 +16,13 @@ import {
   Portal,
   TextInput,
 } from 'react-native-paper';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useRtdb } from '@/hooks/useRtdb';
+import type { ShoppingItem, ShoppingList } from '@/lib/api';
+import { shoppingApi } from '@/lib/api';
 
 function ShoppingItemRow({
   item,
@@ -94,7 +93,10 @@ function ShoppingListCard({ list }: { list: ShoppingList }) {
   const remaining = items.filter((i) => !i.is_checked).length;
 
   const handleAddItem = async () => {
-    if (!newItem.trim()) return;
+    if (!newItem.trim()) {
+return;
+}
+
     try {
       setSaving(true);
       await shoppingApi.addItem(list.id, { name: newItem.trim() });
@@ -175,7 +177,10 @@ export default function ShoppingScreen() {
   );
 
   const handleCreateList = async () => {
-    if (!newListName.trim()) return;
+    if (!newListName.trim()) {
+return;
+}
+
     try {
       setSaving(true);
       await shoppingApi.createList(newListName.trim());

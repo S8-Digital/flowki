@@ -10,6 +10,7 @@ export const storage = {
 
   getUser: async () => {
     const raw = await SecureStore.getItemAsync(USER_KEY);
+
     return raw ? JSON.parse(raw) : null;
   },
   setUser: (user: object) =>
