@@ -55,7 +55,7 @@ class AddShoppingItem implements Tool
         return [
             'name' => $schema->string()->description('Item name')->required(),
             'quantity' => $schema->string()->description('Quantity, e.g. "2 litres"'),
-            'category' => $schema->string()->description('groceries, household, personal_care, or other'),
+            'category' => $schema->string()->description('groceries, household, personal, or other'),
             'list_name' => $schema->string()->description('Shopping list name (uses latest if not specified)'),
         ];
     }

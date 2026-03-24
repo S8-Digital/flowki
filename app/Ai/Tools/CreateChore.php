@@ -27,9 +27,15 @@ class CreateChore implements Tool
             'description' => $request['description'] ?? null,
             'frequency' => $request['frequency'] ?? ChoreFrequency::Weekly->value,
             'next_due_date' => $request['next_due_date'] ?? null,
+            'reminder_enabled' => (bool) ($request['reminder_enabled'] ?? false),
+            'reminder_lead_time' => $request['reminder_lead_time'] ?? null,
         ]);
 
-        return "✓ Chore created: \"{$chore->title}\" ({$chore->frequency->value})";
+        if (! empty($request['assignee_ids'])) {
+            $chore->assignees()->sync($request['assignee_ids']);
+        }
+
+        return "✓ Chore created: \"{$chore->title}\" ({$chore->frequency->value}) (ID: {$chore->id})";
     }
 
     /** @return array<string, JsonSchema> */
@@ -38,8 +44,11 @@ class CreateChore implements Tool
         return [
             'title' => $schema->string()->description('Chore title')->required(),
             'description' => $schema->string()->description('Optional description'),
-            'frequency' => $schema->string()->description('daily, weekly, biweekly, monthly, or as_needed'),
+            'frequency' => $schema->string()->description('Recurrence: once, daily, weekly, or monthly'),
             'next_due_date' => $schema->string()->description('Next due date as YYYY-MM-DD'),
+            'reminder_enabled' => $schema->boolean()->description('Whether to send a reminder'),
+            'reminder_lead_time' => $schema->integer()->description('How many minutes before the due date to send the reminder'),
+            'assignee_ids' => $schema->array()->description('List of family member user IDs to assign this chore to'),
         ];
     }
 }
