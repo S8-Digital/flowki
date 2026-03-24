@@ -38,6 +38,7 @@ class ListChoresToolTest extends TestCase
         $result = $tool->handle(new Request([]));
 
         $this->assertStringContainsString('Vacuum living room', $result);
+        $this->assertMatchesRegularExpression('/\[ID:\d+\]/', $result);
     }
 
     public function test_handle_filters_by_frequency(): void

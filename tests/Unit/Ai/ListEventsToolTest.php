@@ -37,6 +37,7 @@ class ListEventsToolTest extends TestCase
         $result = $tool->handle(new Request([]));
 
         $this->assertStringContainsString('Family dinner', $result);
+        $this->assertMatchesRegularExpression('/\[ID:\d+\]/', $result);
     }
 
     public function test_handle_filters_by_date_range(): void

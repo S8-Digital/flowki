@@ -27,6 +27,18 @@ class EditTodo implements Tool
             return 'Error: todo not found. Use list_todos to find the correct todo ID.';
         }
 
+        if (isset($request['assigned_to'])) {
+            $assignedTo = (int) $request['assigned_to'];
+            $valid = User::query()
+                ->where('family_id', $this->user->family_id)
+                ->where('id', $assignedTo)
+                ->exists();
+
+            if (! $valid) {
+                return "Error: User ID {$assignedTo} is not a member of this family.";
+            }
+        }
+
         $fields = array_filter([
             'title' => $request['title'] ?? null,
             'description' => $request['description'] ?? null,
@@ -34,7 +46,7 @@ class EditTodo implements Tool
             'priority' => $request['priority'] ?? null,
             'status' => $request['status'] ?? null,
             'due_date' => $request['due_date'] ?? null,
-            'assigned_to' => $request['assigned_to'] ?? null,
+            'assigned_to' => isset($request['assigned_to']) ? (int) $request['assigned_to'] : null,
             'reminder_enabled' => isset($request['reminder_enabled']) ? (bool) $request['reminder_enabled'] : null,
             'reminder_lead_time' => $request['reminder_lead_time'] ?? null,
         ], fn ($v) => $v !== null);

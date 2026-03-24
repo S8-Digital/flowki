@@ -22,6 +22,20 @@ class CreateTodo implements Tool
 
     public function handle(Request $request): string
     {
+        $assignedTo = $request['assigned_to'] ?? null;
+
+        if ($assignedTo !== null) {
+            $assignedTo = (int) $assignedTo;
+            $valid = User::query()
+                ->where('family_id', $this->user->family_id)
+                ->where('id', $assignedTo)
+                ->exists();
+
+            if (! $valid) {
+                return "Error: User ID {$assignedTo} is not a member of this family.";
+            }
+        }
+
         $todo = Todo::create([
             'family_id' => $this->user->family_id,
             'created_by' => $this->user->id,
@@ -31,7 +45,7 @@ class CreateTodo implements Tool
             'priority' => $request['priority'] ?? Priority::Medium->value,
             'status' => TodoStatus::Pending->value,
             'due_date' => $request['due_date'] ?? null,
-            'assigned_to' => $request['assigned_to'] ?? null,
+            'assigned_to' => $assignedTo,
             'reminder_enabled' => (bool) ($request['reminder_enabled'] ?? false),
             'reminder_lead_time' => $request['reminder_lead_time'] ?? null,
         ]);

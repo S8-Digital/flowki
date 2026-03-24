@@ -32,7 +32,24 @@ class CreateChore implements Tool
         ]);
 
         if (! empty($request['assignee_ids'])) {
-            $chore->assignees()->sync($request['assignee_ids']);
+            $assigneeIds = array_values(array_unique(array_map('intval', (array) $request['assignee_ids'])));
+
+            $validAssigneeIds = User::query()
+                ->where('family_id', $this->user->family_id)
+                ->whereIn('id', $assigneeIds)
+                ->pluck('id')
+                ->all();
+
+            sort($assigneeIds);
+            sort($validAssigneeIds);
+
+            if ($assigneeIds !== $validAssigneeIds) {
+                $invalidIds = array_values(array_diff($assigneeIds, $validAssigneeIds));
+
+                return 'Error: One or more assignee IDs are invalid or do not belong to this family: '.implode(', ', $invalidIds);
+            }
+
+            $chore->assignees()->sync($validAssigneeIds);
         }
 
         return "✓ Chore created: \"{$chore->title}\" ({$chore->frequency->value}) (ID: {$chore->id})";

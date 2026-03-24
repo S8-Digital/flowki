@@ -41,7 +41,34 @@ class EditChore implements Tool
         }
 
         if (isset($request['assignee_ids'])) {
-            $chore->assignees()->sync($request['assignee_ids']);
+            $assigneeIds = is_array($request['assignee_ids'])
+                ? $request['assignee_ids']
+                : [$request['assignee_ids']];
+
+            $assigneeIds = array_values(array_filter(
+                array_map(static fn ($id): int => (int) $id, $assigneeIds),
+                static fn (int $id): bool => $id > 0
+            ));
+
+            if ($assigneeIds === []) {
+                $chore->assignees()->sync([]);
+            } else {
+                $validAssigneeIds = User::query()
+                    ->where('family_id', $this->user->family_id)
+                    ->whereIn('id', $assigneeIds)
+                    ->pluck('id')
+                    ->all();
+
+                $invalidAssigneeIds = array_values(array_diff($assigneeIds, $validAssigneeIds));
+
+                if (! empty($invalidAssigneeIds)) {
+                    return 'Error: some assignee_ids do not belong to your family or are invalid: '
+                        .implode(', ', $invalidAssigneeIds)
+                        .'. Use list_family_members to find valid user IDs.';
+                }
+
+                $chore->assignees()->sync($validAssigneeIds);
+            }
         }
 
         return "✓ Chore updated: \"{$chore->title}\" (ID: {$chore->id})";

@@ -34,7 +34,24 @@ class CreateEvent implements Tool
         ]);
 
         if (! empty($request['attendee_ids'])) {
-            $event->attendees()->sync($request['attendee_ids']);
+            $attendeeIds = array_unique(array_map('intval', (array) $request['attendee_ids']));
+
+            $validAttendeeIds = User::query()
+                ->where('family_id', $this->user->family_id)
+                ->whereIn('id', $attendeeIds)
+                ->pluck('id')
+                ->all();
+
+            sort($attendeeIds);
+            sort($validAttendeeIds);
+
+            if ($attendeeIds !== $validAttendeeIds) {
+                $invalidIds = array_values(array_diff($attendeeIds, $validAttendeeIds));
+
+                return 'Error: One or more attendee IDs are invalid or do not belong to this family: '.implode(', ', $invalidIds);
+            }
+
+            $event->attendees()->sync($validAttendeeIds);
         }
 
         return "✓ Event scheduled: \"{$event->title}\" on {$event->start_at->toDateTimeString()} (ID: {$event->id})";
