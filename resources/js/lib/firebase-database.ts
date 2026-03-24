@@ -22,6 +22,7 @@ export async function getFirebaseDatabase(): Promise<Database> {
 
             try {
                 const { enableLogging } = await import('firebase/database');
+
                 // Only enable verbose logging in dev
                 if (import.meta.env.DEV) {
                     enableLogging(console.log, /* persistent */ false);

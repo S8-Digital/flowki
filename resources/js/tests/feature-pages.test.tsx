@@ -15,8 +15,8 @@ import { makeUseFormReturn } from './__mocks__/inertia';
 
 vi.mock('@inertiajs/react', () => ({
     Head: ({ title }: { title: string }) => <title>{title}</title>,
-    Link: ({ href, children, ...rest }: { href: string; children: React.ReactNode; [key: string]: unknown }) => (
-        <a href={String(href)} {...rest}>
+    Link: ({ href, children, ...rest }: { href: string; children: React.ReactNode; [_key: string]: unknown }) => (
+        <a href={String(href)} {...(rest as object)}>
             {children}
         </a>
     ),
@@ -66,9 +66,7 @@ vi.mock('@/actions/App/Http/Controllers/RecipeController', () => ({
     update: (id: number) => ({ url: `/recipes/${id}` }),
     destroy: (id: number) => ({ url: `/recipes/${id}` }),
 }));
-vi.mock('@/actions/App/Http/Controllers/AiController', () => ({
-    chat: () => ({ url: '/ai/chat' }),
-}));
+vi.mock('@/actions/App/Http/Controllers/AiController', () => ({}));
 
 vi.mock('@/routes', () => ({
     login: () => '/login',

@@ -191,11 +191,11 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                     try {
                         const parsed = JSON.parse(data);
 
-                        if (parsed.text) {
+                        if (parsed.type === 'text_delta' && parsed.delta) {
                             setMessages((prev) => {
                                 const updated = [...prev];
                                 const last = updated[updated.length - 1];
-                                updated[updated.length - 1] = { ...last, content: last.content + parsed.text };
+                                updated[updated.length - 1] = { ...last, content: last.content + parsed.delta };
 
                                 return updated;
                             });
@@ -235,7 +235,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent style={{ display: 'flex', height: '80vh', flexDirection: 'column', gap: 0, padding: 0 }}>
+            <DialogContent sx={{ display: 'flex', height: '100vh', flexDirection: 'column', gap: 0, padding: 0 }}>
                 <DialogHeader
                     style={{
                         flexDirection: 'row',

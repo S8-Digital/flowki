@@ -13,8 +13,8 @@ class SyncModelToRtdb implements ShouldQueue
     use Queueable;
 
     /**
-     * @param  string  $path   RTDB path, e.g. "families/1/todos/42"
-     * @param  array<string, mixed>|null  $data   Null signals a delete (remove)
+     * @param  string  $path  RTDB path, e.g. "families/1/todos/42"
+     * @param  array<string, mixed>|null  $data  Null signals a delete (remove)
      */
     public function __construct(
         public readonly string $path,

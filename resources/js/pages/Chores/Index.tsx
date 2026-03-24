@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { CheckCircle, Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { CheckCircle, Eye, EyeOff, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { complete, destroy, store, update } from '@/actions/App/Http/Controllers/ChoreController';
 import { getInitials, getMemberColor } from '@/components/Calendar/MemberColumn';
@@ -98,6 +98,30 @@ const ColumnContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ReminderBox = styled(Box)({ borderRadius: '12px' });
+
+function ChoreCompleteButton({ onClick }: { onClick: () => void }) {
+    return (
+        <Button variant="ghost" size="icon" sx={{ width: 24, height: 16, minWidth: 24 }} onClick={onClick} title="Mark complete">
+            <CheckCircle size={24} style={{ color: 'var(--mui-palette-success-main)' }} />
+        </Button>
+    );
+}
+
+function ChoreEditButton({ onClick }: { onClick: () => void }) {
+    return (
+        <Button variant="ghost" size="icon" sx={{ width: 16, height: 16, minWidth: 24 }} onClick={onClick}>
+            <Pencil size={24} />
+        </Button>
+    );
+}
+
+function ChoreDeleteButton({ onClick }: { onClick: () => void }) {
+    return (
+        <Button variant="ghost" size="icon" sx={{ width: 16, height: 16, minWidth: 24 }} onClick={onClick}>
+            <Trash2 size={24} style={{ color: 'var(--mui-palette-error-main)' }} />
+        </Button>
+    );
+}
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Chores', href: '/chores' }];
 
@@ -472,10 +496,10 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                         sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
                                                         style={{
                                                             backgroundColor: `${color}15`,
-                                                            border: `1px solid ${color}`,
+                                                            border: `2px solid ${color}`,
                                                         }}
                                                     >
-                                                        <Box sx={{ mt: 0.25, flexShrink: 0 }}>
+                                                        <Box sx={{ mt: 0.25, flex: 0 }}>
                                                             <RefreshCw size={14} style={{ color: 'var(--mui-palette-success-main)' }} />
                                                         </Box>
                                                         <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -486,38 +510,9 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                             </ChoreMeta>
                                                         </Box>
                                                         <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                                onClick={() => markComplete(chore)}
-                                                                title="Mark complete"
-                                                            >
-                                                                <CheckCircle size={20} style={{ color: 'var(--mui-palette-success-main)' }} />
-                                                            </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                                onClick={() => openEdit(chore)}
-                                                            >
-                                                                <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                        strokeWidth={2}
-                                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                                    />
-                                                                </svg>
-                                                            </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                                onClick={() => deleteChore(chore)}
-                                                            >
-                                                                <Trash2 size={20} style={{ color: 'var(--mui-palette-error-main)' }} />
-                                                            </Button>
+                                                            <ChoreCompleteButton onClick={() => markComplete(chore)} />
+                                                            <ChoreEditButton onClick={() => openEdit(chore)} />
+                                                            <ChoreDeleteButton onClick={() => deleteChore(chore)} />
                                                         </Box>
                                                     </ChoreCard>
                                                 ))
@@ -559,7 +554,7 @@ export default function ChoresIndex({ chores, members }: Props) {
                                             <ChoreCard
                                                 key={chore.id}
                                                 sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
-                                                style={{ backgroundColor: '#94a3b815', border: '1px solid #94a3b8' }}
+                                                style={{ backgroundColor: '#94a3b815', border: '2px solid #94a3b8' }}
                                             >
                                                 <Box sx={{ mt: 0.25, flexShrink: 0 }}>
                                                     <RefreshCw size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
@@ -572,38 +567,9 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                     </ChoreMeta>
                                                 </Box>
                                                 <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                        onClick={() => markComplete(chore)}
-                                                        title="Mark complete"
-                                                    >
-                                                        <CheckCircle size={12} style={{ color: 'var(--mui-palette-success-main)' }} />
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                        onClick={() => openEdit(chore)}
-                                                    >
-                                                        <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                            />
-                                                        </svg>
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                        onClick={() => deleteChore(chore)}
-                                                    >
-                                                        <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
-                                                    </Button>
+                                                    <ChoreCompleteButton onClick={() => markComplete(chore)} />
+                                                    <ChoreEditButton onClick={() => openEdit(chore)} />
+                                                    <ChoreDeleteButton onClick={() => deleteChore(chore)} />
                                                 </Box>
                                             </ChoreCard>
                                         ))}

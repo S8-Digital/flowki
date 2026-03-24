@@ -109,7 +109,7 @@ RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 COPY .docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 COPY .docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY .docker/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY .docker/nginx/app.conf /etc/nginx/http.d/default.conf
+COPY .docker/nginx/app.conf /etc/nginx/conf.d/default.conf
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Finalize ownership of config files

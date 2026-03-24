@@ -25,8 +25,8 @@ class TodoResource extends JsonResource
             'reminder_enabled' => $this->reminder_enabled,
             'reminder_lead_time' => $this->reminder_lead_time,
             'family_id' => $this->family_id,
-            'assignee' => new UserResource($this->whenLoaded('assignee')),
-            'creator' => new UserResource($this->whenLoaded('creator')),
+            'assignee' => $this->whenLoaded('assignee', fn ($assignee) => (new UserResource($assignee))->resolve()),
+            'creator' => $this->whenLoaded('creator', fn ($creator) => (new UserResource($creator))->resolve()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -24,6 +24,7 @@ locals {
     REMOTE_SOURCES               = "cloudflare"
     FIREBASE_PROJECT_ID          = "flowki-490210"
     FIREBASE_CLIENT_EMAIL        = "firebase-adminsdk-fbsvc@flowki-490210.iam.gserviceaccount.com"
+    FIREBASE_DATABASE_URL        = "https://flowki-490210-default-rtdb.firebaseio.com/prod/"
     GOOGLE_MAPS_API_KEY          = "AIzaSyAGjtTOvksZO2Mdr_iwTkjy0zxi0bnKPNo"
     GOOGLE_WEATHER_API_KEY       = "AIzaSyC7tqWAS5prtTNsl3s0Ak_KPNafuEkJqQo"
     VITE_FIREBASE_API_KEY        = "AIzaSyCwhRBRZM3vqXjwYSWDfJRIWB_z08xhNu0"

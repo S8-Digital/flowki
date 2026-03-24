@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { CalendarDays, CheckSquare, ChefHat, LayoutGrid, LogOut, RotateCcw, Settings, ShoppingCart, Sparkles, Users } from 'lucide-react';
+import { CalendarDays, CheckSquare, ChefHat, ChevronUp, LayoutGrid, LogOut, RotateCcw, Settings, ShoppingCart, Sparkles, Users } from 'lucide-react';
 import * as React from 'react';
 import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
@@ -33,6 +33,7 @@ import { toUrl, urlIsActive } from '@/lib/utils';
 import { dashboard, logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { AppPageProps, NavItem } from '@/types';
+import type { PolymorphicProps } from '@/types/globals';
 
 const SidebarContainer = styled(Box)(({ theme }) => ({
     backgroundColor: 'var(--sidebar)',
@@ -40,7 +41,7 @@ const SidebarContainer = styled(Box)(({ theme }) => ({
     boxShadow: theme.shadows[2],
 }));
 
-const SidebarNavButton = styled(ListItemButton)(({ theme }) => ({
+const SidebarNavButton = styled(ListItemButton)<PolymorphicProps>(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     color: 'var(--sidebar-foreground)',
     '&.Mui-selected': {
@@ -201,7 +202,7 @@ export default function AppSidebar() {
                         const button = (
                             <SidebarNavButton
                                 component={Link as React.ElementType}
-                                href={item.href}
+                                href={toUrl(item.href)}
                                 selected={isActive}
                                 sx={{
                                     minHeight: 40,
@@ -281,13 +282,8 @@ export default function AppSidebar() {
                                 <UserNameText variant="body2" noWrap fontWeight={500}>
                                     {user.name}
                                 </UserNameText>
-                                {user.email && (
-                                    <UserEmailText variant="caption" noWrap sx={{ display: 'block' }}>
-                                        {user.email}
-                                    </UserEmailText>
-                                )}
                             </Box>
-                            <AppearanceToggle />
+                            <ChevronUp size={16} />
                         </SidebarUserButton>
                     )}
                 </ListItem>
@@ -300,8 +296,27 @@ export default function AppSidebar() {
                 onClose={handleUserMenuClose}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                slotProps={{ paper: { sx: { minWidth: 180 }, style: { borderRadius: 8 } } }}
+                slotProps={{ paper: { sx: { minWidth: 220 }, style: { borderRadius: 8 } } }}
             >
+                <SidebarMenuItem sx={{ gap: 1.5 }}>
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                        <SidebarAvatar src={user.avatar} alt={user.name} sx={{ width: 28, height: 28 }}>
+                            {getInitials(user.name)}
+                        </SidebarAvatar>
+                    </ListItemIcon>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <UserNameText variant="body2" noWrap fontWeight={500}>
+                            {user.name}
+                        </UserNameText>
+                        {user.email && (
+                            <UserEmailText variant="caption" noWrap sx={{ display: 'block' }}>
+                                {user.email}
+                            </UserEmailText>
+                        )}
+                    </Box>
+                    <AppearanceToggle />
+                </SidebarMenuItem>
+                <Divider />
                 <SidebarMenuItem onClick={handleSettings} sx={{ gap: 1.5 }}>
                     <Settings size={16} />
                     Settings

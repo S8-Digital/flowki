@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { CheckCircle2, Circle, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
+import { CheckCircle2, Circle, Eye, EyeOff, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { destroy, store, update } from '@/actions/App/Http/Controllers/TodoController';
 import { getInitials, getMemberColor } from '@/components/Calendar/MemberColumn';
@@ -125,6 +125,22 @@ const ColumnContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ReminderBox = styled(Box)({ borderRadius: '12px' });
+
+function TodoEditButton({ onClick }: { onClick: () => void }) {
+    return (
+        <Button variant="ghost" size="icon" sx={{ width: 16, height: 16, minWidth: 24 }} onClick={onClick}>
+            <Pencil size={24} />
+        </Button>
+    );
+}
+
+function TodoDeleteButton({ onClick }: { onClick: () => void }) {
+    return (
+        <Button variant="ghost" size="icon" sx={{ width: 16, height: 16, minWidth: 24 }} onClick={onClick}>
+            <Trash2 size={24} style={{ color: 'var(--mui-palette-error-main)' }} />
+        </Button>
+    );
+}
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Todos', href: '/todos' }];
 
@@ -534,10 +550,10 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                         sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
                                                         style={{
                                                             backgroundColor: todo.status === 'completed' ? '#9ca3af22' : `${color}15`,
-                                                            borderLeft: `3px solid ${todo.status === 'completed' ? '#9ca3af' : color}`,
+                                                            border: `2px solid ${color}`,
                                                         }}
                                                     >
-                                                        <Box sx={{ mt: 0.25, flexShrink: 0 }}>
+                                                        <Box sx={{ mt: 0.25, display: 'flex' }}>
                                                             {todo.status === 'completed' ? (
                                                                 <CheckCircle2 size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                                             ) : (
@@ -571,29 +587,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                             </TodoMeta>
                                                         </Box>
                                                         <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                                onClick={() => openEdit(todo)}
-                                                            >
-                                                                <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                        strokeWidth={2}
-                                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                                    />
-                                                                </svg>
-                                                            </Button>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                                onClick={() => deleteTodo(todo)}
-                                                            >
-                                                                <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
-                                                            </Button>
+                                                            <TodoEditButton onClick={() => openEdit(todo)} />
+                                                            <TodoDeleteButton onClick={() => deleteTodo(todo)} />
                                                         </Box>
                                                     </TodoCard>
                                                 ))
@@ -640,10 +635,10 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                 sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
                                                 style={{
                                                     backgroundColor: todo.status === 'completed' ? '#9ca3af22' : '#94a3b815',
-                                                    borderLeft: `3px solid ${todo.status === 'completed' ? '#9ca3af' : '#94a3b8'}`,
+                                                    border: `2px solid #9ca3af22`,
                                                 }}
                                             >
-                                                <Box sx={{ mt: 0.25, flexShrink: 0 }}>
+                                                <Box sx={{ mt: 0.25, display: 'flex' }}>
                                                     {todo.status === 'completed' ? (
                                                         <CheckCircle2 size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
                                                     ) : (
@@ -676,29 +671,8 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                                     </TodoMeta>
                                                 </Box>
                                                 <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                        onClick={() => openEdit(todo)}
-                                                    >
-                                                        <svg width={12} height={12} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                            />
-                                                        </svg>
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        sx={{ width: 24, height: 24, minWidth: 24 }}
-                                                        onClick={() => deleteTodo(todo)}
-                                                    >
-                                                        <Trash2 size={12} style={{ color: 'var(--mui-palette-error-main)' }} />
-                                                    </Button>
+                                                    <TodoEditButton onClick={() => openEdit(todo)} />
+                                                    <TodoDeleteButton onClick={() => deleteTodo(todo)} />
                                                 </Box>
                                             </TodoCard>
                                         ))}
@@ -804,6 +778,7 @@ export default function TodosIndex({ todos, members, categories }: Props) {
                                             label="Due Date & Time"
                                             value={editForm.data.due_date}
                                             onChange={(value) => editForm.setData('due_date', value?.format('YYYY-MM-DDTHH:mm') ?? '')}
+                                            slotProps={{ textField: { size: 'small', InputLabelProps: { shrink: true } } }}
                                         />
                                     </Box>
                                 </Box>
