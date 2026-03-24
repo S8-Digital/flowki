@@ -60,7 +60,7 @@ class AiControllerTest extends TestCase
 
     public function test_chat_returns_sse_response_when_ai_unconfigured(): void
     {
-        config(['ai.providers.openai.key' => null, 'ai.providers.anthropic.key' => null]);
+        config(['ai.providers.gemini.key' => null, 'ai.providers.anthropic.key' => null]);
 
         $user = User::factory()->withFamily()->create();
 
@@ -73,7 +73,7 @@ class AiControllerTest extends TestCase
 
     public function test_chat_returns_sse_response_for_user_without_family(): void
     {
-        config(['ai.providers.openai.key' => null, 'ai.providers.anthropic.key' => null]);
+        config(['ai.providers.gemini.key' => null, 'ai.providers.anthropic.key' => null]);
 
         $user = User::factory()->create();
 

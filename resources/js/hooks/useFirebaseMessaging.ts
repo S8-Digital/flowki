@@ -1,7 +1,9 @@
+import { usePage } from '@inertiajs/react';
 import type { MessagePayload } from 'firebase/messaging';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { destroy, store } from '@/actions/App/Http/Controllers/FcmTokenController';
 import { getFcmToken, onForegroundMessage, requestNotificationPermission } from '@/lib/firebase-messaging';
+import type { AppPageProps } from '@/types';
 
 interface UseFirebaseMessagingReturn {
     notificationPermission: NotificationPermission | null;
@@ -13,6 +15,7 @@ interface UseFirebaseMessagingReturn {
 }
 
 export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
+    const { firebaseConfig } = usePage<AppPageProps>().props;
     const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | null>(
         typeof Notification !== 'undefined' ? Notification.permission : null,
     );
@@ -46,7 +49,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
                 return;
             }
 
-            const token = await getFcmToken();
+            const token = await getFcmToken(firebaseConfig.vapidKey);
 
             if (!token) {
                 return;
@@ -65,7 +68,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         } finally {
             setIsRegistering(false);
         }
-    }, []);
+    }, [firebaseConfig.vapidKey]);
 
     const unregister = useCallback(async () => {
         if (!fcmToken) {

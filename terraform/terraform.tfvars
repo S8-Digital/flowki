@@ -1,5 +1,5 @@
 project_id             = "flowki-490210"
-region                 = "australia-southeast1"
+region                 = "us-east1"
 app_name               = "flowki"
 app_url                = "https://flowki.family"
 terraform_state_bucket = "414442590715-tfstate"

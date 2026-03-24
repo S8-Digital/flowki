@@ -59,6 +59,17 @@ class HandleInertiaRequests extends Middleware
                 ? $user->unreadNotifications()->count()
                 : 0,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'firebaseConfig' => [
+                'apiKey' => config('services.firebase.api_key'),
+                'authDomain' => config('services.firebase.auth_domain'),
+                'projectId' => config('services.firebase.project_id'),
+                'storageBucket' => config('services.firebase.storage_bucket'),
+                'messagingSenderId' => config('services.firebase.messaging_sender_id'),
+                'appId' => config('services.firebase.app_id'),
+                'measurementId' => config('services.firebase.measurement_id'),
+                'vapidKey' => config('services.firebase.vapid_key'),
+                'recaptchaSiteKey' => config('services.firebase.recaptcha_site_key'),
+            ],
         ];
     }
 }

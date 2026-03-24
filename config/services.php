@@ -66,5 +66,6 @@ return [
         'app_id' => env('VITE_FIREBASE_APP_ID'),
         'measurement_id' => env('VITE_FIREBASE_MEASUREMENT_ID'),
         'vapid_key' => env('VITE_FIREBASE_VAPID_KEY'),
+        'recaptcha_site_key' => env('VITE_FIREBASE_RECAPTCHA_SITE_KEY'),
     ],
 ];

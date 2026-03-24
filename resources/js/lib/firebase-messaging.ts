@@ -1,5 +1,6 @@
 import type { MessagePayload, Messaging } from 'firebase/messaging';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import type { FirebaseConfig } from '@/types';
 import { getFirebaseApp } from './firebase';
 
 let messaging: Messaging | null = null;
@@ -20,17 +21,15 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
     return Notification.requestPermission();
 }
 
-export async function getFcmToken(): Promise<string | null> {
+export async function getFcmToken(vapidKey: FirebaseConfig['vapidKey']): Promise<string | null> {
     const messagingInstance = getFirebaseMessaging();
 
     if (!messagingInstance) {
         return null;
     }
 
-    const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;
-
     if (!vapidKey) {
-        console.warn('VITE_FIREBASE_VAPID_KEY is not set.');
+        console.warn('Firebase VAPID key is not set.');
 
         return null;
     }

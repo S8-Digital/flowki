@@ -45,6 +45,18 @@ export interface NavItem {
     iconColor?: string;
 }
 
+export interface FirebaseConfig {
+    apiKey: string;
+    authDomain: string;
+    projectId: string;
+    storageBucket: string;
+    messagingSenderId: string;
+    appId: string;
+    measurementId: string;
+    vapidKey: string;
+    recaptchaSiteKey: string | null;
+}
+
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     name: string;
     quote: { message: string; author: string };
@@ -52,6 +64,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     sidebarOpen: boolean;
     currentUserPermissions: string[];
     unreadNotificationsCount: number;
+    firebaseConfig: FirebaseConfig;
 };
 
 export interface User {
