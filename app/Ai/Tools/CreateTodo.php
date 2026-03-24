@@ -22,6 +22,20 @@ class CreateTodo implements Tool
 
     public function handle(Request $request): string
     {
+        $assignedTo = $request['assigned_to'] ?? null;
+
+        if ($assignedTo !== null) {
+            $assignedTo = (int) $assignedTo;
+            $valid = User::query()
+                ->where('family_id', $this->user->family_id)
+                ->where('id', $assignedTo)
+                ->exists();
+
+            if (! $valid) {
+                return "Error: User ID {$assignedTo} is not a member of this family.";
+            }
+        }
+
         $todo = Todo::create([
             'family_id' => $this->user->family_id,
             'created_by' => $this->user->id,
@@ -31,9 +45,12 @@ class CreateTodo implements Tool
             'priority' => $request['priority'] ?? Priority::Medium->value,
             'status' => TodoStatus::Pending->value,
             'due_date' => $request['due_date'] ?? null,
+            'assigned_to' => $assignedTo,
+            'reminder_enabled' => (bool) ($request['reminder_enabled'] ?? false),
+            'reminder_lead_time' => $request['reminder_lead_time'] ?? 60,
         ]);
 
-        return "✓ Todo created: \"{$todo->title}\"";
+        return "✓ Todo created: \"{$todo->title}\" (ID: {$todo->id})";
     }
 
     /** @return array<string, JsonSchema> */
@@ -42,9 +59,12 @@ class CreateTodo implements Tool
         return [
             'title' => $schema->string()->description('The todo title')->required(),
             'description' => $schema->string()->description('Optional description'),
-            'category' => $schema->string()->description('home, work, school, personal, or other'),
+            'category' => $schema->string()->description('home, work, school, or personal'),
             'priority' => $schema->string()->description('low, medium, or high'),
             'due_date' => $schema->string()->description('Due date as YYYY-MM-DD'),
+            'assigned_to' => $schema->integer()->description('User ID of the family member to assign this todo to'),
+            'reminder_enabled' => $schema->boolean()->description('Whether to send a reminder'),
+            'reminder_lead_time' => $schema->integer()->description('How many minutes before the due date to send the reminder'),
         ];
     }
 }

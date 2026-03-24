@@ -34,7 +34,7 @@ class ListChores implements Tool
         return $chores->map(function (Chore $chore) {
             $due = $chore->next_due_date ? " (due {$chore->next_due_date->toDateString()})" : '';
 
-            return "• [{$chore->frequency->value}] {$chore->title}{$due}";
+            return "• [ID:{$chore->id}] [{$chore->frequency->value}] {$chore->title}{$due}";
         })->implode("\n");
     }
 
@@ -42,7 +42,7 @@ class ListChores implements Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            'frequency' => $schema->string()->description('Filter by frequency: daily, weekly, biweekly, monthly, or as_needed'),
+            'frequency' => $schema->string()->description('Filter by frequency: once, daily, weekly, or monthly'),
             'due_today' => $schema->boolean()->description('Only show chores due today'),
         ];
     }

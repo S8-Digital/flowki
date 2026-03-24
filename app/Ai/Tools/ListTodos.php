@@ -37,7 +37,7 @@ class ListTodos implements Tool
             $due = $todo->due_date ? " (due {$todo->due_date->toDateString()})" : '';
             $assignee = $todo->assignee ? " → {$todo->assignee->name}" : '';
 
-            return "• [{$todo->status->value}] {$todo->title}{$due}{$assignee}";
+            return "• [ID:{$todo->id}] [{$todo->status->value}] {$todo->title}{$due}{$assignee}";
         })->implode("\n");
     }
 

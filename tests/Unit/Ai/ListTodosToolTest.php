@@ -37,6 +37,7 @@ class ListTodosToolTest extends TestCase
         $result = $tool->handle(new Request([]));
 
         $this->assertStringContainsString('Buy groceries', $result);
+        $this->assertMatchesRegularExpression('/\[ID:\d+\]/', $result);
     }
 
     public function test_handle_filters_by_status(): void

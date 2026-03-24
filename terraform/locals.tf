@@ -6,6 +6,7 @@ locals {
     APP_PORT                     = "8080"
     APP_LOCALE                   = "en"
     LOG_LEVEL                    = "info"
+    LOG_CHANNEL                  = "stderr"
     DB_CONNECTION                = "pgsql"
     DB_HOST                      = local.db_socket_path
     DB_DATABASE                  = var.db_name
@@ -16,6 +17,12 @@ locals {
     MAIL_FROM_NAME               = "Flowki"
     MAILGUN_DOMAIN               = "mg.flowki.family"
     MAILGUN_ENDPOINT             = "api.mailgun.net"
+    QUEUE_CONNECTION                  = "cloudtasks"
+    CLOUD_TASKS_PROJECT               = var.project_id
+    CLOUD_TASKS_LOCATION              = var.region
+    CLOUD_TASKS_QUEUE                 = "${var.app_name}-default"
+    CLOUD_TASKS_SERVICE_ACCOUNT_EMAIL = google_service_account.cloud_run.email
+    CLOUD_TASKS_HANDLER               = var.app_url
     GOOGLE_CLIENT_ID             = "414442590715-dt6ads9mjbttgiluc4lm0340ijh6gi9m.apps.googleusercontent.com"
     GOOGLE_AUTH_REDIRECT_URI     = "https://flowki.family/auth/google/callback"
     GOOGLE_REDIRECT_URI          = "https://flowki.family/auth/google/calendar/callback"

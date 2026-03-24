@@ -26,6 +26,7 @@
         "socialiteproviders/apple": "*",
         "spatie/laravel-google-cloud-storage": "^2.3",
         "spatie/laravel-permission": "^7.2",
+        "stackkit/laravel-google-cloud-tasks-queue": "^5.2",
         "symfony/http-client": "^8.0",
         "symfony/mailgun-mailer": "^8.0"
     },
