@@ -1,0 +1,201 @@
+import { storage } from './storage';
+
+// Update this to your backend's base URL (set via env or config)
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000';
+
+class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    message: string,
+    public readonly data?: unknown,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+async function request<T>(
+  method: string,
+  path: string,
+  body?: unknown,
+): Promise<T | null> {
+  const token = await storage.getToken();
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method,
+    headers,
+    body: body != null ? JSON.stringify(body) : undefined,
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, data?.message ?? res.statusText, data);
+  }
+
+  // 204 No Content
+  if (res.status === 204) return null;
+
+  return res.json() as Promise<T>;
+}
+
+export const api = {
+  get: <T>(path: string) => request<T>('GET', path),
+  post: <T>(path: string, body?: unknown) => request<T>('POST', path, body),
+  patch: <T>(path: string, body?: unknown) => request<T>('PATCH', path, body),
+  put: <T>(path: string, body?: unknown) => request<T>('PUT', path, body),
+  delete: (path: string) => request<void>('DELETE', path),
+};
+
+// Auth-specific helpers -------------------------------------------------------
+
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  profile_color?: string | null;
+  family_id?: number | null;
+}
+
+export interface LoginResponse {
+  token: string;
+  user: AuthUser;
+}
+
+export const authApi = {
+  login: (email: string, password: string) =>
+    api.post<LoginResponse>('/api/mobile/login', { email, password }),
+
+  register: (name: string, email: string, password: string, password_confirmation: string) =>
+    api.post<LoginResponse>('/api/mobile/register', {
+      name,
+      email,
+      password,
+      password_confirmation,
+    }),
+
+  logout: () => api.post<void>('/api/mobile/logout'),
+
+  me: () => api.get<AuthUser>('/api/mobile/user'),
+};
+
+// Feature API helpers ----------------------------------------------------------
+
+export const todosApi = {
+  list: () => api.get<Todo[]>('/api/mobile/todos'),
+  create: (data: Partial<Todo>) => api.post<Todo>('/api/mobile/todos', data),
+  update: (id: number, data: Partial<Todo>) =>
+    api.patch<Todo>(`/api/mobile/todos/${id}`, data),
+  remove: (id: number) => api.delete<void>(`/api/mobile/todos/${id}`),
+};
+
+export const choresApi = {
+  list: () => api.get<Chore[]>('/api/mobile/chores'),
+  create: (data: Partial<Chore>) => api.post<Chore>('/api/mobile/chores', data),
+  update: (id: number, data: Partial<Chore>) =>
+    api.patch<Chore>(`/api/mobile/chores/${id}`, data),
+  complete: (id: number) =>
+    api.post<Chore>(`/api/mobile/chores/${id}/complete`),
+  remove: (id: number) => api.delete<void>(`/api/mobile/chores/${id}`),
+};
+
+export const shoppingApi = {
+  lists: () => api.get<ShoppingList[]>('/api/mobile/shopping'),
+  createList: (name: string) =>
+    api.post<ShoppingList>('/api/mobile/shopping', { name }),
+  removeList: (id: number) => api.delete<void>(`/api/mobile/shopping/${id}`),
+  addItem: (listId: number, data: Partial<ShoppingItem>) =>
+    api.post<ShoppingItem>(`/api/mobile/shopping/${listId}/items`, data),
+  toggleItem: (listId: number, itemId: number) =>
+    api.patch<ShoppingItem>(
+      `/api/mobile/shopping/${listId}/items/${itemId}/toggle`,
+    ),
+  removeItem: (listId: number, itemId: number) =>
+    api.delete<void>(`/api/mobile/shopping/${listId}/items/${itemId}`),
+};
+
+export const calendarApi = {
+  list: (start?: string, end?: string) =>
+    api.get<CalendarEvent[]>(
+      `/api/mobile/calendar${start ? `?start=${start}&end=${end ?? ''}` : ''}`,
+    ),
+  create: (data: Partial<CalendarEvent>) =>
+    api.post<CalendarEvent>('/api/mobile/calendar', data),
+  update: (id: number, data: Partial<CalendarEvent>) =>
+    api.patch<CalendarEvent>(`/api/mobile/calendar/${id}`, data),
+  remove: (id: number) => api.delete<void>(`/api/mobile/calendar/${id}`),
+};
+
+export interface Todo {
+  id: number;
+  family_id: number;
+  created_by: number;
+  assigned_to?: number | null;
+  title: string;
+  description?: string | null;
+  category?: string | null;
+  priority?: string | null;
+  status: string;
+  due_date?: string | null;
+  reminder_enabled?: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Chore {
+  id: number;
+  family_id: number;
+  title: string;
+  description?: string | null;
+  frequency?: string | null;
+  next_due_date?: string | null;
+  last_completed_at?: string | null;
+  created_by: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ShoppingItem {
+  id: number;
+  shopping_list_id: number;
+  name: string;
+  quantity?: string | null;
+  category?: string | null;
+  is_checked: boolean;
+  added_by: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ShoppingList {
+  id: number;
+  family_id: number;
+  name: string;
+  items?: ShoppingItem[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CalendarEvent {
+  id: number;
+  family_id: number;
+  title: string;
+  description?: string | null;
+  location?: string | null;
+  start_at: string;
+  end_at: string;
+  is_all_day?: boolean;
+  color?: string | null;
+  created_by: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export { ApiError };
