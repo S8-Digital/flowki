@@ -15,7 +15,7 @@ import { makeUseFormReturn } from './__mocks__/inertia';
 
 vi.mock('@inertiajs/react', () => ({
     Head: ({ title }: { title: string }) => <title>{title}</title>,
-    Link: ({ href, children, ...rest }: { href: string; children: React.ReactNode; [key: string]: unknown }) => (
+    Link: ({ href, children, ...rest }: { href: string; children: React.ReactNode; [_key: string]: unknown }) => (
         <a href={String(href)} {...rest}>
             {children}
         </a>
@@ -220,7 +220,7 @@ describe('Profile settings page', () => {
                 currentUserPermissions: [],
                 unreadNotificationsCount: 0,
             },
-        } as ReturnType<typeof usePage>);
+        } as unknown as ReturnType<typeof usePage>);
         render(<Profile mustVerifyEmail={true} hasGoogleCalendarConnected={false} />);
         expect(screen.getByText(/your email address is unverified/i)).toBeInTheDocument();
     });
@@ -250,7 +250,7 @@ describe('Profile settings page', () => {
 // ---------------------------------------------------------------------------
 
 describe('Categories settings page', () => {
-    const emptyCategories: { value: string; label: string }[] = [];
+    const emptyCategories: { value: string; label: string }[] = [] as { value: string; label: string }[];
 
     it('renders the Todo Categories heading', () => {
         render(<Categories todoCategories={emptyCategories} recipeCategories={emptyCategories} shoppingCategories={emptyCategories} />);
@@ -307,7 +307,7 @@ describe('Member Permissions settings page', () => {
         profile_color: null,
         permissionGroups: [
             {
-                name: 'Todos',
+                group: 'Todos',
                 permissions: [
                     { name: 'view-todos', label: 'View Todos', granted: true },
                     { name: 'create-todos', label: 'Create Todos', granted: false },

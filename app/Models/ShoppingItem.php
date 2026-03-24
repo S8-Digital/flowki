@@ -39,4 +39,24 @@ class ShoppingItem extends Model
     {
         return $this->belongsTo(User::class, 'added_by');
     }
+
+    /**
+     * Serialise this shopping item for Firebase Realtime Database sync.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSyncArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'shopping_list_id' => $this->shopping_list_id,
+            'added_by' => $this->added_by,
+            'name' => $this->name,
+            'quantity' => $this->quantity,
+            'category' => $this->category?->value,
+            'is_checked' => $this->is_checked,
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+        ];
+    }
 }

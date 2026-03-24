@@ -68,4 +68,29 @@ class CalendarEvent extends Model
                 ->orWhere('description', 'like', "%{$term}%");
         });
     }
+
+    /**
+     * Serialise this calendar event for Firebase Realtime Database sync.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSyncArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'family_id' => $this->family_id,
+            'created_by' => $this->created_by,
+            'title' => $this->title,
+            'description' => $this->description,
+            'location' => $this->location,
+            'start_at' => $this->start_at?->toIso8601String(),
+            'end_at' => $this->end_at?->toIso8601String(),
+            'is_all_day' => $this->is_all_day,
+            'recurrence' => $this->recurrence?->value,
+            'reminder_at' => $this->reminder_at?->toIso8601String(),
+            'color' => $this->color,
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+        ];
+    }
 }

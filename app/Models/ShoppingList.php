@@ -47,4 +47,22 @@ class ShoppingList extends Model
     {
         return $query->where('family_id', $familyId);
     }
+
+    /**
+     * Serialise this shopping list for Firebase Realtime Database sync.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSyncArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'family_id' => $this->family_id,
+            'created_by' => $this->created_by,
+            'name' => $this->name,
+            'is_shared' => $this->is_shared,
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+        ];
+    }
 }

@@ -74,4 +74,26 @@ class Chore extends Model
                 ->orWhere('description', 'like', "%{$term}%");
         });
     }
+
+    /**
+     * Serialise this chore for Firebase Realtime Database sync.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSyncArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'family_id' => $this->family_id,
+            'created_by' => $this->created_by,
+            'title' => $this->title,
+            'description' => $this->description,
+            'frequency' => $this->frequency?->value,
+            'next_due_date' => $this->next_due_date?->toIso8601String(),
+            'reminder_enabled' => $this->reminder_enabled,
+            'reminder_lead_time' => $this->reminder_lead_time,
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+        ];
+    }
 }

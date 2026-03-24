@@ -4,13 +4,13 @@ import { styled } from '@mui/material/styles';
 import { Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import type { PolymorphicProps } from '@/types/globals';
 import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
 import { show as recipeShow } from '@/actions/App/Http/Controllers/RecipeController';
 import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import type { PolymorphicProps } from '@/types/globals';
 
 interface SearchResults {
     todos: Array<{ id: number; title: string }>;
