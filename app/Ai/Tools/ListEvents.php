@@ -43,7 +43,7 @@ class ListEvents implements Tool
                 : $event->start_at->toDateTimeString();
             $location = $event->location ? " @ {$event->location}" : '';
 
-            return "• {$event->title} on {$date}{$location}";
+            return "• [ID:{$event->id}] {$event->title} on {$date}{$location}";
         })->implode("\n");
     }
 

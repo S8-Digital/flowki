@@ -4,6 +4,7 @@ namespace Tests\Unit\Ai;
 
 use App\Ai\Tools\CreateChore;
 use App\Enums\ChoreFrequency;
+use App\Models\Chore;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Ai\Tools\Request;
@@ -97,6 +98,65 @@ class CreateChoreToolTest extends TestCase
 
         $this->assertStringContainsString('✓', $result);
         $this->assertStringContainsString('Do laundry', $result);
+    }
+
+    public function test_handle_response_includes_chore_id(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $tool = new CreateChore($user);
+
+        $result = $tool->handle(new Request(['title' => 'Clean windows']));
+
+        $this->assertMatchesRegularExpression('/ID: \d+/', $result);
+    }
+
+    public function test_handle_stores_reminder_fields_when_provided(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $tool = new CreateChore($user);
+
+        $tool->handle(new Request([
+            'title' => 'Water plants',
+            'reminder_enabled' => true,
+            'reminder_lead_time' => 30,
+        ]));
+
+        $this->assertDatabaseHas('chores', [
+            'title' => 'Water plants',
+            'reminder_enabled' => true,
+            'reminder_lead_time' => 30,
+        ]);
+    }
+
+    public function test_handle_syncs_assignees_from_same_family(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $member = User::factory()->create(['family_id' => $user->family_id]);
+        $tool = new CreateChore($user);
+
+        $result = $tool->handle(new Request([
+            'title' => 'Vacuum',
+            'assignee_ids' => [$member->id],
+        ]));
+
+        $this->assertStringContainsString('✓', $result);
+        $chore = Chore::where('title', 'Vacuum')->first();
+        $this->assertTrue($chore->assignees->contains($member->id));
+    }
+
+    public function test_handle_rejects_assignees_from_another_family(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $outsider = User::factory()->withFamily()->create();
+        $tool = new CreateChore($user);
+
+        $result = $tool->handle(new Request([
+            'title' => 'Mop floors',
+            'assignee_ids' => [$outsider->id],
+        ]));
+
+        $this->assertStringContainsString('Error', $result);
+        $this->assertStringContainsString((string) $outsider->id, $result);
     }
 
     public function test_description_is_non_empty_string(): void
