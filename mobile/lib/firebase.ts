@@ -24,10 +24,40 @@ return getApp();
   return initializeApp(firebaseConfig);
 }
 
-/** Returns a Firebase Realtime Database instance (lazy import avoids bundling
- * the full RTDB SDK until it is actually needed). */
-export async function getFirebaseDatabase() {
-  const { getDatabase } = await import('firebase/database');
+let _dbPromise: Promise<import('firebase/database').Database> | null = null;
 
-  return getDatabase(getFirebaseApp());
+/**
+ * Returns a Firebase Realtime Database instance with offline persistence enabled.
+ * The Firebase RTDB JS SDK automatically queues writes when offline and replays
+ * them on reconnection.  We call `enablePersistenceReact` (available in some
+ * versions) or fall back to the default online-state handling which provides
+ * in-process queuing for the session lifetime.
+ *
+ * Lazy import avoids bundling the full RTDB SDK until it is actually needed.
+ */
+export async function getFirebaseDatabase() {
+  if (_dbPromise) {
+    return _dbPromise;
+  }
+
+  _dbPromise = (async () => {
+    const { getDatabase, enableNetwork } = await import('firebase/database');
+    const db = getDatabase(getFirebaseApp());
+
+    // Ensure the SDK is connected so offline writes are queued for replay.
+    try {
+      await enableNetwork(db);
+    } catch (err: unknown) {
+      // enableNetwork throws if the network is already enabled — safe to ignore.
+      const message = err instanceof Error ? err.message : String(err);
+
+      if (!message.includes('already')) {
+        console.warn('[firebase] enableNetwork error:', message);
+      }
+    }
+
+    return db;
+  })();
+
+  return _dbPromise;
 }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\FcmTokenController;
 use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\CalendarController;
 use App\Http\Controllers\Mobile\ChoreController;
@@ -43,6 +44,10 @@ Route::prefix('api/mobile')->name('mobile.')->group(function () {
 
         // Weather
         Route::get('weather', [WeatherController::class, 'index'])->name('weather.index');
+
+        // FCM tokens
+        Route::post('fcm-tokens', [FcmTokenController::class, 'store'])->name('fcm-tokens.store');
+        Route::delete('fcm-tokens/{token}', [FcmTokenController::class, 'destroy'])->name('fcm-tokens.destroy');
 
         // Todos
         Route::get('todos', [TodoController::class, 'index'])->name('todos.index');

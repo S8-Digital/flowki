@@ -212,6 +212,13 @@ export const calendarApi = {
   remove: (id: number) => api.delete<void>(`/api/mobile/calendar/${id}`),
 };
 
+export const fcmTokenApi = {
+  register: (token: string, device_type: string = 'mobile') =>
+    api.post<{ message: string }>('/api/mobile/fcm-tokens', { token, device_type }),
+  unregister: (token: string) =>
+    api.delete(`/api/mobile/fcm-tokens/${encodeURIComponent(token)}`),
+};
+
 export interface Todo {
   id: number;
   family_id: number;

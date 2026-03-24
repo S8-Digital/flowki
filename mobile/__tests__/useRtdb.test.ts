@@ -5,6 +5,17 @@ import { getFirebaseDatabase } from '../lib/firebase';
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
+/**
+ * Flush all pending promises/microtasks so async setup inside hooks completes.
+ * Multiple rounds are needed because the hook chains several async operations
+ * (dynamic import + getFirebaseDatabase + onValue setup).
+ */
+const flushPromises = async () => {
+  for (let i = 0; i < 5; i++) {
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  }
+};
+
 /** Create a minimal Firebase onValue / ref mock pair. */
 function makeFirebaseMocks() {
   const listeners = new Map<string, (snapshot: unknown) => void>();
@@ -96,7 +107,7 @@ describe('useRtdb', () => {
 
     // Wait for the async Firebase setup
     await act(async () => {
-      await vi.runAllMicrotasksAsync();
+      await flushPromises();
     });
 
     const snapshot = { 1: { title: 'Buy milk' } };
@@ -115,7 +126,7 @@ describe('useRtdb', () => {
     const { result } = renderHook(() => useRtdb(path, initial));
 
     await act(async () => {
-      await vi.runAllMicrotasksAsync();
+      await flushPromises();
       mocks.emit(path, null);
     });
 
@@ -127,7 +138,7 @@ describe('useRtdb', () => {
     const { result } = renderHook(() => useRtdb(path, {}));
 
     await act(async () => {
-      await vi.runAllMicrotasksAsync();
+      await flushPromises();
     });
 
     const err = new Error('Permission denied');
@@ -144,7 +155,7 @@ describe('useRtdb', () => {
     const { unmount } = renderHook(() => useRtdb(path, {}));
 
     await act(async () => {
-      await vi.runAllMicrotasksAsync();
+      await flushPromises();
     });
 
     const unsub = mocks.unsubscribers.get(path);
@@ -164,15 +175,20 @@ describe('useRtdb', () => {
     });
 
     await act(async () => {
-      await vi.runAllMicrotasksAsync();
+      await flushPromises();
     });
 
     const unsub1 = mocks.unsubscribers.get(path1);
     expect(unsub1).toBeDefined();
 
-    await act(async () => {
+    // Rerender with the new path and then flush to allow the new async
+    // subscription to be established.
+    act(() => {
       rerender({ p: path2 });
-      await vi.runAllMicrotasksAsync();
+    });
+
+    await act(async () => {
+      await flushPromises();
     });
 
     // Old path listener should be torn down
@@ -188,7 +204,7 @@ describe('useRtdb', () => {
     });
 
     await act(async () => {
-      await vi.runAllMicrotasksAsync();
+      await flushPromises();
     });
 
     const unsub = mocks.unsubscribers.get(path);

@@ -1,4 +1,6 @@
 import { OfflineIndicator } from '@/components/OfflineIndicator';
+import { registerBackgroundSync, unregisterBackgroundSync } from '@/hooks/useBackgroundSync';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { store } from '@/store';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -12,6 +14,7 @@ function AuthGuard() {
   const { user, isLoading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const { unregister: unregisterPush } = usePushNotifications();
 
   useEffect(() => {
     if (isLoading) {
@@ -26,6 +29,16 @@ return;
       router.replace('/(tabs)');
     }
   }, [user, isLoading, segments, router]);
+
+  // Register background sync when logged in; unregister on logout.
+  useEffect(() => {
+    if (user) {
+      registerBackgroundSync();
+    } else {
+      unregisterBackgroundSync();
+      unregisterPush();
+    }
+  }, [user, unregisterPush]);
 
   return <Slot />;
 }
