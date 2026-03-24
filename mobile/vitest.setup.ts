@@ -1,57 +1,7 @@
 import { vi } from 'vitest';
 
-// Mock react-native to prevent Vitest from loading the raw react-native
-// package which contains Flow-type annotations (import typeof *) that Node.js
-// cannot parse.  @testing-library/react-native transitively imports it, so
-// this mock must be registered before any test file loads that library.
-vi.mock('react-native', async () => {
-  const React = await import('react');
-
-  const View = (props: Record<string, unknown>) => React.createElement('div', props);
-  const Text = (props: Record<string, unknown>) => React.createElement('span', props);
-  const StyleSheet = { create: (s: unknown) => s, flatten: (s: unknown) => s };
-  const Dimensions = { get: () => ({ width: 375, height: 667 }) };
-  const Platform = { OS: 'ios', select: (m: Record<string, unknown>) => m.ios ?? m.default };
-  const Animated = {
-    Value: class {
-      constructor(v: number) { return v as unknown as object; }
-    },
-    View,
-    Text,
-    createAnimatedComponent: (c: unknown) => c,
-    timing: () => ({ start: vi.fn() }),
-    spring: () => ({ start: vi.fn() }),
-  };
-
-  return {
-    default: { View, Text, StyleSheet, Dimensions, Platform, Animated },
-    View,
-    Text,
-    StyleSheet,
-    Dimensions,
-    Platform,
-    Animated,
-    TouchableOpacity: View,
-    TouchableHighlight: View,
-    TouchableWithoutFeedback: View,
-    Pressable: View,
-    ScrollView: View,
-    FlatList: View,
-    SectionList: View,
-    Image: View,
-    TextInput: View,
-    Switch: View,
-    Modal: View,
-    ActivityIndicator: View,
-    SafeAreaView: View,
-    KeyboardAvoidingView: View,
-    InteractionManager: { runAfterInteractions: (cb: () => void) => cb() },
-    Linking: { openURL: vi.fn(), addEventListener: vi.fn() },
-    Alert: { alert: vi.fn() },
-    Keyboard: { dismiss: vi.fn(), addListener: vi.fn(() => ({ remove: vi.fn() })) },
-    useColorScheme: vi.fn(() => 'light'),
-  };
-});
+// react-native is aliased to __mocks__/react-native.ts in vitest.config.ts so
+// Vite never loads the raw Flow-typed source. No vi.mock needed here.
 
 // Mock Firebase
 vi.mock('@/lib/firebase', () => ({

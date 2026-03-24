@@ -45,6 +45,7 @@
         "vitest": "^3.0.0"
     },
     "dependencies": {
+        "@flowki/shared": "*",
         "@emotion/cache": "^11.14.0",
         "@emotion/react": "^11.14.0",
         "@emotion/server": "^11.11.0",

@@ -1,7 +1,8 @@
+import { getFirebaseDatabase } from '@/lib/firebase';
 import { renderHook, act } from '@testing-library/react-native';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useRtdb } from '../hooks/useRtdb';
-import { getFirebaseDatabase } from '../lib/firebase';
+import { afterEach, beforeEach, describe, expect, it,  vi } from 'vitest';
+import type {Mock} from 'vitest';
+import { useRtdb } from '@/hooks/useRtdb';
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -20,7 +21,7 @@ const flushPromises = async () => {
 function makeFirebaseMocks() {
   const listeners = new Map<string, (snapshot: unknown) => void>();
   const errorListeners = new Map<string, (err: Error) => void>();
-  const unsubscribers = new Map<string, ReturnType<typeof vi.fn>>();
+  const unsubscribers = new Map<string, Mock>();
 
   const onValue = vi.fn(
     (dbRef: { path: string }, success: (s: unknown) => void, error: (e: Error) => void) => {
@@ -69,8 +70,8 @@ vi.mock('../lib/firebase', () => ({
 }));
 
 vi.mock('firebase/database', () => ({
-  ref: (...args: unknown[]) => mocks.ref(...args),
-  onValue: (...args: unknown[]) => mocks.onValue(...args),
+  ref: (...args: any[]) => mocks.ref(...args),
+  onValue: (...args: any[]) => mocks.onValue(...args),
 }));
 
 beforeEach(() => {

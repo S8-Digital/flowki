@@ -1,3 +1,14 @@
+import type {
+  CalendarEvent,
+  Chore,
+  Family,
+  ShoppingItem,
+  ShoppingList,
+  Todo,
+  WeatherCurrent,
+  WeatherData,
+  WeatherDay,
+} from '@flowki/shared';
 import { storage } from './storage';
 
 // Update this to your backend's base URL (set via env or config)
@@ -100,15 +111,7 @@ export interface FamilyMember {
   role: string;
 }
 
-export interface Family {
-  id: number;
-  name: string;
-  invite_code: string;
-  location_name?: string | null;
-  latitude?: number | null;
-  longitude?: number | null;
-  members: FamilyMember[];
-}
+export type { Family };
 
 export const familyApi = {
   get: () => api.get<Family>('/api/mobile/family'),
@@ -138,28 +141,7 @@ payload.current_password = currentPassword;
 
 // Weather -------------------------------------------------------------------
 
-export interface WeatherCurrent {
-  temp: number;
-  feels_like: number;
-  humidity: number;
-  wind_speed: number;
-  description: string;
-  icon_url?: string | null;
-}
-
-export interface WeatherDay {
-  date: string;
-  temp_min: number;
-  temp_max: number;
-  description: string;
-  icon_url?: string | null;
-}
-
-export interface WeatherData {
-  location: string;
-  current: WeatherCurrent;
-  forecast: WeatherDay[];
-}
+export type { WeatherCurrent, WeatherDay, WeatherData };
 
 export const weatherApi = {
   get: () => api.get<WeatherData>('/api/mobile/weather'),
@@ -172,7 +154,7 @@ export const todosApi = {
   create: (data: Partial<Todo>) => api.post<Todo>('/api/mobile/todos', data),
   update: (id: number, data: Partial<Todo>) =>
     api.patch<Todo>(`/api/mobile/todos/${id}`, data),
-  remove: (id: number) => api.delete<void>(`/api/mobile/todos/${id}`),
+  remove: (id: number) => api.delete(`/api/mobile/todos/${id}`),
 };
 
 export const choresApi = {
@@ -182,14 +164,14 @@ export const choresApi = {
     api.patch<Chore>(`/api/mobile/chores/${id}`, data),
   complete: (id: number) =>
     api.post<Chore>(`/api/mobile/chores/${id}/complete`),
-  remove: (id: number) => api.delete<void>(`/api/mobile/chores/${id}`),
+  remove: (id: number) => api.delete(`/api/mobile/chores/${id}`),
 };
 
 export const shoppingApi = {
   lists: () => api.get<ShoppingList[]>('/api/mobile/shopping'),
   createList: (name: string) =>
     api.post<ShoppingList>('/api/mobile/shopping', { name }),
-  removeList: (id: number) => api.delete<void>(`/api/mobile/shopping/${id}`),
+  removeList: (id: number) => api.delete(`/api/mobile/shopping/${id}`),
   addItem: (listId: number, data: Partial<ShoppingItem>) =>
     api.post<ShoppingItem>(`/api/mobile/shopping/${listId}/items`, data),
   toggleItem: (listId: number, itemId: number) =>
@@ -197,7 +179,7 @@ export const shoppingApi = {
       `/api/mobile/shopping/${listId}/items/${itemId}/toggle`,
     ),
   removeItem: (listId: number, itemId: number) =>
-    api.delete<void>(`/api/mobile/shopping/${listId}/items/${itemId}`),
+    api.delete(`/api/mobile/shopping/${listId}/items/${itemId}`),
 };
 
 export const calendarApi = {
@@ -209,7 +191,7 @@ export const calendarApi = {
     api.post<CalendarEvent>('/api/mobile/calendar', data),
   update: (id: number, data: Partial<CalendarEvent>) =>
     api.patch<CalendarEvent>(`/api/mobile/calendar/${id}`, data),
-  remove: (id: number) => api.delete<void>(`/api/mobile/calendar/${id}`),
+  remove: (id: number) => api.delete(`/api/mobile/calendar/${id}`),
 };
 
 export const fcmTokenApi = {
@@ -219,69 +201,6 @@ export const fcmTokenApi = {
     api.delete(`/api/mobile/fcm-tokens/${encodeURIComponent(token)}`),
 };
 
-export interface Todo {
-  id: number;
-  family_id: number;
-  created_by: number;
-  assigned_to?: number | null;
-  title: string;
-  description?: string | null;
-  category?: string | null;
-  priority?: string | null;
-  status: string;
-  due_date?: string | null;
-  reminder_enabled?: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Chore {
-  id: number;
-  family_id: number;
-  title: string;
-  description?: string | null;
-  frequency?: string | null;
-  next_due_date?: string | null;
-  last_completed_at?: string | null;
-  created_by: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ShoppingItem {
-  id: number;
-  shopping_list_id: number;
-  name: string;
-  quantity?: string | null;
-  category?: string | null;
-  is_checked: boolean;
-  added_by: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ShoppingList {
-  id: number;
-  family_id: number;
-  name: string;
-  items?: ShoppingItem[];
-  created_at: string;
-  updated_at: string;
-}
-
-export interface CalendarEvent {
-  id: number;
-  family_id: number;
-  title: string;
-  description?: string | null;
-  location?: string | null;
-  start_at: string;
-  end_at: string;
-  is_all_day?: boolean;
-  color?: string | null;
-  created_by: number;
-  created_at: string;
-  updated_at: string;
-}
+export type { Todo, Chore, ShoppingItem, ShoppingList, CalendarEvent };
 
 export { ApiError };
