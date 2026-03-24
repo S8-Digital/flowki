@@ -57,6 +57,29 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `vendor/bin/sail yarn run build`, `vendor/bin/sail yarn run dev`, or `vendor/bin/sail composer run dev`. Ask them.
 
+## Mobile App (Expo / React Native)
+
+This project includes a native mobile app built with Expo, located in the `mobile/` directory.
+
+### Mobile Architecture
+
+- **Framework**: Expo + `expo-router` (file-based routing under `mobile/app/`)
+- **State**: Redux Toolkit — store in `mobile/store/`, slices in `mobile/store/slices/`
+- **UI**: `react-native-paper` — do **not** use MUI; it has no native performance story
+- **Auth**: Sanctum bearer tokens stored via `expo-secure-store` (`mobile/lib/storage.ts`)
+- **Real-time**: Firebase RTDB listeners via `mobile/hooks/useRtdb.ts`
+- **API client**: `mobile/lib/api.ts` — communicates with `/api/mobile/*` Laravel endpoints
+
+### Mobile Development Rules
+
+- When implementing a feature that exists in the web app, **also implement it in the mobile app** (`mobile/`). Both platforms must stay in feature parity.
+- Mobile API routes live in `routes/mobile.php`; controllers in `app/Http/Controllers/Mobile/`. Always create dedicated mobile controllers that return JSON resources (not Inertia responses).
+- Use `react-native-paper` components exclusively for UI. Do not use HTML elements or MUI.
+- Follow the existing `mobile/` directory structure for new screens (`mobile/app/(tabs)/`), hooks (`mobile/hooks/`), and shared components (`mobile/components/`).
+- Dark/light mode: use `useColorScheme()` hook and `Colors` constants from `mobile/constants/Colors.ts`.
+- Configure the mobile app via `mobile/.env` (copy from `mobile/.env.example`). Firebase config keys use the `EXPO_PUBLIC_FIREBASE_*` prefix; backend URL uses `EXPO_PUBLIC_API_URL`.
+- Run the mobile app with `cd mobile && npm start` (or `npx expo start`).
+
 ## Documentation Files
 
 - You must only create documentation files if explicitly requested by the user.
@@ -170,6 +193,26 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Place new test files in `resources/js/tests/`, following the naming convention of existing files (e.g., `auth.test.tsx`, `feature-pages.test.tsx`). See those files for the required mocking patterns for `@inertiajs/react` and `@material-tailwind/react`.
 - Tests must cover all happy paths, failure paths, and conditional rendering paths relevant to the change.
 - Run frontend tests with `npm run test` (single pass) or `npm run test:watch` (interactive watch mode).
+
+## Mobile Tests (Expo / React Native)
+
+- Every new feature or bug fix that touches mobile screens, hooks, components, or API integrations under `mobile/` **must** include associated mobile tests. This is a hard requirement for all PRs.
+- Place mobile test files in `mobile/__tests__/`, mirroring the directory structure of the file being tested (e.g., `mobile/__tests__/hooks/useRtdb.test.ts`, `mobile/__tests__/app/(tabs)/todos.test.tsx`).
+- Mock external dependencies (Firebase, SecureStore, NetInfo, Redux store) at the top of each test file.
+- Tests must cover: component rendering, user interactions (create/toggle/delete), loading states, and error states.
+- Run mobile tests with `cd mobile && npm test`.
+
+## Full Test Coverage Requirement
+
+Every user-facing feature must be tested at all three layers:
+
+| Layer | Framework | Location |
+|-------|-----------|----------|
+| **Backend** | PHPUnit | `tests/Feature/` and `tests/Unit/` |
+| **Web frontend** | Vitest + React Testing Library | `resources/js/tests/` |
+| **Mobile** | Vitest + React Native Testing Library | `mobile/__tests__/` |
+
+PRs that add or change user-facing behaviour without covering all three layers should not be merged.
 
 === inertia-laravel/core rules ===
 
