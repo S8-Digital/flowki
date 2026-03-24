@@ -40,6 +40,7 @@ locals {
     "iamcredentials.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "storage.googleapis.com",
+    "cloudtasks.googleapis.com",
   ]
 }
 
@@ -94,6 +95,7 @@ locals {
     "roles/cloudsql.client",
     "roles/storage.objectAdmin",
     "roles/secretmanager.secretAccessor",
+    "roles/cloudtasks.enqueuer",
   ]
   github_actions_roles = [
     "roles/run.developer",
@@ -247,6 +249,24 @@ resource "google_storage_bucket" "laravel_storage" {
   location                    = var.region
   uniform_bucket_level_access = true
   depends_on                  = [google_project_service.apis]
+}
+
+# ──────────────────────────────────────────────────────────────
+# Cloud Tasks Queue
+# ──────────────────────────────────────────────────────────────
+resource "google_cloud_tasks_queue" "default" {
+  project  = var.project_id
+  name     = "${var.app_name}-default"
+  location = var.region
+
+  retry_config {
+    max_attempts  = 10
+    min_backoff   = "5s"
+    max_backoff   = "600s"
+    max_doublings = 5
+  }
+
+  depends_on = [google_project_service.apis]
 }
 
 # ──────────────────────────────────────────────────────────────

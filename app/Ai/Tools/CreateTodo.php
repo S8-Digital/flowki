@@ -47,7 +47,7 @@ class CreateTodo implements Tool
             'due_date' => $request['due_date'] ?? null,
             'assigned_to' => $assignedTo,
             'reminder_enabled' => (bool) ($request['reminder_enabled'] ?? false),
-            'reminder_lead_time' => $request['reminder_lead_time'] ?? null,
+            'reminder_lead_time' => $request['reminder_lead_time'] ?? 60,
         ]);
 
         return "✓ Todo created: \"{$todo->title}\" (ID: {$todo->id})";

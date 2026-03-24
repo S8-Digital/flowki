@@ -32,3 +32,9 @@ output "cloud_run_service_account" {
   description = "Email of the service account used by Cloud Run."
   value       = google_service_account.cloud_run.email
 }
+
+output "cloud_tasks_queue" {
+  description = "Name of the Cloud Tasks queue used for Laravel jobs."
+  value       = google_cloud_tasks_queue.default.name
+}
+

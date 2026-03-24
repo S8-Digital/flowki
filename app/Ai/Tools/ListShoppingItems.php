@@ -24,9 +24,9 @@ class ListShoppingItems implements Tool
             ->forFamily($this->user->family_id)
             ->with(['items' => function ($q) use ($request) {
                 $q->when($request['category'] ?? null, fn ($q) => $q->where('category', $request['category']))
-                  ->when(isset($request['checked']) && $request['checked'] !== null, fn ($q) => $q->where('is_checked', (bool) $request['checked']))
-                  ->orderBy('is_checked')
-                  ->orderBy('name');
+                    ->when(isset($request['checked']) && $request['checked'] !== null, fn ($q) => $q->where('is_checked', (bool) $request['checked']))
+                    ->orderBy('is_checked')
+                    ->orderBy('name');
             }])
             ->when($request['list_name'] ?? null, fn ($q) => $q->where('name', 'like', '%'.($request['list_name']).'%'))
             ->latest()

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Ai;
 
 use App\Ai\Tools\CreateEvent;
+use App\Models\CalendarEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Ai\Tools\Request;
@@ -187,7 +188,7 @@ class CreateEventToolTest extends TestCase
         ]));
 
         $this->assertStringContainsString('✓', $result);
-        $event = \App\Models\CalendarEvent::where('title', 'Family meeting')->first();
+        $event = CalendarEvent::where('title', 'Family meeting')->first();
         $this->assertTrue($event->attendees->contains($member->id));
     }
 

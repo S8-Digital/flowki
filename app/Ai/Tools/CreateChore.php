@@ -28,7 +28,7 @@ class CreateChore implements Tool
             'frequency' => $request['frequency'] ?? ChoreFrequency::Weekly->value,
             'next_due_date' => $request['next_due_date'] ?? null,
             'reminder_enabled' => (bool) ($request['reminder_enabled'] ?? false),
-            'reminder_lead_time' => $request['reminder_lead_time'] ?? null,
+            'reminder_lead_time' => $request['reminder_lead_time'] ?? 60,
         ]);
 
         if (! empty($request['assignee_ids'])) {

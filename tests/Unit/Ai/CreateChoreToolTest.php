@@ -4,6 +4,7 @@ namespace Tests\Unit\Ai;
 
 use App\Ai\Tools\CreateChore;
 use App\Enums\ChoreFrequency;
+use App\Models\Chore;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Ai\Tools\Request;
@@ -139,7 +140,7 @@ class CreateChoreToolTest extends TestCase
         ]));
 
         $this->assertStringContainsString('✓', $result);
-        $chore = \App\Models\Chore::where('title', 'Vacuum')->first();
+        $chore = Chore::where('title', 'Vacuum')->first();
         $this->assertTrue($chore->assignees->contains($member->id));
     }
 
