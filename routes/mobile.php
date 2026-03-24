@@ -69,11 +69,13 @@ Route::prefix('api/mobile')->name('mobile.')->group(function () {
         Route::get('shopping/{shoppingList}', [ShoppingController::class, 'show'])->name('shopping.show');
         Route::delete('shopping/{shoppingList}', [ShoppingController::class, 'destroy'])->name('shopping.destroy');
 
-        // Shopping items
-        Route::post('shopping/{shoppingList}/items', [ShoppingController::class, 'storeItem'])->name('shopping.items.store');
-        Route::patch('shopping/{shoppingList}/items/{shoppingItem}', [ShoppingController::class, 'updateItem'])->name('shopping.items.update');
-        Route::patch('shopping/{shoppingList}/items/{shoppingItem}/toggle', [ShoppingController::class, 'toggleItem'])->name('shopping.items.toggle');
-        Route::delete('shopping/{shoppingList}/items/{shoppingItem}', [ShoppingController::class, 'destroyItem'])->name('shopping.items.destroy');
+        // Shopping items (scoped so {shoppingItem} must belong to {shoppingList})
+        Route::scopeBindings()->group(function () {
+            Route::post('shopping/{shoppingList}/items', [ShoppingController::class, 'storeItem'])->name('shopping.items.store');
+            Route::patch('shopping/{shoppingList}/items/{shoppingItem}', [ShoppingController::class, 'updateItem'])->name('shopping.items.update');
+            Route::patch('shopping/{shoppingList}/items/{shoppingItem}/toggle', [ShoppingController::class, 'toggleItem'])->name('shopping.items.toggle');
+            Route::delete('shopping/{shoppingList}/items/{shoppingItem}', [ShoppingController::class, 'destroyItem'])->name('shopping.items.destroy');
+        });
     });
 });
 

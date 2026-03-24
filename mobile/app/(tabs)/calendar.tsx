@@ -88,7 +88,8 @@ export default function CalendarScreen() {
   const user = useAppSelector((s) => s.auth.user);
   const familyId = user?.family_id;
 
-  const today = new Date().toISOString().slice(0, 10);
+  const _now = new Date();
+  const today = `${_now.getFullYear()}-${String(_now.getMonth() + 1).padStart(2, '0')}-${String(_now.getDate()).padStart(2, '0')}`;
   const [selectedDate, setSelectedDate] = useState(today);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -176,7 +177,7 @@ export default function CalendarScreen() {
 
       <View style={styles.dayHeader}>
         <ThemedText variant="subtitle">
-          {new Date(selectedDate).toLocaleDateString(undefined, {
+          {new Date(`${selectedDate}T00:00:00`).toLocaleDateString(undefined, {
             weekday: 'long',
             month: 'long',
             day: 'numeric',

@@ -56,9 +56,9 @@ class AuthController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Revoke any previous mobile token so a single active session is enforced
-        // per device (simplifies token management for the MVP).
-        // Remove this line to support simultaneous sessions on multiple devices.
+        // Revoke any previous mobile token so a single active mobile session is enforced
+        // per user across all devices (simplifies token management for the MVP).
+        // Remove this line to support simultaneous mobile sessions on multiple devices.
         $user->tokens()->where('name', 'mobile')->delete();
 
         $token = $user->createToken('mobile')->plainTextToken;

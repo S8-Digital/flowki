@@ -5,8 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import type { Family, FamilyMember } from '@/lib/api';
 import { familyApi } from '@/lib/api';
-import { useAppSelector } from '@/store';
-import { Clipboard } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
@@ -123,9 +122,9 @@ export default function FamilyScreen() {
     }
   };
 
-  const copyInviteCode = () => {
+  const copyInviteCode = async () => {
     if (!family?.invite_code) return;
-    Clipboard.setString(family.invite_code);
+    await Clipboard.setStringAsync(family.invite_code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

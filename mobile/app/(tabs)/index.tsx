@@ -32,7 +32,8 @@ const DEFAULT_WIDGETS: Widget[] = [
 ];
 
 function ScheduleWidget({ events }: { events: Record<string, CalendarEvent> }) {
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   const todayEvents = Object.values(events).filter((e) =>
     e.start_at.startsWith(today),
   );
@@ -142,11 +143,7 @@ function WeatherWidget() {
   }
 
   if (!weather) {
-    return (
-      <ThemedText variant="muted">
-        No location set. Add your family location in settings.
-      </ThemedText>
-    );
+    return null;
   }
 
   const { current, forecast, location } = weather;

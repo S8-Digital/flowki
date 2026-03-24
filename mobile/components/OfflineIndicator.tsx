@@ -7,7 +7,7 @@ export function OfflineIndicator() {
 
   useEffect(() => {
     const unsub = NetInfo.addEventListener((state) => {
-      setIsOffline(!state.isConnected);
+      setIsOffline(state.isConnected === false || state.isInternetReachable === false);
     });
     return unsub;
   }, []);
