@@ -96,6 +96,7 @@ locals {
     "roles/storage.objectAdmin",
     "roles/secretmanager.secretAccessor",
     "roles/cloudtasks.enqueuer",
+    "roles/cloudtasks.viewer",
   ]
   github_actions_roles = [
     "roles/run.developer",
@@ -118,6 +119,15 @@ resource "google_project_iam_member" "github_actions_roles" {
   project  = var.project_id
   role     = each.value
   member   = "serviceAccount:${google_service_account.github_actions.email}"
+}
+
+# Allow the Cloud Run SA to act as itself — required so Cloud Tasks can attach
+# an OIDC token (iam.serviceAccounts.actAs) when dispatching HTTP tasks back to
+# Cloud Run.
+resource "google_service_account_iam_member" "cloud_run_acts_as_self" {
+  service_account_id = google_service_account.cloud_run.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.cloud_run.email}"
 }
 
 # ──────────────────────────────────────────────────────────────

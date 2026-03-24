@@ -27,6 +27,7 @@ RUN apk add --no-cache \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl \
     && docker-php-ext-install \
+        bcmath \
         exif \
         gd \
         pdo \
