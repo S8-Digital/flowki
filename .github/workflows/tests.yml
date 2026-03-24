@@ -89,4 +89,4 @@ jobs:
         run: npm run test
 
       - name: PHP Tests
-        run: ./vendor/bin/paratest --runner WrapperRunner --processes 4
+        run: ./vendor/bin/paratest --runner WrapperRunner --processes 12
