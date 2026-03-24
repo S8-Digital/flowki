@@ -39,7 +39,7 @@ export default function VerifyEmail({ status }: Props) {
             )}
 
             <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                <Button disabled={processing} variant="secondary">
+                <Button type="submit" disabled={processing} variant="secondary">
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     Resend verification email
                 </Button>
