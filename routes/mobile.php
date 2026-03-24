@@ -5,8 +5,11 @@ declare(strict_types=1);
 use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\CalendarController;
 use App\Http\Controllers\Mobile\ChoreController;
+use App\Http\Controllers\Mobile\FamilyController;
+use App\Http\Controllers\Mobile\ProfileController;
 use App\Http\Controllers\Mobile\ShoppingController;
 use App\Http\Controllers\Mobile\TodoController;
+use App\Http\Controllers\Mobile\WeatherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +31,18 @@ Route::prefix('api/mobile')->name('mobile.')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('user', [AuthController::class, 'me'])->name('user');
+
+        // Profile & password
+        Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+        // Family
+        Route::get('family', [FamilyController::class, 'show'])->name('family.show');
+        Route::post('family', [FamilyController::class, 'store'])->name('family.store');
+        Route::post('family/join', [FamilyController::class, 'join'])->name('family.join');
+
+        // Weather
+        Route::get('weather', [WeatherController::class, 'index'])->name('weather.index');
 
         // Todos
         Route::get('todos', [TodoController::class, 'index'])->name('todos.index');

@@ -4,17 +4,19 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useRtdb } from '@/hooks/useRtdb';
 import { useAppSelector } from '@/store';
-import type { CalendarEvent, Chore, ShoppingList, Todo } from '@/lib/api';
-import { useState } from 'react';
+import type { CalendarEvent, Chore, ShoppingList, Todo, WeatherData } from '@/lib/api';
+import { weatherApi } from '@/lib/api';
+import { useEffect, useState } from 'react';
 import {
+  Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Card } from 'react-native-paper';
+import { ActivityIndicator, Card } from 'react-native-paper';
 
-type WidgetKey = 'schedule' | 'todos' | 'shopping' | 'chores';
+type WidgetKey = 'schedule' | 'todos' | 'shopping' | 'chores' | 'weather';
 
 interface Widget {
   id: WidgetKey;
@@ -22,17 +24,14 @@ interface Widget {
 }
 
 const DEFAULT_WIDGETS: Widget[] = [
+  { id: 'weather', label: 'Weather' },
   { id: 'schedule', label: "Today's Schedule" },
   { id: 'todos', label: 'Todos' },
   { id: 'shopping', label: 'Shopping' },
   { id: 'chores', label: 'Chores' },
 ];
 
-function ScheduleWidget({
-  events,
-}: {
-  events: Record<string, CalendarEvent>;
-}) {
+function ScheduleWidget({ events }: { events: Record<string, CalendarEvent> }) {
   const today = new Date().toISOString().slice(0, 10);
   const todayEvents = Object.values(events).filter((e) =>
     e.start_at.startsWith(today),
@@ -112,6 +111,86 @@ function ChoresWidget({ chores }: { chores: Record<string, Chore> }) {
   );
 }
 
+function WeatherWidget() {
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    weatherApi
+      .get()
+      .then((d) => {
+        if (!cancelled) setWeather(d);
+      })
+      .catch(() => {
+        /* graceful degradation — weather widget hides itself */
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.weatherLoading}>
+        <ActivityIndicator size="small" />
+      </View>
+    );
+  }
+
+  if (!weather) {
+    return (
+      <ThemedText variant="muted">
+        No location set. Add your family location in settings.
+      </ThemedText>
+    );
+  }
+
+  const { current, forecast, location } = weather;
+
+  return (
+    <View>
+      <View style={styles.weatherCurrent}>
+        {current.icon_url ? (
+          <Image source={{ uri: current.icon_url }} style={styles.weatherIcon} />
+        ) : null}
+        <View>
+          <ThemedText style={styles.weatherTemp}>{current.temp}°C</ThemedText>
+          <ThemedText variant="muted" style={styles.weatherDesc}>
+            {current.description}
+          </ThemedText>
+          <ThemedText variant="muted" style={styles.weatherFeels}>
+            Feels {current.feels_like}°C · {current.humidity}% · {current.wind_speed} km/h
+          </ThemedText>
+        </View>
+      </View>
+      <ThemedText variant="muted" style={styles.weatherLocation}>
+        📍 {location}
+      </ThemedText>
+      {forecast.length > 0 && (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.forecastRow}>
+          {forecast.slice(0, 7).map((day) => (
+            <View key={day.date} style={styles.forecastDay}>
+              <ThemedText style={styles.forecastDayLabel}>
+                {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}
+              </ThemedText>
+              {day.icon_url ? (
+                <Image source={{ uri: day.icon_url }} style={styles.forecastIcon} />
+              ) : null}
+              <ThemedText style={styles.forecastTemp}>
+                {day.temp_max}° / {day.temp_min}°
+              </ThemedText>
+            </View>
+          ))}
+        </ScrollView>
+      )}
+    </View>
+  );
+}
+
 export default function DashboardScreen() {
   const scheme = useColorScheme();
   const colors = Colors[scheme];
@@ -158,6 +237,8 @@ export default function DashboardScreen() {
   const renderWidget = (widget: Widget, index: number) => {
     const content = () => {
       switch (widget.id) {
+        case 'weather':
+          return <WeatherWidget />;
         case 'schedule':
           return <ScheduleWidget events={events} />;
         case 'todos':
@@ -232,4 +313,17 @@ const styles = StyleSheet.create({
   reorderButtons: { flexDirection: 'row', gap: 8 },
   reorderBtn: { padding: 4 },
   widgetItem: { marginBottom: 4 },
+  // Weather styles
+  weatherLoading: { alignItems: 'center', paddingVertical: 16 },
+  weatherCurrent: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  weatherIcon: { width: 56, height: 56 },
+  weatherTemp: { fontSize: 28, fontWeight: '700' },
+  weatherDesc: { fontSize: 13, textTransform: 'capitalize', marginTop: 2 },
+  weatherFeels: { fontSize: 11, marginTop: 2 },
+  weatherLocation: { fontSize: 11, marginTop: 8, letterSpacing: 0.5 },
+  forecastRow: { marginTop: 12 },
+  forecastDay: { alignItems: 'center', marginRight: 12, minWidth: 52 },
+  forecastDayLabel: { fontSize: 11, fontWeight: '600', marginBottom: 2 },
+  forecastIcon: { width: 28, height: 28 },
+  forecastTemp: { fontSize: 11, marginTop: 2 },
 });

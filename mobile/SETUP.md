@@ -16,14 +16,15 @@ The mobile MVP covers the same core daily-use surfaces as the web app:
 | Chores (list, create, complete, delete) | ✅ | ✅ | Frequency + next-due display |
 | Shopping (multi-list, items, check-off) | ✅ | ✅ | RTDB-synced |
 | Calendar (month view, day events, create) | ✅ | ✅ | `react-native-calendars` |
-| Weather widget | ✅ | ❌ | Planned (requires `GOOGLE_WEATHER_API_KEY` — see below) |
-| Google Maps address autocomplete | ✅ | ❌ | Planned (requires `GOOGLE_MAPS_API_KEY` — see below) |
-| Family create / join | ✅ | ❌ | Planned |
-| Settings (profile, password, appearance) | ✅ | ❌ | Planned |
-| Social auth (Google OAuth) | ✅ | ❌ | Planned |
-| Notifications (FCM) | partial | partial | `expo-notifications` wired up; FCM token not yet sent to server |
+| Weather widget | ✅ | ✅ | Fetches from `/api/mobile/weather`; requires `GOOGLE_WEATHER_API_KEY` on the server |
+| Family create / join | ✅ | ✅ | Family tab with invite-code flow |
+| Profile settings (name, email, colour) | ✅ | ✅ | Settings tab → Edit Profile |
+| Password settings | ✅ | ✅ | Settings tab → Change Password |
 | Dark / light mode | ✅ | ✅ | System preference via `useColorScheme` |
 | Offline indicator | ✅ | ✅ | `@react-native-community/netinfo` banner |
+| Google Maps address autocomplete | ✅ | ❌ | Planned (requires React Native Maps integration) |
+| Social auth (Google OAuth) | ✅ | ❌ | Planned (`expo-auth-session`) |
+| Notifications (FCM) | partial | partial | `expo-notifications` wired up; FCM token not yet sent to server |
 
 ---
 
@@ -35,10 +36,10 @@ The mobile MVP covers the same core daily-use surfaces as the web app:
 |-----|-----------|----------|
 | Firebase project credentials (`EXPO_PUBLIC_FIREBASE_*`) | **Yes** | RTDB real-time listeners on all screens |
 | Laravel backend URL (`EXPO_PUBLIC_API_URL`) | **Yes** | Auth + CRUD writes |
+| Google Weather API key (`GOOGLE_WEATHER_API_KEY` on server) | **Optional** | Weather widget on Dashboard (widget shows "no location" if not configured) |
 | Google Maps API key | **No** | Not yet used in mobile (web only for address autocomplete) |
-| Google Weather API key | **No** | Not yet used in mobile (web only for weather widget) |
 
-> **Short answer:** You only need Firebase credentials and your Laravel backend URL to run the MVP. Google Maps and Weather keys are web-only for now.
+> **Short answer:** You only need Firebase credentials and your Laravel backend URL to run the MVP. The weather widget works automatically if your family has a location set and the server has `GOOGLE_WEATHER_API_KEY` configured — it degrades gracefully otherwise.
 
 ---
 
@@ -248,16 +249,13 @@ npx eas-cli update --branch production --message "Fix: shopping list sync"
 
 ---
 
-## 10. Next Steps & Planned Features
+## 10. Remaining Planned Features
 
-The following features are planned for future sprints (web parity items not yet in mobile):
+The following features are planned for future sprints:
 
-- [ ] **Weather widget** — call `/api/mobile/weather` from the mobile Dashboard (needs `GOOGLE_WEATHER_API_KEY` on the server; no key needed in the mobile app itself)
-- [ ] **Google Maps address autocomplete** — for family location settings (needs a React Native Maps integration)
-- [ ] **Family create / join** — onboarding flow after first login
-- [ ] **Profile & password settings** — account management screen
+- [ ] **Google Maps address autocomplete** — for family location settings (needs a React Native Maps integration and `GOOGLE_MAPS_API_KEY`)
 - [ ] **FCM push notifications** — send the device token from `expo-notifications` to the backend after login
 - [ ] **Social auth (Google OAuth)** — `expo-auth-session` + backend Google callback
 - [ ] **Global search** — Postgres-backed search endpoint
-- [ ] **Per-member colours** — pull `profile_color` from auth user and tint avatars
+- [ ] **Per-member colours on member avatars** — already stored in `profile_color`; wire up to all list views
 - [ ] **EAS CI/CD** — GitHub Actions workflow calling `eas build` and `eas submit` on merge to `main`

@@ -77,6 +77,24 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="family"
+        options={{
+          title: 'Family',
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name="people-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name="settings-outline" color={color} size={size} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

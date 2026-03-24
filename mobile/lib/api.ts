@@ -86,6 +86,77 @@ export const authApi = {
   me: () => api.get<AuthUser>('/api/mobile/user'),
 };
 
+// Family --------------------------------------------------------------------
+
+export interface FamilyMember {
+  id: number;
+  name: string;
+  email: string;
+  profile_color?: string | null;
+  role: string;
+}
+
+export interface Family {
+  id: number;
+  name: string;
+  invite_code: string;
+  location_name?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  members: FamilyMember[];
+}
+
+export const familyApi = {
+  get: () => api.get<Family>('/api/mobile/family'),
+  create: (name: string) => api.post<Family>('/api/mobile/family', { name }),
+  join: (invite_code: string) => api.post<Family>('/api/mobile/family/join', { invite_code }),
+};
+
+// Profile -------------------------------------------------------------------
+
+export const profileApi = {
+  update: (data: Partial<Pick<AuthUser, 'name' | 'email' | 'profile_color'>>) =>
+    api.patch<AuthUser>('/api/mobile/profile', data),
+  updatePassword: (
+    currentPassword: string | undefined,
+    password: string,
+    password_confirmation: string,
+  ) => {
+    const payload: Record<string, string> = { password, password_confirmation };
+    if (currentPassword) payload.current_password = currentPassword;
+    return api.put<{ message: string }>('/api/mobile/profile/password', payload);
+  },
+};
+
+// Weather -------------------------------------------------------------------
+
+export interface WeatherCurrent {
+  temp: number;
+  feels_like: number;
+  humidity: number;
+  wind_speed: number;
+  description: string;
+  icon_url?: string | null;
+}
+
+export interface WeatherDay {
+  date: string;
+  temp_min: number;
+  temp_max: number;
+  description: string;
+  icon_url?: string | null;
+}
+
+export interface WeatherData {
+  location: string;
+  current: WeatherCurrent;
+  forecast: WeatherDay[];
+}
+
+export const weatherApi = {
+  get: () => api.get<WeatherData>('/api/mobile/weather'),
+};
+
 // Feature API helpers ----------------------------------------------------------
 
 export const todosApi = {

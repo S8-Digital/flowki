@@ -75,5 +75,19 @@ export function useAuth() {
     }
   };
 
-  return { user, token, isLoading, login, register, logout };
+  /** Re-fetch the user from the server and persist the refreshed data. */
+  const refreshUser = async () => {
+    try {
+      const u = await authApi.me();
+      if (u) {
+        await storage.setUser(u);
+        dispatch(setCredentials({ token: token ?? '', user: u }));
+      }
+    } catch {
+      // best-effort
+    }
+  };
+
+  return { user, token, isLoading, login, register, logout, refreshUser };
 }
+
