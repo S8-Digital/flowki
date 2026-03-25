@@ -23,6 +23,7 @@
         "laravel/telescope": "^5.18",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
+        "php-mime-mail-parser/php-mime-mail-parser": "^9.0",
         "socialiteproviders/apple": "*",
         "spatie/laravel-google-cloud-storage": "^2.3",
         "spatie/laravel-permission": "^7.2",
