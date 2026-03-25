@@ -1,3 +1,4 @@
+import * as Clipboard from 'expo-clipboard';
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import {
@@ -69,6 +70,9 @@ export default function SettingsScreen() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordSaving, setPasswordSaving] = useState(false);
+
+  // Inbound email copy
+  const [inboundCopied, setInboundCopied] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -143,6 +147,13 @@ export default function SettingsScreen() {
     ]);
   };
 
+  const handleCopyInboundEmail = async () => {
+    if (!user?.inbound_email_address) return;
+    await Clipboard.setStringAsync(user.inbound_email_address);
+    setInboundCopied(true);
+    setTimeout(() => setInboundCopied(false), 2000);
+  };
+
   const initials = user?.name
     ? user.name
         .split(' ')
@@ -189,6 +200,31 @@ export default function SettingsScreen() {
             onPress={() => setPasswordOpen(true)}
           />
         </Card>
+
+        {/* Inbound Email */}
+        {user?.inbound_email_address && (
+          <Card style={[styles.card, { backgroundColor: colors.card }]}>
+            <List.Item
+              title="Inbound email address"
+              description="Forward emails here to auto-create family organiser items via AI"
+              left={(props) => <List.Icon {...props} icon="email-arrow-left" />}
+            />
+            <Divider />
+            <View style={styles.inboundEmailRow}>
+              <ThemedText variant="muted" style={styles.inboundEmailText} numberOfLines={1}>
+                {user.inbound_email_address}
+              </ThemedText>
+              <Button
+                mode="outlined"
+                compact
+                onPress={handleCopyInboundEmail}
+                testID="copy-inbound-email"
+              >
+                {inboundCopied ? 'Copied!' : 'Copy'}
+              </Button>
+            </View>
+          </Card>
+        )}
 
         {/* Danger Zone */}
         <Card style={[styles.card, { backgroundColor: colors.card }]}>
@@ -307,5 +343,16 @@ const styles = StyleSheet.create({
   colorSwatchSelected: {
     borderWidth: 3,
     borderColor: '#000',
+  },
+  inboundEmailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 8,
+  },
+  inboundEmailText: {
+    flex: 1,
+    fontSize: 13,
   },
 });
