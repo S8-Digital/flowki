@@ -34,7 +34,9 @@ vi.mock('react-native-paper', async () => {
       placeholder,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChangeText?.(e.target.value),
       onKeyDown: (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') onSubmitEditing?.();
+        if (e.key === 'Enter') {
+          onSubmitEditing?.();
+        }
       },
     });
 
