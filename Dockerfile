@@ -30,6 +30,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         bcmath \
         exif \
         gd \
+        mbstring \
         pdo \
         pdo_pgsql \
         pcntl \
@@ -37,10 +38,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         intl \
         opcache
 
-# Redis (using pecl)
+    # Redis (using pecl)
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
+    && pecl install redis mailparse \
+    && docker-php-ext-enable redis mailparse \
     && apk del .build-deps
 
 # ── Stage 1: Builder (PHP + Node + Composer) ──────────────────────────────────

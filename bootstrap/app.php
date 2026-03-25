@@ -16,11 +16,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
             Route::middleware('api')
-                ->prefix('api')
+                ->prefix('ai')
                 ->group(base_path('routes/ai.php'));
 
-            // Mobile API routes use Sanctum bearer tokens (no web middleware / session)
             Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('api')
+                ->prefix('api/mobile')
                 ->group(base_path('routes/mobile.php'));
         },
     )
