@@ -80,4 +80,3 @@ class AnalyseInboundEmail implements ShouldQueue
         return implode("\n\n", $parts);
     }
 }
-
