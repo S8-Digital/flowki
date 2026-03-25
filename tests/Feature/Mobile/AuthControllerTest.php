@@ -92,6 +92,9 @@ class AuthControllerTest extends TestCase
             ->assertOk()
             ->assertJsonFragment(['message' => 'Logged out.']);
 
+        // Reset the cached auth guard so the next request re-validates against the DB.
+        $this->app['auth']->forgetGuards();
+
         // Token should now be invalid
         $this->withToken($token)
             ->getJson(route('mobile.user'))

@@ -1,8 +1,8 @@
+import { useAppSelector } from '@/store';
 import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { fcmTokenApi } from '@/lib/api';
-import { useAppSelector } from '@/store';
 
 // Configure foreground notification presentation behaviour once at module load.
 Notifications.setNotificationHandler({
@@ -81,6 +81,7 @@ export function usePushNotifications() {
       (_notification) => {
         // The notification is already displayed via setNotificationHandler above.
         // Additional in-app handling (e.g. toast) can be added here.
+        console.log('[usePushNotifications] Notification received in foreground', _notification);
       },
     );
 

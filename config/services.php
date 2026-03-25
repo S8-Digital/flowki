@@ -68,4 +68,9 @@ return [
         'vapid_key' => env('VITE_FIREBASE_VAPID_KEY'),
         'recaptcha_site_key' => env('VITE_FIREBASE_RECAPTCHA_SITE_KEY'),
     ],
+
+    'cloudflare' => [
+        'api_token' => env('CLOUDFLARE_API_TOKEN'),
+        'worker_secret' => env('CLOUDFLARE_WORKER_SECRET'),
+    ],
 ];

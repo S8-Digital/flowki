@@ -1,6 +1,4 @@
 import { OfflineIndicator } from '@/components/OfflineIndicator';
-import { registerBackgroundSync, unregisterBackgroundSync } from '@/hooks/useBackgroundSync';
-import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { store } from '@/store';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -9,6 +7,8 @@ import { useColorScheme } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import { useAuth } from '@/hooks/useAuth';
+import { registerBackgroundSync, unregisterBackgroundSync } from '@/hooks/useBackgroundSync';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 
 function AuthGuard() {
   const { user, isLoading } = useAuth();

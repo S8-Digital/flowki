@@ -1,4 +1,5 @@
 import { getApp, getApps, initializeApp } from 'firebase/app';
+import type { Database } from 'firebase/database';
 
 // Firebase config is injected at build time via EXPO_PUBLIC_ env vars.
 // In production, populate these from your Firebase console project settings.
@@ -24,7 +25,7 @@ return getApp();
   return initializeApp(firebaseConfig);
 }
 
-let _dbPromise: Promise<import('firebase/database').Database> | null = null;
+let _dbPromise: Promise<Database> | null = null;
 
 /**
  * Returns a Firebase Realtime Database instance with offline persistence enabled.

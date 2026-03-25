@@ -106,6 +106,19 @@ export default [
         ],
     },
     {
+        // CommonJS config files in the mobile workspace (e.g. metro.config.js)
+        // use require/module/__dirname which are only available in Node CJS context.
+        files: ['mobile/*.js', 'mobile/**/*.js'],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+            },
+        },
+        rules: {
+            '@typescript-eslint/no-require-imports': 'off',
+        },
+    },
+    {
         // Relax rules for test files: mock factories commonly use _-prefixed params
         // to indicate intentionally ignored props without forwarding them to the DOM.
         files: ['resources/js/tests/**/*.{ts,tsx}'],

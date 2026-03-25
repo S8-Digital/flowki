@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as Notifications from 'expo-notifications';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fcmTokenApi } from '../lib/api';
 
 // ── mocks ────────────────────────────────────────────────────────────────────

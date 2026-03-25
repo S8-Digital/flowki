@@ -1,6 +1,6 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   BACKGROUND_SYNC_TASK,
   registerBackgroundSync,

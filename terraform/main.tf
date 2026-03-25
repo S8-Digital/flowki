@@ -211,6 +211,11 @@ data "google_secret_manager_secret" "cloudflare_api_token" {
   secret_id = "${var.app_name}-cloudflare-api-token"
 }
 
+data "google_secret_manager_secret" "cloudflare_worker_secret" {
+  project   = var.project_id
+  secret_id = "${var.app_name}-cloudflare-worker-secret"
+}
+
 data "google_secret_manager_secret" "mailgun_secret" {
   project   = var.project_id
   secret_id = "${var.app_name}-mailgun-secret"
@@ -355,6 +360,15 @@ resource "google_cloud_run_v2_service" "app" {
         value_source {
           secret_key_ref {
             secret  = data.google_secret_manager_secret.cloudflare_api_token.secret_id
+            version = "latest"
+          }
+        }
+      }
+      env {
+        name = "CLOUDFLARE_WORKER_SECRET"
+        value_source {
+          secret_key_ref {
+            secret  = data.google_secret_manager_secret.cloudflare_worker_secret.secret_id
             version = "latest"
           }
         }

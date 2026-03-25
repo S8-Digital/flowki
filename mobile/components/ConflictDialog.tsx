@@ -42,6 +42,7 @@ export function ConflictDialog({
     colorScheme === 'dark'
       ? 'rgba(255,255,255,0.08)'
       : 'rgba(0,0,0,0.05)';
+
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onDismiss ?? onKeepRemote}>

@@ -11,8 +11,8 @@
  */
 
 import { getFirebaseDatabase } from '@/lib/firebase';
-import { ref as fbRef, onValue as fbOnValue } from 'firebase/database';
 import { renderHook, act, waitFor } from '@testing-library/react-native';
+import { ref as fbRef, onValue as fbOnValue } from 'firebase/database';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Mock } from 'vitest';
 import { useRtdb } from '@/hooks/useRtdb';
