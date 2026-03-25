@@ -5,18 +5,19 @@
  * email address UI is displayed (with a copy button) when the user has one.
  */
 
-import * as Clipboard from 'expo-clipboard';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import * as Clipboard from 'expo-clipboard';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import SettingsScreen from '@/app/(tabs)/settings';
 import type { AuthUser } from '@/lib/api';
 
 // ── mocks ────────────────────────────────────────────────────────────────────
 
 // react-native is aliased to __mocks__/react-native.ts via vitest.config.ts.
 
-vi.mock('react-native-paper', () => {
-    const React = require('react');
+vi.mock('react-native-paper', async () => {
+    const React = await import('react');
     const stub = ({ children }: { children?: React.ReactNode }) =>
         React.createElement('div', {}, children ?? null);
     const Button = ({ children, onPress, testID }: { children?: React.ReactNode; onPress?: () => void; testID?: string }) =>
@@ -39,6 +40,7 @@ vi.mock('react-native-paper', () => {
             ScrollArea: stub,
         },
     );
+
     return { Button, Card: stub, Divider: stub, List, Portal: stub, Dialog: DialogComp, TextInput: stub };
 });
 
@@ -91,7 +93,6 @@ vi.mock('@/hooks/useAuth', () => ({
 }));
 
 // ── import component after mocks are registered ───────────────────────────────
-import SettingsScreen from '@/app/(tabs)/settings';
 
 // ── tests ────────────────────────────────────────────────────────────────────
 

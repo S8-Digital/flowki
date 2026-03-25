@@ -148,7 +148,10 @@ export default function SettingsScreen() {
   };
 
   const handleCopyInboundEmail = async () => {
-    if (!user?.inbound_email_address) return;
+    if (!user?.inbound_email_address) {
+return;
+}
+
     await Clipboard.setStringAsync(user.inbound_email_address);
     setInboundCopied(true);
     setTimeout(() => setInboundCopied(false), 2000);

@@ -34,7 +34,10 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
     const [copied, setCopied] = useState(false);
 
     function copyInboundEmail() {
-        if (!inboundEmailAddress) return;
+        if (!inboundEmailAddress) {
+            return;
+        }
+
         navigator.clipboard.writeText(inboundEmailAddress).then(() => {
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
