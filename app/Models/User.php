@@ -34,17 +34,6 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function (User $user) {
-            if (is_null($user->inbound_email_token)) {
-                $user->inbound_email_token = (string) Str::uuid();
-            }
-        });
-    }
-
     /**
      * The attributes that are mass assignable.
      *

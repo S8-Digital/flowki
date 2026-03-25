@@ -50,7 +50,7 @@ class InboundEmailService
             'raw' => $raw,
             'has_calendar' => $hasCalendar,
             'attachments' => empty($attachments) ? null : $attachments,
-            'processed_at' => now(),
+            'processed_at' => null,
         ]);
 
         AnalyseInboundEmail::dispatch($inboundEmail->id);

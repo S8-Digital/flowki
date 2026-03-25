@@ -31,12 +31,15 @@ const authSlice = createSlice({
       state.token = null;
       state.isLoading = false;
     },
+    setUser(state, action: PayloadAction<AuthUser>) {
+      state.user = action.payload;
+    },
     setLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
   },
 });
 
-export const { setCredentials, clearCredentials, setLoading } =
+export const { setCredentials, clearCredentials, setUser, setLoading } =
   authSlice.actions;
 export default authSlice.reducer;
