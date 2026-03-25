@@ -243,6 +243,34 @@ describe('Profile settings page', () => {
         render(<Profile mustVerifyEmail={false} hasGoogleCalendarConnected={false} />);
         expect(screen.getByText(/saved\./i)).toBeInTheDocument();
     });
+
+    it('does not show the inbound email section when no address is provided', () => {
+        render(<Profile mustVerifyEmail={false} hasGoogleCalendarConnected={false} />);
+        expect(screen.queryByText(/inbound email address/i)).not.toBeInTheDocument();
+    });
+
+    it('shows the inbound email address section when provided', () => {
+        render(
+            <Profile
+                mustVerifyEmail={false}
+                hasGoogleCalendarConnected={false}
+                inboundEmailAddress="abc123@in.flowki.family"
+            />,
+        );
+        expect(screen.getByText(/inbound email address/i)).toBeInTheDocument();
+        expect(screen.getByText('abc123@in.flowki.family')).toBeInTheDocument();
+    });
+
+    it('shows the Copy button when an inbound email address is provided', () => {
+        render(
+            <Profile
+                mustVerifyEmail={false}
+                hasGoogleCalendarConnected={false}
+                inboundEmailAddress="abc123@in.flowki.family"
+            />,
+        );
+        expect(screen.getByRole('button', { name: /copy/i })).toBeInTheDocument();
+    });
 });
 
 // ---------------------------------------------------------------------------

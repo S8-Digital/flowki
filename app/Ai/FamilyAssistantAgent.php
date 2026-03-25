@@ -24,36 +24,38 @@ use App\Ai\Tools\ListSchedule;
 use App\Ai\Tools\ListShoppingItems;
 use App\Ai\Tools\ListTodos;
 use App\Models\User;
-use Laravel\Ai\AnonymousAgent;
+use Laravel\Ai\Contracts\Agent;
+use Laravel\Ai\Contracts\Conversational;
+use Laravel\Ai\Contracts\HasTools;
 use Laravel\Ai\Messages\AssistantMessage;
 use Laravel\Ai\Messages\UserMessage;
-use Laravel\Ai\Responses\StreamableAgentResponse;
+use Laravel\Ai\Promptable;
 
-class FamilyAssistantAgent
+class FamilyAssistantAgent implements Agent, Conversational, HasTools
 {
-    public function __construct(protected User $user) {}
+    use Promptable;
+
+    /** @var array<object> */
+    private array $conversationMessages = [];
 
     /**
      * @param  array<array{role: string, content: string}>  $history
      */
-    public function stream(string $prompt, array $history = []): StreamableAgentResponse
+    public function __construct(protected User $user, array $history = [])
     {
-        $messages = collect($history)->map(fn (array $msg) => match ($msg['role']) {
+        $this->conversationMessages = collect($history)->map(fn (array $msg) => match ($msg['role']) {
             'assistant' => new AssistantMessage($msg['content']),
             default => new UserMessage($msg['content']),
         })->all();
+    }
 
+    public function instructions(): string
+    {
         if (! $this->user->family_id) {
-            $instructions = "You are a helpful family assistant. The user ({$this->user->name}) has not joined or created a family yet. Politely let them know they need to create or join a family before you can help manage todos, events, chores, and shopping lists.";
-
-            return AnonymousAgent::make(
-                instructions: $instructions,
-                messages: $messages,
-                tools: []
-            )->stream($prompt);
+            return "You are a helpful family assistant. The user ({$this->user->name}) has not joined or created a family yet. Politely let them know they need to create or join a family before you can help manage todos, events, chores, and shopping lists.";
         }
 
-        $instructions = <<<MARKDOWN
+        return <<<MARKDOWN
         You are a helpful family assistant for the Family Organizer app. Today's date is {$this->today()}.
         The user's name is {$this->user->name}. Their family has the following members: {$this->familyMemberNames()}.
 
@@ -73,34 +75,30 @@ class FamilyAssistantAgent
         When the user pastes a recipe or asks to import one, use import_recipe to extract and save it.
         Keep responses concise and friendly.
         MARKDOWN;
+    }
+    
+    public function messages(): iterable
+    {
+        return $this->conversationMessages;
+    }
 
-        return AnonymousAgent::make(
-            instructions: $instructions,
-            messages: $messages,
-            tools: [
-                new CreateTodo($this->user),
-                new ListTodos($this->user),
-                new EditTodo($this->user),
-                new DeleteTodo($this->user),
-                new CompleteTodo($this->user),
-                new CreateEvent($this->user),
-                new ListEvents($this->user),
-                new EditEvent($this->user),
-                new DeleteEvent($this->user),
-                new ListSchedule($this->user),
-                new CreateChore($this->user),
-                new ListChores($this->user),
-                new EditChore($this->user),
-                new DeleteChore($this->user),
-                new CompleteChore($this->user),
-                new AddShoppingItem($this->user),
-                new ListShoppingItems($this->user),
-                new ImportRecipe($this->user),
-                new ListRecipes($this->user),
-                new EditRecipe($this->user),
-                new DeleteRecipe($this->user),
-            ]
-        )->stream($prompt);
+    public function tools(): iterable
+    {
+        if (! $this->user->family_id) {
+            return [];
+        }
+
+        return [
+            new CreateTodo($this->user),
+            new ListTodos($this->user),
+            new CreateEvent($this->user),
+            new ListEvents($this->user),
+            new ListSchedule($this->user),
+            new CreateChore($this->user),
+            new ListChores($this->user),
+            new AddShoppingItem($this->user),
+            new ImportRecipe($this->user),
+        ];
     }
 
     protected function today(): string
