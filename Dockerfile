@@ -21,8 +21,7 @@ RUN apk add --no-cache \
     bash \
     icu-dev \
     icu-data-full \
-    netcat-openbsd \
-    mailparse
+    netcat-openbsd
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
