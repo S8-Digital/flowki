@@ -1,6 +1,6 @@
 // FlowkiIntents.swift
 //
-// Defines the four App Intents that surface as Siri voice commands in iOS 16+.
+// Defines the six App Intents that surface as Siri voice commands in iOS 16+.
 // All intents call the Flowki voice-command API, which routes the natural-language
 // phrase through the FamilyAssistantAgent to Postgres + RTDB sync.
 //
@@ -34,6 +34,7 @@ private func readKeychainString(key: String, service: String) -> String? {
 
 private enum FlowkiIntentError: Error, LocalizedError {
     case notAuthenticated
+    case invalidConfiguration
     case serverError(String)
     case networkError(Error)
 
@@ -41,6 +42,8 @@ private enum FlowkiIntentError: Error, LocalizedError {
         switch self {
         case .notAuthenticated:
             return "Please open Flowki and log in before using Siri commands."
+        case .invalidConfiguration:
+            return "Invalid API URL configuration."
         case .serverError(let msg):
             return msg
         case .networkError(let err):
@@ -185,6 +188,62 @@ struct CompleteChoreIntent: AppIntent {
 
     func perform() async throws -> some ProvidesDialog {
         let command = "Mark \(chore) as done"
+        do {
+            let response = try await sendVoiceCommand(command)
+            return .result(dialog: IntentDialog(stringLiteral: response))
+        } catch {
+            return .result(dialog: IntentDialog(stringLiteral: error.localizedDescription))
+        }
+    }
+}
+
+// MARK: - AddChoreIntent
+
+struct AddChoreIntent: AppIntent {
+    static let title: LocalizedStringResource = "Add a Chore"
+    static let description = IntentDescription(
+        "Create a new chore in your Flowki family chore list.",
+        categoryName: "Chores"
+    )
+    static let openAppWhenRun: Bool = false
+
+    @Parameter(
+        title: "Chore",
+        description: "What chore would you like to add?",
+        requestValueDialog: IntentDialog("What chore should I add?")
+    )
+    var chore: String
+
+    func perform() async throws -> some ProvidesDialog {
+        let command = "Add a chore: \(chore)"
+        do {
+            let response = try await sendVoiceCommand(command)
+            return .result(dialog: IntentDialog(stringLiteral: response))
+        } catch {
+            return .result(dialog: IntentDialog(stringLiteral: error.localizedDescription))
+        }
+    }
+}
+
+// MARK: - AddCalendarItemIntent
+
+struct AddCalendarItemIntent: AppIntent {
+    static let title: LocalizedStringResource = "Add Calendar Event"
+    static let description = IntentDescription(
+        "Add a new event to your Flowki family calendar.",
+        categoryName: "Calendar"
+    )
+    static let openAppWhenRun: Bool = false
+
+    @Parameter(
+        title: "Event",
+        description: "What event would you like to add?",
+        requestValueDialog: IntentDialog("What event should I add to your calendar?")
+    )
+    var event: String
+
+    func perform() async throws -> some ProvidesDialog {
+        let command = "Add a calendar event: \(event)"
         do {
             let response = try await sendVoiceCommand(command)
             return .result(dialog: IntentDialog(stringLiteral: response))

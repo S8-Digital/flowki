@@ -35,6 +35,8 @@ describe('buildVoiceCommand', () => {
     ['add-shopping-item', { item: 'eggs' }, 'Add eggs to my shopping list'],
     ['get-schedule', {}, "What's on my schedule today?"],
     ['complete-chore', { chore: 'vacuuming' }, 'Mark vacuuming as done'],
+    ['add-chore', { chore: 'take out bins' }, 'Add a chore: take out bins'],
+    ['add-calendar-item', { event: 'dentist on Friday' }, 'Add a calendar event: dentist on Friday'],
   ])('%s builds the correct command', (type, params, expected) => {
     expect(buildVoiceCommand(type, params)).toBe(expected);
   });
@@ -49,6 +51,14 @@ describe('buildVoiceCommand', () => {
 
   it('handles missing chore gracefully for complete-chore', () => {
     expect(buildVoiceCommand('complete-chore', {})).toBe('Mark  as done');
+  });
+
+  it('handles missing chore gracefully for add-chore', () => {
+    expect(buildVoiceCommand('add-chore', {})).toBe('Add a chore: ');
+  });
+
+  it('handles missing event gracefully for add-calendar-item', () => {
+    expect(buildVoiceCommand('add-calendar-item', {})).toBe('Add a calendar event: ');
   });
 });
 
@@ -150,6 +160,30 @@ describe('useAppIntentHandler', () => {
 
     expect(mockSendCommand).toHaveBeenCalledWith('Mark vacuuming as done');
     expect(onResult).toHaveBeenCalledWith('Vacuuming marked as done.', false);
+  });
+
+  it('sends add-chore command and calls onResult on success', async () => {
+    mockSendCommand.mockResolvedValue({ success: true, response: 'Chore added.' });
+    const onResult = vi.fn();
+    renderHook(() => useAppIntentHandler(onResult));
+
+    await capturedListener?.({ url: 'flowki://intent?type=add-chore&chore=take%20out%20bins' });
+
+    expect(mockSendCommand).toHaveBeenCalledWith('Add a chore: take out bins');
+    expect(onResult).toHaveBeenCalledWith('Chore added.', false);
+  });
+
+  it('sends add-calendar-item command and calls onResult on success', async () => {
+    mockSendCommand.mockResolvedValue({ success: true, response: 'Event added to your calendar.' });
+    const onResult = vi.fn();
+    renderHook(() => useAppIntentHandler(onResult));
+
+    await capturedListener?.({
+      url: 'flowki://intent?type=add-calendar-item&event=dentist%20on%20Friday',
+    });
+
+    expect(mockSendCommand).toHaveBeenCalledWith('Add a calendar event: dentist on Friday');
+    expect(onResult).toHaveBeenCalledWith('Event added to your calendar.', false);
   });
 
   it('calls onResult with error=true when sendCommand throws an Error', async () => {

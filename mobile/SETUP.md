@@ -25,7 +25,7 @@ The mobile MVP covers the same core daily-use surfaces as the web app:
 | Google Maps address autocomplete | ✅ | ❌ | Planned (requires React Native Maps integration) |
 | Social auth (Google OAuth) | ✅ | ❌ | Planned (`expo-auth-session`) |
 | Voice command bar | ✅ | ✅ | Sends natural-language commands to `/api/mobile/voice/command` (AI agent) |
-| Siri & App Intents | ✅ | ✅ (iOS 16+) | `CreateTodoIntent`, `AddShoppingItemIntent`, `GetTodayScheduleIntent`, `CompleteChoreIntent` |
+| Siri & App Intents | ✅ | ✅ (iOS 16+) | `CreateTodoIntent`, `AddShoppingItemIntent`, `GetTodayScheduleIntent`, `CompleteChoreIntent`, `AddChoreIntent`, `AddCalendarItemIntent` |
 
 ---
 
@@ -252,7 +252,7 @@ npx eas-cli update --branch production --message "Fix: shopping list sync"
 
 ## 10. Siri & App Intents (iOS 16+)
 
-Flowki ships four App Intents that surface in Siri, Spotlight, and the Shortcuts app.
+Flowki ships six App Intents that surface in Siri, Spotlight, and the Shortcuts app.
 They call the same `/api/mobile/voice/command` endpoint used by the in-app voice bar, so
 the AI agent handles all the heavy lifting.
 
@@ -264,6 +264,8 @@ the AI agent handles all the heavy lifting.
 | `AddShoppingItemIntent` | "Add eggs to my Flowki list" | Adds an item to the shopping list |
 | `GetTodayScheduleIntent` | "What's on my Flowki schedule" | Reads today's calendar events |
 | `CompleteChoreIntent` | "Mark vacuuming done on Flowki" | Marks a chore as complete |
+| `AddChoreIntent` | "Add take out bins to my Flowki chores" | Creates a new family chore |
+| `AddCalendarItemIntent` | "Add dentist on Friday to my Flowki calendar" | Adds an event to the family calendar |
 
 ### How it works
 

@@ -15,6 +15,8 @@
  *   - `add-shopping-item`  → `item` (string)
  *   - `get-schedule`       → (no params)
  *   - `complete-chore`     → `chore` (string)
+ *   - `add-chore`          → `chore` (string)
+ *   - `add-calendar-item`  → `event` (string)
  *
  * This hook is a no-op on Android (intents only exist on iOS) and when the
  * URL scheme does not match `flowki://intent`.
@@ -28,7 +30,9 @@ export type IntentType =
   | 'create-todo'
   | 'add-shopping-item'
   | 'get-schedule'
-  | 'complete-chore';
+  | 'complete-chore'
+  | 'add-chore'
+  | 'add-calendar-item';
 
 type IntentParams = Record<string, string>;
 
@@ -46,6 +50,10 @@ export function buildVoiceCommand(type: IntentType, params: IntentParams): strin
       return "What's on my schedule today?";
     case 'complete-chore':
       return `Mark ${params.chore ?? ''} as done`;
+    case 'add-chore':
+      return `Add a chore: ${params.chore ?? ''}`;
+    case 'add-calendar-item':
+      return `Add a calendar event: ${params.event ?? ''}`;
   }
 }
 

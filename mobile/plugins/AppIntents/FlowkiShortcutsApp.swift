@@ -54,5 +54,27 @@ struct FlowkiAppShortcuts: AppShortcutsProvider {
             shortTitle: "Complete Chore",
             systemImageName: "checkmark.circle"
         )
+        AppShortcut(
+            intent: AddChoreIntent(),
+            phrases: [
+                "Add \(\.$chore) to my \(.applicationName) chores",
+                "Create a \(.applicationName) chore for \(\.$chore)",
+                "Add a chore to \(.applicationName) for \(\.$chore)",
+                "New \(.applicationName) chore: \(\.$chore)",
+            ],
+            shortTitle: "Add Chore",
+            systemImageName: "figure.cleaning"
+        )
+        AppShortcut(
+            intent: AddCalendarItemIntent(),
+            phrases: [
+                "Add \(\.$event) to my \(.applicationName) calendar",
+                "Schedule \(\.$event) on \(.applicationName)",
+                "Create a \(.applicationName) event for \(\.$event)",
+                "Add a \(.applicationName) calendar event for \(\.$event)",
+            ],
+            shortTitle: "Add Calendar Event",
+            systemImageName: "calendar.badge.plus"
+        )
     }
 }
