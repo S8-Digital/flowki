@@ -10,6 +10,7 @@ import {
 import { ActivityIndicator, Card } from 'react-native-paper';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { VoiceCommandBar } from '@/components/VoiceCommandBar';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useRtdb } from '@/hooks/useRtdb';
@@ -306,6 +307,7 @@ return;
         <ThemedText variant="title" style={styles.greeting}>
           Hey, {user?.name?.split(' ')[0] ?? 'there'} 👋
         </ThemedText>
+        {familyId && <VoiceCommandBar />}
         {widgets.map((widget, index) => renderWidget(widget, index))}
       </ScrollView>
     </ThemedView>

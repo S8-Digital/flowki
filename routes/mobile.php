@@ -10,6 +10,7 @@ use App\Http\Controllers\Mobile\FamilyController;
 use App\Http\Controllers\Mobile\ProfileController;
 use App\Http\Controllers\Mobile\ShoppingController;
 use App\Http\Controllers\Mobile\TodoController;
+use App\Http\Controllers\Mobile\VoiceCommandController;
 use App\Http\Controllers\Mobile\WeatherController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,11 @@ Route::name('mobile.')->group(function () {
 
         // Weather
         Route::get('weather', [WeatherController::class, 'index'])->name('weather.index');
+
+        // Voice commands (rate-limited to 20 requests per minute per user)
+        Route::post('voice/command', VoiceCommandController::class)
+            ->name('voice.command')
+            ->middleware('throttle:20,1');
 
         // FCM tokens
         Route::post('fcm-tokens', [FcmTokenController::class, 'store'])->name('fcm-tokens.store');
