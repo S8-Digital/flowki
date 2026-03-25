@@ -24,7 +24,8 @@ The mobile MVP covers the same core daily-use surfaces as the web app:
 | Offline indicator | ✅ | ✅ | `@react-native-community/netinfo` banner |
 | Google Maps address autocomplete | ✅ | ❌ | Planned (requires React Native Maps integration) |
 | Social auth (Google OAuth) | ✅ | ❌ | Planned (`expo-auth-session`) |
-| Notifications (FCM) | partial | partial | `expo-notifications` wired up; FCM token not yet sent to server |
+| Voice command bar | ✅ | ✅ | Sends natural-language commands to `/api/mobile/voice/command` (AI agent) |
+| Siri & App Intents | ✅ | ✅ (iOS 16+) | `CreateTodoIntent`, `AddShoppingItemIntent`, `GetTodayScheduleIntent`, `CompleteChoreIntent` |
 
 ---
 
@@ -249,7 +250,53 @@ npx eas-cli update --branch production --message "Fix: shopping list sync"
 
 ---
 
-## 10. Remaining Planned Features
+## 10. Siri & App Intents (iOS 16+)
+
+Flowki ships four App Intents that surface in Siri, Spotlight, and the Shortcuts app.
+They call the same `/api/mobile/voice/command` endpoint used by the in-app voice bar, so
+the AI agent handles all the heavy lifting.
+
+### Intents
+
+| Intent | Example Siri phrase | What it does |
+|---|---|---|
+| `CreateTodoIntent` | "Add buy milk to my Flowki to-dos" | Creates a new family to-do |
+| `AddShoppingItemIntent` | "Add eggs to my Flowki list" | Adds an item to the shopping list |
+| `GetTodayScheduleIntent` | "What's on my Flowki schedule" | Reads today's calendar events |
+| `CompleteChoreIntent` | "Mark vacuuming done on Flowki" | Marks a chore as complete |
+
+### How it works
+
+1. **Native Swift intents** (`mobile/plugins/AppIntents/FlowkiIntents.swift`) are compiled
+   into the main app target via the Expo config plugin `mobile/plugins/withAppIntents.js`.
+2. At runtime the Swift code reads the auth token from the iOS Keychain (same item written
+   by `expo-secure-store`) and calls `POST /api/mobile/voice/command` over HTTPS.
+3. The `AppShortcutsProvider` in `FlowkiShortcutsApp.swift` registers phrase suggestions so
+   Siri surfaces them automatically — no manual Shortcut creation needed.
+4. When the intent result causes the app to open (e.g. a user taps a follow-up notification),
+   the JS hook `mobile/hooks/useAppIntentHandler.ts` intercepts the `flowki://intent?…` deep
+   link and dispatches the command through the voice API.
+
+### Build requirements
+
+- **Xcode 15+** (App Intents compile step)
+- **iOS 16+** device or simulator for intent execution
+- **Apple Developer account** — Siri requires the `com.apple.developer.siri` entitlement,
+  which the config plugin adds automatically. You must enable Siri in your App ID in the
+  Apple Developer Portal before submitting to the App Store.
+
+### Local testing
+
+1. Build with EAS or a local Xcode build (`npx expo run:ios`).
+2. In **Settings → Siri & Search → Flowki**, you can verify the app's donated shortcuts.
+3. Say "Hey Siri, add milk to my Flowki list" — Siri will ask for confirmation and show the
+   AI's response inline.
+
+> **Note:** App Intents do **not** work in Expo Go — a native build is required.
+
+---
+
+## 11. Remaining Planned Features
 
 The following features are planned for future sprints:
 

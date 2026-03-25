@@ -9,6 +9,7 @@ import { Provider as StoreProvider } from 'react-redux';
 import { useAuth } from '@/hooks/useAuth';
 import { registerBackgroundSync, unregisterBackgroundSync } from '@/hooks/useBackgroundSync';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useAppIntentHandler } from '@/hooks/useAppIntentHandler';
 
 function AuthGuard() {
   const { user, isLoading } = useAuth();
@@ -39,6 +40,10 @@ return;
       unregisterPush();
     }
   }, [user, unregisterPush]);
+
+  // Handle deep links opened by iOS App Intents (Siri voice commands).
+  // The hook forwards flowki://intent?type=… URLs to the voice-command API.
+  useAppIntentHandler();
 
   return <Slot />;
 }
