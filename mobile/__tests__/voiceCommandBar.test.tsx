@@ -137,8 +137,15 @@ describe('VoiceCommandBar', () => {
     expect(mockSendCommand).toHaveBeenCalledWith('Add milk');
   });
 
-  it('shows an error message when the API returns success: false', async () => {
-    mockSendCommand.mockResolvedValue({ success: false, response: 'AI is not configured.' });
+  it('shows the server-provided error message from an ApiError', async () => {
+    // The real api helper throws ApiError for non-2xx responses (e.g. 503 when the AI
+    // provider is not configured). The backend puts its human-readable text in `data.response`.
+    const err = Object.assign(new Error('Service Unavailable'), {
+      name: 'ApiError',
+      status: 503,
+      data: { success: false, response: 'AI is not configured.' },
+    });
+    mockSendCommand.mockRejectedValue(err);
 
     render(React.createElement(VoiceCommandBar));
     const input = screen.getByTestId('voice-command-input') as HTMLInputElement;
@@ -151,7 +158,7 @@ describe('VoiceCommandBar', () => {
     expect(screen.getByTestId('voice-command-result').textContent).toBe('AI is not configured.');
   });
 
-  it('shows a generic error when the API throws', async () => {
+  it('shows the error message when the API throws without a response payload', async () => {
     mockSendCommand.mockRejectedValue(new Error('Network error'));
 
     render(React.createElement(VoiceCommandBar));
@@ -162,7 +169,7 @@ describe('VoiceCommandBar', () => {
     await waitFor(() =>
       expect(screen.getByTestId('voice-command-result')).toBeInTheDocument(),
     );
-    expect(screen.getByTestId('voice-command-result').textContent).toContain('connect');
+    expect(screen.getByTestId('voice-command-result').textContent).toBe('Network error');
   });
 
   it('calls onSuccess callback with the response text', async () => {

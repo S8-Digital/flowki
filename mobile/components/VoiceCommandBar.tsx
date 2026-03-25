@@ -2,10 +2,10 @@
  * VoiceCommandBar
  *
  * A card-based text input that sends natural-language commands to the
- * `/api/mobile/voice/command` endpoint. Users can type a command or use
- * their device keyboard's built-in dictation microphone (no extra
- * permissions required for dictation). The AI agent's response is shown
- * inline beneath the input.
+ * `/api/mobile/voice/command` endpoint. Users can type a command, use the
+ * keyboard's built-in dictation microphone, or trigger it via Siri Shortcuts
+ * ("Hey Siri, add milk to my Flowki shopping list"). The AI agent's response
+ * is shown inline beneath the input.
  */
 
 import { useState } from 'react';
@@ -46,11 +46,18 @@ export function VoiceCommandBar({ onSuccess }: VoiceCommandBarProps) {
         setResult({ text: res.response, error: false });
         setCommand('');
         onSuccess?.(res.response);
-      } else {
-        setResult({ text: res?.response ?? 'Something went wrong.', error: true });
       }
-    } catch {
-      setResult({ text: 'Could not connect to the server.', error: true });
+    } catch (err: unknown) {
+      // ApiError (from the api helper) attaches the parsed JSON body as `data`.
+      // The backend voice endpoint puts its human-readable message in `data.response`.
+      const data =
+        err != null && typeof err === 'object' && 'data' in err
+          ? (err as { data: Record<string, unknown> }).data
+          : undefined;
+      const message =
+        (typeof data?.response === 'string' ? data.response : undefined) ??
+        (err instanceof Error ? err.message : 'Could not connect to the server.');
+      setResult({ text: message, error: true });
     } finally {
       setLoading(false);
     }

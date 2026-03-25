@@ -17,8 +17,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.s8digital.flowki",
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Flowki uses your microphone so you can dictate voice commands to manage your family's todos, chores, and shopping lists.",
-        "NSSpeechRecognitionUsageDescription": "Flowki uses speech recognition to convert your spoken commands into actions like adding shopping items or completing chores."
+        "NSMicrophoneUsageDescription": "Flowki uses your microphone for in-app voice dictation and to support Siri Shortcuts that let you say things like 'Hey Siri, add milk to my Flowki shopping list'.",
+        "NSSpeechRecognitionUsageDescription": "Flowki uses speech recognition to convert voice commands into actions such as adding shopping items, creating to-dos, or completing chores via Siri Shortcuts."
       }
     },
     "android": {
