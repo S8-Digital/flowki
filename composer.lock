@@ -3477,16 +3477,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v5.19.0",
+            "version": "v5.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "5e95df170d14e03dd74c4b744969cf01f67a050b"
+                "reference": "6e2aead19de0efb767f703559cc6539036b7fc59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/5e95df170d14e03dd74c4b744969cf01f67a050b",
-                "reference": "5e95df170d14e03dd74c4b744969cf01f67a050b",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/6e2aead19de0efb767f703559cc6539036b7fc59",
+                "reference": "6e2aead19de0efb767f703559cc6539036b7fc59",
                 "shasum": ""
             },
             "require": {
@@ -3494,8 +3494,8 @@
                 "laravel/framework": "^8.37|^9.0|^10.0|^11.0|^12.0|^13.0",
                 "laravel/sentinel": "^1.0",
                 "php": "^8.0",
-                "symfony/console": "^5.3|^6.0|^7.0|^8.0",
-                "symfony/var-dumper": "^5.0|^6.0|^7.0|^8.0"
+                "symfony/console": "^5.3|^6.0|^7.0",
+                "symfony/var-dumper": "^5.0|^6.0|^7.0"
             },
             "require-dev": {
                 "ext-gd": "*",
@@ -3540,9 +3540,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v5.19.0"
+                "source": "https://github.com/laravel/telescope/tree/v5.18.0"
             },
-            "time": "2026-03-24T18:37:14+00:00"
+            "time": "2026-03-05T15:53:11+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -4001,16 +4001,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.32.0",
+            "version": "3.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "254b1595b16b22dbddaaef9ed6ca9fdac4956725"
+                "reference": "570b8871e0ce693764434b29154c54b434905350"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/254b1595b16b22dbddaaef9ed6ca9fdac4956725",
-                "reference": "254b1595b16b22dbddaaef9ed6ca9fdac4956725",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/570b8871e0ce693764434b29154c54b434905350",
+                "reference": "570b8871e0ce693764434b29154c54b434905350",
                 "shasum": ""
             },
             "require": {
@@ -4078,9 +4078,9 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.32.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.33.0"
             },
-            "time": "2026-02-25T17:01:41+00:00"
+            "time": "2026-03-25T07:59:30+00:00"
         },
         {
             "name": "league/flysystem-google-cloud-storage",

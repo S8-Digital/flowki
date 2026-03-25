@@ -105,8 +105,6 @@ const mockRoles = [
     { value: 'Guest', label: 'Guest' },
 ];
 
-
-
 describe('Family Create page', () => {
     beforeEach(() => {
         mockForm({ data: { name: '' }, errors: {} });
