@@ -202,6 +202,18 @@ export const fcmTokenApi = {
     api.delete(`/api/mobile/fcm-tokens/${encodeURIComponent(token)}`),
 };
 
+// Voice commands ------------------------------------------------------------
+
+export interface VoiceCommandResponse {
+  success: boolean;
+  response: string;
+}
+
+export const voiceApi = {
+  sendCommand: (command: string) =>
+    api.post<VoiceCommandResponse>('/api/mobile/voice/command', { command }),
+};
+
 export type { Todo, Chore, ShoppingItem, ShoppingList, CalendarEvent };
 
 export { ApiError };

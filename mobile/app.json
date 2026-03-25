@@ -15,7 +15,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.s8digital.flowki"
+      "bundleIdentifier": "com.s8digital.flowki",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Flowki uses your microphone so you can dictate voice commands to manage your family's todos, chores, and shopping lists.",
+        "NSSpeechRecognitionUsageDescription": "Flowki uses speech recognition to convert your spoken commands into actions like adding shopping items or completing chores."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +30,10 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.s8digital.flowki",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
