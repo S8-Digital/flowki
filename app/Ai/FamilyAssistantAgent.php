@@ -3,25 +3,13 @@
 namespace App\Ai;
 
 use App\Ai\Tools\AddShoppingItem;
-use App\Ai\Tools\CompleteChore;
-use App\Ai\Tools\CompleteTodo;
 use App\Ai\Tools\CreateChore;
 use App\Ai\Tools\CreateEvent;
 use App\Ai\Tools\CreateTodo;
-use App\Ai\Tools\DeleteChore;
-use App\Ai\Tools\DeleteEvent;
-use App\Ai\Tools\DeleteRecipe;
-use App\Ai\Tools\DeleteTodo;
-use App\Ai\Tools\EditChore;
-use App\Ai\Tools\EditEvent;
-use App\Ai\Tools\EditRecipe;
-use App\Ai\Tools\EditTodo;
 use App\Ai\Tools\ImportRecipe;
 use App\Ai\Tools\ListChores;
 use App\Ai\Tools\ListEvents;
-use App\Ai\Tools\ListRecipes;
 use App\Ai\Tools\ListSchedule;
-use App\Ai\Tools\ListShoppingItems;
 use App\Ai\Tools\ListTodos;
 use App\Models\User;
 use Laravel\Ai\Contracts\Agent;
@@ -76,7 +64,7 @@ class FamilyAssistantAgent implements Agent, Conversational, HasTools
         Keep responses concise and friendly.
         MARKDOWN;
     }
-    
+
     public function messages(): iterable
     {
         return $this->conversationMessages;
