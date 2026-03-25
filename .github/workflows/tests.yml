@@ -27,6 +27,7 @@ jobs:
           node-version: '22'
 
       - name: Install Node Dependencies
+        # npm workspaces: installs root, shared/, and mobile/ in one pass
         run: npm ci
 
       - name: Copy Environment File
@@ -50,8 +51,14 @@ jobs:
       - name: Build Assets
         run: npm run build
 
-      - name: Frontend Tests
+      - name: Frontend Tests (web)
         run: npm run test
+
+      - name: Mobile Tests
+        # Run from repo root so the npm workspace resolves vitest from
+        # node_modules (mobile/package.json lists vitest as a devDependency
+        # hoisted to the root by the workspace).
+        run: npm run test --workspace=mobile
 
       - name: PHP Tests
         run: ./vendor/bin/paratest --runner WrapperRunner --processes 12

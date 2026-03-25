@@ -1,6 +1,20 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
 import type { RouteDefinition } from '@/wayfinder';
+import type {
+    CalendarEvent as BaseCalendarEvent,
+    Chore as BaseChore,
+    Family as BaseFamily,
+    ShoppingItem as BaseShoppingItem,
+    ShoppingList as BaseShoppingList,
+    Todo as BaseTodo,
+    User as BaseUser,
+    WeatherCurrent,
+    WeatherData,
+    WeatherDay,
+} from '@flowki/shared';
+
+export type { WeatherCurrent, WeatherData, WeatherDay };
 
 export interface Auth {
     user: User;
@@ -14,14 +28,6 @@ export interface Resource<T> {
 
 export interface ResourceCollection<T> {
     data: T[];
-}
-
-export interface PaginatedResource<T> extends ResourceCollection<T> {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-    links: { url: string | null; label: string; active: boolean }[];
 }
 
 export interface PaginatedResource<T> extends ResourceCollection<T> {
@@ -67,32 +73,18 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     firebaseConfig: FirebaseConfig;
 };
 
-export interface User {
-    id: number;
-    name: string;
-    email: string | null;
-    family_id: number | null;
+/** Web-extended User — adds Inertia/Eloquent relation fields on top of the shared base. */
+export interface User extends BaseUser {
     family?: Family | null;
-    role?: string;
     is_pending?: boolean;
     is_child?: boolean;
-    avatar?: string;
-    profile_color?: string | null;
     email_verified_at: string | null;
-    created_at: string;
-    updated_at: string;
 }
 
-export interface Family {
-    id: number;
-    name: string;
-    invite_code: string;
-    location_name: string | null;
-    latitude: number | null;
-    longitude: number | null;
+/** Web-extended Family — adds member_order used by the web dashboard. */
+export interface Family extends BaseFamily {
     members?: User[];
     member_order?: number[];
-    created_at: string;
 }
 
 export interface Permission {
@@ -105,36 +97,18 @@ export interface PermissionGroup {
     permissions: Permission[];
 }
 
-export interface Todo {
-    id: number;
-    title: string;
-    description: string | null;
-    category: string;
-    priority: string;
-    status: string;
-    due_date: string | null; // datetime-local format: Y-m-d\TH:i
-    reminder_enabled: boolean;
+/** Web-extended Todo — adds reminder_lead_time and nested relation objects. */
+export interface Todo extends BaseTodo {
     reminder_lead_time: number;
-    family_id: number;
     assignee?: User;
     creator?: User;
-    created_at: string;
-    updated_at: string;
 }
 
-export interface Chore {
-    id: number;
-    title: string;
-    description: string | null;
-    frequency: string;
-    next_due_date: string | null; // datetime-local format: Y-m-d\TH:i
-    reminder_enabled: boolean;
+/** Web-extended Chore — adds reminder_lead_time and nested relation objects. */
+export interface Chore extends BaseChore {
     reminder_lead_time: number;
-    family_id: number;
     assignees?: User[];
     creator?: User;
-    created_at: string;
-    updated_at: string;
 }
 
 export interface AppNotification {
@@ -145,45 +119,25 @@ export interface AppNotification {
     created_at: string;
 }
 
-export interface CalendarEvent {
-    id: number;
-    title: string;
-    description: string | null;
-    location: string | null;
-    start_at: string;
-    end_at: string | null;
-    is_all_day: boolean;
-    recurrence: string | null;
-    reminder_at: string | null;
-    color: string | null;
-    family_id: number;
+/** Web-extended CalendarEvent — adds recurrence, reminder_at and nested attendees. */
+export interface CalendarEvent extends BaseCalendarEvent {
+    recurrence?: string | null;
+    reminder_at?: string | null;
     attendees?: User[];
     creator?: User;
-    created_at: string;
-    updated_at: string;
 }
 
-export interface ShoppingItem {
-    id: number;
-    name: string;
-    quantity: string | null;
-    category: string;
-    is_checked: boolean;
-    shopping_list_id: number;
-    added_by?: User;
-    created_at: string;
+/** Web-extended ShoppingItem — adds_by as a full User object. */
+export interface ShoppingItem extends BaseShoppingItem {
+    added_by_user?: User;
 }
 
-export interface ShoppingList {
-    id: number;
-    name: string;
+/** Web-extended ShoppingList — adds is_shared, items_count, and creator. */
+export interface ShoppingList extends BaseShoppingList {
     is_shared: boolean;
-    family_id: number;
     items?: ResourceCollection<ShoppingItem>;
     items_count?: number;
     creator?: User;
-    created_at: string;
-    updated_at: string;
 }
 
 export interface RecipeIngredient {
@@ -232,29 +186,6 @@ export interface DashboardShoppingListData {
     id: number;
     name: string;
     items: Pick<ShoppingItem, 'id' | 'name' | 'quantity' | 'category' | 'is_checked'>[];
-}
-
-export interface WeatherCondition {
-    temp: number;
-    feels_like: number;
-    description: string;
-    icon_url: string;
-    humidity: number;
-    wind_speed: number;
-}
-
-export interface ForecastDay {
-    date: string;
-    temp_min: number;
-    temp_max: number;
-    description: string;
-    icon_url: string;
-}
-
-export interface WeatherData {
-    location: string;
-    current: WeatherCondition;
-    forecast: ForecastDay[];
 }
 
 export interface MemberSummary {

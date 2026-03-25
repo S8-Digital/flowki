@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Flowki",
-    "slug": "mobile",
+    "slug": "flowki",
     "scheme": "flowki",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -41,10 +41,19 @@
           "icon": "./assets/icon.png",
           "color": "#3B82F6"
         }
-      ]
+      ],
+      "expo-background-fetch",
+      "expo-task-manager"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b62872ed-b4e1-4ef0-835e-b4caa121ee94"
+      }
+    },
+    "owner": "s8-digital"
   }
 }

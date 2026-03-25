@@ -14,7 +14,9 @@
         "esModuleInterop": true,
         "types": ["vite/client", "./resources/js/types", "google.maps"],
         "paths": {
-            "@/*": ["./resources/js/*"]
+            "@/*": ["./resources/js/*"],
+            "@flowki/shared": ["./shared/src"],
+            "@flowki/shared/*": ["./shared/src/*"]
         }
     },
     "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "resources/js/**/*.d.ts"]

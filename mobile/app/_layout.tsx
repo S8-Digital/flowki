@@ -7,11 +7,14 @@ import { useColorScheme } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import { useAuth } from '@/hooks/useAuth';
+import { registerBackgroundSync, unregisterBackgroundSync } from '@/hooks/useBackgroundSync';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 
 function AuthGuard() {
   const { user, isLoading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const { unregister: unregisterPush } = usePushNotifications();
 
   useEffect(() => {
     if (isLoading) {
@@ -26,6 +29,16 @@ return;
       router.replace('/(tabs)');
     }
   }, [user, isLoading, segments, router]);
+
+  // Register background sync when logged in; unregister on logout.
+  useEffect(() => {
+    if (user) {
+      registerBackgroundSync();
+    } else {
+      unregisterBackgroundSync();
+      unregisterPush();
+    }
+  }, [user, unregisterPush]);
 
   return <Slot />;
 }
