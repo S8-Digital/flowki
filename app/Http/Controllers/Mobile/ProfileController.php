@@ -38,6 +38,7 @@ class ProfileController extends Controller
             'email' => $user->email,
             'profile_color' => $user->profile_color,
             'family_id' => $user->family_id,
+            'inbound_email_address' => $user->inboundEmailAddress(),
         ]);
     }
 

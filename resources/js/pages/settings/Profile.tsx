@@ -2,7 +2,8 @@ import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { CalendarCheck, CalendarX, CheckCircle2, Link2, Link2Off } from 'lucide-react';
+import { CalendarCheck, CalendarX, CheckCircle2, Copy, Link2, Link2Off, Mail } from 'lucide-react';
+import { useState } from 'react';
 import { update } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/DeleteUser';
 import HeadingSmall from '@/components/HeadingSmall';
@@ -19,6 +20,7 @@ interface Props {
     mustVerifyEmail: boolean;
     status?: string;
     hasGoogleCalendarConnected: boolean;
+    inboundEmailAddress?: string | null;
 }
 
 const breadcrumbItems: BreadcrumbItem[] = [{ title: 'Profile settings', href: '/settings/profile' }];
@@ -28,7 +30,20 @@ const socialProviders = [
     { key: 'apple', label: 'Apple' },
 ] as const;
 
-export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConnected }: Props) {
+export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConnected, inboundEmailAddress }: Props) {
+    const [copied, setCopied] = useState(false);
+
+    function copyInboundEmail() {
+        if (!inboundEmailAddress) {
+            return;
+        }
+
+        navigator.clipboard.writeText(inboundEmailAddress).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        });
+    }
+
     const page = usePage<{
         auth: {
             user: { id: number; name: string; email: string; profile_color?: string | null; email_verified_at: string | null };
@@ -353,6 +368,53 @@ export default function Profile({ mustVerifyEmail, status, hasGoogleCalendarConn
                         )}
                     </Box>
                 </Stack>
+
+                {/* Inbound Email */}
+                {inboundEmailAddress && (
+                    <Stack spacing={3}>
+                        <HeadingSmall
+                            title="Inbound email address"
+                            description="Forward emails to this address to automatically create calendar events, todos, chores, and shopping list items. Attachments are limited to 1 MB."
+                        />
+                        <Box sx={{ borderRadius: '12px', border: 1, borderColor: 'divider', p: 2 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        width: 36,
+                                        height: 36,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: '50%',
+                                        bgcolor: 'action.hover',
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    <Mail className="size-5" style={{ color: 'var(--mui-palette-text-secondary)' }} />
+                                </Box>
+                                <Box sx={{ flex: 1, minWidth: 0 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            fontFamily: 'monospace',
+                                            wordBreak: 'break-all',
+                                            fontWeight: 500,
+                                        }}
+                                    >
+                                        {inboundEmailAddress}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                                        Emails sent here are automatically parsed by AI and added to your family organiser.
+                                    </Typography>
+                                </Box>
+                                <Button variant="outline" size="sm" onClick={copyInboundEmail} sx={{ flexShrink: 0 }}>
+                                    <Copy className="mr-1.5 size-4" />
+                                    {copied ? 'Copied!' : 'Copy'}
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Stack>
+                )}
 
                 <DeleteUser hasPasswordSet={hasPasswordSet} />
             </SettingsLayout>

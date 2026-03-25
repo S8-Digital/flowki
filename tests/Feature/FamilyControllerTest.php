@@ -112,6 +112,24 @@ class FamilyControllerTest extends TestCase
         $this->actingAs($user)->get(route('family.show'))->assertOk();
     }
 
+    public function test_family_show_passes_roles_without_child_role(): void
+    {
+        $user = User::factory()->withFamily()->create();
+
+        $response = $this->actingAs($user)->get(route('family.show'));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('Family/Show')
+            ->has('roles', 3)
+            ->where('roles.0.value', FamilyRole::Admin->value)
+            ->where('roles.0.label', FamilyRole::Admin->label())
+            ->where('roles.1.value', FamilyRole::Member->value)
+            ->where('roles.2.value', FamilyRole::Guest->value)
+            ->missing('roles.3')
+        );
+    }
+
     public function test_user_without_family_cannot_view_family(): void
     {
         $user = User::factory()->create(['family_id' => null]);

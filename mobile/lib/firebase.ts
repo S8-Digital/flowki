@@ -19,8 +19,8 @@ const firebaseConfig = {
  */
 export function getFirebaseApp() {
   if (getApps().length > 0) {
-return getApp();
-}
+    return getApp();
+  }
 
   return initializeApp(firebaseConfig);
 }

@@ -24,6 +24,7 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
             'hasGoogleCalendarConnected' => $user->hasGoogleCalendarConnected(),
+            'inboundEmailAddress' => $user->inboundEmailAddress(),
         ]);
     }
 

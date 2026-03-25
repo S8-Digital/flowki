@@ -74,13 +74,13 @@ export default function AuthSimpleLayout({ children, title, description }: Props
                                 sx={{
                                     mb: 0.5,
                                     display: 'flex',
-                                    width: 50,
-                                    height: 32,
+                                    width: 100,
+                                    height: 64,
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}
                             >
-                                <AppLogoIcon style={{ width: 60, height: 60 }} />
+                                <AppLogoIcon style={{ width: 120, height: 120 }} />
                             </LogoIconWrapper>
                             <SrOnlyText
                                 component="span"
