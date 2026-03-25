@@ -21,7 +21,8 @@ RUN apk add --no-cache \
     bash \
     icu-dev \
     icu-data-full \
-    netcat-openbsd
+    netcat-openbsd \
+    oniguruma-dev
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
