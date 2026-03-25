@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/store';
-import { clearCredentials, setCredentials, setLoading } from '@/store/slices/authSlice';
+import { clearCredentials, setCredentials, setLoading, setUser } from '@/store/slices/authSlice';
 import { useEffect } from 'react';
 import { authApi } from '@/lib/api';
 import { storage } from '@/lib/storage';
@@ -86,7 +86,7 @@ dispatch(setLoading(false));
 
       if (u) {
         await storage.setUser(u);
-        dispatch(setCredentials({ token: token ?? '', user: u }));
+        dispatch(setUser(u));
       }
     } catch {
       // best-effort

@@ -31,6 +31,7 @@ const SettingsTabs = styled(Tabs)(({ theme }) => ({
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1),
         fontSize: '0.875rem',
+        textTransform: 'none',
     },
     '& .MuiTabs-indicator': {
         left: 0,

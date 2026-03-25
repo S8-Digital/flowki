@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
 // react-native is aliased to __mocks__/react-native.ts in vitest.config.ts so
@@ -64,4 +65,10 @@ vi.mock('expo-background-fetch', () => ({
 vi.mock('expo-task-manager', () => ({
   defineTask: vi.fn(),
   isTaskRegisteredAsync: vi.fn(() => Promise.resolve(false)),
+}));
+
+// Mock expo-clipboard
+vi.mock('expo-clipboard', () => ({
+  setStringAsync: vi.fn(() => Promise.resolve()),
+  getStringAsync: vi.fn(() => Promise.resolve('')),
 }));

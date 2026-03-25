@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b685279fbb320debcfa96321a19f8e22",
+    "content-hash": "b5b1c37c99216e8807b8f23cc9435f68",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1390,16 +1390,16 @@
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.49.2",
+            "version": "v1.50.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-                "reference": "1cab44377fc65c7feba1f706970f3abf5ccba392"
+                "reference": "8ca5b85ed33776f532bbbf8ae2b34933148c05d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/1cab44377fc65c7feba1f706970f3abf5ccba392",
-                "reference": "1cab44377fc65c7feba1f706970f3abf5ccba392",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/8ca5b85ed33776f532bbbf8ae2b34933148c05d2",
+                "reference": "8ca5b85ed33776f532bbbf8ae2b34933148c05d2",
                 "shasum": ""
             },
             "require": {
@@ -1441,9 +1441,9 @@
             ],
             "description": "Cloud Storage Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.49.2"
+                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.50.0"
             },
-            "time": "2026-01-23T22:57:13+00:00"
+            "time": "2026-03-23T23:35:56+00:00"
         },
         {
             "name": "google/cloud-tasks",
@@ -2646,16 +2646,16 @@
         },
         {
             "name": "laravel/fortify",
-            "version": "v1.36.1",
+            "version": "v1.36.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/fortify.git",
-                "reference": "cad8bfeb63f6818f173d40090725c565c92651d4"
+                "reference": "b36e0782e6f5f6cfbab34327895a63b7c4c031f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/fortify/zipball/cad8bfeb63f6818f173d40090725c565c92651d4",
-                "reference": "cad8bfeb63f6818f173d40090725c565c92651d4",
+                "url": "https://api.github.com/repos/laravel/fortify/zipball/b36e0782e6f5f6cfbab34327895a63b7c4c031f9",
+                "reference": "b36e0782e6f5f6cfbab34327895a63b7c4c031f9",
                 "shasum": ""
             },
             "require": {
@@ -2705,7 +2705,7 @@
                 "issues": "https://github.com/laravel/fortify/issues",
                 "source": "https://github.com/laravel/fortify"
             },
-            "time": "2026-03-10T19:59:49+00:00"
+            "time": "2026-03-20T20:13:51+00:00"
         },
         {
             "name": "laravel/framework",
@@ -3084,16 +3084,16 @@
         },
         {
             "name": "laravel/prompts",
-            "version": "v0.3.15",
+            "version": "v0.3.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/prompts.git",
-                "reference": "4bb8107ec97651fd3f17f897d6489dbc4d8fb999"
+                "reference": "11e7d5f93803a2190b00e145142cb00a33d17ad2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/prompts/zipball/4bb8107ec97651fd3f17f897d6489dbc4d8fb999",
-                "reference": "4bb8107ec97651fd3f17f897d6489dbc4d8fb999",
+                "url": "https://api.github.com/repos/laravel/prompts/zipball/11e7d5f93803a2190b00e145142cb00a33d17ad2",
+                "reference": "11e7d5f93803a2190b00e145142cb00a33d17ad2",
                 "shasum": ""
             },
             "require": {
@@ -3137,22 +3137,22 @@
             "description": "Add beautiful and user-friendly forms to your command-line applications.",
             "support": {
                 "issues": "https://github.com/laravel/prompts/issues",
-                "source": "https://github.com/laravel/prompts/tree/v0.3.15"
+                "source": "https://github.com/laravel/prompts/tree/v0.3.16"
             },
-            "time": "2026-03-17T13:45:17+00:00"
+            "time": "2026-03-23T14:35:33+00:00"
         },
         {
             "name": "laravel/reverb",
-            "version": "v1.8.1",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/reverb.git",
-                "reference": "70e3d28ed31466da34de0c055f3681b75a5a538c"
+                "reference": "7a1ef2235cfe085cdf3190d0dcfaed4f7d251734"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/reverb/zipball/70e3d28ed31466da34de0c055f3681b75a5a538c",
-                "reference": "70e3d28ed31466da34de0c055f3681b75a5a538c",
+                "url": "https://api.github.com/repos/laravel/reverb/zipball/7a1ef2235cfe085cdf3190d0dcfaed4f7d251734",
+                "reference": "7a1ef2235cfe085cdf3190d0dcfaed4f7d251734",
                 "shasum": ""
             },
             "require": {
@@ -3216,9 +3216,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/reverb/issues",
-                "source": "https://github.com/laravel/reverb/tree/v1.8.1"
+                "source": "https://github.com/laravel/reverb/tree/v1.9.0"
             },
-            "time": "2026-03-14T16:59:35+00:00"
+            "time": "2026-03-20T20:16:59+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -3405,16 +3405,16 @@
         },
         {
             "name": "laravel/socialite",
-            "version": "v5.25.0",
+            "version": "v5.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/socialite.git",
-                "reference": "231f572e1a37c9ca1fb8085e9fb8608285beafb3"
+                "reference": "1d26f0c653a5f0e88859f4197830a29fe0cc59d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/socialite/zipball/231f572e1a37c9ca1fb8085e9fb8608285beafb3",
-                "reference": "231f572e1a37c9ca1fb8085e9fb8608285beafb3",
+                "url": "https://api.github.com/repos/laravel/socialite/zipball/1d26f0c653a5f0e88859f4197830a29fe0cc59d0",
+                "reference": "1d26f0c653a5f0e88859f4197830a29fe0cc59d0",
                 "shasum": ""
             },
             "require": {
@@ -3473,7 +3473,7 @@
                 "issues": "https://github.com/laravel/socialite/issues",
                 "source": "https://github.com/laravel/socialite"
             },
-            "time": "2026-02-27T13:56:35+00:00"
+            "time": "2026-03-24T18:37:47+00:00"
         },
         {
             "name": "laravel/telescope",
@@ -4001,16 +4001,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.32.0",
+            "version": "3.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "254b1595b16b22dbddaaef9ed6ca9fdac4956725"
+                "reference": "570b8871e0ce693764434b29154c54b434905350"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/254b1595b16b22dbddaaef9ed6ca9fdac4956725",
-                "reference": "254b1595b16b22dbddaaef9ed6ca9fdac4956725",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/570b8871e0ce693764434b29154c54b434905350",
+                "reference": "570b8871e0ce693764434b29154c54b434905350",
                 "shasum": ""
             },
             "require": {
@@ -4078,9 +4078,9 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.32.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.33.0"
             },
-            "time": "2026-02-25T17:01:41+00:00"
+            "time": "2026-03-25T07:59:30+00:00"
         },
         {
             "name": "league/flysystem-google-cloud-storage",
@@ -5284,6 +5284,91 @@
                 "source": "https://github.com/paragonie/sodium_compat/tree/v2.5.0"
             },
             "time": "2025-12-30T16:12:18+00:00"
+        },
+        {
+            "name": "php-mime-mail-parser/php-mime-mail-parser",
+            "version": "9.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-mime-mail-parser/php-mime-mail-parser.git",
+                "reference": "e26eb593f689a59fd3bf13983f0bf2c700419672"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/e26eb593f689a59fd3bf13983f0bf2c700419672",
+                "reference": "e26eb593f689a59fd3bf13983f0bf2c700419672",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mailparse": "*",
+                "php": "^8.0"
+            },
+            "replace": {
+                "exorus/php-mime-mail-parser": "*",
+                "messaged/php-mime-mail-parser": "*"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2.2",
+                "phpunit/phpunit": "^9.6.22",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpMimeMailParser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "eXorus",
+                    "email": "exorus.spam@gmail.com",
+                    "homepage": "https://github.com/eXorus/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "M.Valinskis",
+                    "email": "M.Valins@gmail.com",
+                    "homepage": "https://code.google.com/p/php-mime-mail-parser",
+                    "role": "Developer"
+                },
+                {
+                    "name": "eugene.emmett.wood",
+                    "email": "gene_w@cementhorizon.com",
+                    "homepage": "https://code.google.com/p/php-mime-mail-parser",
+                    "role": "Developer"
+                },
+                {
+                    "name": "alknetso",
+                    "email": "alkne@gmail.com",
+                    "homepage": "https://code.google.com/p/php-mime-mail-parser",
+                    "role": "Developer"
+                },
+                {
+                    "name": "bucabay",
+                    "email": "gabe@fijiwebdesign.com",
+                    "homepage": "http://www.fijiwebdesign.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A fully tested email parser for PHP 8.0+ (mailparse extension wrapper).",
+            "homepage": "https://github.com/php-mime-mail-parser/php-mime-mail-parser",
+            "keywords": [
+                "MimeMailParser",
+                "mail",
+                "mailparse",
+                "mime",
+                "parser",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/issues",
+                "source": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/tree/9.0.1"
+            },
+            "time": "2024-12-07T23:47:47+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -11394,16 +11479,16 @@
         },
         {
             "name": "laravel/boost",
-            "version": "v2.3.4",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/boost.git",
-                "reference": "9e3dd5f05b59394e463e78853067dc36c63a0394"
+                "reference": "a09bebcff238ed92fd123e460b27bd58bed22520"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/boost/zipball/9e3dd5f05b59394e463e78853067dc36c63a0394",
-                "reference": "9e3dd5f05b59394e463e78853067dc36c63a0394",
+                "url": "https://api.github.com/repos/laravel/boost/zipball/a09bebcff238ed92fd123e460b27bd58bed22520",
+                "reference": "a09bebcff238ed92fd123e460b27bd58bed22520",
                 "shasum": ""
             },
             "require": {
@@ -11456,7 +11541,7 @@
                 "issues": "https://github.com/laravel/boost/issues",
                 "source": "https://github.com/laravel/boost"
             },
-            "time": "2026-03-17T16:42:14+00:00"
+            "time": "2026-03-23T16:01:08+00:00"
         },
         {
             "name": "laravel/pail",
@@ -11669,16 +11754,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.54.0",
+            "version": "v1.55.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "bcc5e06f1a79d806d880a4b027964d2aa5872b07"
+                "reference": "67dc1b72da4e066a2fb54c1c7582fd2f140ea191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/bcc5e06f1a79d806d880a4b027964d2aa5872b07",
-                "reference": "bcc5e06f1a79d806d880a4b027964d2aa5872b07",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/67dc1b72da4e066a2fb54c1c7582fd2f140ea191",
+                "reference": "67dc1b72da4e066a2fb54c1c7582fd2f140ea191",
                 "shasum": ""
             },
             "require": {
@@ -11728,7 +11813,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2026-03-11T14:10:52+00:00"
+            "time": "2026-03-23T15:56:34+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -13882,7 +13967,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "ext-mailparse": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"

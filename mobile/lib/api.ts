@@ -77,6 +77,7 @@ export interface AuthUser {
   email: string;
   profile_color?: string | null;
   family_id?: number | null;
+  inbound_email_address?: string | null;
 }
 
 export interface LoginResponse {

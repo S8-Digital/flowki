@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('api/mobile')->name('mobile.')->group(function () {
+Route::name('mobile.')->group(function () {
     // Public (unauthenticated)
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('login', [AuthController::class, 'login'])->name('login');

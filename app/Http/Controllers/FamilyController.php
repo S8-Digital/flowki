@@ -81,8 +81,18 @@ class FamilyController extends Controller
             $family->regenerateInviteCode();
         }
 
+        $roles = collect(FamilyRole::cases())
+            ->reject(fn (FamilyRole $role) => $role === FamilyRole::Child)
+            ->map(fn (FamilyRole $role) => [
+                'value' => $role->value,
+                'label' => $role->label(),
+            ])
+            ->values()
+            ->toArray();
+
         return Inertia::render('Family/Show', [
             'family' => (new FamilyResource($family))->resolve(),
+            'roles' => $roles,
         ]);
     }
 

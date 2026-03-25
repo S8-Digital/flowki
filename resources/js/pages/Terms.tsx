@@ -11,7 +11,7 @@ import { footerLinkSx, logoWordmarkSx } from '@/lib/publicSx';
 import { privacy } from '@/routes';
 
 const EFFECTIVE_DATE = '22 March 2025';
-const CONTACT_EMAIL = 'legal@flowki.app';
+const CONTACT_EMAIL = 'legal@flowki.family';
 
 export default function Terms() {
     return (

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -21,6 +22,17 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (User $user) {
+            if (is_null($user->inbound_email_token)) {
+                $user->inbound_email_token = (string) Str::uuid();
+            }
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -37,6 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
         'google_calendar_id',
         'google_calendar_token',
+        'inbound_email_token',
     ];
 
     protected $hidden = [
@@ -155,6 +168,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function fcmTokens(): HasMany
     {
         return $this->hasMany(FcmToken::class);
+    }
+
+    public function inboundEmails(): HasMany
+    {
+        return $this->hasMany(InboundEmail::class);
+    }
+
+    public function inboundEmailAddress(): ?string
+    {
+        if ($this->inbound_email_token === null) {
+            return null;
+        }
+
+        return $this->inbound_email_token.'@in.flowki.family';
     }
 
     public function sendEmailVerificationNotification(): void

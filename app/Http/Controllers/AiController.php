@@ -32,11 +32,8 @@ class AiController extends Controller
             ]);
         }
 
-        $agent = new FamilyAssistantAgent($user);
+        $agent = new FamilyAssistantAgent($user, $request->history ?? []);
 
-        return $agent->stream(
-            prompt: $request->message,
-            history: $request->history ?? []
-        )->toResponse($request);
+        return $agent->stream($request->message)->toResponse($request);
     }
 }

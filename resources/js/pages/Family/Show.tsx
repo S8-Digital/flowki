@@ -19,11 +19,12 @@ import type { AppPageProps, BreadcrumbItem, Family, User } from '@/types';
 
 interface Props {
     family: Family;
+    roles: { value: string; label: string }[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Family', href: '/family' }];
 
-export default function FamilyShow({ family }: Props) {
+export default function FamilyShow({ family, roles }: Props) {
     const page = usePage<AppPageProps>();
     const currentUserId = page.props.auth.user.id;
     const canManageMembers = page.props.currentUserPermissions.includes('manage-members');
@@ -42,7 +43,7 @@ export default function FamilyShow({ family }: Props) {
         latitude: family.latitude !== null ? String(family.latitude) : '',
         longitude: family.longitude !== null ? String(family.longitude) : '',
     });
-    const inviteForm = useForm({ email: '', role: 'member' });
+    const inviteForm = useForm({ email: '', role: 'Member' });
     const addChildForm = useForm({ name: '' });
 
     const editNameFormRef = useRef(editNameForm);
@@ -491,8 +492,9 @@ export default function FamilyShow({ family }: Props) {
                                                         <SelectValue placeholder="Select role" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="member">Member</SelectItem>
-                                                        <SelectItem value="guest">Guest (read-only)</SelectItem>
+                                                        {roles.map((role) => (
+                                                            <SelectItem value={role.value}>{role.label}</SelectItem>
+                                                        ))}
                                                     </SelectContent>
                                                 </Select>
                                                 <InputError message={inviteForm.errors.role} />

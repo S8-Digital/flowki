@@ -29,6 +29,7 @@ RUN apt-get update && apt-get upgrade -y \
     && apt-get update \
     && apt-get install -y \
         libgd3 \
+        libonig-dev \
         php8.5-cli \
         php8.5-dev \
         php8.5-pgsql \
@@ -54,6 +55,7 @@ RUN apt-get update && apt-get upgrade -y \
         php8.5-pcov \
         php8.5-imagick \
         php8.5-xdebug \
+        php8.5-mailparse \
     && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
