@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
+import { useAppIntentHandler } from '@/hooks/useAppIntentHandler';
 import { useAuth } from '@/hooks/useAuth';
 import { registerBackgroundSync, unregisterBackgroundSync } from '@/hooks/useBackgroundSync';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
@@ -39,6 +40,10 @@ return;
       unregisterPush();
     }
   }, [user, unregisterPush]);
+
+  // Handle deep links opened by iOS App Intents (Siri voice commands).
+  // The hook forwards flowki://intent?type=… URLs to the voice-command API.
+  useAppIntentHandler();
 
   return <Slot />;
 }
