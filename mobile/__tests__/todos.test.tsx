@@ -243,7 +243,7 @@ describe('Todos screen', () => {
 
     it('renders due date when present', () => {
         mockRtdbData = {
-            '1': makeTodo({ id: 1, title: 'Due soon', due_date: '2030-12-31T00:00:00.000Z' }),
+            '1': makeTodo({ id: 1, title: 'Task with deadline', due_date: '2030-12-31T00:00:00.000Z' }),
         };
         render(React.createElement(TodosScreen));
         expect(screen.getByText(/Due/i)).toBeInTheDocument();

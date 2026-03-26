@@ -27,6 +27,65 @@ const Animated = {
     spring: () => ({ start: vi.fn() }),
 };
 
+const FlatList = ({
+    data,
+    renderItem,
+    keyExtractor,
+    ListEmptyComponent,
+    ...rest
+}: {
+    data?: unknown[];
+    renderItem?: (info: { item: unknown; index: number }) => React.ReactNode;
+    keyExtractor?: (item: unknown, index: number) => string;
+    ListEmptyComponent?: React.ReactNode | (() => React.ReactNode);
+    [key: string]: unknown;
+}) => {
+    const items = data ?? [];
+    const children =
+        items.length === 0
+            ? typeof ListEmptyComponent === 'function'
+                ? (ListEmptyComponent as () => React.ReactNode)()
+                : (ListEmptyComponent ?? null)
+            : items.map((item, index) =>
+                  React.createElement(
+                      'div',
+                      { key: keyExtractor ? keyExtractor(item, index) : String(index) },
+                      renderItem ? renderItem({ item, index }) : null,
+                  ),
+              );
+    return React.createElement('div', { 'data-testid': 'flat-list', ...rest }, children);
+};
+
+const SectionList = ({
+    sections,
+    renderItem,
+    renderSectionHeader,
+    keyExtractor,
+    ...rest
+}: {
+    sections?: Array<{ title?: string; data: unknown[] }>;
+    renderItem?: (info: { item: unknown; index: number; section: unknown }) => React.ReactNode;
+    renderSectionHeader?: (info: { section: unknown }) => React.ReactNode;
+    keyExtractor?: (item: unknown, index: number) => string;
+    [key: string]: unknown;
+}) => {
+    const allSections = sections ?? [];
+    const children = allSections.flatMap((section, sIdx) => {
+        const header = renderSectionHeader ? renderSectionHeader({ section }) : null;
+        const rows = section.data.map((item, idx) =>
+            React.createElement(
+                'div',
+                { key: keyExtractor ? keyExtractor(item, idx) : `${sIdx}-${idx}` },
+                renderItem ? renderItem({ item, index: idx, section }) : null,
+            ),
+        );
+        return header
+            ? [React.createElement('div', { key: `h-${sIdx}` }, header), ...rows]
+            : rows;
+    });
+    return React.createElement('div', { 'data-testid': 'section-list', ...rest }, children);
+};
+
 export {
     View,
     Text,
@@ -34,6 +93,8 @@ export {
     Dimensions,
     Platform,
     Animated,
+    FlatList,
+    SectionList,
 };
 
 export const TouchableOpacity = View;
@@ -41,8 +102,6 @@ export const TouchableHighlight = View;
 export const TouchableWithoutFeedback = View;
 export const Pressable = View;
 export const ScrollView = View;
-export const FlatList = View;
-export const SectionList = View;
 export const Image = View;
 export const TextInput = View;
 export const Switch = View;
@@ -66,13 +125,13 @@ export default {
     Dimensions,
     Platform,
     Animated,
+    FlatList,
+    SectionList,
     TouchableOpacity: View,
     TouchableHighlight: View,
     TouchableWithoutFeedback: View,
     Pressable: View,
     ScrollView: View,
-    FlatList: View,
-    SectionList: View,
     Image: View,
     TextInput: View,
     Switch: View,
@@ -89,4 +148,3 @@ export default {
     },
     useColorScheme: vi.fn(() => 'light'),
 };
-
