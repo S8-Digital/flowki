@@ -170,13 +170,15 @@ vi.mock('@/hooks/useColorScheme', () => ({
 
 // ── shoppingApi mock ──────────────────────────────────────────────────────────
 
-const mockShoppingApi = {
-    createList: vi.fn(() => Promise.resolve()),
-    removeList: vi.fn(() => Promise.resolve()),
-    addItem: vi.fn(() => Promise.resolve()),
-    toggleItem: vi.fn(() => Promise.resolve()),
-    removeItem: vi.fn(() => Promise.resolve()),
-};
+const { mockShoppingApi } = vi.hoisted(() => ({
+    mockShoppingApi: {
+        createList: vi.fn(() => Promise.resolve()),
+        removeList: vi.fn(() => Promise.resolve()),
+        addItem: vi.fn(() => Promise.resolve()),
+        toggleItem: vi.fn(() => Promise.resolve()),
+        removeItem: vi.fn(() => Promise.resolve()),
+    },
+}));
 
 vi.mock('@/lib/api', () => ({
     shoppingApi: mockShoppingApi,

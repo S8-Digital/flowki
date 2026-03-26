@@ -155,11 +155,13 @@ vi.mock('@/hooks/useColorScheme', () => ({
 
 // ── todosApi mock ─────────────────────────────────────────────────────────────
 
-const mockTodosApi = {
-    update: vi.fn(() => Promise.resolve()),
-    remove: vi.fn(() => Promise.resolve()),
-    create: vi.fn(() => Promise.resolve()),
-};
+const { mockTodosApi } = vi.hoisted(() => ({
+    mockTodosApi: {
+        update: vi.fn(() => Promise.resolve()),
+        remove: vi.fn(() => Promise.resolve()),
+        create: vi.fn(() => Promise.resolve()),
+    },
+}));
 
 vi.mock('@/lib/api', () => ({
     todosApi: mockTodosApi,

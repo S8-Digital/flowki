@@ -140,11 +140,13 @@ vi.mock('@/hooks/useColorScheme', () => ({
 
 // ── familyApi mock ────────────────────────────────────────────────────────────
 
-const mockFamilyApi = {
-    get: vi.fn(),
-    create: vi.fn(),
-    join: vi.fn(),
-};
+const { mockFamilyApi } = vi.hoisted(() => ({
+    mockFamilyApi: {
+        get: vi.fn(),
+        create: vi.fn(),
+        join: vi.fn(),
+    },
+}));
 
 vi.mock('@/lib/api', () => ({
     familyApi: mockFamilyApi,
