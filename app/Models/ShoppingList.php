@@ -43,6 +43,15 @@ class ShoppingList extends Model
         return $this->hasMany(ShoppingItem::class);
     }
 
+    /**
+     * Alias for items() — required by Laravel's implicit nested route binding
+     * which resolves {shoppingItem} by calling shoppingItems() on this model.
+     */
+    public function shoppingItems(): HasMany
+    {
+        return $this->hasMany(ShoppingItem::class);
+    }
+
     public function scopeForFamily(Builder $query, int $familyId): Builder
     {
         return $query->where('family_id', $familyId);

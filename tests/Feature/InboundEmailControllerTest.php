@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Jobs\AnalyseInboundEmail;
 use App\Models\InboundEmail;
 use App\Models\User;
+use App\Services\InboundEmailService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -96,6 +97,26 @@ class InboundEmailControllerTest extends TestCase
         Queue::fake();
 
         $user = User::factory()->create();
+
+        // Mock the service to avoid the mailparse PHP extension requirement in local PHP.
+        // The mock simulates the real behaviour: store the record and dispatch the job.
+        $this->mock(InboundEmailService::class, function ($mock) use ($user) {
+            $mock->shouldReceive('handle')
+                ->once()
+                ->andReturnUsing(function () use ($user) {
+                    $email = InboundEmail::create([
+                        'user_id' => $user->id,
+                        'from' => 'sender@example.com',
+                        'subject' => 'Test email',
+                        'raw' => "From: sender@example.com\r\n\r\nHello!",
+                        'has_calendar' => false,
+                    ]);
+
+                    AnalyseInboundEmail::dispatch($email->id);
+
+                    return $email;
+                });
+        });
 
         $this->postJson(
             '/api/inbound-email',
