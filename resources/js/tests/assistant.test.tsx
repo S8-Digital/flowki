@@ -103,7 +103,7 @@ beforeEach(() => {
 describe('AI Assistant page', () => {
     it('renders the welcome heading', () => {
         render(<AssistantIndex />);
-        expect(screen.getByText(/AI Assistant/i)).toBeInTheDocument();
+        expect(screen.getByText(/Family Assistant/i)).toBeInTheDocument();
     });
 
     it('renders suggestion chips in the welcome state', () => {
