@@ -19,8 +19,9 @@ class AcceptInviteControllerTest extends TestCase
         $admin = User::factory()->withFamily()->create();
         $family = $admin->family;
 
+        // Placeholder user created on invite — no family_id yet
         $invitedUser = User::factory()->create([
-            'family_id' => $family->id,
+            'family_id' => null,
             'email_verified_at' => null,
             'password' => null,
             'name' => '',
@@ -64,14 +65,13 @@ class AcceptInviteControllerTest extends TestCase
         $admin = User::factory()->withFamily()->create();
         $family = $admin->family;
 
+        // Invited user: placeholder created on invite — no family_id, no pivot entry
         $invitedUser = User::factory()->create([
-            'family_id' => $family->id,
+            'family_id' => null,
             'email_verified_at' => null,
             'password' => null,
             'name' => '',
         ]);
-
-        $family->members()->attach($invitedUser->id, ['role' => FamilyRole::Member->value]);
 
         $invitation = Invitation::factory()->forUser($invitedUser)->create([
             'family_id' => $family->id,
@@ -88,6 +88,9 @@ class AcceptInviteControllerTest extends TestCase
         $this->assertEquals('Jane Doe', $fresh->name);
         $this->assertNotNull($fresh->email_verified_at);
         $this->assertNotNull($fresh->password);
+        // family_id and pivot entry now set on acceptance
+        $this->assertEquals($family->id, $fresh->family_id);
+        $this->assertDatabaseHas('family_user', ['user_id' => $invitedUser->id, 'family_id' => $family->id]);
         $this->assertNotNull(Invitation::find($invitation->id)->accepted_at);
         $this->assertAuthenticatedAs($fresh);
     }
@@ -96,7 +99,7 @@ class AcceptInviteControllerTest extends TestCase
     {
         $admin = User::factory()->withFamily()->create();
         $invitedUser = User::factory()->create([
-            'family_id' => $admin->family->id,
+            'family_id' => null,
             'email_verified_at' => null,
             'password' => null,
         ]);
@@ -114,7 +117,7 @@ class AcceptInviteControllerTest extends TestCase
     {
         $admin = User::factory()->withFamily()->create();
         $invitedUser = User::factory()->create([
-            'family_id' => $admin->family->id,
+            'family_id' => null,
             'email_verified_at' => null,
             'password' => null,
         ]);

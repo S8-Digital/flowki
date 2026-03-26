@@ -85,6 +85,12 @@ export interface User extends BaseUser {
 export interface Family extends BaseFamily {
     members?: User[];
     member_order?: number[];
+    pending_invitations?: PendingInvitation[];
+}
+
+export interface PendingInvitation {
+    email: string;
+    role: string;
 }
 
 export interface Permission {

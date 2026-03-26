@@ -77,6 +77,16 @@ class Family extends Model
         return $this->hasMany(Recipe::class);
     }
 
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class);
+    }
+
+    public function pendingInvitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class)->whereNull('accepted_at');
+    }
+
     /**
      * @return int[]
      */

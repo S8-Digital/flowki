@@ -67,7 +67,7 @@ class FamilyController extends Controller
 
     public function show(Request $request): Response
     {
-        $family = $request->user()->family()->with('members')->firstOrFail();
+        $family = $request->user()->family()->with('members', 'pendingInvitations')->firstOrFail();
 
         $this->authorize('view', $family);
 
@@ -129,19 +129,19 @@ class FamilyController extends Controller
             return back()->withErrors(['email' => 'This person already belongs to a family. They must leave their current family first.']);
         }
 
-        $invitation = DB::transaction(function () use ($request, $family, $existingUser) {
+        // Prevent duplicate pending invitations to the same family
+        if ($family->pendingInvitations()->where('email', $request->email)->exists()) {
+            return back()->withErrors(['email' => 'An invitation has already been sent to this email address.']);
+        }
+
+        DB::transaction(function () use ($request, $family, $existingUser) {
+            // Create a placeholder user if they don't already exist.
+            // family_id and pivot attachment are intentionally deferred — they are only set when the invitation is accepted.
             $invitedUser = $existingUser ?? User::create([
                 'name' => '',
                 'email' => $request->email,
-                'family_id' => $family->id,
+                'password' => null,
             ]);
-
-            if ($existingUser) {
-                $invitedUser->update(['family_id' => $family->id]);
-            }
-
-            $family->members()->attach($invitedUser->id, ['role' => $request->role]);
-            $invitedUser->syncRoles([ucfirst($request->role)]);
 
             $invitation = Invitation::create([
                 'family_id' => $family->id,
@@ -153,11 +153,9 @@ class FamilyController extends Controller
 
             $invitation->load('family');
             Mail::to($request->email)->queue(new FamilyInvitationMail($invitation));
-
-            return $invitation;
         });
 
-        return back();
+        return redirect()->route('family.show');
     }
 
     public function addChild(AddChildRequest $request): RedirectResponse
@@ -175,7 +173,7 @@ class FamilyController extends Controller
         $family->members()->attach($child->id, ['role' => FamilyRole::Child->value]);
         $child->syncRoles(['Child']);
 
-        return back();
+        return redirect()->route('family.show');
     }
 
     public function updateMemberRole(Request $request, Family $family, int $userId): RedirectResponse

@@ -29,6 +29,13 @@ class FamilyResource extends JsonResource
             $data['members'] = UserResource::collection($this->resource->members)->resolve();
         }
 
+        if ($this->resource->relationLoaded('pendingInvitations')) {
+            $data['pending_invitations'] = $this->resource->pendingInvitations->map(fn ($invitation) => [
+                'email' => $invitation->email,
+                'role' => $invitation->role->value,
+            ])->values()->toArray();
+        }
+
         return $data;
     }
 }

@@ -48,7 +48,11 @@ class AcceptInviteController extends Controller
             'name' => $request->name,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(),
+            'family_id' => $invitation->family_id,
         ]);
+
+        $invitation->family->members()->attach($user->id, ['role' => $invitation->role->value]);
+        $user->syncRoles([ucfirst($invitation->role->value)]);
 
         $invitation->update(['accepted_at' => now()]);
 
