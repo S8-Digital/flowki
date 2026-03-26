@@ -6,10 +6,10 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
+import { useAppIntentHandler } from '@/hooks/useAppIntentHandler';
 import { useAuth } from '@/hooks/useAuth';
 import { registerBackgroundSync, unregisterBackgroundSync } from '@/hooks/useBackgroundSync';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
-import { useAppIntentHandler } from '@/hooks/useAppIntentHandler';
 
 function AuthGuard() {
   const { user, isLoading } = useAuth();

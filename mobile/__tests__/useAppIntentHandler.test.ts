@@ -6,8 +6,8 @@
  * receives the server response.
  */
 
-import * as Linking from 'expo-linking';
 import { renderHook } from '@testing-library/react';
+import * as Linking from 'expo-linking';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildVoiceCommand, useAppIntentHandler } from '../hooks/useAppIntentHandler';
 import type { IntentType } from '../hooks/useAppIntentHandler';
@@ -75,6 +75,7 @@ describe('useAppIntentHandler', () => {
 
     vi.mocked(Linking.addEventListener).mockImplementation((_event, handler) => {
       capturedListener = handler as (event: { url: string }) => void;
+
       return { remove: mockRemove };
     });
 
@@ -82,12 +83,17 @@ describe('useAppIntentHandler', () => {
       // Minimal parse: extract query params from the URL.
       const [, qs] = url.split('?');
       const queryParams: Record<string, string> = {};
+
       if (qs) {
         for (const part of qs.split('&')) {
           const [k, v] = part.split('=');
-          if (k) queryParams[decodeURIComponent(k)] = decodeURIComponent(v ?? '');
+
+          if (k) {
+queryParams[decodeURIComponent(k)] = decodeURIComponent(v ?? '');
+}
         }
       }
+
       return { scheme: 'flowki', hostname: 'intent', path: null, queryParams };
     });
   });

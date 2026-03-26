@@ -89,6 +89,7 @@ export function useAppIntentHandler(
 
       // Collect string query params (Linking may return string | string[]).
       const params: IntentParams = {};
+
       for (const [k, v] of Object.entries(parsed.queryParams ?? {})) {
         if (typeof v === 'string') {
           params[k] = v;
@@ -101,6 +102,7 @@ export function useAppIntentHandler(
 
       try {
         const res = await voiceApi.sendCommand(command);
+
         if (res.success) {
           onResult?.(res.response, false);
         }
@@ -109,11 +111,13 @@ export function useAppIntentHandler(
         // The backend voice endpoint puts its human-readable message in `data.response`.
         let message = 'Could not process Siri command.';
         const apiError = err as { data?: { response?: string } } | undefined;
+
         if (apiError?.data?.response && typeof apiError.data.response === 'string') {
           message = apiError.data.response;
         } else if (err instanceof Error && err.message) {
           message = err.message;
         }
+
         onResult?.(message, true);
       }
     };
@@ -127,6 +131,7 @@ export function useAppIntentHandler(
     });
 
     const subscription = Linking.addEventListener('url', handleUrl);
+
     return () => subscription.remove();
   }, [onResult]);
 }

@@ -16,13 +16,13 @@
  *   "plugins": ["./plugins/withAppIntents"]
  */
 
+const fs = require('fs');
+const path = require('path');
 const {
   withEntitlementsPlist,
   withInfoPlist,
   withXcodeProject,
 } = require('@expo/config-plugins');
-const fs = require('fs');
-const path = require('path');
 
 const SWIFT_FILES = ['FlowkiIntents.swift', 'FlowkiShortcutsApp.swift'];
 const SOURCE_DIR = path.join(__dirname, 'AppIntents');
@@ -32,6 +32,7 @@ const SOURCE_DIR = path.join(__dirname, 'AppIntents');
 function withSiriEntitlement(config) {
   return withEntitlementsPlist(config, (mod) => {
     mod.modResults['com.apple.developer.siri'] = true;
+
     return mod;
   });
 }
@@ -46,6 +47,7 @@ function withApiUrlInfoPlist(config) {
       (config.extra && config.extra.apiUrl) ||
       'https://flowki.family';
     mod.modResults['FLOWKI_API_URL'] = apiUrl;
+
     return mod;
   });
 }
@@ -60,6 +62,7 @@ function withAppIntentsXcode(config) {
 
     // Destination for the Swift files inside the iOS native project.
     const destDir = path.join(iosRoot, 'AppIntents');
+
     if (!fs.existsSync(destDir)) {
       fs.mkdirSync(destDir, { recursive: true });
     }
@@ -73,6 +76,7 @@ function withAppIntentsXcode(config) {
 
     if (!mainTarget) {
       console.warn('[withAppIntents] Could not find main app target — skipping Swift source injection.');
+
       return mod;
     }
 
@@ -91,6 +95,7 @@ function withAppIntentsXcode(config) {
       if (!existingFile) {
         // Add the file reference + build file to the main app target.
         const fileRef = project.addSourceFile(`AppIntents/${filename}`, {}, mainTarget.uuid);
+
         if (fileRef) {
           project.addToPbxSourcesBuildPhase(fileRef, mainTarget.uuid);
         }
@@ -127,6 +132,7 @@ function withAppIntents(config) {
   config = withSiriEntitlement(config);
   config = withApiUrlInfoPlist(config);
   config = withAppIntentsXcode(config);
+
   return config;
 }
 
