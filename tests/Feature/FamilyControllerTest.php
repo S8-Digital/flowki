@@ -265,7 +265,25 @@ class FamilyControllerTest extends TestCase
 
         $this->actingAs($admin)
             ->post(route('family.members.invite'), ['email' => $existing->email, 'role' => FamilyRole::Member->value])
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors(['email' => 'This person is already a member of your family.']);
+
+        $this->assertDatabaseMissing('invitations', ['email' => $existing->email, 'family_id' => $family->id]);
+        Mail::assertNotQueued(FamilyInvitationMail::class);
+    }
+
+    public function test_invite_rejects_user_in_another_family_not_this_one(): void
+    {
+        Mail::fake();
+
+        $admin = User::factory()->withFamily()->create();
+        $otherAdmin = User::factory()->withFamily()->create();
+
+        $this->actingAs($admin)
+            ->post(route('family.members.invite'), ['email' => $otherAdmin->email, 'role' => FamilyRole::Member->value])
+            ->assertSessionHasErrors(['email' => 'This person already belongs to a family. They must leave their current family first.']);
+
+        $this->assertDatabaseMissing('invitations', ['email' => $otherAdmin->email, 'family_id' => $admin->family->id]);
+        Mail::assertNotQueued(FamilyInvitationMail::class);
     }
 
     public function test_invite_rejects_child_role(): void

@@ -244,7 +244,7 @@ describe('Family screen', () => {
                 screen.getByRole('button', { name: /Create a Family/i }),
             );
             fireEvent.click(screen.getByRole('button', { name: /Create a Family/i }));
-            expect(screen.getByText('Create a Family')).toBeInTheDocument();
+            expect(screen.getByTestId('dialog-title')).toHaveTextContent('Create a Family');
         });
 
         it('opens the Join dialog when "Join with Invite Code" is clicked', async () => {

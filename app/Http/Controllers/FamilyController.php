@@ -15,6 +15,7 @@ use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -120,37 +121,41 @@ class FamilyController extends Controller
 
         $existingUser = User::where('email', $request->email)->first();
 
-        if ($existingUser && $existingUser->family_id !== null) {
-            return back()->withErrors(['email' => 'This person already belongs to a family. They must leave their current family first.']);
-        }
-
         if ($existingUser && $family->members()->where('user_id', $existingUser->id)->exists()) {
             return back()->withErrors(['email' => 'This person is already a member of your family.']);
         }
 
-        $invitedUser = $existingUser ?? User::create([
-            'name' => '',
-            'email' => $request->email,
-            'family_id' => $family->id,
-        ]);
-
-        if ($existingUser) {
-            $invitedUser->update(['family_id' => $family->id]);
+        if ($existingUser && $existingUser->family_id !== null) {
+            return back()->withErrors(['email' => 'This person already belongs to a family. They must leave their current family first.']);
         }
 
-        $family->members()->attach($invitedUser->id, ['role' => $request->role]);
-        $invitedUser->syncRoles([ucfirst($request->role)]);
+        $invitation = DB::transaction(function () use ($request, $family, $existingUser) {
+            $invitedUser = $existingUser ?? User::create([
+                'name' => '',
+                'email' => $request->email,
+                'family_id' => $family->id,
+            ]);
 
-        $invitation = Invitation::create([
-            'family_id' => $family->id,
-            'user_id' => $invitedUser->id,
-            'email' => $request->email,
-            'role' => $request->role,
-            'token' => Str::random(32),
-        ]);
+            if ($existingUser) {
+                $invitedUser->update(['family_id' => $family->id]);
+            }
 
-        $invitation->load('family');
-        Mail::to($request->email)->send(new FamilyInvitationMail($invitation));
+            $family->members()->attach($invitedUser->id, ['role' => $request->role]);
+            $invitedUser->syncRoles([ucfirst($request->role)]);
+
+            $invitation = Invitation::create([
+                'family_id' => $family->id,
+                'user_id' => $invitedUser->id,
+                'email' => $request->email,
+                'role' => $request->role,
+                'token' => Str::random(32),
+            ]);
+
+            $invitation->load('family');
+            Mail::to($request->email)->queue(new FamilyInvitationMail($invitation));
+
+            return $invitation;
+        });
 
         return back();
     }
