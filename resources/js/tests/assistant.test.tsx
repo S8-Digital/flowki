@@ -74,9 +74,11 @@ function makeStreamingResponse(chunks: string[]) {
             for (const chunk of chunks) {
                 controller.enqueue(encoder.encode(chunk));
             }
+
             controller.close();
         },
     });
+
     return { ok: true, body: stream } as Response;
 }
 
@@ -118,9 +120,7 @@ describe('AI Assistant page', () => {
 
     it('send button is disabled when input is empty', () => {
         render(<AssistantIndex />);
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         expect(sendBtn).toBeDisabled();
     });
 
@@ -129,9 +129,7 @@ describe('AI Assistant page', () => {
         render(<AssistantIndex />);
         const input = screen.getByPlaceholderText(/Ask me anything/i);
         await user.type(input, 'Hello');
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         expect(sendBtn).not.toBeDisabled();
     });
 
@@ -141,14 +139,10 @@ describe('AI Assistant page', () => {
 
         const input = screen.getByPlaceholderText(/Ask me anything/i);
         await user.type(input, 'What chores are due?');
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         await user.click(sendBtn!);
 
-        await waitFor(() =>
-            expect(screen.getByText('What chores are due?')).toBeInTheDocument(),
-        );
+        await waitFor(() => expect(screen.getByText('What chores are due?')).toBeInTheDocument());
     });
 
     it('clicking a suggestion sends it immediately', async () => {
@@ -158,9 +152,7 @@ describe('AI Assistant page', () => {
         const suggestionBtn = screen.getByText(/Add milk to shopping list/i);
         await user.click(suggestionBtn);
 
-        await waitFor(() =>
-            expect(screen.getByText('Add milk to shopping list')).toBeInTheDocument(),
-        );
+        await waitFor(() => expect(screen.getByText('Add milk to shopping list')).toBeInTheDocument());
         expect(mockFetch).toHaveBeenCalled();
     });
 
@@ -170,40 +162,24 @@ describe('AI Assistant page', () => {
 
         const input = screen.getByPlaceholderText(/Ask me anything/i);
         await user.type(input, 'List my todos');
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         await user.click(sendBtn!);
 
-        await waitFor(() =>
-            expect(mockFetch).toHaveBeenCalledWith(
-                '/api/assistant/chat',
-                expect.objectContaining({ method: 'POST' }),
-            ),
-        );
+        await waitFor(() => expect(mockFetch).toHaveBeenCalledWith('/api/assistant/chat', expect.objectContaining({ method: 'POST' })));
     });
 
     it('shows the assistant response in the chat', async () => {
-        mockFetch.mockResolvedValue(
-            makeStreamingResponse([
-                'data: {"text":"Here are your todos:"}\n',
-                'data: [DONE]\n',
-            ]),
-        );
+        mockFetch.mockResolvedValue(makeStreamingResponse(['data: {"text":"Here are your todos:"}\n', 'data: [DONE]\n']));
 
         const user = userEvent.setup();
         render(<AssistantIndex />);
 
         const input = screen.getByPlaceholderText(/Ask me anything/i);
         await user.type(input, 'List todos');
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         await user.click(sendBtn!);
 
-        await waitFor(() =>
-            expect(screen.getByText(/Here are your todos:/i)).toBeInTheDocument(),
-        );
+        await waitFor(() => expect(screen.getByText(/Here are your todos:/i)).toBeInTheDocument());
     });
 
     it('shows an error message when the fetch fails', async () => {
@@ -214,14 +190,10 @@ describe('AI Assistant page', () => {
 
         const input = screen.getByPlaceholderText(/Ask me anything/i);
         await user.type(input, 'Hello');
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         await user.click(sendBtn!);
 
-        await waitFor(() =>
-            expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument(),
-        );
+        await waitFor(() => expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument());
     });
 
     it('shows the clear conversation button after a message is sent', async () => {
@@ -230,14 +202,10 @@ describe('AI Assistant page', () => {
 
         const input = screen.getByPlaceholderText(/Ask me anything/i);
         await user.type(input, 'Hello');
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         await user.click(sendBtn!);
 
-        await waitFor(() =>
-            expect(screen.getByLabelText(/Clear conversation/i)).toBeInTheDocument(),
-        );
+        await waitFor(() => expect(screen.getByLabelText(/Clear conversation/i)).toBeInTheDocument());
     });
 
     it('clears the conversation when the clear button is clicked', async () => {
@@ -246,17 +214,13 @@ describe('AI Assistant page', () => {
 
         const input = screen.getByPlaceholderText(/Ask me anything/i);
         await user.type(input, 'Hello world');
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         await user.click(sendBtn!);
 
         await waitFor(() => screen.getByText('Hello world'));
         await user.click(screen.getByLabelText(/Clear conversation/i));
 
-        await waitFor(() =>
-            expect(screen.queryByText('Hello world')).not.toBeInTheDocument(),
-        );
+        await waitFor(() => expect(screen.queryByText('Hello world')).not.toBeInTheDocument());
     });
 
     it('shows disclaimer text about AI mistakes', () => {
@@ -270,15 +234,11 @@ describe('AI Assistant page', () => {
 
         const input = screen.getByPlaceholderText(/Ask me anything/i);
         await user.type(input, 'Remember me');
-        const sendBtn = screen.getAllByRole('button').find(
-            (b) => b.querySelector('[data-testid="icon-send"]'),
-        );
+        const sendBtn = screen.getAllByRole('button').find((b) => b.querySelector('[data-testid="icon-send"]'));
         await user.click(sendBtn!);
 
         await waitFor(() => screen.getByText('Remember me'));
-        await waitFor(() =>
-            expect(localStorage.getItem('assistant_history')).not.toBeNull(),
-        );
+        await waitFor(() => expect(localStorage.getItem('assistant_history')).not.toBeNull());
     });
 
     it('loads message history from localStorage on mount', () => {

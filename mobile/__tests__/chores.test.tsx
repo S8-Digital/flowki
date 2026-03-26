@@ -9,8 +9,8 @@
  * - Complete chore via choresApi.complete
  */
 
-import * as React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ChoresScreen from '@/app/(tabs)/chores';
 import type { Chore } from '@/lib/api';

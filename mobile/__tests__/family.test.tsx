@@ -10,9 +10,9 @@
  * - Copying invite code to clipboard
  */
 
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import * as Clipboard from 'expo-clipboard';
 import * as React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import FamilyScreen from '@/app/(tabs)/family';
 import type { AuthUser, Family } from '@/lib/api';
@@ -69,7 +69,7 @@ vi.mock('react-native-paper', async () => {
     const ActivityIndicator = () => React.createElement('div', { 'data-testid': 'activity-indicator' });
 
     const Avatar = {
-        Text: ({ label, size }: { label?: string; size?: number }) =>
+        Text: ({ label }: { label?: string; size?: number }) =>
             React.createElement('div', { 'data-testid': 'avatar', 'aria-label': label }, label),
     };
 
@@ -187,6 +187,8 @@ const baseFamily: Family = {
             email: 'alice@example.com',
             profile_color: '#3B82F6',
             role: 'Admin',
+            created_at: '',
+            updated_at: '',
         },
         {
             id: 2,
@@ -194,6 +196,8 @@ const baseFamily: Family = {
             email: 'bob@example.com',
             profile_color: '#22C55E',
             role: 'Member',
+            created_at: '',
+            updated_at: '',
         },
     ],
 };

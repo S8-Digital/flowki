@@ -12,8 +12,8 @@
  * - Adding an item to a list
  */
 
-import * as React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ShoppingScreen from '@/app/(tabs)/shopping';
 import type { ShoppingItem, ShoppingList } from '@/lib/api';

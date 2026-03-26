@@ -10,8 +10,8 @@
  * - Delete todo via todosApi.remove
  */
 
-import * as React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import TodosScreen from '@/app/(tabs)/todos';
 import type { Todo } from '@/lib/api';
@@ -305,6 +305,7 @@ describe('Todos screen', () => {
         const checkboxes = screen.getAllByRole('button');
         // Find the first non-fab, non-dialog button that triggers toggle
         const checkboxArea = checkboxes.find((b) => b.textContent === '');
+
         if (checkboxArea) {
             fireEvent.click(checkboxArea);
             await waitFor(() =>

@@ -3,7 +3,6 @@
 namespace Tests\Feature\Mobile;
 
 use App\Enums\FamilyRole;
-use App\Models\Family;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

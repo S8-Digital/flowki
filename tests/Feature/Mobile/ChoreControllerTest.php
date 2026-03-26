@@ -3,7 +3,6 @@
 namespace Tests\Feature\Mobile;
 
 use App\Models\Chore;
-use App\Models\ChoreCompletion;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
