@@ -123,19 +123,27 @@ function withShortcutsManifest(config) {
     }
 
     const SHORTCUTS_META_NAME = 'android.app.shortcuts';
+    const SHORTCUTS_META_RESOURCE = '@xml/shortcuts';
 
-    // Skip if already added (idempotent prebuild runs).
-    const alreadyAdded = activity['meta-data'].some(
+    // Ensure the shortcuts meta-data exists and points to the correct resource.
+    const existingMeta = activity['meta-data'].find(
       (m) => m.$?.['android:name'] === SHORTCUTS_META_NAME,
     );
 
-    if (!alreadyAdded) {
+    if (!existingMeta) {
       activity['meta-data'].push({
         $: {
           'android:name': SHORTCUTS_META_NAME,
-          'android:resource': '@xml/shortcuts',
+          'android:resource': SHORTCUTS_META_RESOURCE,
         },
       });
+    } else {
+      if (!existingMeta.$) {
+        existingMeta.$ = {};
+      }
+
+      existingMeta.$['android:name'] = SHORTCUTS_META_NAME;
+      existingMeta.$['android:resource'] = SHORTCUTS_META_RESOURCE;
     }
 
     return mod;
