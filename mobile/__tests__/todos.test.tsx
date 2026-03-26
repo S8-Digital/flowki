@@ -24,9 +24,7 @@ let mockUser: { id: number; family_id: number | null } | null = {
 };
 
 vi.mock('@/store', () => ({
-    useAppSelector: vi.fn((selector: (s: { auth: { user: typeof mockUser } }) => unknown) =>
-        selector({ auth: { user: mockUser } }),
-    ),
+    useAppSelector: vi.fn((selector: (s: { auth: { user: typeof mockUser } }) => unknown) => selector({ auth: { user: mockUser } })),
 }));
 
 // ── react-native-paper mock ───────────────────────────────────────────────────
@@ -44,22 +42,9 @@ vi.mock('react-native-paper', async () => {
         onPress?: () => void;
         disabled?: boolean;
         loading?: boolean;
-    }) =>
-        React.createElement(
-            'button',
-            { onClick: onPress, disabled: disabled || loading },
-            children,
-        );
+    }) => React.createElement('button', { onClick: onPress, disabled: disabled || loading }, children);
 
-    const TextInput = ({
-        value,
-        onChangeText,
-        label,
-    }: {
-        value?: string;
-        onChangeText?: (v: string) => void;
-        label?: string;
-    }) =>
+    const TextInput = ({ value, onChangeText, label }: { value?: string; onChangeText?: (v: string) => void; label?: string }) =>
         React.createElement('input', {
             'data-testid': 'todo-title-input',
             value: value ?? '',
@@ -67,11 +52,9 @@ vi.mock('react-native-paper', async () => {
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChangeText?.(e.target.value),
         });
 
-    const ActivityIndicator = () =>
-        React.createElement('div', { 'data-testid': 'activity-indicator' });
+    const ActivityIndicator = () => React.createElement('div', { 'data-testid': 'activity-indicator' });
 
-    const Chip = ({ children }: { children?: React.ReactNode }) =>
-        React.createElement('span', { 'data-testid': 'chip' }, children);
+    const Chip = ({ children }: { children?: React.ReactNode }) => React.createElement('span', { 'data-testid': 'chip' }, children);
 
     const FAB = ({ onPress }: { onPress?: () => void; icon?: string; style?: unknown; color?: string }) =>
         React.createElement('button', { 'data-testid': 'fab', onClick: onPress }, '+');
@@ -90,56 +73,32 @@ vi.mock('react-native-paper', async () => {
             'div',
             { 'data-testid': 'flat-list' },
             (data ?? []).map((item, index) =>
-                React.createElement(
-                    'div',
-                    { key: keyExtractor ? keyExtractor(item) : index },
-                    renderItem ? renderItem({ item, index }) : null,
-                ),
+                React.createElement('div', { key: keyExtractor ? keyExtractor(item) : index }, renderItem ? renderItem({ item, index }) : null),
             ),
         );
 
     const Dialog = Object.assign(
-        ({
-            visible,
-            children,
-        }: {
-            visible?: boolean;
-            children?: React.ReactNode;
-            onDismiss?: () => void;
-        }) =>
-            visible
-                ? React.createElement('div', { 'data-testid': 'add-dialog' }, children)
-                : null,
+        ({ visible, children }: { visible?: boolean; children?: React.ReactNode; onDismiss?: () => void }) =>
+            visible ? React.createElement('div', { 'data-testid': 'add-dialog' }, children) : null,
         {
-            Title: ({ children }: { children?: React.ReactNode }) =>
-                React.createElement('h2', {}, children),
-            Content: ({ children }: { children?: React.ReactNode }) =>
-                React.createElement('div', {}, children),
-            Actions: ({ children }: { children?: React.ReactNode }) =>
-                React.createElement('div', {}, children),
+            Title: ({ children }: { children?: React.ReactNode }) => React.createElement('h2', {}, children),
+            Content: ({ children }: { children?: React.ReactNode }) => React.createElement('div', {}, children),
+            Actions: ({ children }: { children?: React.ReactNode }) => React.createElement('div', {}, children),
         },
     );
 
-    const Portal = ({ children }: { children?: React.ReactNode }) =>
-        React.createElement('div', {}, children);
+    const Portal = ({ children }: { children?: React.ReactNode }) => React.createElement('div', {}, children);
 
     return { ActivityIndicator, Button, Chip, Dialog, FAB, FlatList, Portal, TextInput };
 });
 
 vi.mock('@/components/ThemedText', () => ({
-    ThemedText: ({
-        children,
-        style,
-    }: {
-        children?: React.ReactNode;
-        style?: unknown;
-        variant?: string;
-    }) => React.createElement('span', { style }, children ?? null),
+    ThemedText: ({ children, style }: { children?: React.ReactNode; style?: unknown; variant?: string }) =>
+        React.createElement('span', { style }, children ?? null),
 }));
 
 vi.mock('@/components/ThemedView', () => ({
-    ThemedView: ({ children }: { children?: React.ReactNode }) =>
-        React.createElement('div', {}, children ?? null),
+    ThemedView: ({ children }: { children?: React.ReactNode }) => React.createElement('div', {}, children ?? null),
 }));
 
 vi.mock('@/constants/Colors', () => ({
@@ -243,7 +202,7 @@ describe('Todos screen', () => {
 
     it('renders due date when present', () => {
         mockRtdbData = {
-            '1': makeTodo({ id: 1, title: 'Due soon', due_date: '2030-12-31T00:00:00.000Z' }),
+            '1': makeTodo({ id: 1, title: 'Urgent task', due_date: '2030-12-31T00:00:00.000Z' }),
         };
         render(React.createElement(TodosScreen));
         expect(screen.getByText(/Due/i)).toBeInTheDocument();
@@ -271,9 +230,7 @@ describe('Todos screen', () => {
         const addBtn = screen.getAllByRole('button', { name: /Add/i })[0];
         fireEvent.click(addBtn);
 
-        await waitFor(() =>
-            expect(mockTodosApi.create).toHaveBeenCalledWith({ title: 'New task', status: 'pending' }),
-        );
+        await waitFor(() => expect(mockTodosApi.create).toHaveBeenCalledWith({ title: 'New task', status: 'pending' }));
     });
 
     it('does not call todosApi.create when the title is empty', async () => {
@@ -310,9 +267,7 @@ describe('Todos screen', () => {
 
         if (checkboxArea) {
             fireEvent.click(checkboxArea);
-            await waitFor(() =>
-                expect(mockTodosApi.update).toHaveBeenCalledWith(1, { status: 'completed' }),
-            );
+            await waitFor(() => expect(mockTodosApi.update).toHaveBeenCalledWith(1, { status: 'completed' }));
         }
     });
 

@@ -27,22 +27,83 @@ const Animated = {
     spring: () => ({ start: vi.fn() }),
 };
 
-export {
-    View,
-    Text,
-    StyleSheet,
-    Dimensions,
-    Platform,
-    Animated,
-};
+export { View, Text, StyleSheet, Dimensions, Platform, Animated };
 
 export const TouchableOpacity = View;
 export const TouchableHighlight = View;
 export const TouchableWithoutFeedback = View;
 export const Pressable = View;
 export const ScrollView = View;
-export const FlatList = View;
-export const SectionList = View;
+
+export const FlatList = <T>({
+    data,
+    renderItem,
+    keyExtractor,
+    ListEmptyComponent,
+    contentContainerStyle,
+    ItemSeparatorComponent,
+}: {
+    data?: T[];
+    renderItem?: (info: { item: T; index: number }) => React.ReactNode;
+    keyExtractor?: (item: T, index: number) => string;
+    ListEmptyComponent?: React.ReactNode | (() => React.ReactNode);
+    contentContainerStyle?: unknown;
+    ItemSeparatorComponent?: React.ComponentType | null;
+}) => {
+    const items = data ?? [];
+
+    if (items.length === 0 && ListEmptyComponent) {
+        const empty = typeof ListEmptyComponent === 'function' ? ListEmptyComponent() : ListEmptyComponent;
+
+        return React.createElement('div', { contentContainerStyle }, empty);
+    }
+
+    const Separator = ItemSeparatorComponent ?? null;
+
+    return React.createElement(
+        'div',
+        { contentContainerStyle, data },
+        ...items.map((item, index) => {
+            const key = keyExtractor ? keyExtractor(item, index) : String(index);
+            const rendered = renderItem ? renderItem({ item, index }) : null;
+
+            return React.createElement('div', { key }, rendered, Separator && index < items.length - 1 ? React.createElement(Separator) : null);
+        }),
+    );
+};
+
+export const SectionList = <T>({
+    sections,
+    renderItem,
+    renderSectionHeader,
+    keyExtractor,
+    contentContainerStyle,
+}: {
+    sections?: { title: string; data: T[] }[];
+    renderItem?: (info: { item: T; index: number; section: { title: string; data: T[] } }) => React.ReactNode;
+    renderSectionHeader?: (info: { section: { title: string; data: T[] } }) => React.ReactNode;
+    keyExtractor?: (item: T, index: number) => string;
+    contentContainerStyle?: unknown;
+}) =>
+    React.createElement(
+        'div',
+        { contentContainerStyle },
+        ...(sections ?? []).map((section) =>
+            React.createElement(
+                'div',
+                { key: section.title },
+                renderSectionHeader ? renderSectionHeader({ section }) : null,
+                ...section.data.map((item, index) =>
+                    React.createElement(
+                        'div',
+                        { key: keyExtractor ? keyExtractor(item, index) : String(index) },
+                        renderItem ? renderItem({ item, index, section }) : null,
+                    ),
+                ),
+            ),
+        ),
+    );
+
 export const Image = View;
 export const TextInput = View;
 export const Switch = View;
@@ -71,8 +132,8 @@ export default {
     TouchableWithoutFeedback: View,
     Pressable: View,
     ScrollView: View,
-    FlatList: View,
-    SectionList: View,
+    FlatList,
+    SectionList,
     Image: View,
     TextInput: View,
     Switch: View,
@@ -89,4 +150,3 @@ export default {
     },
     useColorScheme: vi.fn(() => 'light'),
 };
-
