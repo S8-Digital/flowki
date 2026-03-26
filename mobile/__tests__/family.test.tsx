@@ -209,7 +209,7 @@ describe('Family screen', () => {
             render(React.createElement(FamilyScreen));
             await waitFor(() => screen.getByRole('button', { name: /Create a Family/i }));
             fireEvent.click(screen.getByRole('button', { name: /Create a Family/i }));
-            expect(screen.getByTestId('dialog-title')).toBeInTheDocument();
+            expect(screen.getByTestId('dialog-title')).toHaveTextContent('Create a Family');
         });
 
         it('opens the Join dialog when "Join with Invite Code" is clicked', async () => {
