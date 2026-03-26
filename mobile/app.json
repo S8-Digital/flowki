@@ -51,7 +51,8 @@
       ],
       "expo-background-fetch",
       "expo-task-manager",
-      "./plugins/withAppIntents"
+      "./plugins/withAppIntents",
+      "./plugins/withAppActions"
     ],
     "experiments": {
       "typedRoutes": true

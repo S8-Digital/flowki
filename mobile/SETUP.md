@@ -27,6 +27,7 @@ The mobile MVP covers the same core daily-use surfaces as the web app:
 | Social auth (Google OAuth) | ✅ | ❌ | Planned (`expo-auth-session`) |
 | Voice command bar | ✅ | ✅ | Sends natural-language commands to `/api/mobile/voice/command` (AI agent) |
 | Siri & App Intents | ✅ | ✅ (iOS 16+) | `CreateTodoIntent`, `AddShoppingItemIntent`, `GetTodayScheduleIntent`, `CompleteChoreIntent`, `AddChoreIntent`, `AddCalendarItemIntent` |
+| Google Assistant App Actions | ✅ | ✅ (Android) | `shortcuts.xml` capabilities + static launcher shortcuts; same `/api/mobile/voice/command` backend |
 
 ---
 
@@ -299,7 +300,69 @@ the AI agent handles all the heavy lifting.
 
 ---
 
-## 11. Remaining Planned Features
+## 11. Google Assistant App Actions (Android)
+
+Flowki ships a `shortcuts.xml` that surfaces six App Actions for Google Assistant and four
+static launcher shortcuts (long-press the app icon). They use the same deep-link format and
+the same `/api/mobile/voice/command` backend endpoint as the iOS Siri integration.
+
+> **Note:** App Actions and static shortcuts do **not** work in Expo Go — a native build
+> (`npx expo run:android` or an EAS build) is required.
+
+### App Actions (voice-activated)
+
+| Built-in Intent (BII) | Example phrase | What it does |
+|---|---|---|
+| `actions.intent.CREATE_REMINDER` | "Hey Google, add buy milk to my Flowki to-dos" | Creates a new family to-do |
+| `actions.intent.CREATE_SHOPPING_LIST_ITEM` | "Hey Google, add eggs to my Flowki list" | Adds an item to the shopping list |
+| `actions.intent.GET_SCHEDULE` | "Hey Google, what's on my Flowki schedule" | Reads today's calendar events |
+| `actions.intent.CREATE_TASK` | "Hey Google, add take out bins chore to Flowki" | Creates a new family chore |
+| `actions.intent.RECORD_TASK_COMPLETION` | "Hey Google, mark vacuuming done on Flowki" | Marks a chore as complete |
+| `actions.intent.CREATE_CALENDAR_EVENT` | "Hey Google, add dentist on Friday to my Flowki calendar" | Adds an event to the family calendar |
+
+### Static launcher shortcuts (long-press icon)
+
+| Shortcut | Action |
+|---|---|
+| New To-Do | Opens app at `flowki://intent?type=create-todo` |
+| Add to List | Opens app at `flowki://intent?type=add-shopping-item` |
+| Today's Schedule | Opens app at `flowki://intent?type=get-schedule` |
+| Add Event | Opens app at `flowki://intent?type=add-calendar-item` |
+
+### How it works
+
+1. **`shortcuts.xml`** (`mobile/plugins/AppActions/shortcuts.xml`) declares the capabilities
+   and static shortcuts. Android discovers this file at runtime via the `android.app.shortcuts`
+   `<meta-data>` element on the main activity.
+2. The Expo config plugin **`withAppActions.js`** copies `shortcuts.xml` into
+   `android/app/src/main/res/xml/` and injects the `<meta-data>` element into
+   `AndroidManifest.xml` during `expo prebuild`.
+3. When Google Assistant matches a phrase, it opens the app with the deep link specified in
+   the matching `<capability>`. Parameter values (e.g. the item name the user said) are
+   substituted into the URL template before the app opens.
+4. The JS hook **`useAppIntentHandler.ts`** intercepts the `flowki://intent?…` deep link
+   (same hook used for iOS Siri) and forwards the command to the voice API.
+
+### Build requirements
+
+- **Android API 25+** for static launcher shortcuts.
+- **Google Assistant** — App Actions are processed by Google's servers. The app must be
+  published to Google Play and enrolled in the
+  [Google Actions Center](https://developers.google.com/assistant/app/action-center) for
+  production voice triggers. During development you can test with the
+  **Google Assistant Plugin** for Android Studio.
+
+### Local testing
+
+1. Build with EAS or a local Android build (`npx expo run:android`).
+2. **Static shortcuts:** long-press the Flowki icon on the home screen — the four shortcuts
+   should appear.
+3. **App Actions:** install the [App Actions Test Tool](https://developers.google.com/assistant/app/test-tool)
+   Android Studio plugin, configure your app ID, and run an App Action preview.
+
+---
+
+## 12. Remaining Planned Features
 
 The following features are planned for future sprints:
 
