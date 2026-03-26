@@ -176,9 +176,9 @@ class TodoControllerTest extends TestCase
         ]);
 
         $this->actingAs($user, 'sanctum')
-            ->patchJson(route('mobile.todos.update', $todo), ['status' => 'done'])
+            ->patchJson(route('mobile.todos.update', $todo), ['status' => 'completed'])
             ->assertOk()
-            ->assertJsonFragment(['status' => 'done']);
+            ->assertJsonFragment(['status' => 'completed']);
     }
 
     // ── destroy ────────────────────────────────────────────────────────────────

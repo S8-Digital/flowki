@@ -13,10 +13,8 @@
 import * as React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Mock } from 'vitest';
 import TodosScreen from '@/app/(tabs)/todos';
 import type { Todo } from '@/lib/api';
-import { ref as fbRef, onValue as fbOnValue } from 'firebase/database';
 
 // ── store mock ────────────────────────────────────────────────────────────────
 
@@ -227,7 +225,7 @@ describe('Todos screen', () => {
 
     it('renders a completed todo with strikethrough style', () => {
         mockRtdbData = {
-            '1': makeTodo({ id: 1, title: 'Done task', status: 'done' }),
+            '1': makeTodo({ id: 1, title: 'Done task', status: 'completed' }),
         };
         render(React.createElement(TodosScreen));
         expect(screen.getByText('Done task')).toBeInTheDocument();
@@ -300,7 +298,7 @@ describe('Todos screen', () => {
         await waitFor(() => expect(screen.queryByTestId('add-dialog')).not.toBeInTheDocument());
     });
 
-    it('calls todosApi.update when a todo checkbox is clicked (toggles to done)', async () => {
+    it('calls todosApi.update when a todo checkbox is clicked (toggles to completed)', async () => {
         mockRtdbData = { '1': makeTodo({ id: 1, title: 'Buy milk', status: 'pending' }) };
         render(React.createElement(TodosScreen));
 
@@ -310,7 +308,7 @@ describe('Todos screen', () => {
         if (checkboxArea) {
             fireEvent.click(checkboxArea);
             await waitFor(() =>
-                expect(mockTodosApi.update).toHaveBeenCalledWith(1, { status: 'done' }),
+                expect(mockTodosApi.update).toHaveBeenCalledWith(1, { status: 'completed' }),
             );
         }
     });

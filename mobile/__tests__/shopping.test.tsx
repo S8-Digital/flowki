@@ -350,8 +350,6 @@ describe('Shopping screen', () => {
         render(React.createElement(ShoppingScreen));
 
         // The first touchable area (checkbox) triggers toggle
-        const touchables = document.querySelectorAll('[style]');
-        // Find the checkbox-like element
         const checkboxContainer = Array.from(document.querySelectorAll('div')).find(
             (el) => el.getAttribute('style')?.includes('borderColor'),
         );

@@ -35,7 +35,7 @@ function TodoItem({
 }) {
   const scheme = useColorScheme();
   const colors = Colors[scheme];
-  const done = todo.status === 'done';
+  const done = todo.status === 'completed';
 
   return (
     <View
@@ -104,7 +104,7 @@ export default function TodosScreen() {
   const handleToggle = async (todo: Todo) => {
     try {
       await todosApi.update(todo.id, {
-        status: todo.status === 'done' ? 'pending' : 'done',
+        status: todo.status === 'completed' ? 'pending' : 'completed',
       });
     } catch {
       Alert.alert('Error', 'Could not update todo.');
