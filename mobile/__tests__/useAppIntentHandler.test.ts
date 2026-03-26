@@ -25,6 +25,7 @@ vi.mock('@/lib/api', () => ({
 vi.mock('expo-linking', () => ({
   parse: vi.fn(),
   addEventListener: vi.fn(() => ({ remove: vi.fn() })),
+  getInitialURL: vi.fn(() => Promise.resolve(null)),
 }));
 
 // ── buildVoiceCommand ────────────────────────────────────────────────────────
@@ -196,6 +197,22 @@ describe('useAppIntentHandler', () => {
     expect(onResult).toHaveBeenCalledWith('Network error', true);
   });
 
+  it('extracts data.response from an ApiError for a human-readable message', async () => {
+    const apiError = Object.assign(new Error('Bad Request'), {
+      data: { response: 'You must be part of a family to use voice commands.' },
+    });
+    mockSendCommand.mockRejectedValue(apiError);
+    const onResult = vi.fn();
+    renderHook(() => useAppIntentHandler(onResult));
+
+    await capturedListener?.({ url: 'flowki://intent?type=get-schedule' });
+
+    expect(onResult).toHaveBeenCalledWith(
+      'You must be part of a family to use voice commands.',
+      true,
+    );
+  });
+
   it('calls onResult with a fallback message when sendCommand throws non-Error', async () => {
     mockSendCommand.mockRejectedValue('unexpected');
     const onResult = vi.fn();
@@ -212,5 +229,28 @@ describe('useAppIntentHandler', () => {
     // Should not throw.
     await capturedListener?.({ url: 'flowki://intent?type=get-schedule' });
     expect(mockSendCommand).toHaveBeenCalled();
+  });
+
+  it('handles cold-start URL from getInitialURL on mount', async () => {
+    vi.mocked(Linking.getInitialURL).mockResolvedValue(
+      'flowki://intent?type=create-todo&title=Cold%20Start%20Task',
+    );
+    mockSendCommand.mockResolvedValue({ success: true, response: 'To-do created!' });
+    const onResult = vi.fn();
+
+    renderHook(() => useAppIntentHandler(onResult));
+
+    // Allow the getInitialURL promise to resolve and the handler to run.
+    await vi.waitFor(() => expect(mockSendCommand).toHaveBeenCalled());
+
+    expect(mockSendCommand).toHaveBeenCalledWith('Create a todo: Cold Start Task');
+    expect(onResult).toHaveBeenCalledWith('To-do created!', false);
+  });
+
+  it('ignores cold-start null from getInitialURL', async () => {
+    vi.mocked(Linking.getInitialURL).mockResolvedValue(null);
+    renderHook(() => useAppIntentHandler());
+    await Promise.resolve(); // flush microtasks
+    expect(mockSendCommand).not.toHaveBeenCalled();
   });
 });

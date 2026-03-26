@@ -78,11 +78,24 @@ private func sendVoiceCommand(_ command: String) async throws -> String {
     request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
     request.httpBody = try JSONEncoder().encode(["command": command])
 
-    let (data, _): (Data, URLResponse)
+    let (data, urlResponse): (Data, URLResponse)
     do {
-        (data, _) = try await URLSession.shared.data(for: request)
+        (data, urlResponse) = try await URLSession.shared.data(for: request)
     } catch {
         throw FlowkiIntentError.networkError(error)
+    }
+
+    if let httpResponse = urlResponse as? HTTPURLResponse {
+        if httpResponse.statusCode == 401 {
+            throw FlowkiIntentError.notAuthenticated
+        }
+        if !(200..<300).contains(httpResponse.statusCode) {
+            struct ErrorBody: Decodable { let response: String?; let message: String? }
+            let errorBody = try? JSONDecoder().decode(ErrorBody.self, from: data)
+            let msg = errorBody?.response ?? errorBody?.message
+                ?? "Server error (\(httpResponse.statusCode))."
+            throw FlowkiIntentError.serverError(msg)
+        }
     }
 
     let decoded = try JSONDecoder().decode(VoiceCommandResponse.self, from: data)
@@ -94,6 +107,7 @@ private func sendVoiceCommand(_ command: String) async throws -> String {
 
 // MARK: - CreateTodoIntent
 
+@available(iOS 16.0, *)
 struct CreateTodoIntent: AppIntent {
     static let title: LocalizedStringResource = "Create a To-Do"
     static let description = IntentDescription(
@@ -122,6 +136,7 @@ struct CreateTodoIntent: AppIntent {
 
 // MARK: - AddShoppingItemIntent
 
+@available(iOS 16.0, *)
 struct AddShoppingItemIntent: AppIntent {
     static let title: LocalizedStringResource = "Add Shopping Item"
     static let description = IntentDescription(
@@ -150,6 +165,7 @@ struct AddShoppingItemIntent: AppIntent {
 
 // MARK: - GetTodayScheduleIntent
 
+@available(iOS 16.0, *)
 struct GetTodayScheduleIntent: AppIntent {
     static let title: LocalizedStringResource = "Get Today's Schedule"
     static let description = IntentDescription(
@@ -171,6 +187,7 @@ struct GetTodayScheduleIntent: AppIntent {
 
 // MARK: - CompleteChoreIntent
 
+@available(iOS 16.0, *)
 struct CompleteChoreIntent: AppIntent {
     static let title: LocalizedStringResource = "Complete a Chore"
     static let description = IntentDescription(
@@ -199,6 +216,7 @@ struct CompleteChoreIntent: AppIntent {
 
 // MARK: - AddChoreIntent
 
+@available(iOS 16.0, *)
 struct AddChoreIntent: AppIntent {
     static let title: LocalizedStringResource = "Add a Chore"
     static let description = IntentDescription(
@@ -227,6 +245,7 @@ struct AddChoreIntent: AppIntent {
 
 // MARK: - AddCalendarItemIntent
 
+@available(iOS 16.0, *)
 struct AddCalendarItemIntent: AppIntent {
     static let title: LocalizedStringResource = "Add Calendar Event"
     static let description = IntentDescription(

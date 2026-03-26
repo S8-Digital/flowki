@@ -22,6 +22,7 @@ The mobile MVP covers the same core daily-use surfaces as the web app:
 | Password settings | ✅ | ✅ | Settings tab → Change Password |
 | Dark / light mode | ✅ | ✅ | System preference via `useColorScheme` |
 | Offline indicator | ✅ | ✅ | `@react-native-community/netinfo` banner |
+| Push notifications | ✅ | ✅ | FCM via `expo-notifications`; token registered to `/api/mobile/fcm-tokens` |
 | Google Maps address autocomplete | ✅ | ❌ | Planned (requires React Native Maps integration) |
 | Social auth (Google OAuth) | ✅ | ❌ | Planned (`expo-auth-session`) |
 | Voice command bar | ✅ | ✅ | Sends natural-language commands to `/api/mobile/voice/command` (AI agent) |

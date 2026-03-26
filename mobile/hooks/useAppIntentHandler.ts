@@ -18,6 +18,10 @@
  *   - `add-chore`          → `chore` (string)
  *   - `add-calendar-item`  → `event` (string)
  *
+ * Cold-start handling: when the app is launched directly from a Siri/Shortcut
+ * deep link, React Native delivers the URL via `Linking.getInitialURL()` (not
+ * the `url` event). This hook handles both paths.
+ *
  * This hook is a no-op on Android (intents only exist on iOS) and when the
  * URL scheme does not match `flowki://intent`.
  */
@@ -61,6 +65,9 @@ export function buildVoiceCommand(type: IntentType, params: IntentParams): strin
  * Registers a `Linking` event listener that intercepts `flowki://intent?…`
  * URLs and forwards them as voice commands.
  *
+ * Also checks `Linking.getInitialURL()` on mount to handle apps that were
+ * cold-started by a Siri/Shortcut deep link.
+ *
  * @param onResult - Optional callback called with the API response text and
  *                   an `isError` flag so the caller can show a toast or banner.
  */
@@ -98,11 +105,26 @@ export function useAppIntentHandler(
           onResult?.(res.response, false);
         }
       } catch (err: unknown) {
-        const message =
-          err instanceof Error ? err.message : 'Could not process Siri command.';
+        // ApiError (from the api helper) attaches the parsed JSON body as `data`.
+        // The backend voice endpoint puts its human-readable message in `data.response`.
+        let message = 'Could not process Siri command.';
+        const apiError = err as { data?: { response?: string } } | undefined;
+        if (apiError?.data?.response && typeof apiError.data.response === 'string') {
+          message = apiError.data.response;
+        } else if (err instanceof Error && err.message) {
+          message = err.message;
+        }
         onResult?.(message, true);
       }
     };
+
+    // Handle cold-start: when the app is launched from a Siri/Shortcut deep
+    // link, the initial URL is delivered via getInitialURL(), not the 'url' event.
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleUrl({ url });
+      }
+    });
 
     const subscription = Linking.addEventListener('url', handleUrl);
     return () => subscription.remove();

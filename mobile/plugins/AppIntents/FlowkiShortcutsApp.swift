@@ -8,6 +8,7 @@
 
 import AppIntents
 
+@available(iOS 16.0, *)
 struct FlowkiAppShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
