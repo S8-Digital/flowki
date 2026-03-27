@@ -134,19 +134,15 @@ class FamilyController extends Controller
             return back()->withErrors(['email' => 'An invitation has already been sent to this email address.']);
         }
 
-        $duplicatePending = false;
-
-        DB::transaction(function () use ($request, $family, $existingUser, &$duplicatePending) {
+        $duplicatePending = DB::transaction(function () use ($request, $family, $existingUser) {
             // Lock the family row to serialise concurrent invite requests for the same family,
             // preventing two simultaneous requests from each passing the pending-invite check
             // and inserting duplicate invitation rows.
-            Family::where('id', $family->id)->lockForUpdate()->first();
+            DB::table('families')->where('id', $family->id)->lockForUpdate()->value('id');
 
             // Re-check for duplicate pending invitation inside the lock.
             if ($family->pendingInvitations()->where('email', $request->email)->exists()) {
-                $duplicatePending = true;
-
-                return;
+                return true;
             }
 
             // Create a placeholder user if they don't already exist.
@@ -171,6 +167,8 @@ class FamilyController extends Controller
             // This prevents the worker from trying to hydrate an Invitation row that doesn't exist
             // yet, or sending an email for data that ultimately rolled back.
             Mail::to($request->email)->queue((new FamilyInvitationMail($invitation))->afterCommit());
+
+            return false;
         });
 
         if ($duplicatePending) {

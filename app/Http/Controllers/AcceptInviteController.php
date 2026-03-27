@@ -39,14 +39,13 @@ class AcceptInviteController extends Controller
             // from both reading the same pending invitation and applying the membership twice.
             $invitation = Invitation::where('token', $token)
                 ->whereNull('accepted_at')
+                ->with('user', 'family')
                 ->lockForUpdate()
                 ->first();
 
             if (! $invitation) {
                 return redirect()->route('home')->with('error', 'This invitation link is invalid or has already been used.');
             }
-
-            $invitation->load('user', 'family');
 
             $user = $invitation->user;
 
