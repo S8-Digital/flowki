@@ -134,7 +134,21 @@ class FamilyController extends Controller
             return back()->withErrors(['email' => 'An invitation has already been sent to this email address.']);
         }
 
-        DB::transaction(function () use ($request, $family, $existingUser) {
+        $duplicatePending = false;
+
+        DB::transaction(function () use ($request, $family, $existingUser, &$duplicatePending) {
+            // Lock the family row to serialise concurrent invite requests for the same family,
+            // preventing two simultaneous requests from each passing the pending-invite check
+            // and inserting duplicate invitation rows.
+            Family::where('id', $family->id)->lockForUpdate()->first();
+
+            // Re-check for duplicate pending invitation inside the lock.
+            if ($family->pendingInvitations()->where('email', $request->email)->exists()) {
+                $duplicatePending = true;
+
+                return;
+            }
+
             // Create a placeholder user if they don't already exist.
             // family_id and pivot attachment are intentionally deferred — they are only set when the invitation is accepted.
             $invitedUser = $existingUser ?? User::create([
@@ -152,8 +166,16 @@ class FamilyController extends Controller
             ]);
 
             $invitation->load('family');
-            Mail::to($request->email)->queue(new FamilyInvitationMail($invitation));
+
+            // afterCommit() ensures the mail job is not dispatched until the transaction commits.
+            // This prevents the worker from trying to hydrate an Invitation row that doesn't exist
+            // yet, or sending an email for data that ultimately rolled back.
+            Mail::to($request->email)->queue((new FamilyInvitationMail($invitation))->afterCommit());
         });
+
+        if ($duplicatePending) {
+            return back()->withErrors(['email' => 'An invitation has already been sent to this email address.']);
+        }
 
         return redirect()->route('family.show');
     }
