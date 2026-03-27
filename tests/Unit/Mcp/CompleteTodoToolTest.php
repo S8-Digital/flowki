@@ -57,6 +57,7 @@ class CompleteTodoToolTest extends TestCase
             'family_id' => $other->family_id,
             'created_by' => $other->id,
             'title' => 'Other family todo',
+            'status' => TodoStatus::Pending,
         ]);
 
         $this->actingAs($user);

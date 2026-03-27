@@ -97,7 +97,7 @@ class FamilyControllerTest extends TestCase
 
         $user->refresh();
         $pivot = $user->family->members()->where('users.id', $user->id)->first();
-        $this->assertEquals(FamilyRole::Admin->value, $pivot->pivot->role);
+        $this->assertEquals(FamilyRole::Admin, $pivot->pivot->role);
     }
 
     public function test_family_store_requires_name(): void
@@ -153,7 +153,7 @@ class FamilyControllerTest extends TestCase
             ->assertOk();
 
         $pivot = $family->fresh()->members()->where('users.id', $joiner->id)->first();
-        $this->assertEquals(FamilyRole::Member->value, $pivot->pivot->role);
+        $this->assertEquals(FamilyRole::Member, $pivot->pivot->role);
     }
 
     public function test_join_with_invalid_invite_code_returns_422(): void
