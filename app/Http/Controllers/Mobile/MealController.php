@@ -46,6 +46,11 @@ class MealController extends Controller
             'shopping_list_id' => ['nullable', 'integer', Rule::exists('shopping_lists', 'id')->where('family_id', $request->user()->family_id)],
         ]);
 
+        if (! empty($validated['shopping_list_id']) && ! empty($validated['recipe_id'])) {
+            $shoppingList = ShoppingList::findOrFail($validated['shopping_list_id']);
+            $this->authorize('addItem', $shoppingList);
+        }
+
         $meal = Meal::create(array_merge(
             collect($validated)->except('shopping_list_id')->all(),
             [
@@ -98,6 +103,7 @@ class MealController extends Controller
         ]);
 
         $shoppingList = ShoppingList::findOrFail($validated['shopping_list_id']);
+        $this->authorize('addItem', $shoppingList);
         abort_unless($shoppingList->family_id === $request->user()->family_id, 403);
 
         if ($meal->recipe_id) {

@@ -66,11 +66,16 @@ class MealController extends Controller
             'meal_type' => ['required', 'string', 'in:breakfast,lunch,dinner,snack'],
             'servings' => ['nullable', 'integer', 'min:1'],
             'notes' => ['nullable', 'string', 'max:500'],
-            'shopping_list_id' => ['nullable', 'integer', 'exists:shopping_lists,id'],
+            'shopping_list_id' => ['nullable', 'integer', Rule::exists('shopping_lists', 'id')->where('family_id', $request->user()->family_id)],
         ]);
 
+        if (! empty($validated['shopping_list_id']) && ! empty($validated['recipe_id'])) {
+            $shoppingList = ShoppingList::findOrFail($validated['shopping_list_id']);
+            $this->authorize('addItem', $shoppingList);
+        }
+
         $meal = Meal::create(array_merge(
-            $validated,
+            collect($validated)->except('shopping_list_id')->all(),
             [
                 'family_id' => $request->user()->family_id,
                 'created_by' => $request->user()->id,
@@ -116,10 +121,11 @@ class MealController extends Controller
         $this->authorize('view', $meal);
 
         $validated = $request->validate([
-            'shopping_list_id' => ['required', 'integer', 'exists:shopping_lists,id'],
+            'shopping_list_id' => ['required', 'integer', Rule::exists('shopping_lists', 'id')->where('family_id', $request->user()->family_id)],
         ]);
 
         $shoppingList = ShoppingList::findOrFail($validated['shopping_list_id']);
+        $this->authorize('addItem', $shoppingList);
 
         // Ensure the shopping list belongs to the same family
         abort_unless($shoppingList->family_id === $request->user()->family_id, 403);

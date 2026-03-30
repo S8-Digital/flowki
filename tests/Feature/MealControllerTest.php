@@ -110,6 +110,40 @@ class MealControllerTest extends TestCase
             ->assertSessionHasErrors('recipe_id');
     }
 
+    public function test_user_cannot_add_another_familys_shopping_list_to_meal(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+        $otherUser = User::factory()->withFamily()->create();
+        $shoppingList = ShoppingList::factory()->create(['family_id' => $otherUser->family_id, 'created_by' => $otherUser->id]);
+
+        $this->actingAs($user)
+            ->post(route('meals.store'), [
+                'recipe_id' => $recipe->id,
+                'planned_date' => now()->toDateString(),
+                'meal_type' => 'dinner',
+                'shopping_list_id' => $shoppingList->id,
+            ])
+            ->assertSessionHasErrors('shopping_list_id');
+    }
+
+    public function test_user_needs_add_item_permission_to_aggregate_groceries_when_creating_meal(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $user->revokePermissionTo('create-shopping-items');
+        $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+        $shoppingList = ShoppingList::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+
+        $this->actingAs($user)
+            ->post(route('meals.store'), [
+                'recipe_id' => $recipe->id,
+                'planned_date' => now()->toDateString(),
+                'meal_type' => 'dinner',
+                'shopping_list_id' => $shoppingList->id,
+            ])
+            ->assertForbidden();
+    }
+
     // ── destroy ─────────────────────────────────────────────────────────────────
 
     public function test_user_can_delete_own_family_meal(): void
@@ -185,6 +219,23 @@ class MealControllerTest extends TestCase
         $meal = Meal::factory()->create([
             'family_id' => $otherUser->family_id,
             'created_by' => $otherUser->id,
+        ]);
+        $list = ShoppingList::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+
+        $this->actingAs($user)
+            ->post(route('meals.groceries', $meal), ['shopping_list_id' => $list->id])
+            ->assertForbidden();
+    }
+
+    public function test_user_needs_add_item_permission_to_aggregate_groceries_for_a_meal(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $user->revokePermissionTo('create-shopping-items');
+        $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+        $meal = Meal::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+            'recipe_id' => $recipe->id,
         ]);
         $list = ShoppingList::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
 

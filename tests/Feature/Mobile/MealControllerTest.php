@@ -85,6 +85,41 @@ class MealControllerTest extends TestCase
             ->assertJsonValidationErrors('recipe_id');
     }
 
+    public function test_user_cannot_use_another_familys_shopping_list(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+        $otherUser = User::factory()->withFamily()->create();
+        $shoppingList = ShoppingList::factory()->create(['family_id' => $otherUser->family_id, 'created_by' => $otherUser->id]);
+
+        $this->actingAs($user, 'sanctum')
+            ->postJson(route('mobile.meals.store'), [
+                'recipe_id' => $recipe->id,
+                'planned_date' => now()->toDateString(),
+                'meal_type' => 'dinner',
+                'shopping_list_id' => $shoppingList->id,
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('shopping_list_id');
+    }
+
+    public function test_user_needs_add_item_permission_to_aggregate_groceries_when_creating_meal(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $user->revokePermissionTo('create-shopping-items');
+        $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+        $shoppingList = ShoppingList::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+
+        $this->actingAs($user, 'sanctum')
+            ->postJson(route('mobile.meals.store'), [
+                'recipe_id' => $recipe->id,
+                'planned_date' => now()->toDateString(),
+                'meal_type' => 'dinner',
+                'shopping_list_id' => $shoppingList->id,
+            ])
+            ->assertForbidden();
+    }
+
     public function test_user_can_delete_own_family_meal(): void
     {
         $user = User::factory()->withFamily()->create();
@@ -130,5 +165,22 @@ class MealControllerTest extends TestCase
             ->postJson(route('mobile.meals.groceries', $meal), ['shopping_list_id' => $list->id])
             ->assertOk()
             ->assertJsonFragment(['message' => 'Ingredients added to shopping list.']);
+    }
+
+    public function test_user_needs_add_item_permission_to_aggregate_groceries_for_a_meal(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $user->revokePermissionTo('create-shopping-items');
+        $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+        $meal = Meal::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+            'recipe_id' => $recipe->id,
+        ]);
+        $list = ShoppingList::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+
+        $this->actingAs($user, 'sanctum')
+            ->postJson(route('mobile.meals.groceries', $meal), ['shopping_list_id' => $list->id])
+            ->assertForbidden();
     }
 }
