@@ -53,6 +53,7 @@ const FlatList = ({
                       renderItem ? renderItem({ item, index }) : null,
                   ),
               );
+
     return React.createElement('div', { 'data-testid': 'flat-list', ...rest }, children);
 };
 
@@ -79,10 +80,12 @@ const SectionList = ({
                 renderItem ? renderItem({ item, index: idx, section }) : null,
             ),
         );
+
         return header
             ? [React.createElement('div', { key: `h-${sIdx}` }, header), ...rows]
             : rows;
     });
+
     return React.createElement('div', { 'data-testid': 'section-list', ...rest }, children);
 };
 
