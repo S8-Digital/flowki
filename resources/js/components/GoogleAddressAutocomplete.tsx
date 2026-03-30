@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
 import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
@@ -94,6 +95,7 @@ export default function GoogleAddressAutocomplete({ value, onChange, onPlaceSele
     const [isOpen, setIsOpen] = useState(false);
 
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const popperRef = useRef<HTMLDivElement | null>(null);
     const isMapsLoadedRef = useRef(false);
     const sessionTokenRef = useRef<google.maps.places.AutocompleteSessionToken | null>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -225,7 +227,11 @@ export default function GoogleAddressAutocomplete({ value, onChange, onPlaceSele
 
     useEffect(() => {
         function handlePointerDown(event: PointerEvent): void {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+            const target = event.target as Node;
+            const insideContainer = containerRef.current?.contains(target) ?? false;
+            const insidePopper = popperRef.current?.contains(target) ?? false;
+
+            if (!insideContainer && !insidePopper) {
                 setIsOpen(false);
             }
         }
@@ -245,20 +251,13 @@ export default function GoogleAddressAutocomplete({ value, onChange, onPlaceSele
                 placeholder={placeholder}
                 autoComplete="off"
             />
-            {isOpen && suggestions.length > 0 && (
-                <Paper
-                    elevation={4}
-                    sx={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        right: 0,
-                        mt: 0.5,
-                        zIndex: 1400,
-                        maxHeight: 280,
-                        overflow: 'auto',
-                    }}
-                >
+            <Popper
+                open={isOpen && suggestions.length > 0}
+                anchorEl={containerRef.current}
+                placement="bottom-start"
+                sx={{ zIndex: 1400, width: containerRef.current?.offsetWidth ?? 'auto' }}
+            >
+                <Paper ref={popperRef} elevation={4} sx={{ mt: 0.5, maxHeight: 280, overflow: 'auto' }}>
                     <MenuList dense disablePadding>
                         {suggestions.map((suggestion, i) => (
                             <MenuItem
@@ -283,7 +282,7 @@ export default function GoogleAddressAutocomplete({ value, onChange, onPlaceSele
                         ))}
                     </MenuList>
                 </Paper>
-            )}
+            </Popper>
         </div>
     );
 }

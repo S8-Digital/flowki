@@ -56,6 +56,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('family/children', [FamilyController::class, 'addChild'])->name('family.children.add');
     Route::patch('family/{family}/members/{userId}/role', [FamilyController::class, 'updateMemberRole'])->name('family.members.role');
     Route::delete('family/{family}/members/{userId}', [FamilyController::class, 'removeMember'])->name('family.members.remove');
+    Route::delete('family/{family}/invitations/{invitation}', [FamilyController::class, 'cancelInvitation'])->name('family.invitations.cancel');
+    Route::post('family/{family}/invitations/{invitation}/resend', [FamilyController::class, 'resendInvitation'])->name('family.invitations.resend');
 
     // Todos
     Route::get('todos', [TodoController::class, 'index'])->name('todos.index');
