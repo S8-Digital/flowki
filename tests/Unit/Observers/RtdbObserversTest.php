@@ -5,6 +5,7 @@ namespace Tests\Unit\Observers;
 use App\Jobs\SyncModelToRtdb;
 use App\Models\CalendarEvent;
 use App\Models\Chore;
+use App\Models\Meal;
 use App\Models\ShoppingItem;
 use App\Models\ShoppingList;
 use App\Models\Todo;
@@ -294,6 +295,51 @@ class RtdbObserversTest extends TestCase
         $array = $event->toSyncArray();
 
         foreach (['id', 'family_id', 'title', 'start_at', 'end_at', 'updated_at'] as $key) {
+            $this->assertArrayHasKey($key, $array, "toSyncArray() is missing key: {$key}");
+        }
+    }
+
+    // ── Meal ──────────────────────────────────────────────────────────────────
+
+    public function test_creating_a_meal_dispatches_sync_job(): void
+    {
+        Queue::fake();
+
+        $meal = Meal::factory()->create();
+
+        Queue::assertPushed(SyncModelToRtdb::class, function (SyncModelToRtdb $job) use ($meal) {
+            return $job->path === "families/{$meal->family_id}/meals/{$meal->id}"
+                && $job->data !== null
+                && $job->data['id'] === $meal->id;
+        });
+    }
+
+    public function test_deleting_a_meal_dispatches_remove_job(): void
+    {
+        Queue::fake();
+
+        $meal = Meal::factory()->create();
+        $familyId = $meal->family_id;
+        $mealId = $meal->id;
+
+        Queue::fake();
+        $meal->delete();
+
+        Queue::assertPushed(SyncModelToRtdb::class, function (SyncModelToRtdb $job) use ($familyId, $mealId) {
+            return $job->path === "families/{$familyId}/meals/{$mealId}"
+                && $job->data === null;
+        });
+    }
+
+    public function test_meal_to_sync_array_contains_expected_keys(): void
+    {
+        Queue::fake();
+
+        $meal = Meal::factory()->create();
+
+        $array = $meal->toSyncArray();
+
+        foreach (['id', 'family_id', 'recipe_id', 'planned_date', 'meal_type', 'updated_at'] as $key) {
             $this->assertArrayHasKey($key, $array, "toSyncArray() is missing key: {$key}");
         }
     }

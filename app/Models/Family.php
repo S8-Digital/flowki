@@ -77,6 +77,11 @@ class Family extends Model
         return $this->hasMany(Recipe::class);
     }
 
+    public function meals(): HasMany
+    {
+        return $this->hasMany(Meal::class);
+    }
+
     public function invitations(): HasMany
     {
         return $this->hasMany(Invitation::class);

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AssistantIndex from '@/pages/Assistant/Index';
 import ChoresIndex from '@/pages/Chores/Index';
+import MealsIndex from '@/pages/Meals/Index';
 import RecipesIndex from '@/pages/Recipes/Index';
 import ShoppingIndex from '@/pages/Shopping/Index';
 import TodosIndex from '@/pages/Todos/Index';
@@ -65,6 +66,11 @@ vi.mock('@/actions/App/Http/Controllers/RecipeController', () => ({
     show: (id: number) => ({ url: `/recipes/${id}` }),
     update: (id: number) => ({ url: `/recipes/${id}` }),
     destroy: (id: number) => ({ url: `/recipes/${id}` }),
+}));
+vi.mock('@/actions/App/Http/Controllers/MealController', () => ({
+    store: () => ({ url: '/meals' }),
+    update: (id: number) => ({ url: `/meals/${id}` }),
+    destroy: (id: number) => ({ url: `/meals/${id}` }),
 }));
 vi.mock('@/actions/App/Http/Controllers/AiController', () => ({}));
 
@@ -352,5 +358,100 @@ describe('Chores page', () => {
     it('renders member filter buttons', () => {
         render(<ChoresIndex chores={[baseChore]} members={[baseUser]} />);
         expect(screen.getByTitle(/hide alice smith/i)).toBeInTheDocument();
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Meals page
+// ---------------------------------------------------------------------------
+
+const baseRecipeForMeal = {
+    id: 1,
+    title: 'Spaghetti Bolognese',
+    description: null,
+    category: 'pasta',
+    servings: 4,
+    prep_time_minutes: 15,
+    cook_time_minutes: 30,
+    total_time_minutes: 45,
+    instructions: 'Cook pasta.',
+    photo_path: null,
+    rating: null,
+    is_favorite: false,
+    family_id: 1,
+    created_at: '2024-01-01T00:00:00.000000Z',
+    updated_at: '2024-01-01T00:00:00.000000Z',
+};
+
+const baseMeal = {
+    id: 1,
+    family_id: 1,
+    created_by: 1,
+    recipe_id: 1,
+    planned_date: '2026-03-31',
+    meal_type: 'dinner',
+    servings: null,
+    notes: null,
+    recipe: baseRecipeForMeal,
+    created_at: '2026-03-31T00:00:00.000000Z',
+    updated_at: '2026-03-31T00:00:00.000000Z',
+};
+
+const mealTypes = [
+    { value: 'breakfast', label: 'Breakfast' },
+    { value: 'lunch', label: 'Lunch' },
+    { value: 'dinner', label: 'Dinner' },
+    { value: 'snack', label: 'Snack' },
+];
+
+describe('Meals page', () => {
+    beforeEach(() => {
+        mockForm({
+            data: {
+                recipe_id: '',
+                planned_date: '',
+                meal_type: 'dinner',
+                servings: '',
+                notes: '',
+                shopping_list_id: '',
+            },
+            errors: {},
+        });
+    });
+
+    it('renders the Meal Planner heading', () => {
+        render(<MealsIndex meals={[baseMeal]} recipes={[baseRecipeForMeal]} shoppingLists={[]} weekStart="2026-03-30" mealTypes={mealTypes} />);
+        expect(screen.getByRole('heading', { name: /meal planner/i })).toBeInTheDocument();
+    });
+
+    it('renders meal recipe title in the grid', () => {
+        render(<MealsIndex meals={[baseMeal]} recipes={[baseRecipeForMeal]} shoppingLists={[]} weekStart="2026-03-30" mealTypes={mealTypes} />);
+        expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument();
+    });
+
+    it('renders Add Meal button', () => {
+        render(<MealsIndex meals={[]} recipes={[]} shoppingLists={[]} weekStart="2026-03-30" mealTypes={mealTypes} />);
+        expect(screen.getByRole('button', { name: /add meal/i })).toBeInTheDocument();
+    });
+
+    it('renders recipe list in sidebar panel', () => {
+        render(<MealsIndex meals={[]} recipes={[baseRecipeForMeal]} shoppingLists={[]} weekStart="2026-03-30" mealTypes={mealTypes} />);
+        // Recipe title appears in the panel
+        const titles = screen.getAllByText('Spaghetti Bolognese');
+        expect(titles.length).toBeGreaterThan(0);
+    });
+
+    it('shows empty state in recipe panel when no recipes', () => {
+        render(<MealsIndex meals={[]} recipes={[]} shoppingLists={[]} weekStart="2026-03-30" mealTypes={mealTypes} />);
+        expect(screen.getByText(/no recipes yet/i)).toBeInTheDocument();
+    });
+
+    it('renders 7 day columns', () => {
+        render(<MealsIndex meals={[]} recipes={[]} shoppingLists={[]} weekStart="2026-03-30" mealTypes={mealTypes} />);
+
+        // Each day column shows Mon–Sun
+        for (const day of ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']) {
+            expect(screen.getByText(day)).toBeInTheDocument();
+        }
     });
 });

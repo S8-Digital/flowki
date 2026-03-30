@@ -5,9 +5,9 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { GripVertical, Plus, Settings2, X } from 'lucide-react';
 import { useState } from 'react';
-import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
 import CalendarScheduleWidget from '@/components/Dashboard/CalendarScheduleWidget';
 import CalendarTodayWidget from '@/components/Dashboard/CalendarTodayWidget';
+import MealPlannerWidget from '@/components/Dashboard/MealPlannerWidget';
 import ShoppingListWidget from '@/components/Dashboard/ShoppingListWidget';
 import TodoListWidget from '@/components/Dashboard/TodoListWidget';
 import WeatherWidget from '@/components/Dashboard/WeatherWidget';
@@ -15,8 +15,17 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
-import { dashboard } from '@/routes';
 import type { BreadcrumbItem, CalendarEvent, DashboardShoppingListData, DashboardWidget, DashboardWidgetType, Todo } from '@/types';
+import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
+import { dashboard } from '@/routes';
+
+interface DinnerEntry {
+    id: number;
+    planned_date: string | null;
+    meal_type: string | null;
+    notes: string | null;
+    recipe: { id: number; title: string; photo_path: string | null; rating: number | null } | null;
+}
 
 interface Props {
     widgets: DashboardWidget[];
@@ -26,6 +35,7 @@ interface Props {
     calendarEvents: CalendarEvent[];
     todosToday: Todo[];
     shoppingItems: Record<number, DashboardShoppingListData>;
+    weekDinners: DinnerEntry[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard() }];
@@ -51,6 +61,7 @@ export default function Dashboard({
     calendarEvents,
     todosToday,
     shoppingItems,
+    weekDinners,
 }: Props) {
     const [localWidgets, setLocalWidgets] = useState<DashboardWidget[]>([...initialWidgets]);
     const [addOpen, setAddOpen] = useState(false);
@@ -250,6 +261,7 @@ export default function Dashboard({
                                         />
                                     )}
                                     {widget.type === 'weather' && <WeatherWidget />}
+                                    {widget.type === 'meal_planner' && <MealPlannerWidget weekDinners={weekDinners} />}
                                 </Box>
                             </Box>
                         ))}

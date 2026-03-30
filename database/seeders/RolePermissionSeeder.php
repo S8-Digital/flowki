@@ -20,6 +20,7 @@ class RolePermissionSeeder extends Seeder
         'events' => ['view-events', 'create-events', 'edit-events', 'delete-events'],
         'shopping' => ['view-shopping', 'create-shopping', 'edit-shopping', 'delete-shopping', 'create-shopping-items'],
         'recipes' => ['view-recipes', 'create-recipes', 'edit-recipes', 'delete-recipes'],
+        'meals' => ['view-meals', 'create-meals', 'edit-meals', 'delete-meals'],
         'members' => ['view-members', 'manage-members'],
         'family' => ['manage-family'],
         'dashboard' => ['manage-dashboard'],
@@ -51,6 +52,7 @@ class RolePermissionSeeder extends Seeder
             'view-events', 'create-events', 'edit-events', 'delete-events',
             'view-shopping', 'create-shopping', 'edit-shopping', 'delete-shopping', 'create-shopping-items',
             'view-recipes', 'create-recipes', 'edit-recipes', 'delete-recipes',
+            'view-meals', 'create-meals', 'edit-meals', 'delete-meals',
             'view-members',
             'manage-dashboard',
         ]);
@@ -61,6 +63,7 @@ class RolePermissionSeeder extends Seeder
             'view-events',
             'view-shopping',
             'view-recipes',
+            'view-meals',
             'view-members',
         ]);
     }

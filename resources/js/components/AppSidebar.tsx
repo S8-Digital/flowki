@@ -15,14 +15,21 @@ import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { CalendarDays, CheckSquare, ChefHat, ChevronUp, LayoutGrid, LogOut, RotateCcw, Settings, ShoppingCart, Sparkles, Users } from 'lucide-react';
+import {
+    CalendarDays,
+    CheckSquare,
+    ChefHat,
+    ChevronUp,
+    LayoutGrid,
+    LogOut,
+    RotateCcw,
+    Settings,
+    ShoppingCart,
+    Sparkles,
+    UtensilsCrossed,
+    Users,
+} from 'lucide-react';
 import * as React from 'react';
-import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
-import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
-import { show as familyShow } from '@/actions/App/Http/Controllers/FamilyController';
-import { index as recipeIndex } from '@/actions/App/Http/Controllers/RecipeController';
-import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
-import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
 import AiChatModal from '@/components/AiChatModal';
 import type { AiChatModalHandle } from '@/components/AiChatModal';
 import AppearanceToggle from '@/components/AppearanceToggle';
@@ -30,10 +37,17 @@ import AppLogo from '@/components/AppLogo';
 import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, useAppSidebar } from '@/components/AppSidebarContext';
 import { getInitials } from '@/hooks/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { dashboard, logout } from '@/routes';
-import { edit } from '@/routes/profile';
 import type { AppPageProps, NavItem } from '@/types';
 import type { PolymorphicProps } from '@/types/globals';
+import { index as calendarIndex } from '@/actions/App/Http/Controllers/CalendarEventController';
+import { index as choreIndex } from '@/actions/App/Http/Controllers/ChoreController';
+import { show as familyShow } from '@/actions/App/Http/Controllers/FamilyController';
+import { index as mealIndex } from '@/actions/App/Http/Controllers/MealController';
+import { index as recipeIndex } from '@/actions/App/Http/Controllers/RecipeController';
+import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
+import { index as todoIndex } from '@/actions/App/Http/Controllers/TodoController';
+import { dashboard, logout } from '@/routes';
+import { edit } from '@/routes/profile';
 
 const SidebarContainer = styled(Box)(({ theme }) => ({
     backgroundColor: 'var(--sidebar)',
@@ -149,6 +163,7 @@ export default function AppSidebar() {
         { title: 'Calendar', href: calendarIndex(), icon: CalendarDays, iconColor: '#3282b0' },
         { title: 'Shopping', href: shoppingIndex(), icon: ShoppingCart, iconColor: '#c4503c' },
         { title: 'Recipes', href: recipeIndex(), icon: ChefHat, iconColor: '#d4900e' },
+        { title: 'Meal Planner', href: mealIndex(), icon: UtensilsCrossed, iconColor: '#a85c3a' },
         { title: 'Family', href: familyShow(), icon: Users, iconColor: '#5ba3cb' },
     ];
 

@@ -1,6 +1,5 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
-import type { RouteDefinition } from '@/wayfinder';
 import type {
     CalendarEvent as BaseCalendarEvent,
     Chore as BaseChore,
@@ -13,6 +12,7 @@ import type {
     WeatherData,
     WeatherDay,
 } from '@flowki/shared';
+import type { RouteDefinition } from '@/wayfinder';
 
 export type { WeatherCurrent, WeatherData, WeatherDay };
 
@@ -171,6 +171,21 @@ export interface Recipe {
     is_favorite: boolean;
     family_id: number;
     ingredients?: RecipeIngredient[];
+    creator?: User;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Meal {
+    id: number;
+    family_id: number;
+    created_by: number;
+    recipe_id: number | null;
+    planned_date: string | null;
+    meal_type: string | null;
+    servings: number | null;
+    notes: string | null;
+    recipe?: Recipe | null;
     creator?: User;
     created_at: string;
     updated_at: string;
