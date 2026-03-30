@@ -228,9 +228,7 @@ describe('Family Show page', () => {
     it('renders pending invitations with cancel and resend buttons', () => {
         const familyWithInvitations = {
             ...mockFamily,
-            pending_invitations: [
-                { id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' },
-            ],
+            pending_invitations: [{ id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' }],
         };
         render(<FamilyShow family={familyWithInvitations} roles={mockRoles} />);
         expect(screen.getByText('pending@example.com')).toBeInTheDocument();
@@ -243,9 +241,7 @@ describe('Family Show page', () => {
         const user = userEvent.setup();
         const familyWithInvitations = {
             ...mockFamily,
-            pending_invitations: [
-                { id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' },
-            ],
+            pending_invitations: [{ id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' }],
         };
         vi.spyOn(window, 'confirm').mockReturnValue(true);
         render(<FamilyShow family={familyWithInvitations} roles={mockRoles} />);
@@ -257,9 +253,7 @@ describe('Family Show page', () => {
         const user = userEvent.setup();
         const familyWithInvitations = {
             ...mockFamily,
-            pending_invitations: [
-                { id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' },
-            ],
+            pending_invitations: [{ id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' }],
         };
         render(<FamilyShow family={familyWithInvitations} roles={mockRoles} />);
         await user.click(screen.getByTitle(/resend invitation/i));

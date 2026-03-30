@@ -3,11 +3,8 @@ import { Chip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Baby, Copy, GripVertical, Mail, MapPin, Pencil, RotateCcw, Settings, Trash2, UserMinus, UserPlus } from 'lucide-react';
+import { Baby, Copy, GripVertical, MapPin, Pencil, RotateCcw, Settings, Trash2, UserMinus, UserPlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { addChild, cancelInvitation, inviteMember, removeMember, resendInvitation, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
-import { update as updateMemberOrder } from '@/actions/App/Http/Controllers/Settings/MemberOrderController';
-import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 import GoogleAddressAutocomplete from '@/components/GoogleAddressAutocomplete';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -16,6 +13,17 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
 import type { AppPageProps, BreadcrumbItem, Family, User } from '@/types';
+import {
+    addChild,
+    cancelInvitation,
+    inviteMember,
+    removeMember,
+    resendInvitation,
+    update,
+    updateMemberRole,
+} from '@/actions/App/Http/Controllers/FamilyController';
+import { update as updateMemberOrder } from '@/actions/App/Http/Controllers/Settings/MemberOrderController';
+import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 
 interface Props {
     family: Family;
