@@ -6,6 +6,7 @@ use App\Http\Requests\AcceptInviteRequest;
 use App\Models\Invitation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -33,27 +34,38 @@ class AcceptInviteController extends Controller
 
     public function store(AcceptInviteRequest $request, string $token): RedirectResponse
     {
-        $invitation = Invitation::where('token', $token)
-            ->whereNull('accepted_at')
-            ->with('user', 'family')
-            ->first();
+        return DB::transaction(function () use ($request, $token) {
+            // Lock the invitation row inside the transaction to prevent concurrent double-submissions
+            // from both reading the same pending invitation and applying the membership twice.
+            $invitation = Invitation::where('token', $token)
+                ->whereNull('accepted_at')
+                ->with('user', 'family')
+                ->lockForUpdate()
+                ->first();
 
-        if (! $invitation) {
-            return redirect()->route('home')->with('error', 'This invitation link is invalid or has already been used.');
-        }
+            if (! $invitation) {
+                return redirect()->route('home')->with('error', 'This invitation link is invalid or has already been used.');
+            }
 
-        $user = $invitation->user;
+            $user = $invitation->user;
 
-        $user->update([
-            'name' => $request->name,
-            'password' => Hash::make($request->password),
-            'email_verified_at' => now(),
-        ]);
+            $user->update([
+                'name' => $request->name,
+                'password' => Hash::make($request->password),
+                'email_verified_at' => now(),
+                'family_id' => $invitation->family_id,
+            ]);
 
-        $invitation->update(['accepted_at' => now()]);
+            // syncWithoutDetaching is idempotent — it won't throw a duplicate-key error if the
+            // pivot row already exists (e.g. from a previous partial acceptance attempt).
+            $invitation->family->members()->syncWithoutDetaching([$user->id => ['role' => $invitation->role->value]]);
+            $user->syncRoles([ucfirst($invitation->role->value)]);
 
-        Auth::login($user);
+            $invitation->update(['accepted_at' => now()]);
 
-        return redirect()->route('dashboard');
+            Auth::login($user);
+
+            return redirect()->route('dashboard');
+        });
     }
 }

@@ -15,6 +15,7 @@ use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -66,7 +67,7 @@ class FamilyController extends Controller
 
     public function show(Request $request): Response
     {
-        $family = $request->user()->family()->with('members')->firstOrFail();
+        $family = $request->user()->family()->with('members', 'pendingInvitations')->firstOrFail();
 
         $this->authorize('view', $family);
 
@@ -120,39 +121,61 @@ class FamilyController extends Controller
 
         $existingUser = User::where('email', $request->email)->first();
 
-        if ($existingUser && $existingUser->family_id !== null) {
-            return back()->withErrors(['email' => 'This person already belongs to a family. They must leave their current family first.']);
-        }
-
         if ($existingUser && $family->members()->where('user_id', $existingUser->id)->exists()) {
             return back()->withErrors(['email' => 'This person is already a member of your family.']);
         }
 
-        $invitedUser = $existingUser ?? User::create([
-            'name' => '',
-            'email' => $request->email,
-            'family_id' => $family->id,
-        ]);
-
-        if ($existingUser) {
-            $invitedUser->update(['family_id' => $family->id]);
+        if ($existingUser && $existingUser->family_id !== null) {
+            return back()->withErrors(['email' => 'This person already belongs to a family. They must leave their current family first.']);
         }
 
-        $family->members()->attach($invitedUser->id, ['role' => $request->role]);
-        $invitedUser->syncRoles([ucfirst($request->role)]);
+        // Prevent duplicate pending invitations to the same family
+        if ($family->pendingInvitations()->where('email', $request->email)->exists()) {
+            return back()->withErrors(['email' => 'An invitation has already been sent to this email address.']);
+        }
 
-        $invitation = Invitation::create([
-            'family_id' => $family->id,
-            'user_id' => $invitedUser->id,
-            'email' => $request->email,
-            'role' => $request->role,
-            'token' => Str::random(32),
-        ]);
+        $duplicatePending = DB::transaction(function () use ($request, $family, $existingUser) {
+            // Lock the family row to serialise concurrent invite requests for the same family,
+            // preventing two simultaneous requests from each passing the pending-invite check
+            // and inserting duplicate invitation rows.
+            DB::table('families')->where('id', $family->id)->lockForUpdate()->value('id');
 
-        $invitation->load('family');
-        Mail::to($request->email)->send(new FamilyInvitationMail($invitation));
+            // Re-check for duplicate pending invitation inside the lock.
+            if ($family->pendingInvitations()->where('email', $request->email)->exists()) {
+                return true;
+            }
 
-        return back();
+            // Create a placeholder user if they don't already exist.
+            // family_id and pivot attachment are intentionally deferred — they are only set when the invitation is accepted.
+            $invitedUser = $existingUser ?? User::create([
+                'name' => '',
+                'email' => $request->email,
+                'password' => null,
+            ]);
+
+            $invitation = Invitation::create([
+                'family_id' => $family->id,
+                'user_id' => $invitedUser->id,
+                'email' => $request->email,
+                'role' => $request->role,
+                'token' => Str::random(32),
+            ]);
+
+            $invitation->load('family');
+
+            // afterCommit() ensures the mail job is not dispatched until the transaction commits.
+            // This prevents the worker from trying to hydrate an Invitation row that doesn't exist
+            // yet, or sending an email for data that ultimately rolled back.
+            Mail::to($request->email)->queue((new FamilyInvitationMail($invitation))->afterCommit());
+
+            return false;
+        });
+
+        if ($duplicatePending) {
+            return back()->withErrors(['email' => 'An invitation has already been sent to this email address.']);
+        }
+
+        return redirect()->route('family.show');
     }
 
     public function addChild(AddChildRequest $request): RedirectResponse
@@ -170,7 +193,7 @@ class FamilyController extends Controller
         $family->members()->attach($child->id, ['role' => FamilyRole::Child->value]);
         $child->syncRoles(['Child']);
 
-        return back();
+        return redirect()->route('family.show');
     }
 
     public function updateMemberRole(Request $request, Family $family, int $userId): RedirectResponse

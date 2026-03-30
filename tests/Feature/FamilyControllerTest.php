@@ -209,14 +209,17 @@ class FamilyControllerTest extends TestCase
 
         $this->actingAs($admin)
             ->post(route('family.members.invite'), ['email' => 'newperson@example.com', 'role' => FamilyRole::Member->value])
-            ->assertRedirect();
+            ->assertRedirect(route('family.show'));
 
         $this->assertDatabaseHas('invitations', [
             'email' => 'newperson@example.com',
             'family_id' => $admin->family->id,
         ]);
 
-        $this->assertDatabaseHas('users', ['email' => 'newperson@example.com']);
+        // Placeholder user created but NOT attached to family yet — that happens on acceptance
+        $placeholderUser = User::where('email', 'newperson@example.com')->firstOrFail();
+        $this->assertNull($placeholderUser->family_id);
+        $this->assertDatabaseMissing('family_user', ['user_id' => $placeholderUser->id, 'family_id' => $admin->family->id]);
 
         Mail::assertQueued(FamilyInvitationMail::class, fn ($mail) => $mail->hasTo('newperson@example.com'));
     }
@@ -230,14 +233,32 @@ class FamilyControllerTest extends TestCase
 
         $this->actingAs($admin)
             ->post(route('family.members.invite'), ['email' => $existing->email, 'role' => FamilyRole::Member->value])
-            ->assertRedirect();
+            ->assertRedirect(route('family.show'));
 
-        $this->assertDatabaseHas('family_user', [
-            'user_id' => $existing->id,
-            'family_id' => $admin->family->id,
-        ]);
+        // Invitation created but user NOT yet in pivot — deferred to acceptance
+        $this->assertDatabaseHas('invitations', ['email' => $existing->email, 'family_id' => $admin->family->id]);
+        $this->assertNull($existing->fresh()->family_id);
+        $this->assertDatabaseMissing('family_user', ['user_id' => $existing->id, 'family_id' => $admin->family->id]);
 
         Mail::assertQueued(FamilyInvitationMail::class);
+    }
+
+    public function test_invite_prevents_duplicate_pending_invitation(): void
+    {
+        Mail::fake();
+
+        $admin = User::factory()->withFamily()->create();
+
+        $this->actingAs($admin)
+            ->post(route('family.members.invite'), ['email' => 'pending@example.com', 'role' => FamilyRole::Member->value])
+            ->assertRedirect();
+
+        // Second invite for the same email should be rejected
+        $this->actingAs($admin)
+            ->post(route('family.members.invite'), ['email' => 'pending@example.com', 'role' => FamilyRole::Member->value])
+            ->assertSessionHasErrors('email');
+
+        $this->assertDatabaseCount('invitations', 1);
     }
 
     public function test_invite_rejects_user_already_in_another_family(): void
@@ -265,7 +286,25 @@ class FamilyControllerTest extends TestCase
 
         $this->actingAs($admin)
             ->post(route('family.members.invite'), ['email' => $existing->email, 'role' => FamilyRole::Member->value])
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors(['email' => 'This person is already a member of your family.']);
+
+        $this->assertDatabaseMissing('invitations', ['email' => $existing->email, 'family_id' => $family->id]);
+        Mail::assertNotQueued(FamilyInvitationMail::class);
+    }
+
+    public function test_invite_rejects_user_in_another_family_not_this_one(): void
+    {
+        Mail::fake();
+
+        $admin = User::factory()->withFamily()->create();
+        $otherAdmin = User::factory()->withFamily()->create();
+
+        $this->actingAs($admin)
+            ->post(route('family.members.invite'), ['email' => $otherAdmin->email, 'role' => FamilyRole::Member->value])
+            ->assertSessionHasErrors(['email' => 'This person already belongs to a family. They must leave their current family first.']);
+
+        $this->assertDatabaseMissing('invitations', ['email' => $otherAdmin->email, 'family_id' => $admin->family->id]);
+        Mail::assertNotQueued(FamilyInvitationMail::class);
     }
 
     public function test_invite_rejects_child_role(): void

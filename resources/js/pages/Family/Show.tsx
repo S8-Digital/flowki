@@ -602,6 +602,60 @@ export default function FamilyShow({ family, roles }: Props) {
                             ))}
                         </Box>
                     </Box>
+
+                    {/* Pending Invitations */}
+                    {family.pending_invitations && family.pending_invitations.length > 0 && (
+                        <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider' }}>
+                            <Box
+                                sx={{
+                                    borderBottom: 1,
+                                    borderColor: 'divider',
+                                    px: 2,
+                                    py: 1.5,
+                                }}
+                            >
+                                <Typography sx={{ fontWeight: 600 }}>Pending Invitations ({family.pending_invitations.length})</Typography>
+                            </Box>
+                            <Box sx={{ px: 2, py: 1 }}>
+                                {family.pending_invitations.map((invitation) => (
+                                    <Box
+                                        key={invitation.email}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            py: 1,
+                                            borderBottom: 1,
+                                            borderColor: 'divider',
+                                            '&:last-child': { borderBottom: 0 },
+                                        }}
+                                    >
+                                        <Box>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Typography sx={{ fontWeight: 500 }}>{invitation.email}</Typography>
+                                                <Box
+                                                    component="span"
+                                                    sx={{
+                                                        borderRadius: '50px',
+                                                        bgcolor: 'warning.light',
+                                                        px: 1,
+                                                        py: 0.25,
+                                                        fontSize: '0.75rem',
+                                                        color: 'warning.dark',
+                                                    }}
+                                                >
+                                                    Pending
+                                                </Box>
+                                            </Box>
+                                            <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
+                                                {invitation.role}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Box>
+                    )}
                 </Box>
             </AppLayout>
         </>

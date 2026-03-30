@@ -28,13 +28,11 @@ const Animated = {
 };
 
 export { View, Text, StyleSheet, Dimensions, Platform, Animated };
-
 export const TouchableOpacity = View;
 export const TouchableHighlight = View;
 export const TouchableWithoutFeedback = View;
 export const Pressable = View;
 export const ScrollView = View;
-
 export const FlatList = <T>({
     data,
     renderItem,
@@ -127,13 +125,13 @@ export default {
     Dimensions,
     Platform,
     Animated,
+    FlatList,
+    SectionList,
     TouchableOpacity: View,
     TouchableHighlight: View,
     TouchableWithoutFeedback: View,
     Pressable: View,
     ScrollView: View,
-    FlatList,
-    SectionList,
     Image: View,
     TextInput: View,
     Switch: View,
