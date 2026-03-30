@@ -230,6 +230,7 @@ export default function GoogleAddressAutocomplete({ value, onChange, onPlaceSele
             const target = event.target as Node;
             const insideContainer = containerRef.current?.contains(target) ?? false;
             const insidePopper = popperRef.current?.contains(target) ?? false;
+
             if (!insideContainer && !insidePopper) {
                 setIsOpen(false);
             }
