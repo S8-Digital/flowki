@@ -3,9 +3,9 @@ import { Chip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Baby, Copy, GripVertical, MapPin, Pencil, Settings, UserMinus, UserPlus } from 'lucide-react';
+import { Baby, Copy, GripVertical, Mail, MapPin, Pencil, RotateCcw, Settings, Trash2, UserMinus, UserPlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { addChild, inviteMember, removeMember, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
+import { addChild, cancelInvitation, inviteMember, removeMember, resendInvitation, update, updateMemberRole } from '@/actions/App/Http/Controllers/FamilyController';
 import { update as updateMemberOrder } from '@/actions/App/Http/Controllers/Settings/MemberOrderController';
 import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 import GoogleAddressAutocomplete from '@/components/GoogleAddressAutocomplete';
@@ -111,6 +111,18 @@ export default function FamilyShow({ family, roles }: Props) {
         }
 
         router.delete(removeMember({ family: family.id, userId }).url);
+    }
+
+    function handleCancelInvitation(invitationId: number) {
+        if (!confirm('Cancel this invitation?')) {
+            return;
+        }
+
+        router.delete(cancelInvitation({ family: family.id, invitation: invitationId }).url);
+    }
+
+    function handleResendInvitation(invitationId: number) {
+        router.post(resendInvitation({ family: family.id, invitation: invitationId }).url);
     }
 
     function changeRole(memberId: number, role: string) {
@@ -619,7 +631,7 @@ export default function FamilyShow({ family, roles }: Props) {
                             <Box sx={{ px: 2, py: 1 }}>
                                 {family.pending_invitations.map((invitation) => (
                                     <Box
-                                        key={invitation.email}
+                                        key={invitation.id}
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -651,6 +663,26 @@ export default function FamilyShow({ family, roles }: Props) {
                                                 {invitation.role}
                                             </Typography>
                                         </Box>
+                                        {canManageMembers && (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    title="Resend invitation"
+                                                    onClick={() => handleResendInvitation(invitation.id)}
+                                                >
+                                                    <RotateCcw size={16} style={{ color: 'var(--mui-palette-text-secondary)' }} />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    title="Cancel invitation"
+                                                    onClick={() => handleCancelInvitation(invitation.id)}
+                                                >
+                                                    <Trash2 size={16} style={{ color: 'var(--mui-palette-error-main)' }} />
+                                                </Button>
+                                            </Box>
+                                        )}
                                     </Box>
                                 ))}
                             </Box>

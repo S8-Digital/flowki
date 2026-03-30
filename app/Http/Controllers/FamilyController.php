@@ -212,6 +212,43 @@ class FamilyController extends Controller
         return back();
     }
 
+    public function cancelInvitation(Request $request, Family $family, Invitation $invitation): RedirectResponse
+    {
+        $this->authorize('manageMembers', $family);
+
+        if ($invitation->family_id !== $family->id || $invitation->isAccepted()) {
+            abort(404);
+        }
+
+        // If the invited user is a placeholder (no name, no password, not a member of any family),
+        // delete the user record too so it doesn't orphan in the database.
+        $invitedUser = $invitation->user;
+        $invitation->delete();
+
+        if ($invitedUser && $invitedUser->name === '' && $invitedUser->password === null && $invitedUser->family_id === null) {
+            $invitedUser->delete();
+        }
+
+        return back();
+    }
+
+    public function resendInvitation(Request $request, Family $family, Invitation $invitation): RedirectResponse
+    {
+        $this->authorize('manageMembers', $family);
+
+        if ($invitation->family_id !== $family->id || $invitation->isAccepted()) {
+            abort(404);
+        }
+
+        // Generate a fresh token so old links in emails are invalidated
+        $invitation->update(['token' => Str::random(32)]);
+        $invitation->load('family');
+
+        Mail::to($invitation->email)->queue(new FamilyInvitationMail($invitation));
+
+        return back();
+    }
+
     public function removeMember(Request $request, Family $family, int $userId): RedirectResponse
     {
         $this->authorize('manageMembers', $family);

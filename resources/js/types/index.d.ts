@@ -89,8 +89,10 @@ export interface Family extends BaseFamily {
 }
 
 export interface PendingInvitation {
+    id: number;
     email: string;
     role: string;
+    created_at: string;
 }
 
 export interface Permission {

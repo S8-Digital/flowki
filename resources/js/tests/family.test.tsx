@@ -1,4 +1,4 @@
-import { useForm, usePage } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -51,6 +51,12 @@ vi.mock('@/actions/App/Http/Controllers/FamilyController', () => ({
     removeMember: (id: number) => ({ url: `/family/members/${id}` }),
     updateMemberRole: (id: number) => ({ url: `/family/members/${id}/role` }),
     addChild: () => ({ url: '/family/children' }),
+    cancelInvitation: ({ family, invitation }: { family: number; invitation: number }) => ({
+        url: `/family/${family}/invitations/${invitation}`,
+    }),
+    resendInvitation: ({ family, invitation }: { family: number; invitation: number }) => ({
+        url: `/family/${family}/invitations/${invitation}/resend`,
+    }),
 }));
 
 vi.mock('@/actions/App/Http/Controllers/Settings/MemberOrderController', () => ({
@@ -217,5 +223,46 @@ describe('Family Show page', () => {
         // The invite dialog is closed by default; check that role values are available via hidden select options
         // Confirm the component renders without crashing and the roles prop is consumed
         expect(screen.getByText('Test Family')).toBeInTheDocument();
+    });
+
+    it('renders pending invitations with cancel and resend buttons', () => {
+        const familyWithInvitations = {
+            ...mockFamily,
+            pending_invitations: [
+                { id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' },
+            ],
+        };
+        render(<FamilyShow family={familyWithInvitations} roles={mockRoles} />);
+        expect(screen.getByText('pending@example.com')).toBeInTheDocument();
+        expect(screen.getByText('Pending')).toBeInTheDocument();
+        expect(screen.getByTitle(/resend invitation/i)).toBeInTheDocument();
+        expect(screen.getByTitle(/cancel invitation/i)).toBeInTheDocument();
+    });
+
+    it('calls router.delete when cancel invitation is clicked', async () => {
+        const user = userEvent.setup();
+        const familyWithInvitations = {
+            ...mockFamily,
+            pending_invitations: [
+                { id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' },
+            ],
+        };
+        vi.spyOn(window, 'confirm').mockReturnValue(true);
+        render(<FamilyShow family={familyWithInvitations} roles={mockRoles} />);
+        await user.click(screen.getByTitle(/cancel invitation/i));
+        expect(vi.mocked(router.delete)).toHaveBeenCalledWith('/family/1/invitations/10');
+    });
+
+    it('calls router.post when resend invitation is clicked', async () => {
+        const user = userEvent.setup();
+        const familyWithInvitations = {
+            ...mockFamily,
+            pending_invitations: [
+                { id: 10, email: 'pending@example.com', role: 'member', created_at: '2024-01-02T00:00:00.000000Z' },
+            ],
+        };
+        render(<FamilyShow family={familyWithInvitations} roles={mockRoles} />);
+        await user.click(screen.getByTitle(/resend invitation/i));
+        expect(vi.mocked(router.post)).toHaveBeenCalledWith('/family/1/invitations/10/resend');
     });
 });
