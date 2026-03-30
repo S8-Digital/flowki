@@ -148,6 +148,34 @@ export const weatherApi = {
   get: () => api.get<WeatherData>('/api/mobile/weather'),
 };
 
+// Notifications -------------------------------------------------------------
+
+export interface NotificationsResponse {
+  notifications: AppNotification[];
+  unread_count: number;
+}
+
+export interface AppNotification {
+  id: string;
+  type: string;
+  data: Record<string, unknown>;
+  read_at: string | null;
+  created_at: string;
+}
+
+export const notificationsApi = {
+  list: () => api.get<NotificationsResponse>('/api/mobile/notifications'),
+  markRead: (id: string) =>
+    api.post<{ message: string; notification: AppNotification }>(
+      `/api/mobile/notifications/${id}/read`,
+    ),
+  markAllRead: () =>
+    api.post<{ message: string; unread_count: number }>(
+      '/api/mobile/notifications/read-all',
+    ),
+  remove: (id: string) => api.delete(`/api/mobile/notifications/${id}`),
+};
+
 // Feature API helpers ----------------------------------------------------------
 
 export const todosApi = {

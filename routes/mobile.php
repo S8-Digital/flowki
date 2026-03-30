@@ -7,6 +7,7 @@ use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\CalendarController;
 use App\Http\Controllers\Mobile\ChoreController;
 use App\Http\Controllers\Mobile\FamilyController;
+use App\Http\Controllers\Mobile\NotificationController;
 use App\Http\Controllers\Mobile\ProfileController;
 use App\Http\Controllers\Mobile\ShoppingController;
 use App\Http\Controllers\Mobile\TodoController;
@@ -45,6 +46,12 @@ Route::name('mobile.')->group(function () {
 
         // Weather
         Route::get('weather', [WeatherController::class, 'index'])->name('weather.index');
+
+        // Notifications
+        Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+        Route::post('notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+        Route::delete('notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 
         // Voice commands (rate-limited to 20 requests per minute per user)
         Route::post('voice/command', VoiceCommandController::class)
