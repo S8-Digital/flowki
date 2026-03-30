@@ -226,7 +226,7 @@ queryParams[decodeURIComponent(k)] = decodeURIComponent(v ?? '');
 
     await capturedListener?.({ url: 'flowki://intent?type=get-schedule' });
 
-    expect(onResult).toHaveBeenCalledWith('Could not process Siri command.', true);
+    expect(onResult).toHaveBeenCalledWith('Could not process voice command.', true);
   });
 
   it('does not call onResult when it is not provided', async () => {

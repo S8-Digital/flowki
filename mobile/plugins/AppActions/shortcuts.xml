@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  shortcuts.xml — Android App Actions + Static Launcher Shortcuts
+  ================================================================
+
+  This file wires up two Android features:
+
+  1. STATIC LAUNCHER SHORTCUTS (long-press the Flowki app icon)
+     Up to four shortcuts appear immediately without any voice interaction.
+     Tapping one fires a deep link handled by useAppIntentHandler.ts.
+
+  2. GOOGLE ASSISTANT APP ACTIONS (voice-activated via "Hey Google")
+     Each <capability> maps a Google Built-in Intent (BII) to a Flowki deep
+     link. When the user says a matching phrase, Google Assistant opens the
+     app at flowki://intent?type=<action>&<params…> and the JS hook
+     useAppIntentHandler.ts forwards it to /api/mobile/voice/command (same
+     backend endpoint used by the in-app voice bar and iOS Siri intents).
+
+  Deep-link format (see mobile/hooks/useAppIntentHandler.ts for full docs):
+    flowki://intent?type=<intentType>&<params…>
+
+  Registered in AndroidManifest.xml via the withAppActions.js config plugin:
+    <meta-data
+        android:name="android.app.shortcuts"
+        android:resource="@xml/shortcuts" />
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ── Static launcher shortcuts (long-press app icon) ──────────────── -->
+
+    <shortcut
+        android:shortcutId="create-todo"
+        android:enabled="true"
+        android:shortcutShortLabel="New To-Do"
+        android:shortcutLongLabel="Create a Flowki To-Do">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=create-todo" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="add-shopping-item"
+        android:enabled="true"
+        android:shortcutShortLabel="Add to List"
+        android:shortcutLongLabel="Add a Flowki Shopping Item">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=add-shopping-item" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="get-schedule"
+        android:enabled="true"
+        android:shortcutShortLabel="Today's Schedule"
+        android:shortcutLongLabel="View Today's Flowki Schedule">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=get-schedule" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="add-calendar-item"
+        android:enabled="true"
+        android:shortcutShortLabel="Add Event"
+        android:shortcutLongLabel="Create a Flowki Calendar Event">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=add-calendar-item" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <!-- ── Google Assistant App Action capabilities ──────────────────────── -->
+
+    <!--
+      "Hey Google, create a [task] to-do on Flowki"
+      "Hey Google, add [task] to my Flowki to-dos"
+      Maps to: actions.intent.CREATE_REMINDER (BII)
+      Deep link: flowki://intent?type=create-todo&title={reminder.description}
+    -->
+    <capability android:name="actions.intent.CREATE_REMINDER">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=create-todo&amp;title={reminder.description}" />
+        <parameter
+            android:name="reminder.description"
+            android:key="title"
+            android:mimeType="text/*" />
+    </capability>
+
+    <!--
+      "Hey Google, add [item] to my Flowki shopping list"
+      Maps to: actions.intent.CREATE_SHOPPING_LIST_ITEM (BII)
+      Deep link: flowki://intent?type=add-shopping-item&item={shopping_list.itemList.name}
+    -->
+    <capability android:name="actions.intent.CREATE_SHOPPING_LIST_ITEM">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=add-shopping-item&amp;item={shopping_list.itemList.name}" />
+        <parameter
+            android:name="shopping_list.itemList.name"
+            android:key="item"
+            android:mimeType="text/*" />
+    </capability>
+
+    <!--
+      "Hey Google, what's on my Flowki schedule"
+      "Hey Google, show my Flowki calendar today"
+      Maps to: actions.intent.GET_SCHEDULE (BII)
+      Deep link: flowki://intent?type=get-schedule
+    -->
+    <capability android:name="actions.intent.GET_SCHEDULE">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=get-schedule" />
+    </capability>
+
+    <!--
+      "Hey Google, add [chore] chore to Flowki"
+      "Hey Google, create a [chore] task on Flowki"
+      Maps to: actions.intent.CREATE_TASK (BII)
+      Deep link: flowki://intent?type=add-chore&chore={task.name}
+    -->
+    <capability android:name="actions.intent.CREATE_TASK">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=add-chore&amp;chore={task.name}" />
+        <parameter
+            android:name="task.name"
+            android:key="chore"
+            android:mimeType="text/*" />
+    </capability>
+
+    <!--
+      "Hey Google, mark [chore] as done on Flowki"
+      "Hey Google, complete [chore] on Flowki"
+      Maps to: actions.intent.RECORD_TASK_COMPLETION (BII)
+      Deep link: flowki://intent?type=complete-chore&chore={task.name}
+    -->
+    <capability android:name="actions.intent.RECORD_TASK_COMPLETION">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=complete-chore&amp;chore={task.name}" />
+        <parameter
+            android:name="task.name"
+            android:key="chore"
+            android:mimeType="text/*" />
+    </capability>
+
+    <!--
+      "Hey Google, add [event] to my Flowki calendar"
+      "Hey Google, schedule [event] on Flowki"
+      Maps to: actions.intent.CREATE_CALENDAR_EVENT (BII)
+      Deep link: flowki://intent?type=add-calendar-item&event={calendarEvent.name}
+    -->
+    <capability android:name="actions.intent.CREATE_CALENDAR_EVENT">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="flowki://intent?type=add-calendar-item&amp;event={calendarEvent.name}" />
+        <parameter
+            android:name="calendarEvent.name"
+            android:key="event"
+            android:mimeType="text/*" />
+    </capability>
+
+</shortcuts>

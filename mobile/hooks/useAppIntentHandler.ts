@@ -1,12 +1,11 @@
 /**
  * useAppIntentHandler
  *
- * Listens for deep links opened by the iOS App Intents and dispatches the
- * corresponding natural-language command to the `/api/mobile/voice/command`
- * endpoint.
+ * Listens for deep links opened by the iOS App Intents (Siri) or Android App
+ * Actions (Google Assistant) and dispatches the corresponding natural-language
+ * command to the `/api/mobile/voice/command` endpoint.
  *
- * Deep-link format (opened by the Swift intent when `openAppWhenRun = true`
- * or when the user taps a result notification):
+ * Deep-link format (opened by the Swift intent / Android shortcut capability):
  *
  *   flowki://intent?type=<intentType>&<params...>
  *
@@ -19,11 +18,12 @@
  *   - `add-calendar-item`  → `event` (string)
  *
  * Cold-start handling: when the app is launched directly from a Siri/Shortcut
- * deep link, React Native delivers the URL via `Linking.getInitialURL()` (not
- * the `url` event). This hook handles both paths.
+ * or Google Assistant deep link, React Native delivers the URL via
+ * `Linking.getInitialURL()` (not the `url` event). This hook handles both paths.
  *
- * This hook is a no-op on Android (intents only exist on iOS) and when the
- * URL scheme does not match `flowki://intent`.
+ * This hook is platform-agnostic — it works on both iOS (Siri App Intents) and
+ * Android (Google Assistant App Actions) whenever the URL scheme matches
+ * `flowki://intent`.
  */
 
 import * as Linking from 'expo-linking';
@@ -109,7 +109,7 @@ export function useAppIntentHandler(
       } catch (err: unknown) {
         // ApiError (from the api helper) attaches the parsed JSON body as `data`.
         // The backend voice endpoint puts its human-readable message in `data.response`.
-        let message = 'Could not process Siri command.';
+        let message = 'Could not process voice command.';
         const apiError = err as { data?: { response?: string } } | undefined;
 
         if (apiError?.data?.response && typeof apiError.data.response === 'string') {

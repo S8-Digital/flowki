@@ -48,6 +48,19 @@ npm install
 
 This sets `core.hooksPath = .husky` so the pre-commit hook runs on every `git commit`. The hook automatically runs Pint (PHP), Prettier, and ESLint with auto-fix via `lint-staged` on all staged files—no separate format step needed. Skipping this setup will cause your commits to bypass formatting checks and may result in lint failures on PR.
 
+## Pre-commit Formatting & Linting
+
+Before committing any changes, all modified files must be formatted and linted. Run the following commands on the relevant file types:
+
+- **PHP files**: `vendor/bin/sail composer run pint` (or `./vendor/bin/pint`) — formats PHP code style.
+- **TypeScript / JavaScript / CSS files**: `npm run format` (Prettier) and `npm run lint` (ESLint) — fixes formatting and linting issues automatically.
+- **Mobile-only JS/TS files** (under `mobile/`): these are covered by the root `npm run format` and `npm run lint` commands.
+
+All tests must pass before pushing. Run:
+- **Mobile tests**: `cd mobile && npm test`
+- **Web frontend tests**: `npm test`
+- **PHP tests**: `vendor/bin/sail artisan test --compact`
+
 ## Conventions
 
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
