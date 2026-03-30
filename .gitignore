@@ -34,3 +34,4 @@ mobile/.expo/
 mobile/node_modules/
 mobile/dist/coverage
 /terraform/.terraform/
+credentials.json
