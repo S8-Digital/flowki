@@ -97,6 +97,51 @@ export interface ShoppingList {
     updated_at: string;
 }
 
+export interface RecipeIngredient {
+    id: number;
+    recipe_id: number;
+    name: string;
+    quantity?: string | null;
+    unit?: string | null;
+    sort_order?: number | null;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface Recipe {
+    id: number;
+    family_id: number;
+    created_by?: number;
+    title: string;
+    description?: string | null;
+    category?: string | null;
+    servings?: number | null;
+    prep_time_minutes?: number | null;
+    cook_time_minutes?: number | null;
+    total_time_minutes?: number | null;
+    instructions?: string | null;
+    photo_path?: string | null;
+    rating?: number | null;
+    is_favorite: boolean;
+    ingredients?: RecipeIngredient[];
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Meal {
+    id: number;
+    family_id: number;
+    created_by: number;
+    recipe_id?: number | null;
+    planned_date?: string | null;
+    meal_type?: string | null;
+    servings?: number | null;
+    notes?: string | null;
+    recipe?: Recipe | null;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface WeatherCurrent {
     temp: number;
     feels_like: number;
@@ -119,4 +164,3 @@ export interface WeatherData {
     current: WeatherCurrent;
     forecast: WeatherDay[];
 }
-

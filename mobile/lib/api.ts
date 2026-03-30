@@ -2,6 +2,8 @@ import type {
   CalendarEvent,
   Chore,
   Family,
+  Meal,
+  Recipe,
   ShoppingItem,
   ShoppingList,
   Todo,
@@ -148,35 +150,30 @@ export const weatherApi = {
   get: () => api.get<WeatherData>('/api/mobile/weather'),
 };
 
-// Notifications -------------------------------------------------------------
+// Feature API helpers ----------------------------------------------------------
 
-export interface NotificationsResponse {
-  notifications: AppNotification[];
-  unread_count: number;
-}
-
-export interface AppNotification {
-  id: string;
-  type: string;
-  data: Record<string, unknown>;
-  read_at: string | null;
-  created_at: string;
-}
-
-export const notificationsApi = {
-  list: () => api.get<NotificationsResponse>('/api/mobile/notifications'),
-  markRead: (id: string) =>
-    api.post<{ message: string; notification: AppNotification }>(
-      `/api/mobile/notifications/${id}/read`,
-    ),
-  markAllRead: () =>
-    api.post<{ message: string; unread_count: number }>(
-      '/api/mobile/notifications/read-all',
-    ),
-  remove: (id: string) => api.delete(`/api/mobile/notifications/${id}`),
+export const recipesApi = {
+  list: () => api.get<Recipe[]>('/api/mobile/recipes'),
 };
 
-// Feature API helpers ----------------------------------------------------------
+export const mealsApi = {
+  list: (week?: string) =>
+    api.get<Meal[]>(`/api/mobile/meals${week ? `?week=${week}` : ''}`),
+  create: (
+    data: Partial<Meal> & {
+      planned_date: string;
+      meal_type: string;
+      shopping_list_id?: number | null;
+    },
+  ) => api.post<Meal>('/api/mobile/meals', data),
+  update: (id: number, data: Partial<Meal>) =>
+    api.patch<Meal>(`/api/mobile/meals/${id}`, data),
+  remove: (id: number) => api.delete(`/api/mobile/meals/${id}`),
+  addGroceries: (mealId: number, shopping_list_id: number) =>
+    api.post<{ message: string }>(`/api/mobile/meals/${mealId}/groceries`, {
+      shopping_list_id,
+    }),
+};
 
 export const todosApi = {
   list: () => api.get<Todo[]>('/api/mobile/todos'),
@@ -242,6 +239,14 @@ export const voiceApi = {
     api.post<VoiceCommandResponse>('/api/mobile/voice/command', { command }),
 };
 
-export type { Todo, Chore, ShoppingItem, ShoppingList, CalendarEvent };
+export type {
+  Todo,
+  Chore,
+  ShoppingItem,
+  ShoppingList,
+  CalendarEvent,
+  Meal,
+  Recipe,
+};
 
 export { ApiError };

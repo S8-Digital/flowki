@@ -70,6 +70,15 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="meals"
+        options={{
+          title: 'Meals',
+          tabBarIcon: ({ color, size }) => (
+            <TabBarIcon name="restaurant-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="calendar"
         options={{
           title: 'Calendar',
@@ -84,15 +93,6 @@ export default function TabsLayout() {
           title: 'Family',
           tabBarIcon: ({ color, size }) => (
             <TabBarIcon name="people-outline" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="notifications"
-        options={{
-          title: 'Notifications',
-          tabBarIcon: ({ color, size }) => (
-            <TabBarIcon name="notifications-outline" color={color} size={size} />
           ),
         }}
       />
