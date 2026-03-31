@@ -478,7 +478,7 @@ resource "google_cloud_run_v2_job" "migrate" {
 
       containers {
         image   = local.image_placeholder
-        command = ["php", "artisan", "migrate", "--force"]
+        command = ["php", "artisan", "migrate", "--force", "--seed"]
 
         dynamic "env" {
           for_each = local.app_env_vars

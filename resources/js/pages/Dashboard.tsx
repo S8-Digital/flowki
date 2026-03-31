@@ -1,10 +1,13 @@
 import { Head, router } from '@inertiajs/react';
 import Box from '@mui/material/Box';
+
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { GripVertical, Plus, Settings2, X } from 'lucide-react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
 import CalendarScheduleWidget from '@/components/Dashboard/CalendarScheduleWidget';
 import CalendarTodayWidget from '@/components/Dashboard/CalendarTodayWidget';
 import MealPlannerWidget from '@/components/Dashboard/MealPlannerWidget';
@@ -15,9 +18,9 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
-import type { BreadcrumbItem, CalendarEvent, DashboardShoppingListData, DashboardWidget, DashboardWidgetType, Todo } from '@/types';
-import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
 import { dashboard } from '@/routes';
+
+import type { BreadcrumbItem, CalendarEvent, DashboardShoppingListData, DashboardWidget, DashboardWidgetType, Todo } from '@/types';
 
 interface DinnerEntry {
     id: number;
@@ -64,6 +67,7 @@ export default function Dashboard({
     weekDinners,
 }: Props) {
     const [localWidgets, setLocalWidgets] = useState<DashboardWidget[]>([...initialWidgets]);
+
     const [addOpen, setAddOpen] = useState(false);
     const [newWidgetType, setNewWidgetType] = useState('');
     const [newWidgetListId, setNewWidgetListId] = useState('');
@@ -73,6 +77,10 @@ export default function Dashboard({
     const [settingsListId, setSettingsListId] = useState('');
     const [settingsCategory, setSettingsCategory] = useState('');
     const [draggingId, setDraggingId] = useState<number | null>(null);
+
+    useEffect(() => {
+        setLocalWidgets([...initialWidgets]);
+    }, [initialWidgets]);
 
     function widgetLabel(type: string) {
         return widgetTypes.find((t) => t.value === type)?.label ?? type;

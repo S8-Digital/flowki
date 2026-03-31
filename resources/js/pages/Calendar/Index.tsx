@@ -3,26 +3,31 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import FullCalendar from '@fullcalendar/react';
+import type FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Fab } from '@mui/material';
 import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 import { CalendarDays, Plus, Trash2 } from 'lucide-react';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { Eye, EyeOff, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
 import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
-import FamilyScheduleView from '@/components/Calendar/FamilyScheduleView';
+import { FamilyScheduleView } from '@/components/Calendar/FamilyScheduleView';
+import { getMemberColor } from '@/components/Calendar/MemberColumn';
 import ScheduleUploadModal from '@/components/Calendar/ScheduleUploadModal';
+import { StyledFullCalendar } from '@/components/Calendar/StyledFullCalendar';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { DateTimeInput } from '@/components/ui/datetime-input';
@@ -64,6 +69,7 @@ function localToday(): string {
 export default function CalendarIndex({ events, todos, chores, members, initialView, initialDate }: Props) {
     const [calendarView, setCalendarView] = useState<CalendarViewType>((initialView as CalendarViewType) ?? 'family');
     const [selectedDate, setSelectedDate] = useState<string>(initialDate ?? localToday());
+    const [hiddenMembers, setHiddenMembers] = useState<Set<number>>(new Set());
     const calendarRef = useRef<FullCalendar>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [importOpen, setImportOpen] = useState(false);
@@ -75,12 +81,41 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
     const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
     const [selectedChore, setSelectedChore] = useState<Chore | null>(null);
 
+    useEffect(() => {
+        calendarRef.current?.getApi().gotoDate(selectedDate);
+    }, [selectedDate]);
+
+    function shiftDate(dateStr: string, days: number): string {
+        const d = new Date(dateStr + 'T00:00:00');
+        d.setDate(d.getDate() + days);
+
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function toggleMember(memberId: number) {
+        setHiddenMembers((prev) => {
+            const next = new Set(prev);
+
+            if (next.has(memberId)) {
+                next.delete(memberId);
+            } else {
+                next.add(memberId);
+            }
+
+            return next;
+        });
+    }
+
+    const MemberToggle = styled(ButtonBase)({
+        borderRadius: '9999px',
+        fontSize: '0.75rem',
+        fontWeight: 500,
+        cursor: 'pointer',
+        transition: 'all 0.15s',
+    });
+
     function switchView(view: CalendarViewType) {
         setCalendarView(view);
-
-        if (view !== 'family') {
-            calendarRef.current?.getApi().changeView(view);
-        }
     }
 
     const createForm = useForm({
@@ -110,7 +145,16 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         createForm.setData({ ...createForm.data, attendee_ids: ids, color });
     }
 
-    const editEventForm = useForm({
+    const editEventForm = useForm<{
+        title: string;
+        description: string;
+        location: string;
+        start_at: string;
+        end_at: string;
+        recurrence: string;
+        color: string;
+        attendee_ids: string[];
+    }>({
         title: '',
         description: '',
         location: '',
@@ -118,10 +162,34 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         end_at: '',
         recurrence: '',
         color: '#6366f1',
-        attendee_ids: [] as string[],
+        attendee_ids: [],
     });
-    const editTodoForm = useForm({ title: '', status: '', priority: '', category: '', due_date: '', assigned_to: '' });
-    const editChoreForm = useForm({ title: '', frequency: '', next_due_date: '', assignee_ids: [] as string[] });
+    const editTodoForm = useForm<{
+        title: string;
+        status: string;
+        priority: string;
+        category: string;
+        due_date: string;
+        assigned_to: string;
+    }>({
+        title: '',
+        status: '',
+        priority: '',
+        category: '',
+        due_date: '',
+        assigned_to: '',
+    });
+    const editChoreForm = useForm<{
+        title: string;
+        frequency: string;
+        next_due_date: string;
+        assignee_ids: string[];
+    }>({
+        title: '',
+        frequency: '',
+        next_due_date: '',
+        assignee_ids: [],
+    });
 
     const allFcEvents = useMemo(
         () => [
@@ -136,6 +204,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                 textColor: '#ffffff',
                 editable: true,
                 extendedProps: { type: 'event', source: e },
+                display: 'block',
             })),
             ...(todos ?? [])
                 .filter((t) => t.due_date)
@@ -148,6 +217,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                     textColor: '#ffffff',
                     editable: false,
                     extendedProps: { type: 'todo', source: t },
+                    display: 'block',
                 })),
             ...(chores ?? [])
                 .filter((c) => c.next_due_date)
@@ -160,6 +230,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                     textColor: '#ffffff',
                     editable: false,
                     extendedProps: { type: 'chore', source: c },
+                    display: 'block',
                 })),
         ],
         [events, todos, chores],
@@ -176,28 +247,24 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         if (type === 'event') {
             const e = source as CalendarEvent;
             setSelectedEvent(e);
-            editEventForm.setData({
-                title: e.title,
-                description: e.description ?? '',
-                location: e.location ?? '',
-                start_at: e.start_at.slice(0, 16),
-                end_at: e.end_at?.slice(0, 16) ?? '',
-                recurrence: e.recurrence ?? '',
-                color: e.color ?? '#6366f1',
-                attendee_ids: e.attendees?.map((a) => String(a.id)) ?? [],
-            });
+            editEventForm.setData('title', e.title);
+            editEventForm.setData('description', e.description ?? '');
+            editEventForm.setData('location', e.location ?? '');
+            editEventForm.setData('start_at', e.start_at.slice(0, 16));
+            editEventForm.setData('end_at', e.end_at?.slice(0, 16) ?? '');
+            editEventForm.setData('recurrence', e.recurrence ?? '');
+            editEventForm.setData('color', e.color ?? '#6366f1');
+            editEventForm.setData('attendee_ids', e.attendees?.map((a) => String(a.id)) ?? []);
             setEditEventOpen(true);
         } else if (type === 'todo') {
             const t = source as Todo;
             setSelectedTodo(t);
-            editTodoForm.setData({
-                title: t.title,
-                status: t.status,
-                priority: t.priority,
-                category: t.category,
-                due_date: t.due_date ?? '',
-                assigned_to: String(t.assignee?.id ?? ''),
-            });
+            editTodoForm.setData('title', t.title);
+            editTodoForm.setData('status', t.status);
+            editTodoForm.setData('priority', t.priority);
+            editTodoForm.setData('category', t.category);
+            editTodoForm.setData('due_date', t.due_date ?? '');
+            editTodoForm.setData('assigned_to', String(t.assignee?.id ?? ''));
             setEditTodoOpen(true);
         } else if (type === 'chore') {
             const c = source as Chore;
@@ -289,16 +356,14 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
     const handleFamilyEventClick = useCallback(
         (event: CalendarEvent) => {
             setSelectedEvent(event);
-            editEventForm.setData({
-                title: event.title,
-                description: event.description ?? '',
-                location: event.location ?? '',
-                start_at: event.start_at.slice(0, 16),
-                end_at: event.end_at?.slice(0, 16) ?? '',
-                recurrence: event.recurrence ?? '',
-                color: event.color ?? '#6366f1',
-                attendee_ids: event.attendees?.map((a) => String(a.id)) ?? [],
-            });
+            editEventForm.setData('title', event.title);
+            editEventForm.setData('description', event.description ?? '');
+            editEventForm.setData('location', event.location ?? '');
+            editEventForm.setData('start_at', event.start_at.slice(0, 16));
+            editEventForm.setData('end_at', event.end_at?.slice(0, 16) ?? '');
+            editEventForm.setData('recurrence', event.recurrence ?? '');
+            editEventForm.setData('color', event.color ?? '#6366f1');
+            editEventForm.setData('attendee_ids', event.attendees?.map((a) => String(a.id)) ?? []);
             setEditEventOpen(true);
         },
         [editEventForm],
@@ -348,23 +413,76 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             <WeatherStrip />
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box>
-                                <Select value={calendarView} onValueChange={(v) => switchView(v as CalendarViewType)}>
-                                    <SelectTrigger aria-label="Calendar view">
-                                        <SelectValue placeholder="View" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {VIEW_OPTIONS.map((opt) => (
-                                            <SelectItem key={opt.value} value={opt.value}>
-                                                {opt.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </Box>
                             <Fab sx={{ ml: 2 }} color="primary" aria-label="Add event or import" onClick={(e) => setFabMenuAnchor(e.currentTarget)}>
                                 <Plus size={18} />
                             </Fab>
+                        </Box>
+                    </Box>
+
+                    {/* Date navigation and member toggles (always visible) */}
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setSelectedDate(shiftDate(selectedDate, -1))}
+                                aria-label="Previous day"
+                            >
+                                <ChevronLeft style={{ width: 16, height: 16 }} />
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={() => setSelectedDate(localToday())}>
+                                Today
+                            </Button>
+                            <Button variant="outline" size="icon" onClick={() => setSelectedDate(shiftDate(selectedDate, 1))} aria-label="Next day">
+                                <ChevronRight style={{ width: 16, height: 16 }} />
+                            </Button>
+                        </Box>
+                        <DateTimeInput
+                            type="date"
+                            label="Selected Date"
+                            value={dayjs(selectedDate)}
+                            onChange={(value) => setSelectedDate(value?.format('YYYY-MM-DD') ?? '')}
+                            slotProps={{ textField: { size: 'small', inputProps: { 'aria-label': 'Select date' }, color: 'primary' } }}
+                        />
+                        <Box>
+                            <Select value={calendarView} onValueChange={(v) => switchView(v as CalendarViewType)} label="View">
+                                <SelectTrigger aria-label="Calendar view">
+                                    <SelectValue placeholder="View" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {VIEW_OPTIONS.map((opt) => (
+                                        <SelectItem key={opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </Box>
+                        {/* Member toggles */}
+                        <Box sx={{ ml: 'auto', display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {members.map((member, idx) => {
+                                const color = getMemberColor(member, idx);
+                                const hidden = hiddenMembers.has(member.id);
+
+                                return (
+                                    <MemberToggle
+                                        key={member.id}
+                                        onClick={() => toggleMember(member.id)}
+                                        aria-pressed={!hidden}
+                                        title={hidden ? `Show ${member.name}` : `Hide ${member.name}`}
+                                        sx={{ display: 'flex', alignItems: 'center', gap: 0.75, px: 1.25, py: 0.5 }}
+                                        style={{
+                                            opacity: hidden ? 0.4 : 1,
+                                            color: hidden ? 'inherit' : color,
+                                            backgroundColor: hidden ? 'transparent' : `${color}15`,
+                                            border: `1px solid ${color}`,
+                                        }}
+                                    >
+                                        {hidden ? <EyeOff style={{ width: 12, height: 12 }} /> : <Eye style={{ width: 12, height: 12 }} />}
+                                        {member.name}
+                                    </MemberToggle>
+                                );
+                            })}
                         </Box>
                     </Box>
 
@@ -375,34 +493,31 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             todos={todos}
                             chores={chores}
                             selectedDate={selectedDate}
-                            onDateChange={setSelectedDate}
+                            hiddenMembers={hiddenMembers}
+                            toggleMember={toggleMember}
                             onEventClick={handleFamilyEventClick}
                             onTodoClick={handleFamilyTodoClick}
                             onChoreClick={handleFamilyChoreClick}
                         />
                     ) : (
-                        <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 1 }}>
-                            <FullCalendar
-                                ref={calendarRef}
-                                plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
-                                initialView={calendarView}
-                                initialDate={selectedDate}
-                                headerToolbar={{ left: 'prev,next today', center: 'title', right: '' }}
-                                buttonText={{ today: 'Today' }}
-                                editable
-                                selectable
-                                selectMirror
-                                dayMaxEvents
-                                nowIndicator
-                                height="auto"
-                                events={allFcEvents}
-                                select={handleDateSelect}
-                                eventClick={handleEventClick}
-                                eventDrop={handleEventDrop}
-                                eventResize={handleEventResize}
-                                datesSet={handleDatesSet}
-                            />
-                        </Box>
+                        <StyledFullCalendar
+                            plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
+                            initialView={calendarView}
+                            view={calendarView}
+                            selectedDate={selectedDate}
+                            events={allFcEvents}
+                            select={handleDateSelect}
+                            eventClick={handleEventClick}
+                            eventDrop={handleEventDrop}
+                            eventResize={handleEventResize}
+                            datesSet={handleDatesSet}
+                            editable
+                            selectable
+                            selectMirror
+                            dayMaxEvents
+                            nowIndicator
+                            height="auto"
+                        />
                     )}
                 </Box>
 
