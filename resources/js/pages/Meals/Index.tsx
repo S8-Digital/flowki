@@ -12,13 +12,13 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { ChevronLeft, ChevronRight, Plus, ShoppingCart, Trash2, UtensilsCrossed } from 'lucide-react';
 import { useState } from 'react';
+import { destroy, store } from '@/actions/App/Http/Controllers/MealController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, Meal, Recipe } from '@/types';
-import { destroy, store } from '@/actions/App/Http/Controllers/MealController';
 
 interface MealType {
     value: string;
