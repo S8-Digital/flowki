@@ -29,7 +29,7 @@ class RecipeControllerTest extends TestCase
             ->getJson(route('mobile.recipes.index'));
 
         $response->assertOk()
-            ->assertJsonCount(1)
+            ->assertJsonCount(1, 'data')
             ->assertJsonFragment(['title' => 'Pasta Bake']);
     }
 
@@ -47,6 +47,6 @@ class RecipeControllerTest extends TestCase
         $this->actingAs($user, 'sanctum')
             ->getJson(route('mobile.recipes.index'))
             ->assertOk()
-            ->assertJsonCount(0);
+            ->assertJsonCount(0, 'data');
     }
 }

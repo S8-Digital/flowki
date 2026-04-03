@@ -32,8 +32,8 @@ class MealControllerTest extends TestCase
         $this->actingAs($user, 'sanctum')
             ->getJson(route('mobile.meals.index'))
             ->assertOk()
-            ->assertJsonCount(1)
-            ->assertJsonPath('0.recipe.title', $recipe->title);
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.recipe.title', $recipe->title);
     }
 
     public function test_user_can_create_a_meal(): void
@@ -50,7 +50,7 @@ class MealControllerTest extends TestCase
                 'shopping_list_id' => $list->id,
             ])
             ->assertCreated()
-            ->assertJsonPath('recipe.id', $recipe->id);
+            ->assertJsonPath('data.recipe.id', $recipe->id);
 
         $this->assertDatabaseHas('meals', [
             'family_id' => $user->family_id,
@@ -106,7 +106,8 @@ class MealControllerTest extends TestCase
     public function test_user_needs_add_item_permission_to_aggregate_groceries_when_creating_meal(): void
     {
         $user = User::factory()->withFamily()->create();
-        $user->revokePermissionTo('create-shopping-items');
+        $user->syncRoles(['Guest']);
+        $user->givePermissionTo('create-meals');
         $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
         $shoppingList = ShoppingList::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
 
@@ -170,7 +171,8 @@ class MealControllerTest extends TestCase
     public function test_user_needs_add_item_permission_to_aggregate_groceries_for_a_meal(): void
     {
         $user = User::factory()->withFamily()->create();
-        $user->revokePermissionTo('create-shopping-items');
+        $user->syncRoles(['Guest']);
+        $user->givePermissionTo('view-meals');
         $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
         $meal = Meal::factory()->create([
             'family_id' => $user->family_id,

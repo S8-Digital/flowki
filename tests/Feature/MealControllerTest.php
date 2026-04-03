@@ -130,7 +130,8 @@ class MealControllerTest extends TestCase
     public function test_user_needs_add_item_permission_to_aggregate_groceries_when_creating_meal(): void
     {
         $user = User::factory()->withFamily()->create();
-        $user->revokePermissionTo('create-shopping-items');
+        $user->syncRoles(['Guest']);
+        $user->givePermissionTo('create-meals');
         $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
         $shoppingList = ShoppingList::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
 
@@ -230,7 +231,8 @@ class MealControllerTest extends TestCase
     public function test_user_needs_add_item_permission_to_aggregate_groceries_for_a_meal(): void
     {
         $user = User::factory()->withFamily()->create();
-        $user->revokePermissionTo('create-shopping-items');
+        $user->syncRoles(['Guest']);
+        $user->givePermissionTo('view-meals');
         $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
         $meal = Meal::factory()->create([
             'family_id' => $user->family_id,
