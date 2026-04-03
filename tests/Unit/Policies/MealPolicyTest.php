@@ -17,7 +17,7 @@ class MealPolicyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->policy = new MealPolicy();
+        $this->policy = new MealPolicy;
     }
 
     public function test_user_without_family_cannot_view_any(): void

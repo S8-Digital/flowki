@@ -425,7 +425,7 @@ describe('Meals page', () => {
     });
 
     it('renders meal recipe title in the grid', () => {
-        render(<MealsIndex meals={[baseMeal]} recipes={[baseRecipeForMeal]} shoppingLists={[]} weekStart="2026-03-30" mealTypes={mealTypes} />);
+        render(<MealsIndex meals={[baseMeal]} recipes={[]} shoppingLists={[]} weekStart="2026-03-30" mealTypes={mealTypes} />);
         expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument();
     });
 

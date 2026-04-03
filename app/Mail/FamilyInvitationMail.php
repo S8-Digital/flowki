@@ -39,7 +39,7 @@ class FamilyInvitationMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.family-invitation',
+            view: 'mail.family-invitation',
         );
     }
 

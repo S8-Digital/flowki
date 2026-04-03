@@ -55,7 +55,7 @@ class Meal extends Model
 
     public function scopeForWeek(Builder $query, string $weekStart): Builder
     {
-        return $query->whereBetween('planned_date', [$weekStart, date('Y-m-d', strtotime($weekStart . ' +6 days'))]);
+        return $query->whereBetween('planned_date', [$weekStart, date('Y-m-d', strtotime($weekStart.' +6 days'))]);
     }
 
     /**
