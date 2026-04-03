@@ -171,15 +171,34 @@ describe('useAppearance', () => {
         expect(localStorage.getItem('appearance')).toBe('dark');
     });
 
-    it('sets cookie when updating appearance', () => {
-        const cookieSpy = vi.spyOn(Object.getPrototypeOf(document), 'cookie', 'set');
+    it('sets cookie with correct appearance value when updating appearance', () => {
+        // Track the cookie string that was set
+        let lastCookieSet = '';
+        const originalDescriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie');
+        Object.defineProperty(document, 'cookie', {
+            get: originalDescriptor?.get,
+            set: (value: string) => {
+                lastCookieSet = value;
+
+                if (originalDescriptor?.set) {
+                    originalDescriptor.set.call(document, value);
+                }
+            },
+            configurable: true,
+        });
+
         const { result } = renderHook(() => useAppearance());
         act(() => {
-            result.current.updateAppearance('light');
+            result.current.updateAppearance('dark');
         });
-        // cookie set at least once
-        expect(cookieSpy).toHaveBeenCalled();
-        cookieSpy.mockRestore();
+
+        expect(lastCookieSet).toContain('appearance=dark');
+        expect(lastCookieSet).toContain('path=/');
+
+        // Restore original cookie descriptor
+        if (originalDescriptor) {
+            Object.defineProperty(document, 'cookie', originalDescriptor);
+        }
     });
 
     it('applies the theme when updating appearance to dark', () => {

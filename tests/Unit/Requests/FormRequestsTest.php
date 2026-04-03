@@ -438,25 +438,40 @@ class FormRequestsTest extends TestCase
 
     public function test_inbound_email_webhook_request_authorize_fails_without_secret(): void
     {
+        $original = config('services.cloudflare.worker_secret');
         config(['services.cloudflare.worker_secret' => null]);
-        $request = new InboundEmailWebhookRequest;
-        $this->assertFalse($request->authorize());
+        try {
+            $request = new InboundEmailWebhookRequest;
+            $this->assertFalse($request->authorize());
+        } finally {
+            config(['services.cloudflare.worker_secret' => $original]);
+        }
     }
 
     public function test_inbound_email_webhook_request_authorize_fails_with_wrong_secret(): void
     {
+        $original = config('services.cloudflare.worker_secret');
         config(['services.cloudflare.worker_secret' => 'correct-secret']);
-        $request = new InboundEmailWebhookRequest;
-        $request->headers->set('X-Worker-Secret', 'wrong-secret');
-        $this->assertFalse($request->authorize());
+        try {
+            $request = new InboundEmailWebhookRequest;
+            $request->headers->set('X-Worker-Secret', 'wrong-secret');
+            $this->assertFalse($request->authorize());
+        } finally {
+            config(['services.cloudflare.worker_secret' => $original]);
+        }
     }
 
     public function test_inbound_email_webhook_request_authorize_passes_with_correct_secret(): void
     {
+        $original = config('services.cloudflare.worker_secret');
         config(['services.cloudflare.worker_secret' => 'my-secret']);
-        $request = new InboundEmailWebhookRequest;
-        $request->headers->set('X-Worker-Secret', 'my-secret');
-        $this->assertTrue($request->authorize());
+        try {
+            $request = new InboundEmailWebhookRequest;
+            $request->headers->set('X-Worker-Secret', 'my-secret');
+            $this->assertTrue($request->authorize());
+        } finally {
+            config(['services.cloudflare.worker_secret' => $original]);
+        }
     }
 
     // -----------------------------------------------------------------------

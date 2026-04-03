@@ -22,7 +22,7 @@ import type { CalendarEvent, Chore, ShoppingList, Todo, WeatherData } from '@/li
 
 // ── store mock ────────────────────────────────────────────────────────────────
 
-let mockUser: { id: number; name: string; family_id: number | null } | null = {
+let mockUser: { id: number; name: string | null; family_id: number | null } | null = {
     id: 1,
     name: 'Alice Smith',
     family_id: 42,
@@ -205,7 +205,7 @@ describe('DashboardScreen', () => {
     });
 
     it('renders greeting with "there" fallback when user has no name', () => {
-        mockUser = { id: 1, name: null as unknown as string, family_id: 42 };
+        mockUser = { id: 1, name: null, family_id: 42 };
         render(React.createElement(DashboardScreen));
         expect(screen.getByText(/Hey, there/)).toBeInTheDocument();
     });
@@ -304,24 +304,26 @@ describe('DashboardScreen', () => {
         expect(screen.queryByText(/°C/)).toBeNull();
     });
 
-    it('moves a widget up when the up arrow is pressed', () => {
+    it('moves a widget up when the up arrow button is clicked', () => {
         render(React.createElement(DashboardScreen));
-        // The second widget ("Today's Schedule") should have an up button
-        const upButtons = screen.getAllByText('↑');
-        // Click the up button for the second widget (index 1)
-        fireEvent.click(upButtons[1]);
-        // Now "Today's Schedule" should appear before "Weather" (it was second, now first)
-        const cards = screen.getAllByTestId('card');
-        // We can't assert order directly, but the click should not throw
-        expect(cards.length).toBeGreaterThan(0);
+
+        // The ↑ buttons render as spans inside TouchableOpacity (View mock = div)
+        // fireEvent.click on the parent div triggers onPress via the prop
+        const upSpans = screen.getAllByText('↑');
+        // The second ↑ (index 1) belongs to "Today's Schedule" (index === 0 is disabled)
+        // Just verify the component doesn't crash and still renders all widgets
+        fireEvent.click(upSpans[1].closest('div') as Element);
+        expect(screen.getByText('Weather')).toBeInTheDocument();
+        expect(screen.getByText("Today's Schedule")).toBeInTheDocument();
     });
 
-    it('moves a widget down when the down arrow is pressed', () => {
+    it('moves a widget down when the down arrow button is clicked', () => {
         render(React.createElement(DashboardScreen));
-        const downButtons = screen.getAllByText('↓');
-        // Click the down button for the first widget (Weather)
-        fireEvent.click(downButtons[0]);
-        // Should not throw
+
+        const downSpans = screen.getAllByText('↓');
+        // Click the ↓ for the first non-last widget
+        fireEvent.click(downSpans[0].closest('div') as Element);
         expect(screen.getByText('Weather')).toBeInTheDocument();
+        expect(screen.getByText("Today's Schedule")).toBeInTheDocument();
     });
 });
