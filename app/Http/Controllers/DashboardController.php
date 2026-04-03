@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\DashboardWidgetType;
 use App\Models\CalendarEvent;
 use App\Models\DashboardWidget;
+use App\Models\Meal;
 use App\Models\ShoppingList;
 use App\Models\Todo;
 use Illuminate\Http\RedirectResponse;
@@ -51,6 +52,7 @@ class DashboardController extends Controller
             'calendarEvents' => $this->getUpcomingEvents($family->id),
             'todosToday' => $this->getTodayTodos($family->id, $user->id),
             'shoppingItems' => $this->getShoppingItems($family->id),
+            'weekDinners' => $this->getWeekDinners($family->id),
         ]);
     }
 
@@ -156,6 +158,31 @@ class DashboardController extends Controller
                         'is_checked' => $item->is_checked,
                     ])->values()->all(),
                 ],
+            ])
+            ->all();
+    }
+
+    /** @return array<int, mixed> */
+    private function getWeekDinners(int $familyId): array
+    {
+        return Meal::query()
+            ->forFamily($familyId)
+            ->forWeek(now()->startOfWeek()->toDateString())
+            ->where('meal_type', 'dinner')
+            ->with(['recipe:id,title,photo_path,rating'])
+            ->orderBy('planned_date')
+            ->get()
+            ->map(fn ($meal) => [
+                'id' => $meal->id,
+                'planned_date' => $meal->planned_date?->toDateString(),
+                'meal_type' => $meal->meal_type?->value,
+                'notes' => $meal->notes,
+                'recipe' => $meal->recipe ? [
+                    'id' => $meal->recipe->id,
+                    'title' => $meal->recipe->title,
+                    'photo_path' => $meal->recipe->photo_path,
+                    'rating' => $meal->recipe->rating,
+                ] : null,
             ])
             ->all();
     }

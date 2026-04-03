@@ -59,7 +59,7 @@ vi.mock('@fullcalendar/interaction', () => ({ default: {} }));
 
 // Stub FamilyScheduleView (complex component tested elsewhere)
 vi.mock('@/components/Calendar/FamilyScheduleView', () => ({
-    default: () => <div data-testid="family-schedule-view" />,
+    FamilyScheduleView: () => <div data-testid="family-schedule-view" />,
     buildColumns: vi.fn(() => []),
 }));
 
@@ -127,6 +127,7 @@ const baseChore = {
     reminder_enabled: false,
     reminder_lead_time: 60,
     family_id: 1,
+    created_by: 1,
     assignees: [baseUser],
     created_at: '2024-01-01T00:00:00.000000Z',
     updated_at: '2024-01-01T00:00:00.000000Z',
@@ -144,6 +145,7 @@ const baseCalendarEvent = {
     reminder_at: null,
     color: '#6366f1',
     family_id: 1,
+    created_by: 1,
     attendees: [baseUser],
     creator: baseUser,
     created_at: '2024-01-01T00:00:00.000000Z',

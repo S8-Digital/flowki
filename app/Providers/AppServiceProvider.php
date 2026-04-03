@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Models\CalendarEvent;
 use App\Models\Chore;
+use App\Models\Meal;
 use App\Models\ShoppingItem;
 use App\Models\ShoppingList;
 use App\Models\Todo;
 use App\Observers\CalendarEventObserver;
 use App\Observers\ChoreObserver;
+use App\Observers\MealObserver;
 use App\Observers\ShoppingItemObserver;
 use App\Observers\ShoppingListObserver;
 use App\Observers\TodoObserver;
@@ -39,5 +41,6 @@ class AppServiceProvider extends ServiceProvider
         ShoppingItem::observe(ShoppingItemObserver::class);
         ShoppingList::observe(ShoppingListObserver::class);
         CalendarEvent::observe(CalendarEventObserver::class);
+        Meal::observe(MealObserver::class);
     }
 }

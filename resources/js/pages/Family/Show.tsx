@@ -3,7 +3,7 @@ import { Chip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Baby, Copy, GripVertical, MapPin, Pencil, RotateCcw, Settings, Trash2, UserMinus, UserPlus } from 'lucide-react';
+import { Baby, Copy, GripVertical, MapPin, Pencil, Settings, Trash2, UserMinus, UserPlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {
     addChild,
@@ -675,11 +675,11 @@ export default function FamilyShow({ family, roles }: Props) {
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                                 <Button
                                                     variant="ghost"
-                                                    size="icon"
+                                                    size="sm"
                                                     title="Resend invitation"
                                                     onClick={() => handleResendInvitation(invitation.id)}
                                                 >
-                                                    <RotateCcw size={16} style={{ color: 'var(--mui-palette-text-secondary)' }} />
+                                                    Resend Invitation
                                                 </Button>
                                                 <Button
                                                     variant="ghost"

@@ -10,7 +10,7 @@ services:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${APP_PORT:-8089}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '${VITE_PORT:-5179}:${VITE_PORT:-5179}'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1

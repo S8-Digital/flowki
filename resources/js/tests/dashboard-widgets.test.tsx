@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import CalendarScheduleWidget from '@/components/Dashboard/CalendarScheduleWidget';
 import CalendarTodayWidget from '@/components/Dashboard/CalendarTodayWidget';
+import MealPlannerWidget from '@/components/Dashboard/MealPlannerWidget';
 import ShoppingListWidget from '@/components/Dashboard/ShoppingListWidget';
 import TodoListWidget from '@/components/Dashboard/TodoListWidget';
 
@@ -178,5 +179,56 @@ describe('ShoppingListWidget', () => {
         );
         expect(screen.getByText('Pasta')).toBeInTheDocument();
         expect(screen.queryByText('Apples')).toBeNull();
+    });
+});
+
+// ---------------------------------------------------------------------------
+// MealPlannerWidget
+// ---------------------------------------------------------------------------
+
+const baseDinner = {
+    id: 1,
+    planned_date: '2026-03-31',
+    meal_type: 'dinner',
+    notes: null,
+    recipe: {
+        id: 1,
+        title: 'Spaghetti Bolognese',
+        photo_path: null,
+        rating: 4,
+    },
+};
+
+describe('MealPlannerWidget', () => {
+    it('shows empty state when no dinners', () => {
+        render(<MealPlannerWidget weekDinners={[]} />);
+        expect(screen.getByText(/no dinners planned this week/i)).toBeInTheDocument();
+    });
+
+    it('renders dinner recipe title', () => {
+        render(<MealPlannerWidget weekDinners={[baseDinner]} />);
+        expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument();
+    });
+
+    it('renders day abbreviation for the dinner', () => {
+        render(<MealPlannerWidget weekDinners={[baseDinner]} />);
+        // 2026-03-31 is a Tuesday
+        expect(screen.getByText('Tue')).toBeInTheDocument();
+    });
+
+    it('renders multiple dinners', () => {
+        const dinners = [
+            baseDinner,
+            {
+                id: 2,
+                planned_date: '2026-04-01',
+                meal_type: 'dinner',
+                notes: null,
+                recipe: { id: 2, title: 'Chicken Soup', photo_path: null, rating: null },
+            },
+        ];
+        render(<MealPlannerWidget weekDinners={dinners} />);
+        expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument();
+        expect(screen.getByText('Chicken Soup')).toBeInTheDocument();
     });
 });

@@ -8,6 +8,7 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FcmTokenController;
 use App\Http\Controllers\FirebaseServiceWorkerController;
 use App\Http\Controllers\GlobalSearchController;
+use App\Http\Controllers\MealController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ScheduleController;
@@ -100,6 +101,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('recipes/{recipe}', [RecipeController::class, 'show'])->name('recipes.show');
     Route::patch('recipes/{recipe}', [RecipeController::class, 'update'])->name('recipes.update');
     Route::delete('recipes/{recipe}', [RecipeController::class, 'destroy'])->name('recipes.destroy');
+
+    // Meal Planner
+    Route::get('meals', [MealController::class, 'index'])->name('meals.index');
+    Route::post('meals', [MealController::class, 'store'])->name('meals.store');
+    Route::patch('meals/{meal}', [MealController::class, 'update'])->name('meals.update');
+    Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy');
+    Route::post('meals/{meal}/groceries', [MealController::class, 'aggregateGroceries'])->name('meals.groceries');
 
     // AI Assistant
     Route::get('assistant', [AiController::class, 'index'])->name('assistant.index');

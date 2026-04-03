@@ -176,6 +176,21 @@ export interface Recipe {
     updated_at: string;
 }
 
+export interface Meal {
+    id: number;
+    family_id: number;
+    created_by: number;
+    recipe_id: number | null;
+    planned_date: string | null;
+    meal_type: string | null;
+    servings: number | null;
+    notes: string | null;
+    recipe?: Recipe | null;
+    creator?: User;
+    created_at: string;
+    updated_at: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
 
 export interface DashboardWidget {

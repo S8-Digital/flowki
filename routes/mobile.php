@@ -7,7 +7,9 @@ use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\CalendarController;
 use App\Http\Controllers\Mobile\ChoreController;
 use App\Http\Controllers\Mobile\FamilyController;
+use App\Http\Controllers\Mobile\MealController;
 use App\Http\Controllers\Mobile\ProfileController;
+use App\Http\Controllers\Mobile\RecipeController;
 use App\Http\Controllers\Mobile\ShoppingController;
 use App\Http\Controllers\Mobile\TodoController;
 use App\Http\Controllers\Mobile\VoiceCommandController;
@@ -73,6 +75,16 @@ Route::name('mobile.')->group(function () {
         Route::post('calendar', [CalendarController::class, 'store'])->name('calendar.store');
         Route::patch('calendar/{calendarEvent}', [CalendarController::class, 'update'])->name('calendar.update');
         Route::delete('calendar/{calendarEvent}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
+
+        // Recipes
+        Route::get('recipes', [RecipeController::class, 'index'])->name('recipes.index');
+
+        // Meals
+        Route::get('meals', [MealController::class, 'index'])->name('meals.index');
+        Route::post('meals', [MealController::class, 'store'])->name('meals.store');
+        Route::patch('meals/{meal}', [MealController::class, 'update'])->name('meals.update');
+        Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy');
+        Route::post('meals/{meal}/groceries', [MealController::class, 'aggregateGroceries'])->name('meals.groceries');
 
         // Shopping lists
         Route::get('shopping', [ShoppingController::class, 'index'])->name('shopping.index');
