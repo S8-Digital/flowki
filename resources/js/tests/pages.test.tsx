@@ -61,6 +61,12 @@ vi.mock('@/components/AppearanceToggle', () => ({
     default: () => <button>Toggle appearance</button>,
 }));
 
+vi.mock('@/actions/App/Http/Controllers/NotificationController', () => ({
+    markRead: (id: string) => ({ url: `/notifications/${id}/read` }),
+    markAllRead: () => ({ url: '/notifications/read-all' }),
+    destroy: (id: string) => ({ url: `/notifications/${id}` }),
+}));
+
 // ---------------------------------------------------------------------------
 // Welcome page
 // ---------------------------------------------------------------------------
