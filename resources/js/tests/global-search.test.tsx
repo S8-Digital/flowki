@@ -16,6 +16,9 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import GlobalSearch from '@/components/GlobalSearch';
 
+/** Matches the debounce delay inside GlobalSearch (300 ms + a small buffer). */
+const DEBOUNCE_DELAY = 400;
+
 // ── @inertiajs/react mock ─────────────────────────────────────────────────────
 
 vi.mock('@inertiajs/react', () => ({
@@ -101,7 +104,7 @@ describe('GlobalSearch', () => {
         fireEvent.click(screen.getAllByRole('button')[0]);
         fireEvent.change(screen.getByRole('textbox'), { target: { value: 'mi' } });
 
-        await vi.advanceTimersByTimeAsync(400);
+        await vi.advanceTimersByTimeAsync(DEBOUNCE_DELAY);
         vi.useRealTimers();
 
         expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/search?q=mi'), expect.any(Object));
@@ -120,7 +123,7 @@ describe('GlobalSearch', () => {
         fireEvent.click(screen.getAllByRole('button')[0]);
         fireEvent.change(screen.getByRole('textbox'), { target: { value: 'milk' } });
 
-        await vi.advanceTimersByTimeAsync(400);
+        await vi.advanceTimersByTimeAsync(DEBOUNCE_DELAY);
         vi.useRealTimers();
 
         await waitFor(() => {
@@ -141,7 +144,7 @@ describe('GlobalSearch', () => {
         fireEvent.click(screen.getAllByRole('button')[0]);
         fireEvent.change(screen.getByRole('textbox'), { target: { value: 'vac' } });
 
-        await vi.advanceTimersByTimeAsync(400);
+        await vi.advanceTimersByTimeAsync(DEBOUNCE_DELAY);
         vi.useRealTimers();
 
         await waitFor(() => {
@@ -162,7 +165,7 @@ describe('GlobalSearch', () => {
         fireEvent.click(screen.getAllByRole('button')[0]);
         fireEvent.change(screen.getByRole('textbox'), { target: { value: 'pasta' } });
 
-        await vi.advanceTimersByTimeAsync(400);
+        await vi.advanceTimersByTimeAsync(DEBOUNCE_DELAY);
         vi.useRealTimers();
 
         await waitFor(() => {
@@ -176,7 +179,7 @@ describe('GlobalSearch', () => {
         fireEvent.click(screen.getAllByRole('button')[0]);
         fireEvent.change(screen.getByRole('textbox'), { target: { value: 'xyzzy' } });
 
-        await vi.advanceTimersByTimeAsync(400);
+        await vi.advanceTimersByTimeAsync(DEBOUNCE_DELAY);
         vi.useRealTimers();
 
         await waitFor(() => {
@@ -208,7 +211,7 @@ describe('GlobalSearch', () => {
         fireEvent.click(screen.getAllByRole('button')[0]);
         fireEvent.change(screen.getByRole('textbox'), { target: { value: 'bread' } });
 
-        await vi.advanceTimersByTimeAsync(400);
+        await vi.advanceTimersByTimeAsync(DEBOUNCE_DELAY);
         vi.useRealTimers();
 
         await waitFor(() => {
