@@ -5,11 +5,12 @@
  * `@laravel/vite-plugin-wayfinder` Vite plugin and are excluded from version
  * control (/resources/js/actions in .gitignore).
  *
- * The vitest.config.ts aliases every `@/actions/*` import to this file via a
- * regex alias so Vite's transform-time resolver can find a real file.
- * Individual test files override specific named exports via:
+ * In vitest.config.ts, a custom `actionsStubPlugin()` intercepts `@/actions/*`
+ * imports in `resolveId()` and redirects them to this stub through a virtual
+ * module query string so Vite can resolve a concrete module during tests.
+ * Individual test files can still override specific named exports via:
  *   vi.mock('@/actions/App/Http/Controllers/FooController', () => ({ ... }))
- * which Vitest hoists before any modules are evaluated, taking precedence over
+ * which Vitest hoists before modules are evaluated, taking precedence over
  * this stub at runtime.
  *
  * All exported functions return a URL descriptor object compatible with

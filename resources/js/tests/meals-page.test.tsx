@@ -133,16 +133,18 @@ describe('Meals page (/meals)', () => {
     });
 
     it('calls router.delete when the delete button on a meal is clicked', async () => {
+        const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
         const meals = [makeMeal({ id: 5 })];
         render(<MealsIndex {...EMPTY_PROPS} meals={meals} />);
 
-        // The "Remove" aria-label button for the meal
-        const iconBtns = screen.getAllByRole('button');
-        const trashBtn = iconBtns.find((b) => b.getAttribute('aria-label') === 'Remove') ?? iconBtns[iconBtns.length - 1];
+        // The IconButton within the Tooltip titled "Remove" gets aria-label="Remove" from MUI
+        const removeBtn = screen.getByRole('button', { name: 'Remove' });
+        expect(removeBtn).toBeDefined();
+        fireEvent.click(removeBtn);
 
-        if (trashBtn) {
-            fireEvent.click(trashBtn);
-        }
+        expect(confirmSpy).toHaveBeenCalled();
+        expect(vi.mocked(router.delete)).toHaveBeenCalled();
+        confirmSpy.mockRestore();
     });
 
     it('renders the "Add Meal" button or dialog trigger', () => {

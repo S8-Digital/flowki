@@ -284,13 +284,13 @@ describe('DashboardScreen', () => {
     });
 
     it('shows weather loading state briefly', async () => {
-        // Make weather API hang so we can observe the loading state
-        mockWeatherApi.get.mockImplementation(
-            () => new Promise((resolve) => setTimeout(() => resolve(null), 5000)),
-        );
-        render(<DashboardScreen />);
+        // Use a deferred promise so no real timer is involved
+        const pendingWeatherRequest = new Promise<null>(() => {});
+        mockWeatherApi.get.mockReturnValue(pendingWeatherRequest);
+        const { unmount } = render(<DashboardScreen />);
         // ActivityIndicator should appear while loading
         expect(screen.getByTestId('activity-indicator')).toBeInTheDocument();
+        unmount();
     });
 
     it('hides weather widget when weatherApi resolves to null', async () => {

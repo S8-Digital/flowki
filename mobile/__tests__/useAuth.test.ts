@@ -14,7 +14,7 @@
  */
 
 import { getItemAsync, setItemAsync, deleteItemAsync } from 'expo-secure-store';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -70,39 +70,39 @@ describe('useAuth', () => {
             return null;
         });
 
-        await act(async () => {
-            renderHook(() => useAuth());
-        });
+        renderHook(() => useAuth());
 
-        expect(mockDispatch).toHaveBeenCalledWith(
-            expect.objectContaining({
-                payload: { token: fakeToken, user: fakeUser },
-            }),
-        );
+        await waitFor(() => {
+            expect(mockDispatch).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    payload: { token: fakeToken, user: fakeUser },
+                }),
+            );
+        });
     });
 
     it('dispatches setLoading(false) when storage is empty', async () => {
         vi.mocked(getItemAsync).mockResolvedValue(null);
 
-        await act(async () => {
-            renderHook(() => useAuth());
-        });
+        renderHook(() => useAuth());
 
-        expect(mockDispatch).toHaveBeenCalledWith(
-            expect.objectContaining({ payload: false }),
-        );
+        await waitFor(() => {
+            expect(mockDispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ payload: false }),
+            );
+        });
     });
 
     it('dispatches setLoading(false) when storage throws', async () => {
         vi.mocked(getItemAsync).mockRejectedValue(new Error('SecureStore error'));
 
-        await act(async () => {
-            renderHook(() => useAuth());
-        });
+        renderHook(() => useAuth());
 
-        expect(mockDispatch).toHaveBeenCalledWith(
-            expect.objectContaining({ payload: false }),
-        );
+        await waitFor(() => {
+            expect(mockDispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ payload: false }),
+            );
+        });
     });
 
     it('login() saves token and user to storage then dispatches setCredentials', async () => {

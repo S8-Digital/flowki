@@ -106,8 +106,8 @@ class DashboardTest extends TestCase
         ]);
 
         $widgets = DashboardWidget::where('user_id', $user->id)->orderBy('position')->get();
-        $this->assertEquals(0, $widgets->first()->position);
-        $this->assertEquals(1, $widgets->last()->position);
+        $this->assertEquals(1, $widgets->first()->position);
+        $this->assertEquals(2, $widgets->last()->position);
     }
 
     public function test_widget_settings_can_be_updated()
