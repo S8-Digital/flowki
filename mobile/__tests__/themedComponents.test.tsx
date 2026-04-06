@@ -7,6 +7,7 @@
  */
 
 import { render, screen } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { useColorScheme as rnUseColorScheme } from 'react-native';
 import { describe, expect, it, vi } from 'vitest';
@@ -14,7 +15,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { renderHook } from '@testing-library/react';
 
 // ── ThemedText ────────────────────────────────────────────────────────────────
 

@@ -3,7 +3,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import type FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Fab } from '@mui/material';
@@ -20,7 +19,7 @@ import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 import { CalendarDays, Plus, Trash2 } from 'lucide-react';
 import { Eye, EyeOff, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
 import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
 import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
@@ -36,6 +35,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import WeatherStrip from '@/components/WeatherStrip';
 import AppLayout from '@/layouts/AppLayout';
+import { calendarNavAriaLabel, calendarViewLabel, navigateCalendar } from '@/lib/calendarNav';
+import type { CalendarViewType } from '@/lib/calendarNav';
 import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
 
@@ -47,8 +48,6 @@ interface Props {
     initialView?: string;
     initialDate?: string;
 }
-
-type CalendarViewType = 'family' | 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
 
 const VIEW_OPTIONS: { value: CalendarViewType; label: string }[] = [
     { value: 'family', label: 'Family' },
@@ -70,7 +69,6 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
     const [calendarView, setCalendarView] = useState<CalendarViewType>((initialView as CalendarViewType) ?? 'family');
     const [selectedDate, setSelectedDate] = useState<string>(initialDate ?? localToday());
     const [hiddenMembers, setHiddenMembers] = useState<Set<number>>(new Set());
-    const calendarRef = useRef<FullCalendar>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [importOpen, setImportOpen] = useState(false);
     const [fabMenuAnchor, setFabMenuAnchor] = useState<HTMLElement | null>(null);
@@ -81,15 +79,12 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
     const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
     const [selectedChore, setSelectedChore] = useState<Chore | null>(null);
 
-    useEffect(() => {
-        calendarRef.current?.getApi().gotoDate(selectedDate);
-    }, [selectedDate]);
+    function navigate(direction: 'prev' | 'next') {
+        setSelectedDate(navigateCalendar(selectedDate, direction, calendarView));
+    }
 
-    function shiftDate(dateStr: string, days: number): string {
-        const d = new Date(dateStr + 'T00:00:00');
-        d.setDate(d.getDate() + days);
-
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    function navAriaLabel(direction: 'prev' | 'next'): string {
+        return calendarNavAriaLabel(direction, calendarView);
     }
 
     function toggleMember(memberId: number) {
@@ -399,7 +394,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         [editChoreForm],
     );
 
-    const todayLabel = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+    const viewLabel = useMemo(() => calendarViewLabel(selectedDate, calendarView), [calendarView, selectedDate]);
 
     return (
         <>
@@ -409,7 +404,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                     {/* Top bar: date + weather (left) | view select + add (right) */}
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                            <Typography variant="h5">{todayLabel}</Typography>
+                            <Typography variant="h5">{viewLabel}</Typography>
                             <WeatherStrip />
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -422,18 +417,13 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                     {/* Date navigation and member toggles (always visible) */}
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.5 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => setSelectedDate(shiftDate(selectedDate, -1))}
-                                aria-label="Previous day"
-                            >
+                            <Button variant="outline" size="icon" onClick={() => navigate('prev')} aria-label={navAriaLabel('prev')}>
                                 <ChevronLeft style={{ width: 16, height: 16 }} />
                             </Button>
                             <Button variant="outline" size="sm" onClick={() => setSelectedDate(localToday())}>
                                 Today
                             </Button>
-                            <Button variant="outline" size="icon" onClick={() => setSelectedDate(shiftDate(selectedDate, 1))} aria-label="Next day">
+                            <Button variant="outline" size="icon" onClick={() => navigate('next')} aria-label={navAriaLabel('next')}>
                                 <ChevronRight style={{ width: 16, height: 16 }} />
                             </Button>
                         </Box>

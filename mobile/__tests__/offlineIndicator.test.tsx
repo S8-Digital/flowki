@@ -9,12 +9,12 @@
  * - Cleans up listener on unmount
  */
 
+import { OfflineIndicator } from '@/components/OfflineIndicator';
 import NetInfo from '@react-native-community/netinfo';
+import type { NetInfoState } from '@react-native-community/netinfo';
 import { render, screen, act } from '@testing-library/react';
 import * as React from 'react';
-import type { NetInfoState } from '@react-native-community/netinfo';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { OfflineIndicator } from '@/components/OfflineIndicator';
 
 describe('OfflineIndicator', () => {
     let capturedListener: ((state: Partial<NetInfoState>) => void) | null = null;
@@ -25,6 +25,7 @@ describe('OfflineIndicator', () => {
         removeListener.mockClear();
         vi.mocked(NetInfo.addEventListener).mockImplementation((listener) => {
             capturedListener = listener as (state: Partial<NetInfoState>) => void;
+
             return removeListener;
         });
     });

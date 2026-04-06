@@ -13,8 +13,8 @@
  * - refreshUser() is silent on API error
  */
 
-import { getItemAsync, setItemAsync, deleteItemAsync } from 'expo-secure-store';
 import { renderHook, act, waitFor } from '@testing-library/react';
+import { getItemAsync, setItemAsync, deleteItemAsync } from 'expo-secure-store';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -65,8 +65,14 @@ describe('useAuth', () => {
 
     it('dispatches setCredentials when stored token and user are found', async () => {
         vi.mocked(getItemAsync).mockImplementation(async (key) => {
-            if (key === 'flowki_auth_token') return fakeToken;
-            if (key === 'flowki_user') return JSON.stringify(fakeUser);
+            if (key === 'flowki_auth_token') {
+return fakeToken;
+}
+
+            if (key === 'flowki_user') {
+return JSON.stringify(fakeUser);
+}
+
             return null;
         });
 

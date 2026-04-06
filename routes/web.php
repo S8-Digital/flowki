@@ -16,14 +16,18 @@ use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\WeatherController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Firebase messaging service worker (must be at root scope, no auth)
 Route::get('/firebase-messaging-sw.js', FirebaseServiceWorkerController::class)->name('firebase.sw');
 
-Route::get('/', function () {
-    if (auth()->check()) {
+Route::get('/', function (Request $request) {
+    // Redirect authenticated users to the dashboard on direct (browser) navigation.
+    // When navigating from within the app via Inertia (X-Inertia header), show the
+    // Welcome page so users can access the homepage from a link inside the app.
+    if (auth()->check() && ! $request->hasHeader('X-Inertia')) {
         return redirect()->route('dashboard');
     }
 

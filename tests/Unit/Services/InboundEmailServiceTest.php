@@ -14,6 +14,15 @@ class InboundEmailServiceTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (! function_exists('mailparse_msg_create')) {
+            $this->markTestSkipped('mailparse extension is required for InboundEmailService parsing tests.');
+        }
+    }
+
     /**
      * A minimal but syntactically valid raw MIME email with a plain-text body.
      */

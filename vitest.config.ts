@@ -29,9 +29,11 @@ function actionsStubPlugin(): Plugin {
             if (id === '@/routes') {
                 return ROUTES_STUB;
             }
+
             if (id.startsWith('@/routes/')) {
                 return `${ROUTES_SUB_STUB}?routeId=${encodeURIComponent(id)}`;
             }
+
             if (id.startsWith('@/actions/')) {
                 return `${ACTIONS_STUB}?actionId=${encodeURIComponent(id)}`;
             }
@@ -40,9 +42,11 @@ function actionsStubPlugin(): Plugin {
             if (id === RESOLVED_ROUTES || id === RESOLVED_ROUTES + '.ts') {
                 return ROUTES_STUB;
             }
+
             if (id.startsWith(RESOLVED_ROUTES + '/')) {
                 return `${ROUTES_SUB_STUB}?routeId=${encodeURIComponent(id)}`;
             }
+
             if (id.startsWith(RESOLVED_ACTIONS_DIR + '/') || id.startsWith(RESOLVED_ACTIONS_DIR + '\\')) {
                 return `${ACTIONS_STUB}?actionId=${encodeURIComponent(id)}`;
             }
