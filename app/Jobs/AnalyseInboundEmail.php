@@ -43,7 +43,7 @@ class AnalyseInboundEmail implements ShouldQueue
             return;
         }
 
-        (new InboundEmailAnalysisAgent($user))->prompt($this->buildEmailContent($inboundEmail));
+        app(InboundEmailAnalysisAgent::class, ['user' => $user])->prompt($this->buildEmailContent($inboundEmail));
 
         $inboundEmail->update(['processed_at' => now()]);
     }

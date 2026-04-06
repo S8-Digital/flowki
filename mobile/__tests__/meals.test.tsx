@@ -139,6 +139,8 @@ vi.mock('@/lib/api', () => ({
 let mockRtdbData: Record<string, Meal> = {};
 let mockRtdbLoading = false;
 
+const today = new Date().toISOString().slice(0, 10);
+
 vi.mock('@/hooks/useRtdb', () => ({
   useRtdb: vi.fn(() => ({ data: mockRtdbData, isLoading: mockRtdbLoading })),
 }));
@@ -172,7 +174,7 @@ const makeMeal = (overrides: Partial<Meal> = {}): Meal => ({
   family_id: 42,
   created_by: 1,
   recipe_id: 1,
-  planned_date: '2026-03-30',
+  planned_date: today,
   meal_type: 'dinner',
   servings: 4,
   notes: null,
