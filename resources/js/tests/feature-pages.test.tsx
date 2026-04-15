@@ -380,6 +380,16 @@ describe('Chores page', () => {
         render(<ChoresIndex chores={[pendingChore]} members={[baseUser]} />);
         expect(screen.getByText('Vacuum living room')).toBeInTheDocument();
     });
+
+    it('treats a chore with last_completed_at and no next_due_date as completed', () => {
+        const completedNoDate = {
+            ...baseChore,
+            next_due_date: null,
+            last_completed_at: '2024-06-02T09:00:00',
+        };
+        render(<ChoresIndex chores={[completedNoDate]} members={[baseUser]} />);
+        expect(screen.getByText('Vacuum living room')).toBeInTheDocument();
+    });
 });
 
 // ---------------------------------------------------------------------------

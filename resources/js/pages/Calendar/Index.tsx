@@ -241,7 +241,9 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
 
             if (type === 'event') {
                 const e = source as CalendarEvent;
-                const involvedIds: number[] = [...(e.attendees?.map((a) => a.id) ?? []), ...(e.creator?.id ? [e.creator.id] : [])];
+                const attendeeIds = e.attendees?.map((a) => a.id) ?? [];
+                const creatorIds = e.creator?.id ? [e.creator.id] : [];
+                const involvedIds: number[] = [...attendeeIds, ...creatorIds];
 
                 if (involvedIds.length === 0) {
                     return true;
