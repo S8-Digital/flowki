@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useRef, useState } from 'react';
-import { destroy } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -19,6 +18,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { destroy } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 
 interface Props {
     /** True when the authenticated user has a password set. False for OAuth-only accounts. */

@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
-import { store } from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
 import TextLink from '@/components/TextLink';
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/AuthLayout';
 import { toUrl } from '@/lib/utils';
+import { store } from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
 import { logout } from '@/routes';
 
 const StatusMessage = styled(Typography)(({ theme }) => ({

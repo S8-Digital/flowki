@@ -5,8 +5,8 @@ import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { PropsWithChildren } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
-import { home } from '@/routes';
 import type { AppPageProps } from '@/types';
+import { home } from '@/routes';
 
 const SplitLeftPanel = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,

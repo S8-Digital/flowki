@@ -20,6 +20,7 @@ class ChoreResource extends JsonResource
             'description' => $this->description,
             'frequency' => $this->frequency,
             'next_due_date' => $this->next_due_date?->format('Y-m-d\TH:i'),
+            'last_completed_at' => $this->completions_max_completed_at,
             'reminder_enabled' => $this->reminder_enabled,
             'reminder_lead_time' => $this->reminder_lead_time,
             'family_id' => $this->family_id,

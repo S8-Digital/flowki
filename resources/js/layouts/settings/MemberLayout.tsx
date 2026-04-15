@@ -5,12 +5,12 @@ import { styled } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import type { PropsWithChildren } from 'react';
-import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
-import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';
 import Heading from '@/components/Heading';
 import { Separator } from '@/components/ui/separator';
 import { urlIsActive } from '@/lib/utils';
 import type { NavItem } from '@/types';
+import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
+import { edit as permissionsEdit } from '@/actions/App/Http/Controllers/Settings/PermissionController';
 
 interface Member {
     id: number;

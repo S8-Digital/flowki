@@ -2,11 +2,11 @@ import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { LoaderCircle } from 'lucide-react';
-import { store } from '@/actions/App/Http/Controllers/Auth/ConfirmablePasswordController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/AuthLayout';
+import { store } from '@/actions/App/Http/Controllers/Auth/ConfirmablePasswordController';
 
 export default function ConfirmPassword() {
     const { data, setData, post, processing, errors, reset } = useForm({ password: '' });

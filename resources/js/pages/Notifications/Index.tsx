@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CheckCheck, Trash2 } from 'lucide-react';
-import { destroy, markAllRead, markRead } from '@/actions/App/Http/Controllers/NotificationController';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
 import type { AppNotification, BreadcrumbItem, PaginatedResource } from '@/types';
+import { destroy, markAllRead, markRead } from '@/actions/App/Http/Controllers/NotificationController';
 
 interface Props {
     notifications: PaginatedResource<AppNotification>;

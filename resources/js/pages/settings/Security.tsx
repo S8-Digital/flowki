@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { RefreshCw, Shield, ShieldCheck, ShieldOff } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { update } from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
 import type { BreadcrumbItem } from '@/types';
+import { update } from '@/actions/App/Http/Controllers/Settings/PasswordController';
 
 interface Props {
     twoFactorEnabled: boolean;

@@ -3,14 +3,14 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
-import { edit as permissionEdit, update as permissionUpdate } from '@/actions/App/Http/Controllers/Settings/PermissionController';
 import HeadingSmall from '@/components/HeadingSmall';
 import { Button } from '@/components/ui/button';
 import UserPermissionsPanel from '@/components/UserPermissionsPanel';
 import AppLayout from '@/layouts/AppLayout';
 import MemberSettingsLayout from '@/layouts/settings/MemberLayout';
 import type { BreadcrumbItem, PermissionGroup } from '@/types';
+import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
+import { edit as permissionEdit, update as permissionUpdate } from '@/actions/App/Http/Controllers/Settings/PermissionController';
 
 interface Member {
     id: number;

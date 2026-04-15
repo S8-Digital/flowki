@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { index } from '@/actions/App/Http/Controllers/WeatherController';
 import type { WeatherData } from '@/types';
+import { index } from '@/actions/App/Http/Controllers/WeatherController';
 
 interface UseWeatherOptions {
     lat?: number | null;

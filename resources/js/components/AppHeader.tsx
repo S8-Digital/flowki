@@ -17,9 +17,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import UserMenuContent from '@/components/UserMenuContent';
 import { getInitials } from '@/hooks/useInitials';
 import { cn, toUrl, urlIsActive } from '@/lib/utils';
-import { dashboard } from '@/routes';
 import type { AppPageProps, BreadcrumbItem, NavItem } from '@/types';
 import type { PolymorphicProps } from '@/types/globals';
+import { dashboard } from '@/routes';
 
 const MobileNavLink = styled(MuiLink, {
     shouldForwardProp: (prop) => prop !== 'isActive',

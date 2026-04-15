@@ -4,13 +4,13 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { update } from '@/actions/App/Http/Controllers/Settings/CategoriesController';
 import HeadingSmall from '@/components/HeadingSmall';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
 import type { BreadcrumbItem } from '@/types';
+import { update } from '@/actions/App/Http/Controllers/Settings/CategoriesController';
 
 interface Category {
     [key: string]: string;

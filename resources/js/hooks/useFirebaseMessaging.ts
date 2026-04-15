@@ -1,9 +1,9 @@
 import { usePage } from '@inertiajs/react';
 import type { MessagePayload } from 'firebase/messaging';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { destroy, store } from '@/actions/App/Http/Controllers/FcmTokenController';
 import { getFcmToken, onForegroundMessage, requestNotificationPermission } from '@/lib/firebase-messaging';
 import type { AppPageProps } from '@/types';
+import { destroy, store } from '@/actions/App/Http/Controllers/FcmTokenController';
 
 interface UseFirebaseMessagingReturn {
     notificationPermission: NotificationPermission | null;

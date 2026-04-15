@@ -4,7 +4,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
-import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/InputError';
 import SocialAuthButtons from '@/components/SocialAuthButtons';
 import TextLink from '@/components/TextLink';
@@ -12,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/AuthLayout';
+import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
 

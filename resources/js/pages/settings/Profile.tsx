@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CalendarCheck, CalendarX, CheckCircle2, Copy, Link2, Link2Off, Mail } from 'lucide-react';
 import { useState } from 'react';
-import { update } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/DeleteUser';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
@@ -12,9 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import SettingsLayout from '@/layouts/settings/Layout';
+import type { BreadcrumbItem } from '@/types';
+import { update } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import { link, unlink } from '@/routes/social';
 import { send } from '@/routes/verification';
-import type { BreadcrumbItem } from '@/types';
 
 interface Props {
     mustVerifyEmail: boolean;

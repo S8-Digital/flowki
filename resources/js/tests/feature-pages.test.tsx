@@ -311,6 +311,7 @@ const baseChore = {
     description: null,
     frequency: 'weekly',
     next_due_date: null,
+    last_completed_at: null,
     reminder_enabled: false,
     reminder_lead_time: 60,
     family_id: 1,
@@ -358,6 +359,26 @@ describe('Chores page', () => {
     it('renders member filter buttons', () => {
         render(<ChoresIndex chores={[baseChore]} members={[baseUser]} />);
         expect(screen.getByTitle(/hide alice smith/i)).toBeInTheDocument();
+    });
+
+    it('renders a completed chore without crashing', () => {
+        const completedChore = {
+            ...baseChore,
+            next_due_date: '2024-06-01T10:00',
+            last_completed_at: '2024-06-02T09:00:00',
+        };
+        render(<ChoresIndex chores={[completedChore]} members={[baseUser]} />);
+        expect(screen.getByText('Vacuum living room')).toBeInTheDocument();
+    });
+
+    it('renders a non-completed chore (last_completed_at before next_due_date) without completed styling', () => {
+        const pendingChore = {
+            ...baseChore,
+            next_due_date: '2024-06-10T10:00',
+            last_completed_at: '2024-06-01T09:00:00',
+        };
+        render(<ChoresIndex chores={[pendingChore]} members={[baseUser]} />);
+        expect(screen.getByText('Vacuum living room')).toBeInTheDocument();
     });
 });
 

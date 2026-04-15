@@ -8,8 +8,8 @@ import type { PropsWithChildren } from 'react';
 import Heading from '@/components/Heading';
 import { Separator } from '@/components/ui/separator';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { appearance } from '@/routes';
 import type { NavItem } from '@/types';
+import { appearance } from '@/routes';
 
 const sidebarNavItems: NavItem[] = [
     { title: 'Profile', href: '/settings/profile' },

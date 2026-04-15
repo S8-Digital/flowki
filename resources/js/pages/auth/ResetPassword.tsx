@@ -1,11 +1,11 @@
 import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import { LoaderCircle } from 'lucide-react';
-import { store } from '@/actions/App/Http/Controllers/Auth/NewPasswordController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/AuthLayout';
+import { store } from '@/actions/App/Http/Controllers/Auth/NewPasswordController';
 
 interface Props {
     token: string;

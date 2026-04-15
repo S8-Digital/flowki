@@ -20,9 +20,6 @@ import dayjs from 'dayjs';
 import { CalendarDays, Plus, Trash2 } from 'lucide-react';
 import { Eye, EyeOff, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
-import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
-import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
 import { FamilyScheduleView } from '@/components/Calendar/FamilyScheduleView';
 import { getMemberColor } from '@/components/Calendar/MemberColumn';
 import ScheduleUploadModal from '@/components/Calendar/ScheduleUploadModal';
@@ -39,6 +36,9 @@ import { calendarNavAriaLabel, calendarViewLabel, navigateCalendar } from '@/lib
 import type { CalendarViewType } from '@/lib/calendarNav';
 import { getProfileColor } from '@/lib/utils';
 import type { BreadcrumbItem, CalendarEvent, Chore, Todo, User } from '@/types';
+import { destroy, move, store, update } from '@/actions/App/Http/Controllers/CalendarEventController';
+import { update as updateChore } from '@/actions/App/Http/Controllers/ChoreController';
+import { update as updateTodo } from '@/actions/App/Http/Controllers/TodoController';
 
 interface Props {
     events: CalendarEvent[];
@@ -231,6 +231,50 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         [events, todos, chores],
     );
 
+    const visibleFcEvents = useMemo(() => {
+        if (hiddenMembers.size === 0) {
+            return allFcEvents;
+        }
+
+        return allFcEvents.filter((ev) => {
+            const { type, source } = ev.extendedProps as { type: string; source: CalendarEvent | Todo | Chore };
+
+            if (type === 'event') {
+                const e = source as CalendarEvent;
+                const involvedIds: number[] = [...(e.attendees?.map((a) => a.id) ?? []), ...(e.creator?.id ? [e.creator.id] : [])];
+
+                if (involvedIds.length === 0) {
+                    return true;
+                }
+
+                return involvedIds.some((id) => !hiddenMembers.has(id));
+            }
+
+            if (type === 'todo') {
+                const t = source as Todo;
+
+                if (!t.assignee) {
+                    return true;
+                }
+
+                return !hiddenMembers.has(t.assignee.id);
+            }
+
+            if (type === 'chore') {
+                const c = source as Chore;
+                const assigneeIds = c.assignees?.map((a) => a.id) ?? [];
+
+                if (assigneeIds.length === 0) {
+                    return true;
+                }
+
+                return assigneeIds.some((id) => !hiddenMembers.has(id));
+            }
+
+            return true;
+        });
+    }, [allFcEvents, hiddenMembers]);
+
     function handleDateSelect(info: DateSelectArg) {
         createForm.setData({ ...createForm.data, start_at: info.startStr.slice(0, 16), end_at: info.endStr ? info.endStr.slice(0, 16) : '' });
         setCreateOpen(true);
@@ -297,7 +341,9 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
     }
 
     function handleDatesSet(info: DatesSetArg) {
-        setSelectedDate(info.startStr.split('T')[0]);
+        const d = info.view.currentStart;
+
+        setSelectedDate(dayjs(d).format('YYYY-MM-DD'));
     }
 
     function deleteCurrentEvent() {
@@ -495,7 +541,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             initialView={calendarView}
                             view={calendarView}
                             selectedDate={selectedDate}
-                            events={allFcEvents}
+                            events={visibleFcEvents}
                             select={handleDateSelect}
                             eventClick={handleEventClick}
                             eventDrop={handleEventDrop}

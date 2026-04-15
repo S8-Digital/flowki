@@ -2,14 +2,14 @@ import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { update as colorUpdate } from '@/actions/App/Http/Controllers/Settings/MemberColorController';
-import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 import HeadingSmall from '@/components/HeadingSmall';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout';
 import MemberSettingsLayout from '@/layouts/settings/MemberLayout';
 import type { BreadcrumbItem } from '@/types';
+import { update as colorUpdate } from '@/actions/App/Http/Controllers/Settings/MemberColorController';
+import { edit as memberProfileEdit } from '@/actions/App/Http/Controllers/Settings/MemberProfileController';
 
 interface Member {
     id: number;
