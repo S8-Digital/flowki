@@ -3,10 +3,10 @@ import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { Bot, Send, Sparkles, User } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { chat } from '@/actions/App/Http/Controllers/AiController';
 
 interface Message {
     role: 'user' | 'assistant';

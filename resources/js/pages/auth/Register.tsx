@@ -2,13 +2,13 @@ import { Head, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { LoaderCircle } from 'lucide-react';
+import { store } from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import InputError from '@/components/InputError';
 import SocialAuthButtons from '@/components/SocialAuthButtons';
 import TextLink from '@/components/TextLink';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/AuthLayout';
-import { store } from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import { login } from '@/routes';
 
 export default function Register() {

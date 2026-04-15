@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { CheckCircle, Eye, EyeOff, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { complete, destroy, store, update } from '@/actions/App/Http/Controllers/ChoreController';
 import { getInitials, getMemberColor } from '@/components/Calendar/MemberColumn';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, Chore, User } from '@/types';
-import { complete, destroy, store, update } from '@/actions/App/Http/Controllers/ChoreController';
 
 interface Props {
     chores: Chore[] | null;

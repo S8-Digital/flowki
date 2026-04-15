@@ -1,5 +1,6 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
+import type { RouteDefinition } from '@/wayfinder';
 import type {
     CalendarEvent as BaseCalendarEvent,
     Chore as BaseChore,
@@ -12,7 +13,6 @@ import type {
     WeatherData,
     WeatherDay,
 } from '@flowki/shared';
-import type { RouteDefinition } from '@/wayfinder';
 
 export type { WeatherCurrent, WeatherData, WeatherDay };
 

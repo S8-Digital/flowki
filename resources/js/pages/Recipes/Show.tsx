@@ -7,14 +7,14 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { ChefHat, Clock, Heart, Star, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
+import { destroy, update } from '@/actions/App/Http/Controllers/RecipeController';
+import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import type { BreadcrumbItem, Recipe } from '@/types';
-import { destroy, update } from '@/actions/App/Http/Controllers/RecipeController';
-import { index as shoppingIndex } from '@/actions/App/Http/Controllers/ShoppingListController';
 
 interface Props {
     recipe: Recipe;

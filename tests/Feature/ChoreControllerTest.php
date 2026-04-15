@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ChoreFrequency;
 use App\Enums\FamilyRole;
+use App\Http\Resources\ChoreResource;
 use App\Models\Chore;
 use App\Models\User;
 use App\Notifications\ChoreAssigned;
@@ -196,7 +197,7 @@ class ChoreControllerTest extends TestCase
 
         $this->actingAs($user)->post(route('chores.complete', $chore));
 
-        $resource = new \App\Http\Resources\ChoreResource(
+        $resource = new ChoreResource(
             Chore::query()
                 ->withMax('completions', 'completed_at')
                 ->find($chore->id)

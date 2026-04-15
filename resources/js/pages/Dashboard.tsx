@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { GripVertical, Plus, Settings2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
+import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
 import CalendarScheduleWidget from '@/components/Dashboard/CalendarScheduleWidget';
 import CalendarTodayWidget from '@/components/Dashboard/CalendarTodayWidget';
 import MealPlannerWidget from '@/components/Dashboard/MealPlannerWidget';
@@ -18,9 +19,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout';
 
-import type { BreadcrumbItem, CalendarEvent, DashboardShoppingListData, DashboardWidget, DashboardWidgetType, Todo } from '@/types';
-import { destroy, reorder, store, update } from '@/actions/App/Http/Controllers/DashboardController';
 import { dashboard } from '@/routes';
+import type { BreadcrumbItem, CalendarEvent, DashboardShoppingListData, DashboardWidget, DashboardWidgetType, Todo } from '@/types';
 
 interface DinnerEntry {
     id: number;

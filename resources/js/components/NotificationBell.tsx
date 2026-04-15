@@ -5,12 +5,12 @@ import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { Bell, CheckCheck, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { recent, markRead } from '@/actions/App/Http/Controllers/NotificationController';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { onForegroundMessage } from '@/lib/firebase-messaging';
 import type { AppNotification, AppPageProps } from '@/types';
-import { recent, markRead } from '@/actions/App/Http/Controllers/NotificationController';
 
 const UnreadBadge = styled('span')(({ theme }) => ({
     position: 'absolute',

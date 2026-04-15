@@ -14,8 +14,8 @@ import AppLogoIcon from '@/components/AppLogoIcon';
 import { useRemoteConfig } from '@/hooks/useRemoteConfig';
 import { FooterBox, LogoLink, PageRoot } from '@/lib/publicStyled';
 import { footerLinkSx, logoWordmarkSx, navLinkSx } from '@/lib/publicSx';
-import type { PolymorphicProps } from '@/types/globals';
 import { login, privacy, register, terms } from '@/routes';
+import type { PolymorphicProps } from '@/types/globals';
 
 /** Map of icon names (stored in Remote Config) to Lucide components */
 const ICON_MAP: Record<string, LucideIcon> = {
