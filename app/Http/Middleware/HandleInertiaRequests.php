@@ -59,6 +59,7 @@ class HandleInertiaRequests extends Middleware
                 ? $user->unreadNotifications()->count()
                 : 0,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'googleMapsApiKey' => config('services.google.maps_key'),
             'firebaseConfig' => [
                 'apiKey' => config('services.firebase.api_key'),
                 'authDomain' => config('services.firebase.auth_domain'),

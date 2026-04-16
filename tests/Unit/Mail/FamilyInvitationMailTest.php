@@ -29,7 +29,7 @@ class FamilyInvitationMailTest extends TestCase
         $mail = new FamilyInvitationMail($invitation);
         $content = $mail->content();
 
-        $this->assertEquals('mail.family-invitation', $content->view);
+        $this->assertEquals('mail.family-invitation', $content->markdown);
     }
 
     public function test_attachments_returns_empty_array(): void

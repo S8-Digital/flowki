@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
@@ -6,6 +7,7 @@ import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
 import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
+import type { AppPageProps } from '@/types';
 
 export interface PlaceResult {
     address: string;
@@ -90,6 +92,7 @@ function loadGoogleMapsScript(apiKey: string): Promise<void> {
  * session (cheaper than per-request billing).
  */
 export default function GoogleAddressAutocomplete({ value, onChange, onPlaceSelected, placeholder, id }: Props) {
+    const page = usePage<AppPageProps>();
     const [localValue, setLocalValue] = useState(value ?? '');
     const [suggestions, setSuggestions] = useState<google.maps.places.AutocompleteSuggestion[]>([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -110,7 +113,7 @@ export default function GoogleAddressAutocomplete({ value, onChange, onPlaceSele
         setLocalValue(value ?? '');
     }, [value]);
 
-    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const apiKey = page.props.googleMapsApiKey ?? import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
     useEffect(() => {
         if (!apiKey) {

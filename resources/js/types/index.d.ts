@@ -70,6 +70,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     sidebarOpen: boolean;
     currentUserPermissions: string[];
     unreadNotificationsCount: number;
+    googleMapsApiKey?: string | null;
     firebaseConfig: FirebaseConfig;
 };
 

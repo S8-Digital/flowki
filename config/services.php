@@ -46,6 +46,7 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_AUTH_REDIRECT_URI'),
         'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
+        'maps_key' => env('GOOGLE_MAPS_API_KEY'),
         'weather_key' => env('GOOGLE_WEATHER_API_KEY'),
     ],
 
