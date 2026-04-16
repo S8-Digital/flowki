@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ChoreFrequency;
 use App\Enums\FamilyRole;
+use App\Http\Resources\ChoreResource;
 use App\Models\Chore;
 use App\Models\User;
 use App\Notifications\ChoreAssigned;
@@ -184,6 +185,28 @@ class ChoreControllerTest extends TestCase
         ]);
 
         $this->actingAs($user)->post(route('chores.complete', $chore))->assertForbidden();
+    }
+
+    public function test_chore_index_includes_last_completed_at(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        $chore = Chore::factory()->create([
+            'family_id' => $user->family_id,
+            'created_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)->post(route('chores.complete', $chore));
+
+        $resource = new ChoreResource(
+            Chore::query()
+                ->withMax('completions', 'completed_at')
+                ->find($chore->id)
+        );
+
+        $data = $resource->resolve();
+
+        $this->assertArrayHasKey('last_completed_at', $data);
+        $this->assertNotNull($data['last_completed_at']);
     }
 
     /** @return array<string, mixed> */

@@ -15,6 +15,7 @@ use App\Observers\ShoppingItemObserver;
 use App\Observers\ShoppingListObserver;
 use App\Observers\TodoObserver;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Apple\AppleExtendSocialite;
 use SocialiteProviders\Manager\SocialiteWasCalled;
@@ -34,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::addNamespace('mail', resource_path('views/mail'));
+
         Event::listen(SocialiteWasCalled::class, AppleExtendSocialite::class);
 
         Todo::observe(TodoObserver::class);

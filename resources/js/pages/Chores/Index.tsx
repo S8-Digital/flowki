@@ -214,6 +214,18 @@ export default function ChoresIndex({ chores, members }: Props) {
         router.post(complete(chore.id).url);
     }
 
+    function isChoreCompleted(chore: Chore): boolean {
+        if (!chore.last_completed_at) {
+            return false;
+        }
+
+        if (!chore.next_due_date) {
+            return true;
+        }
+
+        return chore.last_completed_at >= chore.next_due_date;
+    }
+
     function toggleAssignee(formSetData: (key: 'assignee_ids', val: string[]) => void, current: string[], id: string) {
         formSetData('assignee_ids', current.includes(id) ? current.filter((x) => x !== id) : [...current, id]);
     }
@@ -490,32 +502,56 @@ export default function ChoresIndex({ chores, members }: Props) {
                                                     No chores
                                                 </EmptyColumnCaption>
                                             ) : (
-                                                memberChores.map((chore) => (
-                                                    <ChoreCard
-                                                        key={chore.id}
-                                                        sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
-                                                        style={{
-                                                            backgroundColor: `${color}15`,
-                                                            border: `2px solid ${color}`,
-                                                        }}
-                                                    >
-                                                        <Box sx={{ mt: 0.25, flex: 0 }}>
-                                                            <RefreshCw size={14} style={{ color: 'var(--mui-palette-success-main)' }} />
-                                                        </Box>
-                                                        <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                            <ChoreTitleText variant="caption">{chore.title}</ChoreTitleText>
-                                                            <ChoreMeta sx={{ mt: 0.25, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                                <FrequencySpan>{chore.frequency}</FrequencySpan>
-                                                                {chore.next_due_date && <span>&middot; {formatDateTime(chore.next_due_date)}</span>}
-                                                            </ChoreMeta>
-                                                        </Box>
-                                                        <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                            <ChoreCompleteButton onClick={() => markComplete(chore)} />
-                                                            <ChoreEditButton onClick={() => openEdit(chore)} />
-                                                            <ChoreDeleteButton onClick={() => deleteChore(chore)} />
-                                                        </Box>
-                                                    </ChoreCard>
-                                                ))
+                                                memberChores.map((chore) => {
+                                                    const completed = isChoreCompleted(chore);
+
+                                                    return (
+                                                        <ChoreCard
+                                                            key={chore.id}
+                                                            sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'flex-start',
+                                                                gap: 1,
+                                                                p: 1,
+                                                                opacity: completed ? 0.5 : 1,
+                                                            }}
+                                                            style={{
+                                                                backgroundColor: completed ? '#94a3b815' : `${color}15`,
+                                                                border: `2px solid ${completed ? '#94a3b8' : color}`,
+                                                            }}
+                                                        >
+                                                            <Box sx={{ mt: 0.25, flex: 0 }}>
+                                                                <RefreshCw
+                                                                    size={14}
+                                                                    style={{
+                                                                        color: completed
+                                                                            ? 'var(--mui-palette-text-disabled)'
+                                                                            : 'var(--mui-palette-success-main)',
+                                                                    }}
+                                                                />
+                                                            </Box>
+                                                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                                <ChoreTitleText
+                                                                    variant="caption"
+                                                                    sx={{ textDecoration: completed ? 'line-through' : 'none' }}
+                                                                >
+                                                                    {chore.title}
+                                                                </ChoreTitleText>
+                                                                <ChoreMeta sx={{ mt: 0.25, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                                    <FrequencySpan>{chore.frequency}</FrequencySpan>
+                                                                    {chore.next_due_date && (
+                                                                        <span>&middot; {formatDateTime(chore.next_due_date)}</span>
+                                                                    )}
+                                                                </ChoreMeta>
+                                                            </Box>
+                                                            <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
+                                                                <ChoreCompleteButton onClick={() => markComplete(chore)} />
+                                                                <ChoreEditButton onClick={() => openEdit(chore)} />
+                                                                <ChoreDeleteButton onClick={() => deleteChore(chore)} />
+                                                            </Box>
+                                                        </ChoreCard>
+                                                    );
+                                                })
                                             )}
                                         </Box>
                                     </ColumnContainer>
@@ -550,29 +586,48 @@ export default function ChoresIndex({ chores, members }: Props) {
                                         </Box>
                                     </Box>
                                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0.75, overflowY: 'auto', p: 1 }}>
-                                        {columns.unassigned.map((chore) => (
-                                            <ChoreCard
-                                                key={chore.id}
-                                                sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1 }}
-                                                style={{ backgroundColor: '#94a3b815', border: '2px solid #94a3b8' }}
-                                            >
-                                                <Box sx={{ mt: 0.25, flexShrink: 0 }}>
-                                                    <RefreshCw size={14} style={{ color: 'var(--mui-palette-text-secondary)' }} />
-                                                </Box>
-                                                <Box sx={{ minWidth: 0, flex: 1 }}>
-                                                    <ChoreTitleText variant="caption">{chore.title}</ChoreTitleText>
-                                                    <ChoreMeta sx={{ mt: 0.25, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                        <FrequencySpan>{chore.frequency}</FrequencySpan>
-                                                        {chore.next_due_date && <span>&middot; {formatDateTime(chore.next_due_date)}</span>}
-                                                    </ChoreMeta>
-                                                </Box>
-                                                <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
-                                                    <ChoreCompleteButton onClick={() => markComplete(chore)} />
-                                                    <ChoreEditButton onClick={() => openEdit(chore)} />
-                                                    <ChoreDeleteButton onClick={() => deleteChore(chore)} />
-                                                </Box>
-                                            </ChoreCard>
-                                        ))}
+                                        {columns.unassigned.map((chore) => {
+                                            const completed = isChoreCompleted(chore);
+
+                                            return (
+                                                <ChoreCard
+                                                    key={chore.id}
+                                                    sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, p: 1, opacity: completed ? 0.5 : 1 }}
+                                                    style={{
+                                                        backgroundColor: completed ? '#e2e8f015' : '#94a3b815',
+                                                        border: `2px solid ${completed ? '#cbd5e1' : '#94a3b8'}`,
+                                                    }}
+                                                >
+                                                    <Box sx={{ mt: 0.25, flexShrink: 0 }}>
+                                                        <RefreshCw
+                                                            size={14}
+                                                            style={{
+                                                                color: completed
+                                                                    ? 'var(--mui-palette-text-disabled)'
+                                                                    : 'var(--mui-palette-text-secondary)',
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                    <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                        <ChoreTitleText
+                                                            variant="caption"
+                                                            sx={{ textDecoration: completed ? 'line-through' : 'none' }}
+                                                        >
+                                                            {chore.title}
+                                                        </ChoreTitleText>
+                                                        <ChoreMeta sx={{ mt: 0.25, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                            <FrequencySpan>{chore.frequency}</FrequencySpan>
+                                                            {chore.next_due_date && <span>&middot; {formatDateTime(chore.next_due_date)}</span>}
+                                                        </ChoreMeta>
+                                                    </Box>
+                                                    <Box sx={{ display: 'flex', flexShrink: 0, gap: 0.25 }}>
+                                                        <ChoreCompleteButton onClick={() => markComplete(chore)} />
+                                                        <ChoreEditButton onClick={() => openEdit(chore)} />
+                                                        <ChoreDeleteButton onClick={() => deleteChore(chore)} />
+                                                    </Box>
+                                                </ChoreCard>
+                                            );
+                                        })}
                                     </Box>
                                 </ColumnContainer>
                             )}

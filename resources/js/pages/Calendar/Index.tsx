@@ -231,6 +231,52 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
         [events, todos, chores],
     );
 
+    const visibleFcEvents = useMemo(() => {
+        if (hiddenMembers.size === 0) {
+            return allFcEvents;
+        }
+
+        return allFcEvents.filter((ev) => {
+            const { type, source } = ev.extendedProps as { type: string; source: CalendarEvent | Todo | Chore };
+
+            if (type === 'event') {
+                const e = source as CalendarEvent;
+                const attendeeIds = e.attendees?.map((a) => a.id) ?? [];
+                const creatorIds = e.creator?.id ? [e.creator.id] : [];
+                const involvedIds: number[] = [...attendeeIds, ...creatorIds];
+
+                if (involvedIds.length === 0) {
+                    return true;
+                }
+
+                return involvedIds.some((id) => !hiddenMembers.has(id));
+            }
+
+            if (type === 'todo') {
+                const t = source as Todo;
+
+                if (!t.assignee) {
+                    return true;
+                }
+
+                return !hiddenMembers.has(t.assignee.id);
+            }
+
+            if (type === 'chore') {
+                const c = source as Chore;
+                const assigneeIds = c.assignees?.map((a) => a.id) ?? [];
+
+                if (assigneeIds.length === 0) {
+                    return true;
+                }
+
+                return assigneeIds.some((id) => !hiddenMembers.has(id));
+            }
+
+            return true;
+        });
+    }, [allFcEvents, hiddenMembers]);
+
     function handleDateSelect(info: DateSelectArg) {
         createForm.setData({ ...createForm.data, start_at: info.startStr.slice(0, 16), end_at: info.endStr ? info.endStr.slice(0, 16) : '' });
         setCreateOpen(true);
@@ -297,7 +343,9 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
     }
 
     function handleDatesSet(info: DatesSetArg) {
-        setSelectedDate(info.startStr.split('T')[0]);
+        const d = info.view.currentStart;
+
+        setSelectedDate(dayjs(d).format('YYYY-MM-DD'));
     }
 
     function deleteCurrentEvent() {
@@ -495,7 +543,7 @@ export default function CalendarIndex({ events, todos, chores, members, initialV
                             initialView={calendarView}
                             view={calendarView}
                             selectedDate={selectedDate}
-                            events={allFcEvents}
+                            events={visibleFcEvents}
                             select={handleDateSelect}
                             eventClick={handleEventClick}
                             eventDrop={handleEventDrop}
