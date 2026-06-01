@@ -107,11 +107,12 @@ export default function AssistantIndex() {
         scrollToBottom();
 
         try {
+            const xsrfToken = decodeURIComponent(document.cookie.match(/(?:^|;)\s*XSRF-TOKEN=([^;]+)/)?.[1] ?? '');
             const response = await fetch(chat().url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '',
+                    'X-XSRF-TOKEN': xsrfToken,
                     Accept: 'text/event-stream',
                 },
                 body: JSON.stringify({ message, history }),

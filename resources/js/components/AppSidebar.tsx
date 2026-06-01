@@ -151,10 +151,14 @@ const SidebarMobileDrawer = styled(Drawer)({
 export default function AppSidebar() {
     const { open, mobileOpen, setMobileOpen } = useAppSidebar();
     const page = usePage<AppPageProps>();
-    const user = page.props.auth.user;
+    const user = page.props.auth?.user;
     const isMobile = useMediaQuery('(max-width:899px)');
     const aiChatModalRef = React.useRef<AiChatModalHandle>(null);
     const [userMenuAnchor, setUserMenuAnchor] = React.useState<null | HTMLElement>(null);
+
+    if (!user) {
+        return null;
+    }
 
     const mainNavItems: NavItem[] = [
         { title: 'Dashboard', href: dashboard(), icon: LayoutGrid, iconColor: '#3282b0' },

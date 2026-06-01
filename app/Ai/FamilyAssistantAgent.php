@@ -14,6 +14,7 @@ use App\Ai\Tools\DeleteTodo;
 use App\Ai\Tools\EditChore;
 use App\Ai\Tools\EditEvent;
 use App\Ai\Tools\EditTodo;
+use App\Ai\Tools\FetchUrlContent;
 use App\Ai\Tools\ImportRecipe;
 use App\Ai\Tools\ListChores;
 use App\Ai\Tools\ListEvents;
@@ -106,6 +107,7 @@ class FamilyAssistantAgent implements Agent, Conversational, HasTools
             new ListShoppingItems($this->user),
             new ImportRecipe($this->user),
             new ListRecipes($this->user),
+            new FetchUrlContent($this->user),
         ];
     }
 
