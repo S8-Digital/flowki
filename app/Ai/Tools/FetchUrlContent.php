@@ -2,6 +2,7 @@
 
 namespace App\Ai\Tools;
 
+use App\Ai\Concerns\ValidatesRemoteUrl;
 use App\Models\User;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Support\Facades\Http;
@@ -10,6 +11,7 @@ use Laravel\Ai\Tools\Request;
 
 class FetchUrlContent implements Tool
 {
+    use ValidatesRemoteUrl;
     public function __construct(protected User $user) {}
 
     public function description(): string
@@ -65,26 +67,25 @@ class FetchUrlContent implements Tool
         }
 
         // Validate every redirect destination to prevent SSRF via 302 → internal host.
-        $self = $this;
-        $onRedirect = static function (
+        $onRedirect = function (
             \Psr\Http\Message\RequestInterface $req,
             \Psr\Http\Message\ResponseInterface $res,
             \Psr\Http\Message\UriInterface $uri
-        ) use ($self): void {
+        ): void {
             $redirectHost = $uri->getHost();
             $redirectScheme = strtolower($uri->getScheme());
             if (! in_array($redirectScheme, ['http', 'https'], true)) {
                 throw new \RuntimeException('Redirect to non-HTTP scheme blocked.');
             }
             if (filter_var($redirectHost, FILTER_VALIDATE_IP)) {
-                if ($self->isPrivateIp($redirectHost)) {
+                if ($this->isPrivateIp($redirectHost)) {
                     throw new \RuntimeException('Redirect to private/reserved address blocked.');
                 }
             } else {
                 $records = @dns_get_record($redirectHost, DNS_A | DNS_AAAA) ?: [];
                 foreach ($records as $record) {
                     $ip = $record['ip'] ?? $record['ipv6'] ?? null;
-                    if ($ip !== null && $self->isPrivateIp($ip)) {
+                    if ($ip !== null && $this->isPrivateIp($ip)) {
                         throw new \RuntimeException('Redirect to private/reserved address blocked.');
                     }
                 }
@@ -159,17 +160,5 @@ class FetchUrlContent implements Tool
             'url' => $schema->string()->description('The full URL of the web page to fetch')->required(),
         ];
     }
-
-    private function isPrivateIp(string $ip): bool
-    {
-        if (! filter_var($ip, FILTER_VALIDATE_IP)) {
-            return true; // Cannot resolve — block it
-        }
-
-        return ! filter_var(
-            $ip,
-            FILTER_VALIDATE_IP,
-            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE,
-        );
-    }
 }
+

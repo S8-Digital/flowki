@@ -147,6 +147,8 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
 
         return meals;
     });
+    // Incrementing counter for collision-free temporary IDs on optimistic meals
+    const [optimisticCounter, setOptimisticCounter] = useState(0);
 
     // When Inertia reloads with authoritative server data, sync local state and update cache
     useEffect(() => {
@@ -232,12 +234,14 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
         }
 
         const recipe = recipes.find((r) => r.id === dragRecipeId) ?? null;
-        const tempId = -Date.now(); // negative ID flags this as an optimistic (unconfirmed) meal
+        // Use an incrementing counter for the temp ID to avoid collisions on rapid drops
+        const tempId = -(optimisticCounter + 1);
+        setOptimisticCounter((c) => c + 1);
 
         const optimisticMeal: Meal = {
             id: tempId,
-            family_id: 0,
-            created_by: 0,
+            family_id: -1,
+            created_by: -1,
             recipe_id: dragRecipeId,
             planned_date: dateStr,
             meal_type: 'dinner',

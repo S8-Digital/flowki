@@ -2,6 +2,7 @@
 
 namespace App\Ai\Tools;
 
+use App\Ai\Concerns\ValidatesRemoteUrl;
 use App\Enums\RecipeCategory;
 use App\Models\Recipe;
 use App\Models\User;
@@ -15,6 +16,7 @@ use Laravel\Ai\Tools\Request;
 
 class ImportRecipe implements Tool
 {
+    use ValidatesRemoteUrl;
     public function __construct(protected User $user) {}
 
     public function description(): string
@@ -68,20 +70,42 @@ class ImportRecipe implements Tool
             $imageUrl = $request['image_url'] ?? null;
             if ($imageUrl && filter_var($imageUrl, FILTER_VALIDATE_URL)) {
                 try {
-                    $imageResponse = Http::timeout(15)->get($imageUrl);
-                    if ($imageResponse->successful()) {
-                        $extension = 'jpg';
-                        $contentType = $imageResponse->header('Content-Type') ?? '';
-                        if (str_contains($contentType, 'png')) {
-                            $extension = 'png';
-                        } elseif (str_contains($contentType, 'gif')) {
-                            $extension = 'gif';
-                        } elseif (str_contains($contentType, 'webp')) {
-                            $extension = 'webp';
+                    // Validate the image host is not a private/reserved address (SSRF protection).
+                    $imageHost = parse_url($imageUrl, PHP_URL_HOST) ?? '';
+                    $imageScheme = strtolower(parse_url($imageUrl, PHP_URL_SCHEME) ?? '');
+                    $safeToFetch = in_array($imageScheme, ['http', 'https'], true);
+
+                    if ($safeToFetch) {
+                        if (filter_var($imageHost, FILTER_VALIDATE_IP)) {
+                            $safeToFetch = ! $this->isPrivateIp($imageHost);
+                        } else {
+                            $records = @dns_get_record($imageHost, DNS_A | DNS_AAAA) ?: [];
+                            foreach ($records as $record) {
+                                $ip = $record['ip'] ?? $record['ipv6'] ?? null;
+                                if ($ip !== null && $this->isPrivateIp($ip)) {
+                                    $safeToFetch = false;
+                                    break;
+                                }
+                            }
                         }
-                        $filename = 'recipes/'.Str::uuid().'.'.$extension;
-                        Storage::disk('public')->put($filename, $imageResponse->body());
-                        $recipe->update(['photo_path' => $filename]);
+                    }
+
+                    if ($safeToFetch) {
+                        $imageResponse = Http::timeout(15)->get($imageUrl);
+                        if ($imageResponse->successful()) {
+                            $extension = 'jpg';
+                            $contentType = $imageResponse->header('Content-Type') ?? '';
+                            if (str_contains($contentType, 'png')) {
+                                $extension = 'png';
+                            } elseif (str_contains($contentType, 'gif')) {
+                                $extension = 'gif';
+                            } elseif (str_contains($contentType, 'webp')) {
+                                $extension = 'webp';
+                            }
+                            $filename = 'recipes/'.Str::uuid().'.'.$extension;
+                            Storage::disk('public')->put($filename, $imageResponse->body());
+                            $recipe->update(['photo_path' => $filename]);
+                        }
                     }
                 } catch (\Throwable) {
                     // Photo download failed — recipe was still created successfully.
