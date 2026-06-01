@@ -7,6 +7,7 @@ import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
+import { getXsrfToken } from '@/lib/csrf';
 import type { BreadcrumbItem } from '@/types';
 
 interface Message {
@@ -111,7 +112,7 @@ export default function AssistantIndex() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '',
+                    'X-XSRF-TOKEN': getXsrfToken(),
                     Accept: 'text/event-stream',
                 },
                 body: JSON.stringify({ message, history }),

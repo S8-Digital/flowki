@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import { confirm, upload } from '@/actions/App/Http/Controllers/ScheduleController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { getXsrfToken } from '@/lib/csrf';
 import type { ParsedShift, RosterItem } from '@/types';
 
 interface Props {
@@ -171,11 +172,10 @@ export default function ScheduleUploadModal({ open, onOpenChange }: Props) {
         setIsLoading(true);
 
         try {
-            const csrfMeta = document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement | null;
             const response = await fetch(upload().url, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': csrfMeta?.content ?? '',
+                    'X-XSRF-TOKEN': getXsrfToken(),
                     Accept: 'application/json',
                 },
                 body: formData,

@@ -7,6 +7,7 @@ import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { getXsrfToken } from '@/lib/csrf';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -145,7 +146,7 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '',
+                    'X-XSRF-TOKEN': getXsrfToken(),
                     Accept: 'text/event-stream',
                 },
                 body: JSON.stringify({ message, history }),
@@ -191,11 +192,11 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                     try {
                         const parsed = JSON.parse(data);
 
-                        if (parsed.type === 'text_delta' && parsed.delta) {
+                        if (parsed.text) {
                             setMessages((prev) => {
                                 const updated = [...prev];
                                 const last = updated[updated.length - 1];
-                                updated[updated.length - 1] = { ...last, content: last.content + parsed.delta };
+                                updated[updated.length - 1] = { ...last, content: last.content + parsed.text };
 
                                 return updated;
                             });

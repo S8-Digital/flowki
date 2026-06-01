@@ -43,9 +43,7 @@ createInertiaApp({
             </StrictMode>,
         );
     },
-    progress: {
-        color: '#4e92be',
-    },
+    progress: { delay: 250 },
 });
 
 // This will set light / dark mode on page load...

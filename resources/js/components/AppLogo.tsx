@@ -20,7 +20,7 @@ const LogoNameSpan = styled(Box)({
 
 export default function AppLogo() {
     const page = usePage<AppPageProps>();
-    const displayName = page.props.auth.user?.family?.name ?? page.props.name;
+    const displayName = page.props.auth?.user?.family?.name ?? page.props.name;
     const isMobile = useMediaQuery('(max-width:899px)');
     const { open } = useAppSidebar();
     const LOGO_DIMENSIONS = !open || isMobile ? 40 : 50;

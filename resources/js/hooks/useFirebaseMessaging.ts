@@ -3,6 +3,7 @@ import type { MessagePayload } from 'firebase/messaging';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { destroy, store } from '@/actions/App/Http/Controllers/FcmTokenController';
 import { getFcmToken, onForegroundMessage, requestNotificationPermission } from '@/lib/firebase-messaging';
+import { getXsrfToken } from '@/lib/csrf';
 import type { AppPageProps } from '@/types';
 
 interface UseFirebaseMessagingReturn {
@@ -61,7 +62,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
+                    'X-XSRF-TOKEN': getXsrfToken(),
                 },
                 body: JSON.stringify({ token, device_type: 'web' }),
             });
@@ -78,7 +79,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         await fetch(destroy(fcmToken).url, {
             method: 'DELETE',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
+                'X-XSRF-TOKEN': getXsrfToken(),
             },
         });
         setFcmToken(null);
