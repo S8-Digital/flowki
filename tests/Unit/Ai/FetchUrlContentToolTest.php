@@ -122,6 +122,14 @@ class FetchUrlContentToolTest extends TestCase
         $this->assertStringContainsString('no readable content', $result);
     }
 
+    public function test_handle_blocks_hostname_resolving_to_private_ip(): void
+    {
+        // 'localhost' resolves to 127.0.0.1 (loopback), which must be rejected via DNS path.
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://localhost/']));
+
+        $this->assertStringContainsString('Error', $result);
+    }
+
     public function test_description_is_not_empty(): void
     {
         $this->assertNotEmpty($this->makeTool()->description());

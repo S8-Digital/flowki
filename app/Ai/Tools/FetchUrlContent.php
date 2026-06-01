@@ -47,8 +47,9 @@ class FetchUrlContent implements Tool
             }
             $resolveEntries[] = "{$host}:{$port}:{$host}";
         } else {
-            $records = dns_get_record($host, DNS_A | DNS_AAAA);
-            if (empty($records)) {
+            // dns_get_record() returns false on hard DNS failure; treat that the same as no records.
+            $records = @dns_get_record($host, DNS_A | DNS_AAAA);
+            if ($records === false || empty($records)) {
                 return 'Error: could not resolve host.';
             }
             foreach ($records as $record) {
