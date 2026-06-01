@@ -4,9 +4,12 @@ namespace Tests\Unit\Ai;
 
 use App\Ai\Tools\ImportRecipe;
 use App\Enums\RecipeCategory;
+use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Ai\Tools\Request;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -141,5 +144,100 @@ class ImportRecipeToolTest extends TestCase
         $this->assertArrayHasKey('title', $fields);
         $this->assertArrayHasKey('instructions', $fields);
         $this->assertArrayHasKey('ingredients', $fields);
+        $this->assertArrayHasKey('image_url', $fields);
+    }
+
+    public function test_handle_downloads_and_stores_image_for_valid_public_url(): void
+    {
+        Storage::fake('public');
+
+        Http::fake([
+            '*' => Http::response('fake-image-bytes', 200, ['Content-Type' => 'image/jpeg']),
+        ]);
+
+        $user = User::factory()->withFamily()->create();
+        $tool = new ImportRecipe($user);
+
+        $result = $tool->handle(new Request([
+            'title'        => 'Photo Recipe',
+            'instructions' => 'Cook it.',
+            'ingredients'  => [],
+            'image_url'    => 'http://1.2.3.4/hero.jpg',
+        ]));
+
+        $this->assertStringContainsString('Photo Recipe', $result);
+
+        $recipe = Recipe::where('title', 'Photo Recipe')->firstOrFail();
+        $this->assertNotNull($recipe->photo_path);
+        $this->assertStringStartsWith('recipes/', $recipe->photo_path);
+        $this->assertStringEndsWith('.jpg', $recipe->photo_path);
+        Storage::disk('public')->assertExists($recipe->photo_path);
+    }
+
+    public function test_handle_skips_image_for_private_ip(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->withFamily()->create();
+        $tool = new ImportRecipe($user);
+
+        $result = $tool->handle(new Request([
+            'title'        => 'Private IP Recipe',
+            'instructions' => 'Cook it.',
+            'ingredients'  => [],
+            'image_url'    => 'http://192.168.1.1/image.jpg',
+        ]));
+
+        // Recipe should still be created; photo_path must not be set
+        $this->assertStringContainsString('Private IP Recipe', $result);
+
+        $recipe = Recipe::where('title', 'Private IP Recipe')->firstOrFail();
+        $this->assertNull($recipe->photo_path);
+        $this->assertEmpty(Storage::disk('public')->files('recipes'));
+    }
+
+    public function test_handle_skips_image_for_loopback_host(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->withFamily()->create();
+        $tool = new ImportRecipe($user);
+
+        $result = $tool->handle(new Request([
+            'title'        => 'Loopback Image Recipe',
+            'instructions' => 'Cook it.',
+            'ingredients'  => [],
+            'image_url'    => 'http://127.0.0.1/image.jpg',
+        ]));
+
+        $this->assertStringContainsString('Loopback Image Recipe', $result);
+
+        $recipe = Recipe::where('title', 'Loopback Image Recipe')->firstOrFail();
+        $this->assertNull($recipe->photo_path);
+    }
+
+    public function test_handle_skips_image_for_unsupported_content_type(): void
+    {
+        Storage::fake('public');
+
+        Http::fake([
+            '*' => Http::response('<svg></svg>', 200, ['Content-Type' => 'image/svg+xml']),
+        ]);
+
+        $user = User::factory()->withFamily()->create();
+        $tool = new ImportRecipe($user);
+
+        $result = $tool->handle(new Request([
+            'title'        => 'SVG Image Recipe',
+            'instructions' => 'Cook it.',
+            'ingredients'  => [],
+            'image_url'    => 'http://1.2.3.4/image.svg',
+        ]));
+
+        $this->assertStringContainsString('SVG Image Recipe', $result);
+
+        $recipe = Recipe::where('title', 'SVG Image Recipe')->firstOrFail();
+        $this->assertNull($recipe->photo_path);
+        $this->assertEmpty(Storage::disk('public')->files('recipes'));
     }
 }

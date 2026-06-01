@@ -11,7 +11,7 @@ import { alpha, styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { ChevronLeft, ChevronRight, Plus, ShoppingCart, Trash2, UtensilsCrossed } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -147,8 +147,8 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
 
         return meals;
     });
-    // Incrementing counter for collision-free temporary IDs on optimistic meals
-    const [optimisticCounter, setOptimisticCounter] = useState(0);
+    // Mutable ref for collision-free temporary IDs — doesn't need to trigger a re-render
+    const optimisticCounterRef = useRef(0);
 
     // When Inertia reloads with authoritative server data, sync local state and update cache
     useEffect(() => {
@@ -208,7 +208,10 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
             return updated;
         });
 
-        router.delete(destroy(meal.id).url, { preserveScroll: true });
+        // Only send server delete for real (persisted) meals — optimistic entries have negative IDs
+        if (meal.id > 0) {
+            router.delete(destroy(meal.id).url, { preserveScroll: true });
+        }
     }
 
     // Drag-and-drop from recipe panel to day column
@@ -234,15 +237,14 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
         }
 
         const recipe = recipes.find((r) => r.id === dragRecipeId) ?? null;
-        // Use an incrementing counter for the temp ID to avoid collisions on rapid drops
-        const tempId = -(optimisticCounter + 1);
-        setOptimisticCounter((c) => c + 1);
+        // Synchronously increment the ref so rapid drops never produce the same temp ID
+        const tempId = -(++optimisticCounterRef.current);
 
         const optimisticMeal: Meal = {
             id: tempId,
             family_id: -1,
             created_by: -1,
-            recipe_id: dragRecipeId,
+            recipe_id: null, // null keeps shopping-list actions hidden until server returns the real meal ID
             planned_date: dateStr,
             meal_type: 'dinner',
             servings: recipe?.servings ?? null,

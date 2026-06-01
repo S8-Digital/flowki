@@ -79,32 +79,40 @@ class ImportRecipe implements Tool
                         if (filter_var($imageHost, FILTER_VALIDATE_IP)) {
                             $safeToFetch = ! $this->isPrivateIp($imageHost);
                         } else {
-                            $records = @dns_get_record($imageHost, DNS_A | DNS_AAAA) ?: [];
-                            foreach ($records as $record) {
-                                $ip = $record['ip'] ?? $record['ipv6'] ?? null;
-                                if ($ip !== null && $this->isPrivateIp($ip)) {
-                                    $safeToFetch = false;
-                                    break;
+                            $records = @dns_get_record($imageHost, DNS_A | DNS_AAAA);
+                            if ($records === false || empty($records)) {
+                                // Treat unresolvable hostnames as unsafe (fail closed)
+                                $safeToFetch = false;
+                            } else {
+                                foreach ($records as $record) {
+                                    $ip = $record['ip'] ?? $record['ipv6'] ?? null;
+                                    if ($ip !== null && $this->isPrivateIp($ip)) {
+                                        $safeToFetch = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
 
                     if ($safeToFetch) {
-                        $imageResponse = Http::timeout(15)->get($imageUrl);
+                        // Disable redirects to prevent SSRF via 3xx to an internal address
+                        $imageResponse = Http::timeout(15)->withOptions(['allow_redirects' => false])->get($imageUrl);
                         if ($imageResponse->successful()) {
-                            $extension = 'jpg';
                             $contentType = $imageResponse->header('Content-Type') ?? '';
-                            if (str_contains($contentType, 'png')) {
-                                $extension = 'png';
-                            } elseif (str_contains($contentType, 'gif')) {
-                                $extension = 'gif';
-                            } elseif (str_contains($contentType, 'webp')) {
-                                $extension = 'webp';
+                            $mimeType = trim(strtok($contentType, ';') ?: '');
+                            $allowedMimeTypes = [
+                                'image/jpeg' => 'jpg',
+                                'image/png'  => 'png',
+                                'image/gif'  => 'gif',
+                                'image/webp' => 'webp',
+                            ];
+                            if (isset($allowedMimeTypes[$mimeType])) {
+                                $extension = $allowedMimeTypes[$mimeType];
+                                $filename = 'recipes/'.Str::uuid().'.'.$extension;
+                                Storage::disk('public')->put($filename, $imageResponse->body());
+                                $recipe->update(['photo_path' => $filename]);
                             }
-                            $filename = 'recipes/'.Str::uuid().'.'.$extension;
-                            Storage::disk('public')->put($filename, $imageResponse->body());
-                            $recipe->update(['photo_path' => $filename]);
                         }
                     }
                 } catch (\Throwable) {

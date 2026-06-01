@@ -82,7 +82,10 @@ class FetchUrlContent implements Tool
                     throw new \RuntimeException('Redirect to private/reserved address blocked.');
                 }
             } else {
-                $records = @dns_get_record($redirectHost, DNS_A | DNS_AAAA) ?: [];
+                $records = @dns_get_record($redirectHost, DNS_A | DNS_AAAA);
+                if ($records === false || empty($records)) {
+                    throw new \RuntimeException('Redirect to unresolvable host blocked.');
+                }
                 foreach ($records as $record) {
                     $ip = $record['ip'] ?? $record['ipv6'] ?? null;
                     if ($ip !== null && $this->isPrivateIp($ip)) {
