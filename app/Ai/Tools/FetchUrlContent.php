@@ -30,22 +30,51 @@ class FetchUrlContent implements Tool
             return 'Error: only http and https URLs are supported.';
         }
 
-        // Resolve the host to an IP and block private / reserved ranges (SSRF protection).
-        // We pin the resolved IP via CURLOPT_RESOLVE so the same IP is used for both
-        // validation and the actual connection, preventing DNS rebinding attacks.
+        // Resolve the host to IPs and block private / reserved ranges (SSRF protection).
+        // We resolve both A (IPv4) and AAAA (IPv6) records, validate every returned address,
+        // and pin them all via CURLOPT_RESOLVE so the same IPs are used for both validation
+        // and the actual connection, preventing DNS rebinding attacks.
+        // Redirects are disabled to prevent SSRF via 302 responses pointing at internal hosts.
         $host = parse_url($url, PHP_URL_HOST) ?? '';
         $port = (int) (parse_url($url, PHP_URL_PORT) ?? ($scheme === 'https' ? 443 : 80));
-        $ip = gethostbyname($host);
-        if ($this->isPrivateIp($ip)) {
-            return 'Error: requests to private or reserved IP addresses are not allowed.';
+
+        $resolveEntries = [];
+
+        if (filter_var($host, FILTER_VALIDATE_IP)) {
+            // Host is already an IP literal (IPv4 or IPv6) — validate it directly.
+            if ($this->isPrivateIp($host)) {
+                return 'Error: requests to private or reserved IP addresses are not allowed.';
+            }
+            $resolveEntries[] = "{$host}:{$port}:{$host}";
+        } else {
+            $records = dns_get_record($host, DNS_A | DNS_AAAA);
+            if (empty($records)) {
+                return 'Error: could not resolve host.';
+            }
+            foreach ($records as $record) {
+                $ip = $record['ip'] ?? $record['ipv6'] ?? null;
+                if ($ip === null) {
+                    continue;
+                }
+                if ($this->isPrivateIp($ip)) {
+                    return 'Error: requests to private or reserved IP addresses are not allowed.';
+                }
+                $resolveEntries[] = "{$host}:{$port}:{$ip}";
+            }
+            if (empty($resolveEntries)) {
+                return 'Error: could not resolve host.';
+            }
         }
 
         try {
             $response = Http::timeout(15)
                 ->withHeaders(['User-Agent' => 'Mozilla/5.0 (compatible; Flowki/1.0)'])
                 ->withOptions([
-                    // Pin hostname → IP to prevent DNS rebinding; TLS still validates the hostname
-                    'curl' => [CURLOPT_RESOLVE => ["{$host}:{$port}:{$ip}"]],
+                    // Disable redirects to prevent SSRF via 302 to internal addresses.
+                    'allow_redirects' => false,
+                    // Pin hostname → IPs (all A/AAAA records) to prevent DNS rebinding;
+                    // TLS still validates the hostname.
+                    'curl' => [CURLOPT_RESOLVE => $resolveEntries],
                 ])
                 ->get($url);
         } catch (\Throwable $e) {
