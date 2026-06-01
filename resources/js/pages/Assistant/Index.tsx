@@ -7,6 +7,7 @@ import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
+import { getXsrfToken } from '@/lib/csrf';
 import type { BreadcrumbItem } from '@/types';
 
 interface Message {
@@ -107,12 +108,11 @@ export default function AssistantIndex() {
         scrollToBottom();
 
         try {
-            const xsrfToken = decodeURIComponent(document.cookie.match(/(?:^|;)\s*XSRF-TOKEN=([^;]+)/)?.[1] ?? '');
             const response = await fetch(chat().url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-XSRF-TOKEN': xsrfToken,
+                    'X-XSRF-TOKEN': getXsrfToken(),
                     Accept: 'text/event-stream',
                 },
                 body: JSON.stringify({ message, history }),

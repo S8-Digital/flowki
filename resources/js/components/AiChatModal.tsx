@@ -7,6 +7,7 @@ import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { getXsrfToken } from '@/lib/csrf';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -141,12 +142,11 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
         scrollToBottom();
 
         try {
-            const xsrfToken = decodeURIComponent(document.cookie.match(/(?:^|;)\s*XSRF-TOKEN=([^;]+)/)?.[1] ?? '');
             const response = await fetch(chat().url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-XSRF-TOKEN': xsrfToken,
+                    'X-XSRF-TOKEN': getXsrfToken(),
                     Accept: 'text/event-stream',
                 },
                 body: JSON.stringify({ message, history }),
