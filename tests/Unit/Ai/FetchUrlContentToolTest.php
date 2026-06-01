@@ -4,9 +4,11 @@ namespace Tests\Unit\Ai;
 
 use App\Ai\Tools\FetchUrlContent;
 use App\Models\User;
+use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Laravel\Ai\Tools\Request;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class FetchUrlContentToolTest extends TestCase
@@ -199,8 +201,8 @@ class FetchUrlContentToolTest extends TestCase
 
     public function test_schema_contains_url_field(): void
     {
-        /** @var \Illuminate\Contracts\JsonSchema\JsonSchema&\Mockery\MockInterface $schema */
-        $schema = \Mockery::mock(\Illuminate\Contracts\JsonSchema\JsonSchema::class);
+        /** @var JsonSchema&MockInterface $schema */
+        $schema = \Mockery::mock(JsonSchema::class);
         $schema->shouldReceive('string')->andReturnSelf()->zeroOrMoreTimes();
         $schema->shouldReceive('description')->andReturnSelf()->zeroOrMoreTimes();
         $schema->shouldReceive('required')->andReturnSelf()->zeroOrMoreTimes();

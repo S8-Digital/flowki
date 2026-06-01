@@ -17,6 +17,7 @@ use Laravel\Ai\Tools\Request;
 class ImportRecipe implements Tool
 {
     use ValidatesRemoteUrl;
+
     public function __construct(protected User $user) {}
 
     public function description(): string
@@ -103,8 +104,8 @@ class ImportRecipe implements Tool
                             $mimeType = trim(strtok($contentType, ';') ?: '');
                             $allowedMimeTypes = [
                                 'image/jpeg' => 'jpg',
-                                'image/png'  => 'png',
-                                'image/gif'  => 'gif',
+                                'image/png' => 'png',
+                                'image/gif' => 'gif',
                                 'image/webp' => 'webp',
                             ];
                             if (isset($allowedMimeTypes[$mimeType])) {

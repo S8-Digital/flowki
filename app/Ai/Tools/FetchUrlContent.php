@@ -8,10 +8,14 @@ use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Support\Facades\Http;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 
 class FetchUrlContent implements Tool
 {
     use ValidatesRemoteUrl;
+
     public function __construct(protected User $user) {}
 
     public function description(): string
@@ -68,9 +72,9 @@ class FetchUrlContent implements Tool
 
         // Validate every redirect destination to prevent SSRF via 302 → internal host.
         $onRedirect = function (
-            \Psr\Http\Message\RequestInterface $req,
-            \Psr\Http\Message\ResponseInterface $res,
-            \Psr\Http\Message\UriInterface $uri
+            RequestInterface $req,
+            ResponseInterface $res,
+            UriInterface $uri
         ): void {
             $redirectHost = $uri->getHost();
             $redirectScheme = strtolower($uri->getScheme());
@@ -164,4 +168,3 @@ class FetchUrlContent implements Tool
         ];
     }
 }
-

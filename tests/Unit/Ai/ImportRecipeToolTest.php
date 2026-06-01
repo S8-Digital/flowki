@@ -159,10 +159,10 @@ class ImportRecipeToolTest extends TestCase
         $tool = new ImportRecipe($user);
 
         $result = $tool->handle(new Request([
-            'title'        => 'Photo Recipe',
+            'title' => 'Photo Recipe',
             'instructions' => 'Cook it.',
-            'ingredients'  => [],
-            'image_url'    => 'http://1.2.3.4/hero.jpg',
+            'ingredients' => [],
+            'image_url' => 'http://1.2.3.4/hero.jpg',
         ]));
 
         $this->assertStringContainsString('Photo Recipe', $result);
@@ -182,10 +182,10 @@ class ImportRecipeToolTest extends TestCase
         $tool = new ImportRecipe($user);
 
         $result = $tool->handle(new Request([
-            'title'        => 'Private IP Recipe',
+            'title' => 'Private IP Recipe',
             'instructions' => 'Cook it.',
-            'ingredients'  => [],
-            'image_url'    => 'http://192.168.1.1/image.jpg',
+            'ingredients' => [],
+            'image_url' => 'http://192.168.1.1/image.jpg',
         ]));
 
         // Recipe should still be created; photo_path must not be set
@@ -204,10 +204,10 @@ class ImportRecipeToolTest extends TestCase
         $tool = new ImportRecipe($user);
 
         $result = $tool->handle(new Request([
-            'title'        => 'Loopback Image Recipe',
+            'title' => 'Loopback Image Recipe',
             'instructions' => 'Cook it.',
-            'ingredients'  => [],
-            'image_url'    => 'http://127.0.0.1/image.jpg',
+            'ingredients' => [],
+            'image_url' => 'http://127.0.0.1/image.jpg',
         ]));
 
         $this->assertStringContainsString('Loopback Image Recipe', $result);
@@ -228,10 +228,10 @@ class ImportRecipeToolTest extends TestCase
         $tool = new ImportRecipe($user);
 
         $result = $tool->handle(new Request([
-            'title'        => 'SVG Image Recipe',
+            'title' => 'SVG Image Recipe',
             'instructions' => 'Cook it.',
-            'ingredients'  => [],
-            'image_url'    => 'http://1.2.3.4/image.svg',
+            'ingredients' => [],
+            'image_url' => 'http://1.2.3.4/image.svg',
         ]));
 
         $this->assertStringContainsString('SVG Image Recipe', $result);
