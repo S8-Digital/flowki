@@ -7,6 +7,9 @@ use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 
@@ -16,7 +19,7 @@ class ImportRecipe implements Tool
 
     public function description(): string
     {
-        return 'Import a recipe from pasted text or a URL. The input should contain a recipe with a title, ingredients, and instructions. Creates a Recipe record with associated ingredients.';
+        return 'Import a recipe from pasted text or a URL. The input should contain a recipe with a title, ingredients, and instructions. Creates a Recipe record with associated ingredients. If an image_url is available (e.g. from the og:image of a fetched page), pass it so the photo can be saved.';
     }
 
     public function handle(Request $request): string
@@ -60,6 +63,30 @@ class ImportRecipe implements Tool
 
                 return $recipe;
             });
+
+            // Download and store the recipe photo (best-effort — don't fail the import if this errors).
+            $imageUrl = $request['image_url'] ?? null;
+            if ($imageUrl && filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+                try {
+                    $imageResponse = Http::timeout(15)->get($imageUrl);
+                    if ($imageResponse->successful()) {
+                        $extension = 'jpg';
+                        $contentType = $imageResponse->header('Content-Type') ?? '';
+                        if (str_contains($contentType, 'png')) {
+                            $extension = 'png';
+                        } elseif (str_contains($contentType, 'gif')) {
+                            $extension = 'gif';
+                        } elseif (str_contains($contentType, 'webp')) {
+                            $extension = 'webp';
+                        }
+                        $filename = 'recipes/'.Str::uuid().'.'.$extension;
+                        Storage::disk('public')->put($filename, $imageResponse->body());
+                        $recipe->update(['photo_path' => $filename]);
+                    }
+                } catch (\Throwable) {
+                    // Photo download failed — recipe was still created successfully.
+                }
+            }
         } catch (\Throwable $e) {
             report($e);
 
@@ -83,6 +110,7 @@ class ImportRecipe implements Tool
             'cook_time_minutes' => $schema->integer()->description('Cooking time in minutes'),
             'instructions' => $schema->string()->description('Step-by-step cooking instructions')->required(),
             'ingredients' => $schema->array()->description('List of ingredients, each with a required "name" and optional "quantity", "unit", and "notes"')->required(),
+            'image_url' => $schema->string()->description('Absolute URL of the recipe hero image (e.g. og:image from the source page)'),
         ];
     }
 }

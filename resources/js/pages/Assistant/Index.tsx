@@ -3,12 +3,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Bot, Send, Sparkles, Trash2, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import { getXsrfToken } from '@/lib/csrf';
 import type { BreadcrumbItem } from '@/types';
+import { chat } from '@/actions/App/Http/Controllers/AiController';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -153,9 +153,29 @@ export default function AssistantIndex() {
                     try {
                         const parsed = JSON.parse(data);
 
-                        if (parsed.text) {
-                            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: m.content + parsed.text } : m)));
+                        if (parsed.type === 'text_delta' && parsed.delta) {
+                            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: m.content + parsed.delta } : m)));
                             scrollToBottom();
+                        } else if (parsed.type === 'tool_call') {
+                            setMessages((prev) =>
+                                prev.map((m, i) => {
+                                    if (i !== assistantIdx || m.content) {
+                                        return m;
+                                    }
+
+                                    return { ...m, content: `⏳ Using ${parsed.tool_name ?? 'tool'}…` };
+                                }),
+                            );
+                        } else if (parsed.type === 'tool_result') {
+                            setMessages((prev) =>
+                                prev.map((m, i) => {
+                                    if (i !== assistantIdx || !m.content.startsWith('⏳')) {
+                                        return m;
+                                    }
+
+                                    return { ...m, content: '' };
+                                }),
+                            );
                         }
                     } catch {
                         /* non-JSON */

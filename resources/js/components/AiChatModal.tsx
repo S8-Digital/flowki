@@ -3,11 +3,11 @@ import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { Bot, Send, Sparkles, User } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { getXsrfToken } from '@/lib/csrf';
+import { chat } from '@/actions/App/Http/Controllers/AiController';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -192,15 +192,38 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                     try {
                         const parsed = JSON.parse(data);
 
-                        if (parsed.text) {
+                        if (parsed.type === 'text_delta' && parsed.delta) {
                             setMessages((prev) => {
                                 const updated = [...prev];
                                 const last = updated[updated.length - 1];
-                                updated[updated.length - 1] = { ...last, content: last.content + parsed.text };
+                                updated[updated.length - 1] = { ...last, content: last.content + parsed.delta };
 
                                 return updated;
                             });
                             scrollToBottom();
+                        } else if (parsed.type === 'tool_call') {
+                            setMessages((prev) => {
+                                const updated = [...prev];
+                                const last = updated[updated.length - 1];
+
+                                if (!last.content) {
+                                    updated[updated.length - 1] = { ...last, content: `⏳ Using ${parsed.tool_name ?? 'tool'}…` };
+                                }
+
+                                return updated;
+                            });
+                        } else if (parsed.type === 'tool_result') {
+                            setMessages((prev) => {
+                                const updated = [...prev];
+                                const last = updated[updated.length - 1];
+
+                                // Replace the "using tool" placeholder once we have a real result
+                                if (last.content.startsWith('⏳')) {
+                                    updated[updated.length - 1] = { ...last, content: '' };
+                                }
+
+                                return updated;
+                            });
                         }
                     } catch {
                         // non-JSON chunk — skip
