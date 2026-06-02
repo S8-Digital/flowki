@@ -194,6 +194,107 @@ class FetchUrlContentToolTest extends TestCase
         $this->assertStringContainsString('Error', $result);
     }
 
+    public function test_handle_extracts_recipe_from_json_ld(): void
+    {
+        $html = <<<'HTML'
+            <html><head>
+                <script type="application/ld+json">
+                {
+                    "@context": "http://schema.org/",
+                    "@type": "Recipe",
+                    "name": "Spaghetti Carbonara",
+                    "description": "A classic Italian pasta dish.",
+                    "recipeYield": "4 servings",
+                    "prepTime": "PT10M",
+                    "cookTime": "PT20M",
+                    "image": "https://example.com/carbonara.jpg",
+                    "recipeIngredient": ["200g spaghetti", "100g pancetta", "2 eggs"],
+                    "recipeInstructions": [
+                        {"@type": "HowToStep", "text": "Boil the pasta."},
+                        {"@type": "HowToStep", "text": "Fry the pancetta."},
+                        {"@type": "HowToStep", "text": "Mix eggs and cheese."}
+                    ]
+                }
+                </script>
+            </head><body>Some page content</body></html>
+            HTML;
+
+        Http::fake([
+            '*' => Http::response($html, 200, ['Content-Type' => 'text/html']),
+        ]);
+
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://'.self::PUBLIC_IP.'/recipe']));
+
+        $this->assertStringContainsString('Recipe Image URL: https://example.com/carbonara.jpg', $result);
+        $this->assertStringContainsString('Spaghetti Carbonara', $result);
+        $this->assertStringContainsString('200g spaghetti', $result);
+        $this->assertStringContainsString('100g pancetta', $result);
+        $this->assertStringContainsString('Boil the pasta.', $result);
+        $this->assertStringContainsString('Fry the pancetta.', $result);
+        $this->assertStringContainsString('10', $result); // prep time minutes
+        $this->assertStringContainsString('20', $result); // cook time minutes
+    }
+
+    public function test_handle_extracts_recipe_from_json_ld_graph(): void
+    {
+        $html = <<<'HTML'
+            <html><head>
+                <script type="application/ld+json">
+                {
+                    "@context": "http://schema.org/",
+                    "@graph": [
+                        {"@type": "WebPage", "name": "My Blog"},
+                        {
+                            "@type": "Recipe",
+                            "name": "Chocolate Cake",
+                            "recipeIngredient": ["200g flour", "150g sugar"],
+                            "recipeInstructions": "Mix everything and bake at 180°C for 30 minutes."
+                        }
+                    ]
+                }
+                </script>
+            </head><body>Blog post content</body></html>
+            HTML;
+
+        Http::fake([
+            '*' => Http::response($html, 200, ['Content-Type' => 'text/html']),
+        ]);
+
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://'.self::PUBLIC_IP.'/blog/recipe']));
+
+        $this->assertStringContainsString('Chocolate Cake', $result);
+        $this->assertStringContainsString('200g flour', $result);
+        $this->assertStringContainsString('Mix everything', $result);
+    }
+
+    public function test_handle_falls_back_to_structured_text_when_no_json_ld(): void
+    {
+        $html = <<<'HTML'
+            <html><body>
+                <h2>Ingredients</h2>
+                <ul>
+                    <li>2 cups flour</li>
+                    <li>1 cup sugar</li>
+                </ul>
+                <h2>Instructions</h2>
+                <ol>
+                    <li>Mix dry ingredients.</li>
+                    <li>Add wet ingredients.</li>
+                </ol>
+            </body></html>
+            HTML;
+
+        Http::fake([
+            '*' => Http::response($html, 200, ['Content-Type' => 'text/html']),
+        ]);
+
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://'.self::PUBLIC_IP.'/simple-recipe']));
+
+        $this->assertStringContainsString('2 cups flour', $result);
+        $this->assertStringContainsString('1 cup sugar', $result);
+        $this->assertStringContainsString('Mix dry ingredients.', $result);
+    }
+
     public function test_description_is_not_empty(): void
     {
         $this->assertNotEmpty($this->makeTool()->description());

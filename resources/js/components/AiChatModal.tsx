@@ -3,11 +3,11 @@ import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { Bot, Send, Sparkles, User } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { getXsrfToken } from '@/lib/csrf';
+import { chat } from '@/actions/App/Http/Controllers/AiController';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -112,6 +112,8 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
+    // Tracks the index of the message bubble currently receiving streaming content.
+    const currentBubbleIdxRef = useRef<number>(-1);
 
     useImperativeHandle(ref, () => ({
         open: () => setIsOpen(true),
@@ -138,6 +140,8 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
 
         const history = messages.map(({ role, content }) => ({ role, content }));
 
+        const assistantIdx = messages.length + 1; // +1 for the user message being prepended
+        currentBubbleIdxRef.current = assistantIdx;
         setMessages((prev) => [...prev, { role: 'user', content: message }, { role: 'assistant', content: '', isStreaming: true }]);
         scrollToBottom();
 
@@ -155,7 +159,11 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
             if (!response.ok || !response.body) {
                 setMessages((prev) => {
                     const updated = [...prev];
-                    updated[updated.length - 1] = { role: 'assistant', content: 'Something went wrong. Please try again.', isStreaming: false };
+                    updated[currentBubbleIdxRef.current] = {
+                        role: 'assistant',
+                        content: 'Something went wrong. Please try again.',
+                        isStreaming: false,
+                    };
 
                     return updated;
                 });
@@ -193,36 +201,52 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                         const parsed = JSON.parse(data);
 
                         if (parsed.type === 'text_delta' && parsed.delta) {
+                            const idx = currentBubbleIdxRef.current;
                             setMessages((prev) => {
                                 const updated = [...prev];
-                                const last = updated[updated.length - 1];
-                                updated[updated.length - 1] = { ...last, content: last.content + parsed.delta };
+                                const bubble = updated[idx];
+                                updated[idx] = { ...bubble, content: bubble.content + parsed.delta };
 
                                 return updated;
                             });
                             scrollToBottom();
                         } else if (parsed.type === 'tool_call') {
                             setMessages((prev) => {
-                                const updated = [...prev];
-                                const last = updated[updated.length - 1];
+                                const idx = currentBubbleIdxRef.current;
+                                const current = prev[idx];
 
-                                if (!last.content) {
-                                    updated[updated.length - 1] = { ...last, content: `⏳ Using ${parsed.tool_name ?? 'tool'}…` };
+                                if (current?.content && !current.content.startsWith('⏳')) {
+                                    // Finalise the current bubble and open a fresh one for the next AI turn.
+                                    const updated = prev.map((m, i) => (i === idx ? { ...m, isStreaming: false } : m));
+                                    const newIdx = updated.length;
+                                    currentBubbleIdxRef.current = newIdx;
+
+                                    return [...updated, { role: 'assistant' as const, content: '', isStreaming: true }];
                                 }
 
-                                return updated;
+                                if (!current?.content) {
+                                    const updated = [...prev];
+                                    updated[idx] = { ...current, content: `⏳ ${parsed.tool_name ?? 'tool'}…` };
+
+                                    return updated;
+                                }
+
+                                return prev;
                             });
+                            scrollToBottom();
                         } else if (parsed.type === 'tool_result') {
                             setMessages((prev) => {
-                                const updated = [...prev];
-                                const last = updated[updated.length - 1];
+                                const idx = currentBubbleIdxRef.current;
+                                const current = prev[idx];
 
-                                // Replace the "using tool" placeholder once we have a real result
-                                if (last.content.startsWith('⏳')) {
-                                    updated[updated.length - 1] = { ...last, content: '' };
+                                if (current?.content?.startsWith('⏳')) {
+                                    const updated = [...prev];
+                                    updated[idx] = { ...current, content: '' };
+
+                                    return updated;
                                 }
 
-                                return updated;
+                                return prev;
                             });
                         }
                     } catch {
@@ -233,18 +257,14 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
         } catch {
             setMessages((prev) => {
                 const updated = [...prev];
-                updated[updated.length - 1] = { role: 'assistant', content: 'Something went wrong. Please try again.', isStreaming: false };
+                const idx = currentBubbleIdxRef.current;
+                updated[idx] = { role: 'assistant', content: 'Something went wrong. Please try again.', isStreaming: false };
 
                 return updated;
             });
         } finally {
-            setMessages((prev) => {
-                const updated = [...prev];
-                const last = updated[updated.length - 1];
-                updated[updated.length - 1] = { ...last, isStreaming: false };
-
-                return updated;
-            });
+            // Finalise every bubble that is still in streaming state.
+            setMessages((prev) => prev.map((m) => (m.isStreaming ? { ...m, isStreaming: false } : m)));
             setIsLoading(false);
             scrollToBottom();
         }
@@ -339,7 +359,38 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                                                 </Box>
                                             </Box>
                                         ) : (
-                                            <MessageContent>{msg.content}</MessageContent>
+                                            <MessageContent>
+                                                {msg.content}
+                                                {msg.isStreaming && (
+                                                    <Box
+                                                        component="span"
+                                                        sx={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: 0.25,
+                                                            ml: 0.5,
+                                                            verticalAlign: 'middle',
+                                                            color: 'text.secondary',
+                                                        }}
+                                                    >
+                                                        <Box component="span" sx={{ animation: 'bounce 1s infinite', fontSize: '0.5em' }}>
+                                                            ●
+                                                        </Box>
+                                                        <Box
+                                                            component="span"
+                                                            sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s', fontSize: '0.5em' }}
+                                                        >
+                                                            ●
+                                                        </Box>
+                                                        <Box
+                                                            component="span"
+                                                            sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s', fontSize: '0.5em' }}
+                                                        >
+                                                            ●
+                                                        </Box>
+                                                    </Box>
+                                                )}
+                                            </MessageContent>
                                         )}
                                     </AssistantBubble>
                                 )}

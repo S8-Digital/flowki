@@ -71,7 +71,15 @@ class FamilyAssistantAgent implements Agent, Conversational, HasTools
         When the user asks to delete something, confirm the item with the user before deleting if you are not certain which item they mean.
         When the user asks to see or list something, use the appropriate listing tool.
         When the user asks about their work schedule, roster, or shifts, use list_schedule.
-        When the user pastes a recipe or asks to import one, use import_recipe to extract and save it.
+        When the user pastes a recipe or asks to import one from text, use import_recipe to extract and save it.
+        When the user provides a recipe URL to import, ALWAYS follow these steps:
+        1. Call fetch_url_content with the URL to retrieve the recipe data.
+        2. The response will contain structured recipe fields (title, description, servings, prep/cook times, ingredients, instructions) and, if available, a "Recipe Image URL:" line at the top.
+        3. Call import_recipe with ALL extracted fields:
+           - Pass image_url if "Recipe Image URL: ..." is present at the start of the fetched content.
+           - Break each ingredient into its own object with "name", "quantity", and "unit" — do not lump everything into the name (e.g. "2 cups flour" → {name:"flour", quantity:"2", unit:"cups"}).
+           - Pass instructions exactly as formatted in the fetched content.
+        4. Confirm what was imported.
         Keep responses concise and friendly.
         MARKDOWN;
     }

@@ -134,19 +134,23 @@ class FetchUrlContent implements Tool
         $html = $response->body();
 
         // Extract the og:image URL before stripping tags so ImportRecipe can save a photo.
-        $imageUrl = null;
+        $ogImageUrl = null;
         if (preg_match('/<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\'][^>]*>/i', $html, $m)
             || preg_match('/<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\'][^>]*>/i', $html, $m)) {
             $candidate = trim($m[1]);
             if (filter_var($candidate, FILTER_VALIDATE_URL) && in_array(strtolower(parse_url($candidate, PHP_URL_SCHEME) ?? ''), ['http', 'https'], true)) {
-                $imageUrl = $candidate;
+                $ogImageUrl = $candidate;
             }
         }
 
-        // Strip tags and normalise whitespace
-        $text = strip_tags($html);
-        $text = preg_replace('/\s+/', ' ', $text);
-        $text = trim($text ?? '');
+        // Prefer structured JSON-LD recipe data when available.
+        $jsonLdText = $this->extractJsonLdRecipe($html, $ogImageUrl);
+        if ($jsonLdText !== null) {
+            return $jsonLdText;
+        }
+
+        // Fall back to a structure-preserving HTML → plain-text conversion.
+        $text = $this->htmlToStructuredText($html);
 
         // Truncate to keep within reasonable token limits
         if (strlen($text) > 8000) {
@@ -158,11 +162,187 @@ class FetchUrlContent implements Tool
         }
 
         // Prepend the image URL as a structured hint so the AI can pass it to ImportRecipe.
-        if ($imageUrl !== null) {
-            $text = "Recipe Image URL: {$imageUrl}\n\n".$text;
+        if ($ogImageUrl !== null) {
+            $text = "Recipe Image URL: {$ogImageUrl}\n\n".$text;
         }
 
         return $text;
+    }
+
+    /**
+     * Try to find a schema.org/Recipe node in any JSON-LD block on the page.
+     * Returns a pre-formatted text representation ready for the AI, or null if none found.
+     */
+    private function extractJsonLdRecipe(string $html, ?string $fallbackImageUrl): ?string
+    {
+        preg_match_all('/<script[^>]+type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/si', $html, $matches);
+
+        foreach ($matches[1] as $jsonBlock) {
+            $data = json_decode(trim($jsonBlock), true);
+            if (! is_array($data)) {
+                continue;
+            }
+
+            // Some pages wrap everything in an @graph array.
+            $items = (isset($data['@graph']) && is_array($data['@graph'])) ? $data['@graph'] : [$data];
+
+            foreach ($items as $item) {
+                if (! is_array($item)) {
+                    continue;
+                }
+                $type = $item['@type'] ?? '';
+                if ($type === 'Recipe' || (is_array($type) && in_array('Recipe', $type, true))) {
+                    return $this->formatJsonLdRecipe($item, $fallbackImageUrl);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /** @param array<string, mixed> $recipe */
+    private function formatJsonLdRecipe(array $recipe, ?string $fallbackImageUrl): string
+    {
+        $lines = [];
+
+        // Image URL — prefer JSON-LD over og:image.
+        $imageUrl = $this->imageFromJsonLd($recipe) ?? $fallbackImageUrl;
+        if ($imageUrl !== null) {
+            $lines[] = "Recipe Image URL: {$imageUrl}";
+            $lines[] = '';
+        }
+
+        if (! empty($recipe['name'])) {
+            $lines[] = 'Title: '.strip_tags((string) $recipe['name']);
+        }
+
+        if (! empty($recipe['description'])) {
+            $lines[] = 'Description: '.strip_tags((string) $recipe['description']);
+        }
+
+        if (! empty($recipe['recipeCategory'])) {
+            $cat = is_array($recipe['recipeCategory'])
+                ? implode(', ', $recipe['recipeCategory'])
+                : $recipe['recipeCategory'];
+            $lines[] = 'Category: '.strip_tags((string) $cat);
+        }
+
+        if (! empty($recipe['recipeYield'])) {
+            $yield = is_array($recipe['recipeYield']) ? ($recipe['recipeYield'][0] ?? '') : $recipe['recipeYield'];
+            $lines[] = 'Servings: '.strip_tags((string) $yield);
+        }
+
+        if (! empty($recipe['prepTime'])) {
+            $mins = $this->isoDurationToMinutes((string) $recipe['prepTime']);
+            if ($mins > 0) {
+                $lines[] = "Prep time: {$mins} minutes";
+            }
+        }
+
+        if (! empty($recipe['cookTime'])) {
+            $mins = $this->isoDurationToMinutes((string) $recipe['cookTime']);
+            if ($mins > 0) {
+                $lines[] = "Cook time: {$mins} minutes";
+            }
+        }
+
+        // Ingredients
+        if (! empty($recipe['recipeIngredient']) && is_array($recipe['recipeIngredient'])) {
+            $lines[] = '';
+            $lines[] = 'Ingredients:';
+            foreach ($recipe['recipeIngredient'] as $ingredient) {
+                $lines[] = '- '.strip_tags((string) $ingredient);
+            }
+        }
+
+        // Instructions
+        if (! empty($recipe['recipeInstructions'])) {
+            $lines[] = '';
+            $lines[] = 'Instructions:';
+            $instructions = $recipe['recipeInstructions'];
+
+            if (is_string($instructions)) {
+                $lines[] = strip_tags($instructions);
+            } elseif (is_array($instructions)) {
+                $step = 1;
+                foreach ($instructions as $instruction) {
+                    $text = '';
+                    if (is_string($instruction)) {
+                        $text = strip_tags($instruction);
+                    } elseif (is_array($instruction)) {
+                        $text = strip_tags((string) ($instruction['text'] ?? $instruction['name'] ?? ''));
+                    }
+                    $text = trim($text);
+                    if ($text !== '') {
+                        $lines[] = "{$step}. {$text}";
+                        $step++;
+                    }
+                }
+            }
+        }
+
+        return implode("\n", $lines);
+    }
+
+    /** @param array<string, mixed> $recipe */
+    private function imageFromJsonLd(array $recipe): ?string
+    {
+        $image = $recipe['image'] ?? null;
+        if ($image === null) {
+            return null;
+        }
+
+        $candidates = is_array($image) ? $image : [$image];
+
+        foreach ($candidates as $candidate) {
+            $url = null;
+            if (is_string($candidate)) {
+                $url = $candidate;
+            } elseif (is_array($candidate)) {
+                $url = $candidate['url'] ?? $candidate['@id'] ?? null;
+                $url = is_string($url) ? $url : null;
+            }
+
+            if ($url !== null
+                && filter_var($url, FILTER_VALIDATE_URL)
+                && in_array(strtolower(parse_url($url, PHP_URL_SCHEME) ?? ''), ['http', 'https'], true)) {
+                return $url;
+            }
+        }
+
+        return null;
+    }
+
+    /** Convert an ISO 8601 duration (PT15M, PT1H30M, …) to total minutes. */
+    private function isoDurationToMinutes(string $duration): int
+    {
+        if (preg_match('/PT?(?:(\d+)H)?(?:(\d+)M)?/i', $duration, $m)) {
+            return ((int) ($m[1] ?? 0)) * 60 + (int) ($m[2] ?? 0);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Convert HTML to plain text while preserving list and paragraph structure
+     * so the AI can better identify recipe sections without JSON-LD.
+     */
+    private function htmlToStructuredText(string $html): string
+    {
+        // List items become "- item"
+        $text = preg_replace('/<li[^>]*>/i', "\n- ", $html) ?? $html;
+        // Block-level elements become newlines
+        $text = preg_replace('/<\/?(p|div|section|article|header|footer|main|h[1-6]|ul|ol|blockquote|br|tr)[^>]*>/i', "\n", $text) ?? $text;
+        // Strip remaining tags
+        $text = strip_tags($text);
+        // Normalise horizontal whitespace
+        $text = preg_replace('/[ \t]+/', ' ', $text) ?? $text;
+        // Remove spaces around newlines
+        $text = preg_replace('/[ \t]*\n[ \t]*/', "\n", $text) ?? $text;
+        // Collapse excess blank lines
+        $text = preg_replace('/\n{3,}/', "\n\n", $text) ?? $text;
+
+        return trim($text);
     }
 
     /** @return array<string, JsonSchema> */

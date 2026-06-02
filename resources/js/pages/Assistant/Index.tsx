@@ -3,12 +3,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Bot, Send, Sparkles, Trash2, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { chat } from '@/actions/App/Http/Controllers/AiController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
 import { getXsrfToken } from '@/lib/csrf';
 import type { BreadcrumbItem } from '@/types';
+import { chat } from '@/actions/App/Http/Controllers/AiController';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -66,6 +66,8 @@ export default function AssistantIndex() {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    // Tracks the index of the message bubble currently receiving streaming content.
+    const currentBubbleIdxRef = useRef<number>(-1);
 
     useEffect(() => {
         if (!isLoading) {
@@ -104,6 +106,7 @@ export default function AssistantIndex() {
         setMessages(userMessages);
 
         const assistantIdx = userMessages.length;
+        currentBubbleIdxRef.current = assistantIdx;
         setMessages((prev) => [...prev, { role: 'assistant', content: '', isStreaming: true }]);
         scrollToBottom();
 
@@ -119,7 +122,9 @@ export default function AssistantIndex() {
             });
 
             if (!response.ok || !response.body) {
-                setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: 'Something went wrong.', isStreaming: false } : m)));
+                setMessages((prev) =>
+                    prev.map((m, i) => (i === currentBubbleIdxRef.current ? { ...m, content: 'Something went wrong.', isStreaming: false } : m)),
+                );
 
                 return;
             }
@@ -154,28 +159,44 @@ export default function AssistantIndex() {
                         const parsed = JSON.parse(data);
 
                         if (parsed.type === 'text_delta' && parsed.delta) {
-                            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: m.content + parsed.delta } : m)));
+                            const idx = currentBubbleIdxRef.current;
+                            setMessages((prev) => prev.map((m, i) => (i === idx ? { ...m, content: m.content + parsed.delta } : m)));
                             scrollToBottom();
                         } else if (parsed.type === 'tool_call') {
-                            setMessages((prev) =>
-                                prev.map((m, i) => {
-                                    if (i !== assistantIdx || m.content) {
-                                        return m;
-                                    }
+                            setMessages((prev) => {
+                                const idx = currentBubbleIdxRef.current;
+                                const current = prev[idx];
 
-                                    return { ...m, content: `⏳ Using ${parsed.tool_name ?? 'tool'}…` };
-                                }),
-                            );
+                                if (current?.content && !current.content.startsWith('⏳')) {
+                                    // Finalise the current bubble and open a fresh one for the next AI turn.
+                                    const newIdx = prev.length;
+                                    currentBubbleIdxRef.current = newIdx;
+
+                                    return [
+                                        ...prev.map((m, i) => (i === idx ? { ...m, isStreaming: false } : m)),
+                                        { role: 'assistant' as const, content: '', isStreaming: true },
+                                    ];
+                                }
+
+                                if (!current?.content) {
+                                    // Empty bubble — show which tool is running.
+                                    return prev.map((m, i) => (i === idx ? { ...m, content: `⏳ ${parsed.tool_name ?? 'tool'}…` } : m));
+                                }
+
+                                return prev;
+                            });
+                            scrollToBottom();
                         } else if (parsed.type === 'tool_result') {
-                            setMessages((prev) =>
-                                prev.map((m, i) => {
-                                    if (i !== assistantIdx || !m.content.startsWith('⏳')) {
-                                        return m;
-                                    }
+                            setMessages((prev) => {
+                                const idx = currentBubbleIdxRef.current;
+                                const current = prev[idx];
 
-                                    return { ...m, content: '' };
-                                }),
-                            );
+                                if (current?.content?.startsWith('⏳')) {
+                                    return prev.map((m, i) => (i === idx ? { ...m, content: '' } : m));
+                                }
+
+                                return prev;
+                            });
                         }
                     } catch {
                         /* non-JSON */
@@ -183,9 +204,12 @@ export default function AssistantIndex() {
                 }
             }
         } catch {
-            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: 'Something went wrong.', isStreaming: false } : m)));
+            setMessages((prev) =>
+                prev.map((m, i) => (i === currentBubbleIdxRef.current ? { ...m, content: 'Something went wrong.', isStreaming: false } : m)),
+            );
         } finally {
-            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, isStreaming: false } : m)));
+            // Finalise every bubble that is still in streaming state.
+            setMessages((prev) => prev.map((m) => (m.isStreaming ? { ...m, isStreaming: false } : m)));
             setIsLoading(false);
             scrollToBottom();
         }
@@ -302,6 +326,29 @@ export default function AssistantIndex() {
                                         ) : (
                                             <Box component="span" sx={{ whiteSpace: 'pre-wrap' }}>
                                                 {msg.content}
+                                                {msg.isStreaming && (
+                                                    <Box
+                                                        component="span"
+                                                        sx={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: 0.25,
+                                                            ml: 0.5,
+                                                            verticalAlign: 'middle',
+                                                            color: 'text.secondary',
+                                                        }}
+                                                    >
+                                                        <span className="animate-bounce" style={{ fontSize: '0.5em' }}>
+                                                            ●
+                                                        </span>
+                                                        <span className="animate-bounce [animation-delay:100ms]" style={{ fontSize: '0.5em' }}>
+                                                            ●
+                                                        </span>
+                                                        <span className="animate-bounce [animation-delay:200ms]" style={{ fontSize: '0.5em' }}>
+                                                            ●
+                                                        </span>
+                                                    </Box>
+                                                )}
                                             </Box>
                                         )}
                                     </Box>
