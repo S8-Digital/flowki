@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { alpha, styled } from '@mui/material/styles';
+import { alpha, keyframes, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { Bot, Send, Sparkles, User } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
@@ -27,6 +27,11 @@ const suggestions = [
     'Schedule a family dinner on Saturday at 6pm',
     'Add weekly vacuuming as a chore',
 ];
+
+const dotBounce = keyframes({
+    '0%, 100%': { transform: 'translateY(-25%)', animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)' },
+    '50%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)' },
+});
 
 const AiAvatar = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -330,13 +335,13 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                                     <UserBubble sx={{ px: 2, py: 1.25 }}>
                                         {msg.isStreaming && !msg.content ? (
                                             <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                                                <Box component="span" sx={{ animation: 'bounce 1s infinite' }}>
+                                                <Box component="span" sx={{ animation: `${dotBounce} 1s infinite` }}>
                                                     ●
                                                 </Box>
-                                                <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>
+                                                <Box component="span" sx={{ animation: `${dotBounce} 1s infinite`, animationDelay: '0.1s' }}>
                                                     ●
                                                 </Box>
-                                                <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>
+                                                <Box component="span" sx={{ animation: `${dotBounce} 1s infinite`, animationDelay: '0.2s' }}>
                                                     ●
                                                 </Box>
                                             </Box>
@@ -348,13 +353,13 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                                     <AssistantBubble sx={{ px: 2, py: 1.25 }}>
                                         {msg.isStreaming && !msg.content ? (
                                             <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
-                                                <Box component="span" sx={{ animation: 'bounce 1s infinite' }}>
+                                                <Box component="span" sx={{ animation: `${dotBounce} 1s infinite` }}>
                                                     ●
                                                 </Box>
-                                                <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s' }}>
+                                                <Box component="span" sx={{ animation: `${dotBounce} 1s infinite`, animationDelay: '0.1s' }}>
                                                     ●
                                                 </Box>
-                                                <Box component="span" sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s' }}>
+                                                <Box component="span" sx={{ animation: `${dotBounce} 1s infinite`, animationDelay: '0.2s' }}>
                                                     ●
                                                 </Box>
                                             </Box>
@@ -373,18 +378,18 @@ const AiChatModal = forwardRef<AiChatModalHandle>((_, ref) => {
                                                             color: 'text.secondary',
                                                         }}
                                                     >
-                                                        <Box component="span" sx={{ animation: 'bounce 1s infinite', fontSize: '0.5em' }}>
+                                                        <Box component="span" sx={{ animation: `${dotBounce} 1s infinite`, fontSize: '0.5em' }}>
                                                             ●
                                                         </Box>
                                                         <Box
                                                             component="span"
-                                                            sx={{ animation: 'bounce 1s infinite', animationDelay: '0.1s', fontSize: '0.5em' }}
+                                                            sx={{ animation: `${dotBounce} 1s infinite`, animationDelay: '0.1s', fontSize: '0.5em' }}
                                                         >
                                                             ●
                                                         </Box>
                                                         <Box
                                                             component="span"
-                                                            sx={{ animation: 'bounce 1s infinite', animationDelay: '0.2s', fontSize: '0.5em' }}
+                                                            sx={{ animation: `${dotBounce} 1s infinite`, animationDelay: '0.2s', fontSize: '0.5em' }}
                                                         >
                                                             ●
                                                         </Box>

@@ -316,7 +316,7 @@ class FetchUrlContent implements Tool
     /** Convert an ISO 8601 duration (PT15M, PT1H30M, …) to total minutes. */
     private function isoDurationToMinutes(string $duration): int
     {
-        if (preg_match('/PT?(?:(\d+)H)?(?:(\d+)M)?/i', $duration, $m)) {
+        if (preg_match('/PT(?:(\d+)H)?(?:(\d+)M)?/i', $duration, $m)) {
             return ((int) ($m[1] ?? 0)) * 60 + (int) ($m[2] ?? 0);
         }
 

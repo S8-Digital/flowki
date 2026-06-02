@@ -338,15 +338,23 @@ export default function AssistantIndex() {
                                                             color: 'text.secondary',
                                                         }}
                                                     >
-                                                        <span className="animate-bounce" style={{ fontSize: '0.5em' }}>
+                                                        <Box component="span" className="animate-bounce" sx={{ fontSize: '0.5em' }}>
                                                             ●
-                                                        </span>
-                                                        <span className="animate-bounce [animation-delay:100ms]" style={{ fontSize: '0.5em' }}>
+                                                        </Box>
+                                                        <Box
+                                                            component="span"
+                                                            className="animate-bounce [animation-delay:100ms]"
+                                                            sx={{ fontSize: '0.5em' }}
+                                                        >
                                                             ●
-                                                        </span>
-                                                        <span className="animate-bounce [animation-delay:200ms]" style={{ fontSize: '0.5em' }}>
+                                                        </Box>
+                                                        <Box
+                                                            component="span"
+                                                            className="animate-bounce [animation-delay:200ms]"
+                                                            sx={{ fontSize: '0.5em' }}
+                                                        >
                                                             ●
-                                                        </span>
+                                                        </Box>
                                                     </Box>
                                                 )}
                                             </Box>
