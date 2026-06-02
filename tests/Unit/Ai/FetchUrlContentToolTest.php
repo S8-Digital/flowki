@@ -267,6 +267,63 @@ class FetchUrlContentToolTest extends TestCase
         $this->assertStringContainsString('Mix everything', $result);
     }
 
+    public function test_handle_extracts_recipe_from_top_level_json_ld_array(): void
+    {
+        $html = <<<'HTML'
+            <html><head>
+                <script type="application/ld+json">
+                [
+                    {"@type": "WebPage", "name": "Recipe page"},
+                    {
+                        "@type": "Recipe",
+                        "name": "Array Recipe",
+                        "recipeIngredient": ["1 cup rice", "2 cups water"],
+                        "recipeInstructions": "Combine and cook."
+                    }
+                ]
+                </script>
+            </head><body>Page content</body></html>
+            HTML;
+
+        Http::fake([
+            '*' => Http::response($html, 200, ['Content-Type' => 'text/html']),
+        ]);
+
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://'.self::PUBLIC_IP.'/array-recipe']));
+
+        $this->assertStringContainsString('Array Recipe', $result);
+        $this->assertStringContainsString('1 cup rice', $result);
+        $this->assertStringContainsString('Combine and cook.', $result);
+    }
+
+    public function test_handle_truncates_long_json_ld_recipe_output(): void
+    {
+        $longInstructions = str_repeat('a', 9000);
+
+        $html = <<<HTML
+            <html><head>
+                <script type="application/ld+json">
+                {
+                    "@context": "http://schema.org/",
+                    "@type": "Recipe",
+                    "name": "Very Long Recipe",
+                    "recipeInstructions": "{$longInstructions}"
+                }
+                </script>
+            </head><body>Page content</body></html>
+            HTML;
+
+        Http::fake([
+            '*' => Http::response($html, 200, ['Content-Type' => 'text/html']),
+        ]);
+
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://'.self::PUBLIC_IP.'/long-jsonld-recipe']));
+
+        $this->assertStringContainsString('Very Long Recipe', $result);
+        $this->assertLessThanOrEqual(8010, strlen($result));
+        $this->assertStringEndsWith('…', $result);
+    }
+
     public function test_handle_falls_back_to_structured_text_when_no_json_ld(): void
     {
         $html = <<<'HTML'

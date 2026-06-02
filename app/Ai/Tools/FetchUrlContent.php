@@ -146,6 +146,11 @@ class FetchUrlContent implements Tool
         // Prefer structured JSON-LD recipe data when available.
         $jsonLdText = $this->extractJsonLdRecipe($html, $ogImageUrl);
         if ($jsonLdText !== null) {
+            // Truncate to keep within reasonable token limits.
+            if (strlen($jsonLdText) > 8000) {
+                $jsonLdText = substr($jsonLdText, 0, 8000).'…';
+            }
+
             return $jsonLdText;
         }
 
@@ -183,8 +188,14 @@ class FetchUrlContent implements Tool
                 continue;
             }
 
-            // Some pages wrap everything in an @graph array.
-            $items = (isset($data['@graph']) && is_array($data['@graph'])) ? $data['@graph'] : [$data];
+            // Some pages wrap everything in an @graph array or as a top-level array.
+            if (isset($data['@graph']) && is_array($data['@graph'])) {
+                $items = $data['@graph'];
+            } elseif (array_is_list($data)) {
+                $items = $data;
+            } else {
+                $items = [$data];
+            }
 
             foreach ($items as $item) {
                 if (! is_array($item)) {
