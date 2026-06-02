@@ -11,7 +11,7 @@ import { alpha, styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { ChevronLeft, ChevronRight, Plus, ShoppingCart, Trash2, UtensilsCrossed } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { destroy, store } from '@/actions/App/Http/Controllers/MealController';
 import InputError from '@/components/InputError';
 import { Button } from '@/components/ui/button';
@@ -128,6 +128,39 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
     const [groceryListOpen, setGroceryListOpen] = useState(false);
     const [selectedListId, setSelectedListId] = useState('');
 
+    // Optimistic local state — instantly reflects drops / deletes without waiting for server
+    const localStorageKey = `meals_week_${weekStart}`;
+    const [localMeals, setLocalMeals] = useState<Meal[]>(() => {
+        try {
+            const cached = localStorage.getItem(localStorageKey);
+
+            if (cached) {
+                const parsed = JSON.parse(cached) as Meal[];
+
+                if (Array.isArray(parsed)) {
+                    return parsed;
+                }
+            }
+        } catch {
+            /* ignore */
+        }
+
+        return meals;
+    });
+    // Mutable ref for collision-free temporary IDs — doesn't need to trigger a re-render
+    const optimisticCounterRef = useRef(0);
+
+    // When Inertia reloads with authoritative server data, sync local state and update cache
+    useEffect(() => {
+        setLocalMeals(meals);
+
+        try {
+            localStorage.setItem(localStorageKey, JSON.stringify(meals));
+        } catch {
+            /* ignore */
+        }
+    }, [meals, localStorageKey]);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         recipe_id: '',
         planned_date: '',
@@ -140,7 +173,7 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
     const weekDays = getWeekDays(weekStart);
 
     function getMealsForDate(dateStr: string): Meal[] {
-        return meals.filter((m) => m.planned_date === dateStr);
+        return localMeals.filter((m) => m.planned_date === dateStr);
     }
 
     function navigateWeek(delta: number) {
@@ -162,7 +195,23 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
             return;
         }
 
-        router.delete(destroy(meal.id).url);
+        // Optimistic removal — disappears instantly; Inertia sync will confirm on response
+        setLocalMeals((prev) => {
+            const updated = prev.filter((m) => m.id !== meal.id);
+
+            try {
+                localStorage.setItem(localStorageKey, JSON.stringify(updated));
+            } catch {
+                /* ignore */
+            }
+
+            return updated;
+        });
+
+        // Only send server delete for real (persisted) meals — optimistic entries have negative IDs
+        if (meal.id > 0) {
+            router.delete(destroy(meal.id).url, { preserveScroll: true });
+        }
     }
 
     // Drag-and-drop from recipe panel to day column
@@ -187,6 +236,39 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
             return;
         }
 
+        const recipe = recipes.find((r) => r.id === dragRecipeId) ?? null;
+        // Synchronously increment the ref so rapid drops never produce the same temp ID
+        const tempId = -++optimisticCounterRef.current;
+
+        const optimisticMeal: Meal = {
+            id: tempId,
+            family_id: -1,
+            created_by: -1,
+            recipe_id: null, // null keeps shopping-list actions hidden until server returns the real meal ID
+            planned_date: dateStr,
+            meal_type: 'dinner',
+            servings: recipe?.servings ?? null,
+            notes: null,
+            recipe,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        };
+
+        // Apply optimistically before server responds
+        setLocalMeals((prev) => {
+            const updated = [...prev, optimisticMeal];
+
+            try {
+                localStorage.setItem(localStorageKey, JSON.stringify(updated));
+            } catch {
+                /* ignore */
+            }
+
+            return updated;
+        });
+
+        setDragRecipeId(null);
+
         router.post(
             store().url,
             {
@@ -194,9 +276,24 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
                 planned_date: dateStr,
                 meal_type: 'dinner',
             },
-            { preserveScroll: true },
+            {
+                preserveScroll: true,
+                onError: () => {
+                    // Revert on failure
+                    setLocalMeals((prev) => {
+                        const reverted = prev.filter((m) => m.id !== tempId);
+
+                        try {
+                            localStorage.setItem(localStorageKey, JSON.stringify(reverted));
+                        } catch {
+                            /* ignore */
+                        }
+
+                        return reverted;
+                    });
+                },
+            },
         );
-        setDragRecipeId(null);
     }
 
     function onDragEnd() {

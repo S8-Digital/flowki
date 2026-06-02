@@ -4,9 +4,11 @@ namespace Tests\Unit\Ai;
 
 use App\Ai\Tools\FetchUrlContent;
 use App\Models\User;
+use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Laravel\Ai\Tools\Request;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class FetchUrlContentToolTest extends TestCase
@@ -130,6 +132,68 @@ class FetchUrlContentToolTest extends TestCase
         $this->assertStringContainsString('Error', $result);
     }
 
+    public function test_handle_extracts_og_image_and_prepends_as_recipe_image_url(): void
+    {
+        $html = <<<'HTML'
+            <html><head>
+                <meta property="og:image" content="https://example.com/image.jpg" />
+            </head><body>Delicious pasta recipe</body></html>
+            HTML;
+
+        Http::fake([
+            '*' => Http::response($html, 200, ['Content-Type' => 'text/html']),
+        ]);
+
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://'.self::PUBLIC_IP.'/recipe']));
+
+        $this->assertStringContainsString('Recipe Image URL: https://example.com/image.jpg', $result);
+        $this->assertStringContainsString('Delicious pasta recipe', $result);
+    }
+
+    public function test_handle_extracts_og_image_with_content_before_property(): void
+    {
+        $html = <<<'HTML'
+            <html><head>
+                <meta content="https://example.com/photo.png" property="og:image" />
+            </head><body>Another recipe</body></html>
+            HTML;
+
+        Http::fake([
+            '*' => Http::response($html, 200, ['Content-Type' => 'text/html']),
+        ]);
+
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://'.self::PUBLIC_IP.'/recipe2']));
+
+        $this->assertStringContainsString('Recipe Image URL: https://example.com/photo.png', $result);
+    }
+
+    public function test_handle_ignores_invalid_og_image_url(): void
+    {
+        $html = <<<'HTML'
+            <html><head>
+                <meta property="og:image" content="not-a-valid-url" />
+            </head><body>Some recipe content</body></html>
+            HTML;
+
+        Http::fake([
+            '*' => Http::response($html, 200, ['Content-Type' => 'text/html']),
+        ]);
+
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://'.self::PUBLIC_IP.'/recipe3']));
+
+        $this->assertStringNotContainsString('Recipe Image URL:', $result);
+        $this->assertStringContainsString('Some recipe content', $result);
+    }
+
+    public function test_handle_blocks_redirect_to_unresolvable_host(): void
+    {
+        // A hostname that cannot be resolved must be blocked even in a redirect context.
+        // We verify the initial host check rejects unresolvable names fail-closed.
+        $result = $this->makeTool()->handle(new Request(['url' => 'http://this-host-definitely-does-not-exist.invalid/']));
+
+        $this->assertStringContainsString('Error', $result);
+    }
+
     public function test_description_is_not_empty(): void
     {
         $this->assertNotEmpty($this->makeTool()->description());
@@ -137,8 +201,8 @@ class FetchUrlContentToolTest extends TestCase
 
     public function test_schema_contains_url_field(): void
     {
-        /** @var \Illuminate\Contracts\JsonSchema\JsonSchema&\Mockery\MockInterface $schema */
-        $schema = \Mockery::mock(\Illuminate\Contracts\JsonSchema\JsonSchema::class);
+        /** @var JsonSchema&MockInterface $schema */
+        $schema = \Mockery::mock(JsonSchema::class);
         $schema->shouldReceive('string')->andReturnSelf()->zeroOrMoreTimes();
         $schema->shouldReceive('description')->andReturnSelf()->zeroOrMoreTimes();
         $schema->shouldReceive('required')->andReturnSelf()->zeroOrMoreTimes();

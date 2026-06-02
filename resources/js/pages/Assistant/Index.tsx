@@ -153,9 +153,29 @@ export default function AssistantIndex() {
                     try {
                         const parsed = JSON.parse(data);
 
-                        if (parsed.text) {
-                            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: m.content + parsed.text } : m)));
+                        if (parsed.type === 'text_delta' && parsed.delta) {
+                            setMessages((prev) => prev.map((m, i) => (i === assistantIdx ? { ...m, content: m.content + parsed.delta } : m)));
                             scrollToBottom();
+                        } else if (parsed.type === 'tool_call') {
+                            setMessages((prev) =>
+                                prev.map((m, i) => {
+                                    if (i !== assistantIdx || m.content) {
+                                        return m;
+                                    }
+
+                                    return { ...m, content: `⏳ Using ${parsed.tool_name ?? 'tool'}…` };
+                                }),
+                            );
+                        } else if (parsed.type === 'tool_result') {
+                            setMessages((prev) =>
+                                prev.map((m, i) => {
+                                    if (i !== assistantIdx || !m.content.startsWith('⏳')) {
+                                        return m;
+                                    }
+
+                                    return { ...m, content: '' };
+                                }),
+                            );
                         }
                     } catch {
                         /* non-JSON */
