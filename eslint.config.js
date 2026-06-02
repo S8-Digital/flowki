@@ -73,6 +73,13 @@ export default [
                 'error',
                 {
                     groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+                    pathGroups: [
+                        {
+                            pattern: '@/actions/**',
+                            group: 'internal',
+                            position: 'before',
+                        },
+                    ],
                     alphabetize: {
                         order: 'asc',
                         caseInsensitive: true,
