@@ -41,6 +41,11 @@ class FetchUrlContent implements Tool
         // and pin them all via CURLOPT_RESOLVE so the same IPs are used for both validation
         // and the actual connection, preventing DNS rebinding attacks.
         $host = parse_url($url, PHP_URL_HOST) ?? '';
+        // parse_url() may return IPv6 literals with surrounding brackets (e.g. "[::1]");
+        // strip them so FILTER_VALIDATE_IP can recognise the address.
+        if (str_starts_with($host, '[') && str_ends_with($host, ']')) {
+            $host = substr($host, 1, -1);
+        }
         $port = (int) (parse_url($url, PHP_URL_PORT) ?? ($scheme === 'https' ? 443 : 80));
 
         $resolveEntries = [];

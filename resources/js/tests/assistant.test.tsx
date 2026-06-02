@@ -169,7 +169,7 @@ describe('AI Assistant page', () => {
     });
 
     it('shows the assistant response in the chat', async () => {
-        mockFetch.mockResolvedValue(makeStreamingResponse(['data: {"text":"Here are your todos:"}\n', 'data: [DONE]\n']));
+        mockFetch.mockResolvedValue(makeStreamingResponse(['data: {"type":"text_delta","delta":"Here are your todos:"}\n', 'data: [DONE]\n']));
 
         const user = userEvent.setup();
         render(<AssistantIndex />);

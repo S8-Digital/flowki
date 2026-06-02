@@ -43,23 +43,27 @@ describe('useIsMobile', () => {
     beforeEach(() => {
         listeners.clear();
         Object.defineProperty(window, 'innerWidth', { value: 1024, configurable: true, writable: true });
-        vi.spyOn(window, 'matchMedia').mockImplementation(
-            (query) =>
-                ({
-                    matches: false,
-                    media: query,
-                    onchange: null,
-                    addEventListener: (_: string, handler: () => void) => {
-                        listeners.set(query, handler);
-                    },
-                    removeEventListener: vi.fn(),
-                    dispatchEvent: vi.fn(),
-                }) as unknown as MediaQueryList,
-        );
+        Object.defineProperty(window, 'matchMedia', {
+            value: vi.fn().mockImplementation(
+                (query: string) =>
+                    ({
+                        matches: false,
+                        media: query,
+                        onchange: null,
+                        addEventListener: (_: string, handler: () => void) => {
+                            listeners.set(query, handler);
+                        },
+                        removeEventListener: vi.fn(),
+                        dispatchEvent: vi.fn(),
+                    }) as unknown as MediaQueryList,
+            ),
+            configurable: true,
+            writable: true,
+        });
     });
 
     afterEach(() => {
-        vi.restoreAllMocks();
+        vi.clearAllMocks();
     });
 
     it('returns false when window width is >= 768px', () => {
