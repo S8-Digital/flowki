@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Ai\MealPlannerAgent;
 use App\Enums\MealType;
 use App\Http\Resources\MealResource;
 use App\Jobs\AggregateMealGroceries;
 use App\Models\Meal;
 use App\Models\Recipe;
 use App\Models\ShoppingList;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -133,6 +136,98 @@ class MealController extends Controller
         if ($meal->recipe_id) {
             AggregateMealGroceries::dispatch($meal->id, $validated['shopping_list_id']);
         }
+
+        return back();
+    }
+
+    /**
+     * Use AI to suggest meals for the week and return structured JSON for the UI preview.
+     */
+    public function aiSuggest(Request $request): JsonResponse
+    {
+        $this->authorize('create', Meal::class);
+
+        $validated = $request->validate([
+            'week_start' => ['nullable', 'date_format:Y-m-d'],
+            'preferences' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        if (! config('ai.providers.anthropic.key') && ! config('ai.providers.gemini.key')) {
+            return response()->json(['error' => 'AI is not configured on this server.'], 503);
+        }
+
+        $user = $request->user();
+        $weekStart = $validated['week_start'] ?? now()->startOfWeek()->toDateString();
+        $preferences = $validated['preferences'] ?? null;
+
+        try {
+            $agent = new MealPlannerAgent($user, $weekStart, $preferences);
+            $raw = $agent->prompt('Suggest meals for this week.');
+
+            // Strip markdown code fences if the model wraps JSON in them
+            $json = preg_replace('/^```(?:json)?\s*/i', '', trim($raw));
+            $json = preg_replace('/\s*```$/', '', $json);
+
+            $suggestions = json_decode($json, true);
+
+            if (! is_array($suggestions)) {
+                return response()->json(['error' => 'AI returned an unexpected response. Please try again.'], 502);
+            }
+
+            // Handle no-recipes error object
+            if (isset($suggestions['error'])) {
+                return response()->json($suggestions, 422);
+            }
+
+            return response()->json(['suggestions' => $suggestions]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json(['error' => 'Failed to generate suggestions. Please try again.'], 500);
+        }
+    }
+
+    /**
+     * Bulk-create meals from AI suggestions that the user has accepted.
+     */
+    public function bulkStore(Request $request): RedirectResponse
+    {
+        $this->authorize('create', Meal::class);
+
+        $validated = $request->validate([
+            'meals' => ['required', 'array', 'min:1', 'max:21'],
+            'meals.*.planned_date' => ['required', 'date'],
+            'meals.*.meal_type' => ['required', 'string', 'in:breakfast,lunch,dinner,snack'],
+            'meals.*.recipe_id' => ['nullable', 'integer', Rule::exists('recipes', 'id')->where('family_id', $request->user()->family_id)],
+            'meals.*.servings' => ['nullable', 'integer', 'min:1'],
+            'meals.*.notes' => ['nullable', 'string', 'max:500'],
+            'shopping_list_id' => ['nullable', 'integer', Rule::exists('shopping_lists', 'id')->where('family_id', $request->user()->family_id)],
+        ]);
+
+        $shoppingListId = $validated['shopping_list_id'] ?? null;
+
+        if ($shoppingListId) {
+            $shoppingList = ShoppingList::findOrFail($shoppingListId);
+            $this->authorize('addItem', $shoppingList);
+        }
+
+        DB::transaction(function () use ($validated, $shoppingListId, $request) {
+            foreach ($validated['meals'] as $entry) {
+                $meal = Meal::create([
+                    'family_id' => $request->user()->family_id,
+                    'created_by' => $request->user()->id,
+                    'recipe_id' => $entry['recipe_id'] ?? null,
+                    'planned_date' => $entry['planned_date'],
+                    'meal_type' => $entry['meal_type'],
+                    'servings' => $entry['servings'] ?? null,
+                    'notes' => $entry['notes'] ?? null,
+                ]);
+
+                if ($shoppingListId && $meal->recipe_id) {
+                    AggregateMealGroceries::dispatch($meal->id, (int) $shoppingListId);
+                }
+            }
+        });
 
         return back();
     }

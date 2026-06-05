@@ -28,6 +28,8 @@ const suggestions = [
     'Import a recipe for spaghetti bolognese',
     "What's on the shopping list?",
     "List this week's chores",
+    'Plan my meals for this week',
+    'Suggest dinner recipes for the week',
 ];
 
 function loadHistory(): Message[] {
@@ -63,7 +65,15 @@ function saveHistory(messages: Message[]): void {
 
 export default function AssistantIndex() {
     const [messages, setMessages] = useState<Message[]>(() => loadHistory());
-    const [input, setInput] = useState('');
+    const [input, setInput] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+
+            return params.get('prompt') ?? '';
+        }
+
+        return '';
+    });
     const [isLoading, setIsLoading] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     // Tracks the index of the message bubble currently receiving streaming content.
