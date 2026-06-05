@@ -9,6 +9,7 @@ use App\Jobs\AggregateMealGroceries;
 use App\Models\Meal;
 use App\Models\Recipe;
 use App\Models\ShoppingList;
+use App\Traits\StripsMdFences;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 class MealController extends Controller
+{
+    use StripsMdFences;
 {
     public function index(Request $request): Response
     {
@@ -164,9 +167,7 @@ class MealController extends Controller
             $agent = new MealPlannerAgent($user, $weekStart, $preferences);
             $raw = $agent->prompt('Suggest meals for this week.');
 
-            // Strip markdown code fences if the model wraps JSON in them
-            $json = preg_replace('/^```(?:json)?\s*/i', '', trim($raw));
-            $json = preg_replace('/\s*```$/', '', $json);
+            $json = $this->stripJsonFences($raw);
 
             $suggestions = json_decode($json, true);
 

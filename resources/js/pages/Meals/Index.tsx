@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
@@ -401,13 +401,11 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
     }
 
     function removeSuggestion(index: number) {
-        setAiSuggestions((prev) => (prev ? prev.filter((_, i) => i !== index) : prev));
+        setAiSuggestions((prev) => (prev ?? []).filter((_, i) => i !== index));
     }
 
     function swapSuggestion(index: number, recipe: Recipe) {
-        setAiSuggestions((prev) =>
-            prev ? prev.map((s, i) => (i === index ? { ...s, recipe_id: recipe.id, recipe_title: recipe.title } : s)) : prev,
-        );
+        setAiSuggestions((prev) => (prev ?? []).map((s, i) => (i === index ? { ...s, recipe_id: recipe.id, recipe_title: recipe.title } : s)));
         setSwapDialogIndex(null);
     }
 
@@ -604,16 +602,16 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
                                                     >
                                                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                                             No recipes in your library yet. Add some via the{' '}
-                                                            <a href="/recipes" style={{ color: 'inherit', textDecoration: 'underline' }}>
+                                                            <Link href="/recipes" style={{ color: 'inherit', textDecoration: 'underline' }}>
                                                                 Recipes
-                                                            </a>{' '}
+                                                            </Link>{' '}
                                                             page, or ask the{' '}
-                                                            <a
+                                                            <Link
                                                                 href="/assistant?prompt=Find+me+some+new+dinner+recipes"
                                                                 style={{ color: 'inherit', textDecoration: 'underline' }}
                                                             >
                                                                 AI assistant
-                                                            </a>{' '}
+                                                            </Link>{' '}
                                                             to find some.
                                                         </Typography>
                                                     </Box>

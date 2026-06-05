@@ -10,6 +10,7 @@ use App\Http\Resources\MealResource;
 use App\Jobs\AggregateMealGroceries;
 use App\Models\Meal;
 use App\Models\ShoppingList;
+use App\Traits\StripsMdFences;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -18,6 +19,7 @@ use Illuminate\Validation\Rule;
 
 class MealController extends Controller
 {
+    use StripsMdFences;
     public function index(Request $request): AnonymousResourceCollection
     {
         $this->authorize('viewAny', Meal::class);
@@ -139,8 +141,7 @@ class MealController extends Controller
             $agent = new MealPlannerAgent($user, $weekStart, $preferences);
             $raw = $agent->prompt('Suggest meals for this week.');
 
-            $json = preg_replace('/^```(?:json)?\s*/i', '', trim($raw));
-            $json = preg_replace('/\s*```$/', '', $json);
+            $json = $this->stripJsonFences($raw);
 
             $suggestions = json_decode($json, true);
 

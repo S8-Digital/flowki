@@ -279,7 +279,7 @@ export default function MealsScreen() {
   };
 
   const removeSuggestion = (index: number) => {
-    setAiSuggestions((prev) => prev ? prev.filter((_, i) => i !== index) : prev);
+    setAiSuggestions((prev) => (prev ?? []).filter((_, i) => i !== index));
   };
 
   const swapSuggestion = (index: number, newRecipeId: number) => {
@@ -290,11 +290,9 @@ export default function MealsScreen() {
     }
 
     setAiSuggestions((prev) =>
-      prev
-        ? prev.map((s, i) =>
-            i === index ? { ...s, recipe_id: recipe.id, recipe_title: recipe.title } : s,
-          )
-        : prev,
+      (prev ?? []).map((s, i) =>
+        i === index ? { ...s, recipe_id: recipe.id, recipe_title: recipe.title } : s,
+      ),
     );
     setSwapDialogIndex(null);
   };
