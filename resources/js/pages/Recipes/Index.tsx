@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { ChefHat, Clock, Plus, Star, Trash2 } from 'lucide-react';
+import { ChefHat, Clock, Plus, Sparkles, Star, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { destroy, show, store } from '@/actions/App/Http/Controllers/RecipeController';
 import InputError from '@/components/InputError';
@@ -63,112 +63,117 @@ export default function RecipesIndex({ recipes }: Props) {
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
                             Recipes
                         </Typography>
-                        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-                            <DialogTrigger asChild>
-                                <Button size="sm">
-                                    <Plus size={16} style={{ marginRight: 4 }} /> New Recipe
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent sx={{ maxHeight: '90vh', overflowY: 'auto' }}>
-                                <DialogHeader>
-                                    <DialogTitle>Create Recipe</DialogTitle>
-                                </DialogHeader>
-                                <Stack component="form" onSubmit={handleCreate} spacing={2}>
-                                    <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Input
-                                            label="Title"
-                                            value={data.title}
-                                            onChange={(e) => setData('title', e.target.value)}
-                                            placeholder="Recipe name"
-                                            required
-                                        />
-                                        <InputError message={errors.title} />
-                                    </Box>
-                                    <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Input
-                                            label="Description"
-                                            value={data.description}
-                                            onChange={(e) => setData('description', e.target.value)}
-                                            placeholder="Brief description"
-                                        />
-                                    </Box>
-                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
-                                        <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Select label="Category" value={data.category} onValueChange={(v) => setData('category', v)}>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="None" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="">None</SelectItem>
-                                                    <SelectItem value="breakfast">Breakfast</SelectItem>
-                                                    <SelectItem value="lunch">Lunch</SelectItem>
-                                                    <SelectItem value="dinner">Dinner</SelectItem>
-                                                    <SelectItem value="snack">Snack</SelectItem>
-                                                    <SelectItem value="dessert">Dessert</SelectItem>
-                                                    <SelectItem value="drink">Drink</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </Box>
-                                        <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Input
-                                                label="Servings"
-                                                type="number"
-                                                min="1"
-                                                value={data.servings}
-                                                onChange={(e) => setData('servings', e.target.value)}
-                                                placeholder="4"
-                                            />
-                                        </Box>
-                                    </Box>
-                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
-                                        <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Input
-                                                label="Prep (min)"
-                                                type="number"
-                                                min="0"
-                                                value={data.prep_time_minutes}
-                                                onChange={(e) => setData('prep_time_minutes', e.target.value)}
-                                                placeholder="15"
-                                            />
-                                        </Box>
-                                        <Box sx={{ display: 'grid', gap: 1 }}>
-                                            <Input
-                                                label="Cook (min)"
-                                                type="number"
-                                                min="0"
-                                                value={data.cook_time_minutes}
-                                                onChange={(e) => setData('cook_time_minutes', e.target.value)}
-                                                placeholder="30"
-                                            />
-                                        </Box>
-                                    </Box>
-                                    <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <TextField
-                                            label="Instructions"
-                                            value={data.instructions}
-                                            onChange={(e) => setData('instructions', e.target.value)}
-                                            multiline
-                                            rows={4}
-                                            required
-                                            placeholder="Step by step instructions…"
-                                            size="small"
-                                            fullWidth
-                                        />
-                                        <InputError message={errors.instructions} />
-                                    </Box>
-                                    <Box sx={{ display: 'grid', gap: 1 }}>
-                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                            Photo
-                                        </Typography>
-                                        <Input type="file" accept="image/*" onChange={(e) => setData('photo', e.target.files?.[0] ?? null)} />
-                                        <InputError message={errors.photo} />
-                                    </Box>
-                                    <Button type="submit" sx={{ width: '100%' }} disabled={processing}>
-                                        {processing ? 'Creating…' : 'Create Recipe'}
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button size="sm" variant="outline" onClick={() => router.visit('/assistant?prompt=Find+me+some+new+recipes+to+try')}>
+                                <Sparkles size={16} style={{ marginRight: 4 }} /> Find Recipes
+                            </Button>
+                            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+                                <DialogTrigger asChild>
+                                    <Button size="sm">
+                                        <Plus size={16} style={{ marginRight: 4 }} /> New Recipe
                                     </Button>
-                                </Stack>
-                            </DialogContent>
-                        </Dialog>
+                                </DialogTrigger>
+                                <DialogContent sx={{ maxHeight: '90vh', overflowY: 'auto' }}>
+                                    <DialogHeader>
+                                        <DialogTitle>Create Recipe</DialogTitle>
+                                    </DialogHeader>
+                                    <Stack component="form" onSubmit={handleCreate} spacing={2}>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
+                                            <Input
+                                                label="Title"
+                                                value={data.title}
+                                                onChange={(e) => setData('title', e.target.value)}
+                                                placeholder="Recipe name"
+                                                required
+                                            />
+                                            <InputError message={errors.title} />
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
+                                            <Input
+                                                label="Description"
+                                                value={data.description}
+                                                onChange={(e) => setData('description', e.target.value)}
+                                                placeholder="Brief description"
+                                            />
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
+                                                <Select label="Category" value={data.category} onValueChange={(v) => setData('category', v)}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="None" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="">None</SelectItem>
+                                                        <SelectItem value="breakfast">Breakfast</SelectItem>
+                                                        <SelectItem value="lunch">Lunch</SelectItem>
+                                                        <SelectItem value="dinner">Dinner</SelectItem>
+                                                        <SelectItem value="snack">Snack</SelectItem>
+                                                        <SelectItem value="dessert">Dessert</SelectItem>
+                                                        <SelectItem value="drink">Drink</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </Box>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
+                                                <Input
+                                                    label="Servings"
+                                                    type="number"
+                                                    min="1"
+                                                    value={data.servings}
+                                                    onChange={(e) => setData('servings', e.target.value)}
+                                                    placeholder="4"
+                                                />
+                                            </Box>
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
+                                                <Input
+                                                    label="Prep (min)"
+                                                    type="number"
+                                                    min="0"
+                                                    value={data.prep_time_minutes}
+                                                    onChange={(e) => setData('prep_time_minutes', e.target.value)}
+                                                    placeholder="15"
+                                                />
+                                            </Box>
+                                            <Box sx={{ display: 'grid', gap: 1 }}>
+                                                <Input
+                                                    label="Cook (min)"
+                                                    type="number"
+                                                    min="0"
+                                                    value={data.cook_time_minutes}
+                                                    onChange={(e) => setData('cook_time_minutes', e.target.value)}
+                                                    placeholder="30"
+                                                />
+                                            </Box>
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
+                                            <TextField
+                                                label="Instructions"
+                                                value={data.instructions}
+                                                onChange={(e) => setData('instructions', e.target.value)}
+                                                multiline
+                                                rows={4}
+                                                required
+                                                placeholder="Step by step instructions…"
+                                                size="small"
+                                                fullWidth
+                                            />
+                                            <InputError message={errors.instructions} />
+                                        </Box>
+                                        <Box sx={{ display: 'grid', gap: 1 }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                Photo
+                                            </Typography>
+                                            <Input type="file" accept="image/*" onChange={(e) => setData('photo', e.target.files?.[0] ?? null)} />
+                                            <InputError message={errors.photo} />
+                                        </Box>
+                                        <Button type="submit" sx={{ width: '100%' }} disabled={processing}>
+                                            {processing ? 'Creating…' : 'Create Recipe'}
+                                        </Button>
+                                    </Stack>
+                                </DialogContent>
+                            </Dialog>
+                        </Box>
                     </Box>
 
                     {!recipes ? (

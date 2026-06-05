@@ -13,6 +13,7 @@ use App\Mcp\Tools\ListEventsTool;
 use App\Mcp\Tools\ListScheduleTool;
 use App\Mcp\Tools\ListShoppingItemsTool;
 use App\Mcp\Tools\ListTodosTool;
+use App\Mcp\Tools\SuggestWeeklyMealsTool;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Instructions;
 use Laravel\Mcp\Server\Attributes\Name;
@@ -37,6 +38,7 @@ use Laravel\Mcp\Server\Attributes\Version;
     - complete_chore: Mark a chore as completed
     - add_shopping_item: Add an item to a shopping list
     - list_shopping_items: List items in a shopping list
+    - suggest_weekly_meals: Retrieve available recipes and the current week's meals to help plan a weekly meal schedule
     MARKDOWN)]
 class FamilyOrganizerServer extends Server
 {
@@ -52,6 +54,7 @@ class FamilyOrganizerServer extends Server
         CompleteChore::class,
         AddShoppingItemTool::class,
         ListShoppingItemsTool::class,
+        SuggestWeeklyMealsTool::class,
     ];
 
     protected array $resources = [];

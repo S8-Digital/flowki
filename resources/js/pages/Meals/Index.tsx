@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 import { alpha, styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { ChevronLeft, ChevronRight, Plus, ShoppingCart, Trash2, UtensilsCrossed } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, Plus, RefreshCw, ShoppingCart, Sparkles, Trash2, UtensilsCrossed, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { destroy, store } from '@/actions/App/Http/Controllers/MealController';
 import InputError from '@/components/InputError';
@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout';
+import { getXsrfToken } from '@/lib/csrf';
 import type { BreadcrumbItem, Meal, Recipe } from '@/types';
 
 interface MealType {
@@ -36,6 +37,13 @@ interface Props {
     shoppingLists: ShoppingListSummary[];
     weekStart: string;
     mealTypes: MealType[];
+}
+
+interface AiMealSuggestion {
+    planned_date: string;
+    meal_type: string;
+    recipe_id: number;
+    recipe_title: string;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Meal Planner', href: '/meals' }];
@@ -127,6 +135,15 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
     const [groceryMealId, setGroceryMealId] = useState<number | null>(null);
     const [groceryListOpen, setGroceryListOpen] = useState(false);
     const [selectedListId, setSelectedListId] = useState('');
+
+    // AI meal suggestion state
+    const [aiPlanOpen, setAiPlanOpen] = useState(false);
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiError, setAiError] = useState<string | null>(null);
+    const [aiSuggestions, setAiSuggestions] = useState<AiMealSuggestion[] | null>(null);
+    const [aiPreferences, setAiPreferences] = useState('');
+    const [aiShoppingListId, setAiShoppingListId] = useState('');
+    const [swapDialogIndex, setSwapDialogIndex] = useState<number | null>(null);
 
     // Optimistic local state — instantly reflects drops / deletes without waiting for server
     const localStorageKey = `meals_week_${weekStart}`;
@@ -325,6 +342,73 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
         );
     }
 
+    async function fetchAiSuggestions() {
+        setAiLoading(true);
+        setAiError(null);
+        setAiSuggestions(null);
+
+        try {
+            const response = await fetch('/meals/ai-suggest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': getXsrfToken(),
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({
+                    week_start: weekStart,
+                    preferences: aiPreferences || undefined,
+                }),
+            });
+
+            const data = (await response.json()) as { suggestions?: AiMealSuggestion[]; error?: string; message?: string };
+
+            if (!response.ok || data.error) {
+                setAiError(data.message ?? data.error ?? 'Something went wrong. Please try again.');
+
+                return;
+            }
+
+            setAiSuggestions(data.suggestions ?? null);
+        } catch {
+            setAiError('Failed to connect. Please try again.');
+        } finally {
+            setAiLoading(false);
+        }
+    }
+
+    function acceptAiSuggestions() {
+        if (!aiSuggestions) {
+            return;
+        }
+
+        router.post(
+            '/meals/bulk',
+            {
+                meals: aiSuggestions,
+                shopping_list_id: aiShoppingListId || undefined,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setAiPlanOpen(false);
+                    setAiSuggestions(null);
+                    setAiPreferences('');
+                    setAiShoppingListId('');
+                },
+            },
+        );
+    }
+
+    function removeSuggestion(index: number) {
+        setAiSuggestions((prev) => (prev ?? []).filter((_, i) => i !== index));
+    }
+
+    function swapSuggestion(index: number, recipe: Recipe) {
+        setAiSuggestions((prev) => (prev ?? []).map((s, i) => (i === index ? { ...s, recipe_id: recipe.id, recipe_title: recipe.title } : s)));
+        setSwapDialogIndex(null);
+    }
+
     const weekLabel = `${weekDays[0].toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} – ${weekDays[6].toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`;
 
     return (
@@ -450,8 +534,226 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
                                     </Stack>
                                 </DialogContent>
                             </Dialog>
+
+                            {/* AI Auto-Plan dialog */}
+                            <Dialog
+                                open={aiPlanOpen}
+                                onOpenChange={(open) => {
+                                    setAiPlanOpen(open);
+
+                                    if (!open) {
+                                        setAiSuggestions(null);
+                                        setAiError(null);
+                                        setAiPreferences('');
+                                        setAiShoppingListId('');
+                                        setSwapDialogIndex(null);
+                                    }
+                                }}
+                            >
+                                <DialogTrigger asChild>
+                                    <Button size="sm" variant="outline">
+                                        <Sparkles size={16} style={{ marginRight: 4 }} /> Auto Plan Week
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Auto Plan Week</DialogTitle>
+                                    </DialogHeader>
+                                    <Stack spacing={2}>
+                                        {!aiSuggestions ? (
+                                            <>
+                                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                                    Let AI suggest dinners for each day of the week based on your saved recipes.
+                                                </Typography>
+                                                <Box sx={{ display: 'grid', gap: 1 }}>
+                                                    <FormLabel>Preferences (optional)</FormLabel>
+                                                    <Input
+                                                        placeholder="e.g. no fish, vegetarian on Wednesday"
+                                                        value={aiPreferences}
+                                                        onChange={(e) => setAiPreferences(e.target.value)}
+                                                    />
+                                                </Box>
+                                                {shoppingLists.length > 0 && (
+                                                    <Box sx={{ display: 'grid', gap: 1 }}>
+                                                        <FormLabel>Add ingredients to shopping list (optional)</FormLabel>
+                                                        <FormControl fullWidth size="small">
+                                                            <MuiSelect
+                                                                value={aiShoppingListId}
+                                                                onChange={(e) => setAiShoppingListId(e.target.value)}
+                                                                displayEmpty
+                                                            >
+                                                                <MenuItem value="">— Don't add —</MenuItem>
+                                                                {shoppingLists.map((l) => (
+                                                                    <MenuItem key={l.id} value={String(l.id)}>
+                                                                        {l.name}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </MuiSelect>
+                                                        </FormControl>
+                                                    </Box>
+                                                )}
+                                                {recipes.length === 0 && (
+                                                    <Box
+                                                        sx={{
+                                                            p: 1.5,
+                                                            borderRadius: 1,
+                                                            bgcolor: 'action.hover',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            gap: 1,
+                                                        }}
+                                                    >
+                                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                                            No recipes in your library yet. Add some via the{' '}
+                                                            <Link href="/recipes" style={{ color: 'inherit', textDecoration: 'underline' }}>
+                                                                Recipes
+                                                            </Link>{' '}
+                                                            page, or ask the{' '}
+                                                            <Link
+                                                                href="/assistant?prompt=Find+me+some+new+dinner+recipes"
+                                                                style={{ color: 'inherit', textDecoration: 'underline' }}
+                                                            >
+                                                                AI assistant
+                                                            </Link>{' '}
+                                                            to find some.
+                                                        </Typography>
+                                                    </Box>
+                                                )}
+                                                {aiError && (
+                                                    <Typography variant="body2" sx={{ color: 'error.main' }}>
+                                                        {aiError}
+                                                    </Typography>
+                                                )}
+                                                <Button onClick={fetchAiSuggestions} disabled={aiLoading || recipes.length === 0}>
+                                                    {aiLoading ? (
+                                                        <>
+                                                            <Box
+                                                                component={Loader2}
+                                                                size={16}
+                                                                sx={{
+                                                                    mr: 0.5,
+                                                                    '@keyframes spin': { from: { rotate: '0deg' }, to: { rotate: '360deg' } },
+                                                                    animation: 'spin 1s linear infinite',
+                                                                }}
+                                                            />
+                                                            Thinking…
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Sparkles size={16} style={{ marginRight: 4 }} /> Generate Suggestions
+                                                        </>
+                                                    )}
+                                                </Button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                                    Review the plan. Use ↻ to swap a recipe or ✕ to remove a day.
+                                                </Typography>
+                                                <Stack spacing={0.75}>
+                                                    {aiSuggestions.map((s, i) => (
+                                                        <Box
+                                                            key={i}
+                                                            sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                gap: 1,
+                                                                p: 1,
+                                                                borderRadius: 1,
+                                                                border: (t) => `1px solid ${t.palette.divider}`,
+                                                                bgcolor: 'background.paper',
+                                                            }}
+                                                        >
+                                                            <Typography
+                                                                variant="caption"
+                                                                sx={{ fontWeight: 600, minWidth: 80, color: 'text.secondary' }}
+                                                            >
+                                                                {new Date(s.planned_date + 'T00:00:00').toLocaleDateString(undefined, {
+                                                                    weekday: 'short',
+                                                                    day: 'numeric',
+                                                                    month: 'short',
+                                                                })}
+                                                            </Typography>
+                                                            <Chip
+                                                                label={s.meal_type}
+                                                                size="small"
+                                                                sx={{ height: 18, fontSize: '0.65rem', textTransform: 'capitalize' }}
+                                                            />
+                                                            <Typography
+                                                                variant="body2"
+                                                                sx={{
+                                                                    flex: 1,
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    whiteSpace: 'nowrap',
+                                                                }}
+                                                            >
+                                                                {s.recipe_title}
+                                                            </Typography>
+                                                            <Tooltip title="Swap recipe">
+                                                                <IconButton
+                                                                    size="small"
+                                                                    onClick={() => setSwapDialogIndex(i)}
+                                                                    aria-label="Swap recipe"
+                                                                >
+                                                                    <RefreshCw size={14} />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                            <Tooltip title="Remove">
+                                                                <IconButton
+                                                                    size="small"
+                                                                    onClick={() => removeSuggestion(i)}
+                                                                    aria-label="Remove suggestion"
+                                                                >
+                                                                    <X size={14} />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </Box>
+                                                    ))}
+                                                </Stack>
+                                                {aiSuggestions.length === 0 && (
+                                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                                        All suggestions removed. Click Regenerate to start over.
+                                                    </Typography>
+                                                )}
+                                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                                    <Button variant="outline" onClick={() => setAiSuggestions(null)} style={{ flex: 1 }}>
+                                                        Regenerate
+                                                    </Button>
+                                                    <Button onClick={acceptAiSuggestions} disabled={!aiSuggestions.length} style={{ flex: 1 }}>
+                                                        Accept Plan
+                                                    </Button>
+                                                </Box>
+                                            </>
+                                        )}
+                                    </Stack>
+                                </DialogContent>
+                            </Dialog>
                         </Box>
                     </Box>
+
+                    {/* Swap recipe dialog */}
+                    <Dialog open={swapDialogIndex !== null} onOpenChange={(open) => !open && setSwapDialogIndex(null)}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Choose a Different Recipe</DialogTitle>
+                            </DialogHeader>
+                            <Stack spacing={1} sx={{ maxHeight: 360, overflowY: 'auto' }}>
+                                {recipes
+                                    .filter((r) => swapDialogIndex === null || r.id !== aiSuggestions?.[swapDialogIndex]?.recipe_id)
+                                    .map((r) => (
+                                        <Button
+                                            key={r.id}
+                                            variant="outline"
+                                            style={{ justifyContent: 'flex-start' }}
+                                            onClick={() => swapDialogIndex !== null && swapSuggestion(swapDialogIndex, r)}
+                                        >
+                                            {r.title}
+                                        </Button>
+                                    ))}
+                            </Stack>
+                        </DialogContent>
+                    </Dialog>
 
                     {/* Grocery list selection dialog */}
                     <Dialog open={groceryListOpen} onOpenChange={setGroceryListOpen}>

@@ -61,6 +61,14 @@ All tests must pass before pushing. Run:
 - **Web frontend tests**: `npm test`
 - **PHP tests**: `vendor/bin/sail artisan test --compact`
 
+Before requesting review or marking a PR ready, ensure all quality gates pass (run from repo root):
+- `vendor/bin/pint --test` (or `vendor/bin/sail bin pint --test`)
+- `npm run format:check`
+- `npx eslint .`
+- `npm test`
+- `cd mobile && npm test`
+- `vendor/bin/sail artisan test --compact`
+
 ## Conventions
 
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.

@@ -2,6 +2,7 @@
 
 namespace App\Ai;
 
+use App\Ai\Tools\AcceptMealSuggestions;
 use App\Ai\Tools\AddShoppingItem;
 use App\Ai\Tools\CompleteChore;
 use App\Ai\Tools\CompleteTodo;
@@ -22,6 +23,7 @@ use App\Ai\Tools\ListRecipes;
 use App\Ai\Tools\ListSchedule;
 use App\Ai\Tools\ListShoppingItems;
 use App\Ai\Tools\ListTodos;
+use App\Ai\Tools\SuggestWeeklyMeals;
 use App\Models\User;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\Conversational;
@@ -65,6 +67,7 @@ class FamilyAssistantAgent implements Agent, Conversational, HasTools
         - Adding, editing, and deleting chores; marking them as complete (use create_chore, list_chores, edit_chore, delete_chore, complete_chore)
         - Adding items to shopping lists and reading shopping lists (use add_shopping_item, list_shopping_items)
         - Importing and editing recipes; listing and filtering the recipe collection (use import_recipe, list_recipes, edit_recipe, delete_recipe)
+        - Planning weekly meals: suggest a meal plan (use suggest_weekly_meals) and create it once accepted (use accept_meal_suggestions)
 
         When the user asks to create something, use the appropriate tool and confirm what was created.
         When the user asks to edit or update something, use the appropriate edit tool. If you do not have the item ID, list items first to find it.
@@ -80,6 +83,7 @@ class FamilyAssistantAgent implements Agent, Conversational, HasTools
            - Break each ingredient into its own object with "name", "quantity", and "unit" — do not lump everything into the name (e.g. "2 cups flour" → {name:"flour", quantity:"2", unit:"cups"}).
            - Pass instructions exactly as formatted in the fetched content.
         4. Confirm what was imported.
+        When the user asks to plan meals for the week, call suggest_weekly_meals to retrieve available recipes and the current schedule, then propose a plan. Once the user accepts, call accept_meal_suggestions to create the meals.
         Keep responses concise and friendly.
         MARKDOWN;
     }
@@ -116,6 +120,8 @@ class FamilyAssistantAgent implements Agent, Conversational, HasTools
             new ImportRecipe($this->user),
             new ListRecipes($this->user),
             new FetchUrlContent($this->user),
+            new SuggestWeeklyMeals($this->user),
+            new AcceptMealSuggestions($this->user),
         ];
     }
 

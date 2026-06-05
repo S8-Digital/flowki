@@ -22,6 +22,11 @@ import type { Meal, Recipe } from '@/types';
 
 vi.mock('@inertiajs/react', () => ({
     Head: ({ title }: { title: string }) => <title>{title}</title>,
+    Link: ({ href, children, style }: { href: string; children: React.ReactNode; style?: React.CSSProperties }) => (
+        <a href={href} style={style}>
+            {children}
+        </a>
+    ),
     router: { visit: vi.fn(), post: vi.fn(), delete: vi.fn() },
     useForm: vi.fn().mockReturnValue({
         data: {},

@@ -2,11 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Ai\MealPlannerAgent;
+use App\Jobs\AggregateMealGroceries;
 use App\Models\Meal;
 use App\Models\Recipe;
 use App\Models\ShoppingList;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
+use Laravel\Ai\Responses\AgentResponse;
 use Tests\TestCase;
 
 class MealControllerTest extends TestCase
@@ -244,5 +248,99 @@ class MealControllerTest extends TestCase
         $this->actingAs($user)
             ->post(route('meals.groceries', $meal), ['shopping_list_id' => $list->id])
             ->assertForbidden();
+    }
+
+    public function test_ai_suggest_returns_valid_suggestions_for_web_preview(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        config()->set('ai.default', 'openai');
+        config()->set('ai.providers.openai.key', 'test-key');
+
+        $response = \Mockery::mock(AgentResponse::class);
+        $response->text = json_encode([
+            [
+                'planned_date' => '2025-06-02',
+                'meal_type' => 'dinner',
+                'recipe_id' => 12,
+                'recipe_title' => 'Pasta',
+            ],
+        ]);
+
+        $planner = \Mockery::mock(MealPlannerAgent::class);
+        $planner->shouldReceive('prompt')->once()->andReturn($response);
+        $this->app->bind(MealPlannerAgent::class, fn () => $planner);
+
+        $this->actingAs($user)
+            ->postJson(route('meals.ai-suggest'), ['week_start' => '2025-06-02'])
+            ->assertOk()
+            ->assertJsonPath('suggestions.0.planned_date', '2025-06-02')
+            ->assertJsonPath('suggestions.0.meal_type', 'dinner')
+            ->assertJsonPath('suggestions.0.recipe_id', 12)
+            ->assertJsonPath('suggestions.0.recipe_title', 'Pasta');
+    }
+
+    public function test_ai_suggest_rejects_malformed_suggestions_for_web_preview(): void
+    {
+        $user = User::factory()->withFamily()->create();
+        config()->set('ai.default', 'openai');
+        config()->set('ai.providers.openai.key', 'test-key');
+
+        $response = \Mockery::mock(AgentResponse::class);
+        $response->text = json_encode([
+            [
+                'planned_date' => '2025-06-02',
+                'meal_type' => 'dinner',
+                'recipe_id' => 'invalid',
+                'recipe_title' => 'Pasta',
+            ],
+        ]);
+
+        $planner = \Mockery::mock(MealPlannerAgent::class);
+        $planner->shouldReceive('prompt')->once()->andReturn($response);
+        $this->app->bind(MealPlannerAgent::class, fn () => $planner);
+
+        $this->actingAs($user)
+            ->postJson(route('meals.ai-suggest'), ['week_start' => '2025-06-02'])
+            ->assertStatus(502)
+            ->assertJsonPath('error', 'AI returned an unexpected response. Please try again.');
+    }
+
+    public function test_user_can_bulk_create_meals_from_ai_suggestions(): void
+    {
+        Queue::fake();
+
+        $user = User::factory()->withFamily()->create();
+        $recipe = Recipe::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+        $list = ShoppingList::factory()->create(['family_id' => $user->family_id, 'created_by' => $user->id]);
+
+        $this->actingAs($user)
+            ->post(route('meals.bulk'), [
+                'shopping_list_id' => $list->id,
+                'meals' => [
+                    [
+                        'planned_date' => '2025-06-02',
+                        'meal_type' => 'dinner',
+                        'recipe_id' => $recipe->id,
+                    ],
+                    [
+                        'planned_date' => '2025-06-03',
+                        'meal_type' => 'dinner',
+                        'recipe_id' => $recipe->id,
+                    ],
+                ],
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('meals', [
+            'family_id' => $user->family_id,
+            'planned_date' => '2025-06-02 00:00:00',
+            'recipe_id' => $recipe->id,
+        ]);
+        $this->assertDatabaseHas('meals', [
+            'family_id' => $user->family_id,
+            'planned_date' => '2025-06-03 00:00:00',
+            'recipe_id' => $recipe->id,
+        ]);
+        Queue::assertPushed(AggregateMealGroceries::class, 2);
     }
 }
