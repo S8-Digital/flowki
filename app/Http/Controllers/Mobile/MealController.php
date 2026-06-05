@@ -20,6 +20,7 @@ use Illuminate\Validation\Rule;
 class MealController extends Controller
 {
     use StripsMdFences;
+
     public function index(Request $request): AnonymousResourceCollection
     {
         $this->authorize('viewAny', Meal::class);

@@ -38,7 +38,7 @@ class MealPlannerAgent implements Agent
             ->get(['id', 'title', 'category', 'servings']);
 
         if ($recipes->isEmpty()) {
-            return <<<MARKDOWN
+            return <<<'MARKDOWN'
             You are a meal planner. The family has no saved recipes yet.
             Respond with exactly this JSON and nothing else:
             {"error":"no_recipes","message":"No recipes found. Please add some recipes first."}
