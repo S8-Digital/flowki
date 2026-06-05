@@ -587,7 +587,15 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
                                                 <Button onClick={fetchAiSuggestions} disabled={aiLoading}>
                                                     {aiLoading ? (
                                                         <>
-                                                            <Loader2 size={16} style={{ marginRight: 4, animation: 'spin 1s linear infinite' }} />
+                                                            <Box
+                                                                component={Loader2}
+                                                                size={16}
+                                                                sx={{
+                                                                    mr: 0.5,
+                                                                    '@keyframes spin': { from: { rotate: '0deg' }, to: { rotate: '360deg' } },
+                                                                    animation: 'spin 1s linear infinite',
+                                                                }}
+                                                            />
                                                             Thinking…
                                                         </>
                                                     ) : (

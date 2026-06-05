@@ -152,7 +152,7 @@ class MealController extends Controller
             'preferences' => ['nullable', 'string', 'max:500'],
         ]);
 
-        if (! config('ai.providers.anthropic.key') && ! config('ai.providers.gemini.key')) {
+        if (! config('ai.providers.'.config('ai.default').'.key')) {
             return response()->json(['error' => 'AI is not configured on this server.'], 503);
         }
 
