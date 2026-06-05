@@ -15,8 +15,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useRtdb } from '@/hooks/useRtdb';
-import type { Meal, Recipe, ShoppingList } from '@/lib/api';
-import { mealsApi, recipesApi, shoppingApi } from '@/lib/api';
+import type { AiMealSuggestion, Meal, Recipe, ShoppingList } from '@/lib/api';
+import { mealsApi, recipesApi, shoppingApi, voiceApi } from '@/lib/api';
 
 const MEAL_TYPES = [
   { value: 'breakfast', label: 'Breakfast' },
@@ -161,6 +161,15 @@ export default function MealsScreen() {
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // AI meal planning state
+  const [aiPlanVisible, setAiPlanVisible] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiSuggestions, setAiSuggestions] = useState<AiMealSuggestion[] | null>(null);
+  const [aiPreferences, setAiPreferences] = useState('');
+  const [aiShoppingListId, setAiShoppingListId] = useState<number | null>(null);
+  const [swapDialogIndex, setSwapDialogIndex] = useState<number | null>(null);
+
   const { data: mealsById, isLoading: mealsLoading } = useRtdb<Record<string, Meal>>(
     familyId ? `families/${familyId}/meals` : null,
     {},
@@ -237,6 +246,85 @@ export default function MealsScreen() {
     setNotes('');
     setSelectedListId(null);
     setCreateVisible(true);
+  };
+
+  const openAiPlanDialog = () => {
+    setAiSuggestions(null);
+    setAiError(null);
+    setAiPreferences('');
+    setAiShoppingListId(null);
+    setAiPlanVisible(true);
+  };
+
+  const fetchAiSuggestions = async () => {
+    setAiLoading(true);
+    setAiError(null);
+    setAiSuggestions(null);
+
+    try {
+      const data = await mealsApi.aiSuggest(weekStart, aiPreferences || undefined);
+
+      if (data?.error) {
+        setAiError(data.error);
+
+        return;
+      }
+
+      setAiSuggestions(data?.suggestions ?? null);
+    } catch {
+      setAiError('Failed to connect. Please try again.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const removeSuggestion = (index: number) => {
+    setAiSuggestions((prev) => prev ? prev.filter((_, i) => i !== index) : prev);
+  };
+
+  const swapSuggestion = (index: number, newRecipeId: number) => {
+    const recipe = recipes.find((r) => r.id === newRecipeId);
+
+    if (!recipe) {
+      return;
+    }
+
+    setAiSuggestions((prev) =>
+      prev
+        ? prev.map((s, i) =>
+            i === index ? { ...s, recipe_id: recipe.id, recipe_title: recipe.title } : s,
+          )
+        : prev,
+    );
+    setSwapDialogIndex(null);
+  };
+
+  const acceptAiSuggestions = async () => {
+    if (!aiSuggestions?.length) {
+      return;
+    }
+
+    try {
+      setSaving(true);
+      await mealsApi.bulkCreate(aiSuggestions, aiShoppingListId);
+      setAiPlanVisible(false);
+      setAiSuggestions(null);
+      setAiPreferences('');
+      setAiShoppingListId(null);
+    } catch {
+      Alert.alert('Error', 'Could not save meal plan.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const askAssistantForRecipes = async () => {
+    try {
+      await voiceApi.sendCommand('Find me some new recipes for the week');
+      Alert.alert('Assistant', 'Your AI assistant is finding new recipes. Check back shortly.');
+    } catch {
+      Alert.alert('Error', 'Could not reach the assistant.');
+    }
   };
 
   const handleCreate = async () => {
@@ -326,6 +414,17 @@ export default function MealsScreen() {
         <Button onPress={() => setWeekStart(offsetWeek(weekStart, -1))}>Prev</Button>
         <ThemedText variant="subtitle">{weekLabel}</ThemedText>
         <Button onPress={() => setWeekStart(offsetWeek(weekStart, 1))}>Next</Button>
+      </View>
+
+      <View style={styles.aiButtonRow}>
+        <Button
+          mode="outlined"
+          compact
+          onPress={openAiPlanDialog}
+          testID="auto-plan-week-btn"
+        >
+          ✨ Auto Plan Week
+        </Button>
       </View>
 
       <FlatList
@@ -484,6 +583,185 @@ export default function MealsScreen() {
         </Dialog>
       </Portal>
 
+      {/* AI Plan Week dialog */}
+      <Portal>
+        <Dialog visible={aiPlanVisible} onDismiss={() => setAiPlanVisible(false)}>
+          <Dialog.Title>Auto Plan Week</Dialog.Title>
+          <Dialog.Content>
+            {!aiSuggestions ? (
+              <>
+                <TextInput
+                  label="Preferences (optional)"
+                  value={aiPreferences}
+                  onChangeText={setAiPreferences}
+                  mode="outlined"
+                  style={styles.input}
+                  placeholder="e.g. vegetarian, no fish"
+                />
+                {shoppingLists.length > 0 ? (
+                  <>
+                    <ThemedText variant="caption" style={styles.dialogLabel}>
+                      Add groceries to list (optional)
+                    </ThemedText>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                      <View style={styles.optionWrap}>
+                        <Button
+                          mode={aiShoppingListId === null ? 'contained' : 'outlined'}
+                          compact
+                          onPress={() => setAiShoppingListId(null)}
+                        >
+                          Skip
+                        </Button>
+                        {shoppingLists.map((list) => (
+                          <Button
+                            key={list.id}
+                            mode={aiShoppingListId === list.id ? 'contained' : 'outlined'}
+                            compact
+                            onPress={() => setAiShoppingListId(list.id)}
+                          >
+                            {list.name}
+                          </Button>
+                        ))}
+                      </View>
+                    </ScrollView>
+                  </>
+                ) : null}
+                {recipes.length === 0 ? (
+                  <View style={styles.noRecipesBox}>
+                    <ThemedText variant="muted" style={styles.noRecipesText}>
+                      No recipes in your library yet. Ask the assistant to find some.
+                    </ThemedText>
+                    <Button
+                      mode="outlined"
+                      compact
+                      onPress={askAssistantForRecipes}
+                      testID="find-recipes-btn"
+                    >
+                      Find Recipes via AI
+                    </Button>
+                  </View>
+                ) : null}
+                {aiError ? (
+                  <ThemedText variant="muted" style={styles.aiError}>
+                    {aiError}
+                  </ThemedText>
+                ) : null}
+              </>
+            ) : (
+              <>
+                <ThemedText variant="caption" style={styles.dialogLabel}>
+                  Review the suggested plan. Tap ✕ to remove a day or ↻ to swap the recipe.
+                </ThemedText>
+                <ScrollView style={styles.suggestionList}>
+                  {aiSuggestions.map((s, i) => (
+                    <View key={i} style={styles.suggestionRow}>
+                      <View style={styles.suggestionInfo}>
+                        <ThemedText variant="caption" style={styles.suggestionDate}>
+                          {new Date(`${s.planned_date}T00:00:00`).toLocaleDateString(undefined, {
+                            weekday: 'short',
+                            day: 'numeric',
+                            month: 'short',
+                          })}
+                        </ThemedText>
+                        <ThemedText variant="caption" style={styles.suggestionType}>
+                          {s.meal_type}
+                        </ThemedText>
+                        <ThemedText style={styles.suggestionTitle} numberOfLines={1}>
+                          {s.recipe_title}
+                        </ThemedText>
+                      </View>
+                      <View style={styles.suggestionActions}>
+                        <Button
+                          compact
+                          mode="text"
+                          onPress={() => setSwapDialogIndex(i)}
+                          testID={`swap-suggestion-${i}`}
+                        >
+                          ↻
+                        </Button>
+                        <Button
+                          compact
+                          mode="text"
+                          textColor="#EF4444"
+                          onPress={() => removeSuggestion(i)}
+                          testID={`remove-suggestion-${i}`}
+                        >
+                          ✕
+                        </Button>
+                      </View>
+                    </View>
+                  ))}
+                </ScrollView>
+                {aiSuggestions.length === 0 ? (
+                  <ThemedText variant="muted">All suggestions removed.</ThemedText>
+                ) : null}
+              </>
+            )}
+          </Dialog.Content>
+          <Dialog.Actions>
+            {!aiSuggestions ? (
+              <>
+                <Button onPress={() => setAiPlanVisible(false)}>Cancel</Button>
+                <Button
+                  onPress={fetchAiSuggestions}
+                  disabled={aiLoading || recipes.length === 0}
+                  loading={aiLoading}
+                  testID="generate-suggestions-btn"
+                >
+                  {aiLoading ? 'Generating…' : 'Generate'}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button onPress={() => setAiSuggestions(null)}>Regenerate</Button>
+                <Button
+                  onPress={acceptAiSuggestions}
+                  disabled={!aiSuggestions.length || saving}
+                  loading={saving}
+                  testID="accept-ai-plan-btn"
+                >
+                  Accept Plan
+                </Button>
+              </>
+            )}
+          </Dialog.Actions>
+        </Dialog>
+
+        {/* Swap recipe picker dialog */}
+        <Dialog
+          visible={swapDialogIndex !== null}
+          onDismiss={() => setSwapDialogIndex(null)}
+        >
+          <Dialog.Title>Choose a Recipe</Dialog.Title>
+          <Dialog.Content>
+            <ScrollView style={styles.swapList}>
+              {recipes
+                .filter(
+                  (r) =>
+                    swapDialogIndex === null ||
+                    r.id !== aiSuggestions?.[swapDialogIndex]?.recipe_id,
+                )
+                .map((r) => (
+                  <Button
+                    key={r.id}
+                    mode="outlined"
+                    style={styles.swapItem}
+                    onPress={() =>
+                      swapDialogIndex !== null && swapSuggestion(swapDialogIndex, r.id)
+                    }
+                    testID={`swap-recipe-${r.id}`}
+                  >
+                    {r.title}
+                  </Button>
+                ))}
+            </ScrollView>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setSwapDialogIndex(null)}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
       <FAB
         icon="plus"
         style={styles.fab}
@@ -503,6 +781,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  aiButtonRow: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    alignItems: 'flex-start',
   },
   list: { padding: 16, paddingBottom: 96, gap: 12 },
   dayCard: { marginBottom: 12 },
@@ -541,4 +824,28 @@ const styles = StyleSheet.create({
     bottom: 16,
     backgroundColor: '#3B82F6',
   },
+  noRecipesBox: {
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0,0,0,0.04)',
+    gap: 8,
+    marginBottom: 12,
+  },
+  noRecipesText: { marginBottom: 4 },
+  aiError: { color: '#EF4444', marginTop: 8 },
+  suggestionList: { maxHeight: 320 },
+  suggestionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
+  },
+  suggestionInfo: { flex: 1, gap: 2 },
+  suggestionDate: { fontWeight: '600', color: '#6B7280' },
+  suggestionType: { textTransform: 'capitalize', color: '#6B7280' },
+  suggestionTitle: { fontSize: 14 },
+  suggestionActions: { flexDirection: 'row', alignItems: 'center' },
+  swapList: { maxHeight: 300 },
+  swapItem: { marginBottom: 8 },
 });

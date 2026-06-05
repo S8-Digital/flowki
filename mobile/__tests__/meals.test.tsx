@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Alert } from 'react-native';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MealsScreen from '@/app/(tabs)/meals';
-import type { Meal, Recipe, ShoppingList } from '@/lib/api';
+import type { AiMealSuggestion, Meal, Recipe, ShoppingList } from '@/lib/api';
 
 let mockUser: { id: number; family_id: number | null } | null = {
   id: 1,
@@ -116,11 +116,13 @@ vi.mock('@/hooks/useColorScheme', () => ({
   useColorScheme: () => 'light',
 }));
 
-const { mockMealsApi, mockRecipesApi, mockShoppingApi } = vi.hoisted(() => ({
+const { mockMealsApi, mockRecipesApi, mockShoppingApi, mockVoiceApi } = vi.hoisted(() => ({
   mockMealsApi: {
     create: vi.fn(() => Promise.resolve()),
     remove: vi.fn(() => Promise.resolve()),
     addGroceries: vi.fn(() => Promise.resolve({ message: 'ok' })),
+    aiSuggest: vi.fn(),
+    bulkCreate: vi.fn(() => Promise.resolve({ message: 'Meals created.' })),
   },
   mockRecipesApi: {
     list: vi.fn(),
@@ -128,12 +130,16 @@ const { mockMealsApi, mockRecipesApi, mockShoppingApi } = vi.hoisted(() => ({
   mockShoppingApi: {
     lists: vi.fn(),
   },
+  mockVoiceApi: {
+    sendCommand: vi.fn(() => Promise.resolve({ success: true, response: 'ok' })),
+  },
 }));
 
 vi.mock('@/lib/api', () => ({
   mealsApi: mockMealsApi,
   recipesApi: mockRecipesApi,
   shoppingApi: mockShoppingApi,
+  voiceApi: mockVoiceApi,
 }));
 
 let mockRtdbData: Record<string, Meal> = {};
@@ -181,6 +187,14 @@ const makeMeal = (overrides: Partial<Meal> = {}): Meal => ({
   recipe: makeRecipe(),
   created_at: '2025-01-01T00:00:00.000Z',
   updated_at: '2025-01-01T00:00:00.000Z',
+  ...overrides,
+});
+
+const makeAiSuggestion = (overrides: Partial<AiMealSuggestion> = {}): AiMealSuggestion => ({
+  planned_date: today,
+  meal_type: 'dinner',
+  recipe_id: 1,
+  recipe_title: 'Pasta Bake',
   ...overrides,
 });
 
@@ -322,5 +336,107 @@ describe('Meals screen', () => {
     await waitFor(() =>
       expect(screen.getByText(/join or create a family to plan meals/i)).toBeInTheDocument(),
     );
+  });
+
+  it('renders the Auto Plan Week button', async () => {
+    render(React.createElement(MealsScreen));
+    await waitFor(() => expect(screen.getByTestId('auto-plan-week-btn')).toBeInTheDocument());
+  });
+
+  it('opens the AI plan dialog when Auto Plan Week is clicked', async () => {
+    render(React.createElement(MealsScreen));
+    await waitFor(() => screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('auto-plan-week-btn'));
+    expect(screen.getByText('Auto Plan Week')).toBeInTheDocument();
+    expect(screen.getByTestId('generate-suggestions-btn')).toBeInTheDocument();
+  });
+
+  it('calls mealsApi.aiSuggest and shows suggestions', async () => {
+    const suggestion = makeAiSuggestion();
+    mockMealsApi.aiSuggest.mockResolvedValue({ suggestions: [suggestion] });
+
+    render(React.createElement(MealsScreen));
+    await waitFor(() => screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('generate-suggestions-btn'));
+
+    await waitFor(() => expect(screen.getByText('Pasta Bake')).toBeInTheDocument());
+    expect(mockMealsApi.aiSuggest).toHaveBeenCalled();
+  });
+
+  it('shows an error when aiSuggest fails', async () => {
+    mockMealsApi.aiSuggest.mockRejectedValue(new Error('Network error'));
+
+    render(React.createElement(MealsScreen));
+    await waitFor(() => screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('generate-suggestions-btn'));
+
+    await waitFor(() => expect(screen.getByText(/Failed to connect/i)).toBeInTheDocument());
+  });
+
+  it('removes a suggestion when the remove button is clicked', async () => {
+    const suggestion = makeAiSuggestion();
+    mockMealsApi.aiSuggest.mockResolvedValue({ suggestions: [suggestion] });
+
+    render(React.createElement(MealsScreen));
+    await waitFor(() => screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('generate-suggestions-btn'));
+
+    await waitFor(() => screen.getByTestId('remove-suggestion-0'));
+    fireEvent.click(screen.getByTestId('remove-suggestion-0'));
+
+    await waitFor(() => expect(screen.getByText(/All suggestions removed/i)).toBeInTheDocument());
+  });
+
+  it('opens the swap dialog when the swap button is clicked', async () => {
+    const recipe2 = makeRecipe({ id: 2, title: 'Veggie Curry' });
+    mockRecipesApi.list.mockResolvedValue([makeRecipe(), recipe2]);
+    const suggestion = makeAiSuggestion();
+    mockMealsApi.aiSuggest.mockResolvedValue({ suggestions: [suggestion] });
+
+    render(React.createElement(MealsScreen));
+    await waitFor(() => screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('generate-suggestions-btn'));
+
+    await waitFor(() => screen.getByTestId('swap-suggestion-0'));
+    fireEvent.click(screen.getByTestId('swap-suggestion-0'));
+
+    await waitFor(() => expect(screen.getByText('Choose a Recipe')).toBeInTheDocument());
+    fireEvent.click(screen.getByTestId('swap-recipe-2'));
+
+    await waitFor(() => expect(screen.getByText('Veggie Curry')).toBeInTheDocument());
+  });
+
+  it('calls mealsApi.bulkCreate when Accept Plan is clicked', async () => {
+    const suggestion = makeAiSuggestion();
+    mockMealsApi.aiSuggest.mockResolvedValue({ suggestions: [suggestion] });
+
+    render(React.createElement(MealsScreen));
+    await waitFor(() => screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('generate-suggestions-btn'));
+
+    await waitFor(() => screen.getByTestId('accept-ai-plan-btn'));
+    fireEvent.click(screen.getByTestId('accept-ai-plan-btn'));
+
+    await waitFor(() =>
+      expect(mockMealsApi.bulkCreate).toHaveBeenCalledWith([suggestion], null),
+    );
+  });
+
+  it('shows Find Recipes button and calls voiceApi when no recipes exist', async () => {
+    mockRecipesApi.list.mockResolvedValue([]);
+
+    render(React.createElement(MealsScreen));
+    await waitFor(() => screen.getByTestId('auto-plan-week-btn'));
+    fireEvent.click(screen.getByTestId('auto-plan-week-btn'));
+
+    await waitFor(() => expect(screen.getByTestId('find-recipes-btn')).toBeInTheDocument());
+    fireEvent.click(screen.getByTestId('find-recipes-btn'));
+
+    await waitFor(() => expect(mockVoiceApi.sendCommand).toHaveBeenCalledWith('Find me some new recipes for the week'));
   });
 });

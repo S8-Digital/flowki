@@ -81,6 +81,8 @@ Route::name('mobile.')->group(function () {
 
         // Meals
         Route::get('meals', [MealController::class, 'index'])->name('meals.index');
+        Route::post('meals/ai-suggest', [MealController::class, 'aiSuggest'])->name('meals.ai-suggest');
+        Route::post('meals/bulk', [MealController::class, 'bulkCreate'])->name('meals.bulk');
         Route::post('meals', [MealController::class, 'store'])->name('meals.store');
         Route::patch('meals/{meal}', [MealController::class, 'update'])->name('meals.update');
         Route::delete('meals/{meal}', [MealController::class, 'destroy'])->name('meals.destroy');

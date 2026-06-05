@@ -156,6 +156,13 @@ export const recipesApi = {
   list: () => api.get<Recipe[]>('/api/mobile/recipes'),
 };
 
+export interface AiMealSuggestion {
+  planned_date: string;
+  meal_type: string;
+  recipe_id: number;
+  recipe_title: string;
+}
+
 export const mealsApi = {
   list: (week?: string) =>
     api.get<Meal[]>(`/api/mobile/meals${week ? `?week=${week}` : ''}`),
@@ -172,6 +179,19 @@ export const mealsApi = {
   addGroceries: (mealId: number, shopping_list_id: number) =>
     api.post<{ message: string }>(`/api/mobile/meals/${mealId}/groceries`, {
       shopping_list_id,
+    }),
+  aiSuggest: (weekStart: string, preferences?: string) =>
+    api.post<{ suggestions?: AiMealSuggestion[]; error?: string }>(
+      '/api/mobile/meals/ai-suggest',
+      { week_start: weekStart, preferences },
+    ),
+  bulkCreate: (
+    meals: AiMealSuggestion[],
+    shoppingListId?: number | null,
+  ) =>
+    api.post<{ message: string }>('/api/mobile/meals/bulk', {
+      meals,
+      shopping_list_id: shoppingListId ?? undefined,
     }),
 };
 
