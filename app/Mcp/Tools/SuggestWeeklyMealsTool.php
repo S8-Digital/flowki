@@ -26,9 +26,7 @@ class SuggestWeeklyMealsTool extends Tool
         }
 
         $input = $request->all();
-        $weekStart = ! empty($input['week_start'])
-            ? $input['week_start']
-            : now()->startOfWeek()->toDateString();
+        $weekStart = $this->resolveWeekStart($input['week_start'] ?? null);
 
         $recipes = Recipe::query()
             ->forFamily($user->family_id)
@@ -95,5 +93,18 @@ class SuggestWeeklyMealsTool extends Tool
             'week_start' => $schema->string()->description('Week start date in YYYY-MM-DD format (defaults to this Monday).'),
             'preferences' => $schema->string()->description('Optional dietary preferences, e.g. "no fish, vegetarian Wednesdays".'),
         ];
+    }
+
+    private function resolveWeekStart(mixed $weekStart): string
+    {
+        if (! is_string($weekStart) || ! preg_match('/^\d{4}-\d{2}-\d{2}$/', $weekStart)) {
+            return now()->startOfWeek()->toDateString();
+        }
+
+        [$year, $month, $day] = array_map('intval', explode('-', $weekStart));
+
+        return checkdate($month, $day, $year)
+            ? $weekStart
+            : now()->startOfWeek()->toDateString();
     }
 }

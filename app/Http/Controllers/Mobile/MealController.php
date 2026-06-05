@@ -138,7 +138,12 @@ class MealController extends Controller
         $preferences = $validated['preferences'] ?? null;
 
         try {
-            $agent = new MealPlannerAgent($user, $weekStart, $preferences);
+            /** @var MealPlannerAgent $agent */
+            $agent = app()->makeWith(MealPlannerAgent::class, [
+                'user' => $user,
+                'weekStart' => $weekStart,
+                'preferences' => $preferences,
+            ]);
             $raw = $agent->prompt('Suggest meals for this week.');
 
             $json = $this->stripJsonFences($raw);
@@ -151,6 +156,10 @@ class MealController extends Controller
 
             if (isset($suggestions['error'])) {
                 return response()->json($suggestions, 422);
+            }
+
+            if (! $this->hasValidSuggestionShape($suggestions)) {
+                return response()->json(['error' => 'AI returned an unexpected response. Please try again.'], 502);
             }
 
             return response()->json(['suggestions' => $suggestions]);
@@ -198,11 +207,25 @@ class MealController extends Controller
                 ]);
 
                 if ($shoppingListId && $meal->recipe_id) {
-                    AggregateMealGroceries::dispatch($meal->id, (int) $shoppingListId);
+                    AggregateMealGroceries::dispatch($meal->id, (int) $shoppingListId)->afterCommit();
                 }
             }
         });
 
         return response()->json(['message' => 'Meals created.'], 201);
+    }
+
+    private function hasValidSuggestionShape(array $suggestions): bool
+    {
+        if (! array_is_list($suggestions)) {
+            return false;
+        }
+
+        return validator($suggestions, [
+            '*.planned_date' => ['required', 'date_format:Y-m-d'],
+            '*.meal_type' => ['required', 'string', Rule::in(['breakfast', 'lunch', 'dinner', 'snack'])],
+            '*.recipe_id' => ['required', 'integer', 'min:1'],
+            '*.recipe_title' => ['required', 'string', 'max:255'],
+        ])->passes();
     }
 }

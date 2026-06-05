@@ -544,6 +544,9 @@ export default function MealsIndex({ meals, recipes, shoppingLists, weekStart, m
                                     if (!open) {
                                         setAiSuggestions(null);
                                         setAiError(null);
+                                        setAiPreferences('');
+                                        setAiShoppingListId('');
+                                        setSwapDialogIndex(null);
                                     }
                                 }}
                             >

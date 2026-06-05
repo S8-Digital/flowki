@@ -80,7 +80,7 @@ class AcceptMealSuggestions implements Tool
                     ]);
 
                     if ($shoppingListId && $meal->recipe_id) {
-                        AggregateMealGroceries::dispatch($meal->id, (int) $shoppingListId);
+                        AggregateMealGroceries::dispatch($meal->id, (int) $shoppingListId)->afterCommit();
                     }
 
                     $results[] = $meal;
