@@ -68,13 +68,13 @@ class AcceptMealSuggestionsToolTest extends TestCase
         $this->assertStringContainsString('2 meal', $result);
         $this->assertDatabaseHas('meals', [
             'family_id' => $user->family_id,
-            'planned_date' => '2025-06-02',
+            'planned_date' => '2025-06-02 00:00:00',
             'meal_type' => MealType::Dinner->value,
             'recipe_id' => $recipe->id,
         ]);
         $this->assertDatabaseHas('meals', [
             'family_id' => $user->family_id,
-            'planned_date' => '2025-06-03',
+            'planned_date' => '2025-06-03 00:00:00',
         ]);
     }
 
@@ -117,7 +117,7 @@ class AcceptMealSuggestionsToolTest extends TestCase
         // Meal created but without the foreign recipe
         $this->assertDatabaseHas('meals', [
             'family_id' => $user->family_id,
-            'planned_date' => '2025-06-02',
+            'planned_date' => '2025-06-02 00:00:00',
             'recipe_id' => null,
         ]);
         $this->assertStringContainsString('1 meal', $result);
@@ -166,7 +166,7 @@ class AcceptMealSuggestionsToolTest extends TestCase
         $this->assertStringContainsString('shopping list', $result);
         $this->assertDatabaseHas('meals', [
             'family_id' => $user->family_id,
-            'planned_date' => '2025-06-02',
+            'planned_date' => '2025-06-02 00:00:00',
         ]);
     }
 

@@ -10,6 +10,7 @@ use App\Models\ShoppingList;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
+use Laravel\Ai\Responses\AgentResponse;
 use Tests\TestCase;
 
 class MealControllerTest extends TestCase
@@ -255,15 +256,18 @@ class MealControllerTest extends TestCase
         config()->set('ai.default', 'openai');
         config()->set('ai.providers.openai.key', 'test-key');
 
-        $planner = \Mockery::mock(MealPlannerAgent::class);
-        $planner->shouldReceive('prompt')->once()->andReturn(json_encode([
+        $response = \Mockery::mock(AgentResponse::class);
+        $response->text = json_encode([
             [
                 'planned_date' => '2025-06-02',
                 'meal_type' => 'dinner',
                 'recipe_id' => 12,
                 'recipe_title' => 'Pasta',
             ],
-        ]));
+        ]);
+
+        $planner = \Mockery::mock(MealPlannerAgent::class);
+        $planner->shouldReceive('prompt')->once()->andReturn($response);
         $this->app->bind(MealPlannerAgent::class, fn () => $planner);
 
         $this->actingAs($user)
@@ -281,15 +285,18 @@ class MealControllerTest extends TestCase
         config()->set('ai.default', 'openai');
         config()->set('ai.providers.openai.key', 'test-key');
 
-        $planner = \Mockery::mock(MealPlannerAgent::class);
-        $planner->shouldReceive('prompt')->once()->andReturn(json_encode([
+        $response = \Mockery::mock(AgentResponse::class);
+        $response->text = json_encode([
             [
                 'planned_date' => '2025-06-02',
                 'meal_type' => 'dinner',
                 'recipe_id' => 'invalid',
                 'recipe_title' => 'Pasta',
             ],
-        ]));
+        ]);
+
+        $planner = \Mockery::mock(MealPlannerAgent::class);
+        $planner->shouldReceive('prompt')->once()->andReturn($response);
         $this->app->bind(MealPlannerAgent::class, fn () => $planner);
 
         $this->actingAs($user)
@@ -326,12 +333,12 @@ class MealControllerTest extends TestCase
 
         $this->assertDatabaseHas('meals', [
             'family_id' => $user->family_id,
-            'planned_date' => '2025-06-02',
+            'planned_date' => '2025-06-02 00:00:00',
             'recipe_id' => $recipe->id,
         ]);
         $this->assertDatabaseHas('meals', [
             'family_id' => $user->family_id,
-            'planned_date' => '2025-06-03',
+            'planned_date' => '2025-06-03 00:00:00',
             'recipe_id' => $recipe->id,
         ]);
         Queue::assertPushed(AggregateMealGroceries::class, 2);

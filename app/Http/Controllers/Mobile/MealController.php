@@ -145,9 +145,9 @@ class MealController extends Controller
                 'weekStart' => $weekStart,
                 'preferences' => $preferences,
             ]);
-            $raw = $agent->prompt('Suggest meals for this week.');
+            $response = $agent->prompt('Suggest meals for this week.');
 
-            $json = $this->stripJsonFences($raw);
+            $json = $this->stripJsonFences($response->text);
 
             $suggestions = json_decode($json, true);
 
